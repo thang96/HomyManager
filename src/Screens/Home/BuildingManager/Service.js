@@ -1,0 +1,125 @@
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  KeyboardAvoidingView,
+  FlatList,
+} from 'react-native';
+import CustomAppBar from '../../../Components/CustomAppBar';
+import CustomButton from '../../../Components/CustomButton';
+import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
+import {icons, colors} from '../../../Constants';
+import CustomChecker from '../../../Components/CustomChecker';
+import CustomTextTitle from '../../../Components/CustomTextTitle';
+import {ScrollView} from 'react-native-virtualized-view';
+
+const Service = props => {
+  const navigation = useNavigation();
+
+  const [listSevice, setListSevice] = useState([
+    {label: 'Điện', value: '4000/KWH', isCheck: true},
+    {label: 'Nước', value: '5000/M³', isCheck: false},
+    {label: 'Wifi', value: '50000/T', isCheck: false},
+    {label: 'Ga', value: '200000/T', isCheck: true},
+    {label: 'Ga1', value: '200000/T', isCheck: false},
+    {label: 'Ga2', value: '200000/T', isCheck: false},
+    {label: 'Ga3', value: '200000/T', isCheck: true},
+  ]);
+
+  const renderListService = (item, index) => {
+    const updateItem = () => {
+      let newList = [...listSevice];
+      let itemCheck = newList[index];
+      let newItem = {
+        ...itemCheck,
+        isCheck: itemCheck?.isCheck == false ? true : false,
+      };
+      newList[index] = newItem;
+      setListSevice(newList);
+    };
+    return (
+      <CustomChecker
+        icon={icons.ic_paidService}
+        label={item?.label}
+        value={item?.value}
+        isCheck={item?.isCheck}
+        onPress={() => updateItem()}
+      />
+    );
+  };
+
+  return (
+    <View style={{flex: 1, backgroundColor: 'white'}}>
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <CustomAppBar
+          iconLeft={icons.ic_back}
+          label={'Dịch vụ'}
+          iconRight={icons.ic_bell}
+          iconSecondRight={icons.ic_moreOption}
+          pressIconLeft={() => navigation.goBack()}
+        />
+        <ScrollView style={[styles.eachContainer]}>
+          <Text style={styles.content}>
+            Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ
+          </Text>
+          <CustomTextTitle label={'Dịch vụ đã thêm'} />
+
+          {listSevice.length > 0 ? (
+            <FlatList
+              listKey="listPaidSevice"
+              style={{justifyContent: 'space-between'}}
+              horizontal={false}
+              scrollEnabled={false}
+              numColumns={2}
+              data={listSevice}
+              keyExtractor={key => key.label}
+              renderItem={({item, index}) => renderListService(item, index)}
+            />
+          ) : null}
+
+          <View style={styles.viewButton}>
+            <CustomButton
+              icon={icons.ic_plus}
+              styleButton={styles.styleButton}
+              styleIcon={{width: 20, height: 20, tintColor: 'white'}}
+              onPress={() => navigation.navigate('AddService')}
+            />
+            <Text style={styles.content}>Thêm mới dịch vụ</Text>
+          </View>
+        </ScrollView>
+
+        <CustomTwoButtonBottom
+          leftLabel={'Trở lại'}
+          rightLabel={'Xác nhận'}
+          onPressLeft={() => navigation.goBack()}
+          onPressRight={() => {
+            console.log('do some thing');
+          }}
+        />
+      </KeyboardAvoidingView>
+    </View>
+  );
+};
+const styles = StyleSheet.create({
+  eachContainer: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    backgroundColor: colors.backgroundGrey,
+  },
+  content: {color: 'rgba(127, 138, 147, 1)', fontSize: 13, fontWeight: '400'},
+  viewButton: {alignSelf: 'center', alignItems: 'center', marginVertical: 50},
+  styleButton: {
+    backgroundColor: colors.mainColor,
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    marginBottom: 5,
+  },
+});
+export default Service;

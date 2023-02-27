@@ -1,0 +1,45 @@
+import React from 'react';
+import {StyleSheet, View, Text, Image} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {colors, icons} from '../Constants';
+import CustomButton from './CustomButton';
+
+const CustomTextTitle = props => {
+  const {label, labelButton, onPress, viewTitle} = props;
+  return (
+    <View style={[styles.viewContainer, viewTitle]}>
+      <Text style={styles.title}>{label}</Text>
+      {labelButton && (
+        <TouchableOpacity onPress={onPress} style={styles.styleButton}>
+          <Text style={styles.labelButton}>{labelButton}</Text>
+          <Image source={icons.ic_plus} style={styles.image} />
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+};
+const styles = StyleSheet.create({
+  viewContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  title: {
+    fontSize: 17,
+    color: colors.textTitle,
+    fontWeight: '600',
+    letterSpacing: -0.5,
+  },
+  styleButton: {
+    height: 30,
+    backgroundColor: colors.backgroundButton,
+    borderRadius: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  labelButton: {fontSize: 11, color: 'white', marginHorizontal: 3},
+  image: {width: 15, height: 15, tintColor: 'white', marginRight: 3},
+});
+export default CustomTextTitle;
