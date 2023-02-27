@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: 'bold',
     fontStyle: 'italic',
+    textAlign: 'center',
   },
 });
 export default SplashScreen;
