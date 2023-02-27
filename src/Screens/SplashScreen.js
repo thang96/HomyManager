@@ -33,7 +33,7 @@ const SplashScreen = () => {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Homy</Text>
+      <Text style={styles.title}>Homy Manager</Text>
     </View>
   );
 };
