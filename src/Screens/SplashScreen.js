@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, Image} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {colors} from '../Constants';
+import {colors, images} from '../Constants';
 import {updateToken} from '../Store/slices/tokenSlice';
 
 const SplashScreen = () => {
@@ -33,23 +33,16 @@ const SplashScreen = () => {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Homy Manager</Text>
+      <Image
+        source={images.im_backgroundSplash}
+        style={{width: '100%', height: '100%'}}
+      />
     </View>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.mainColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    color: 'white',
-    fontSize: 50,
-    fontWeight: 'bold',
-    fontStyle: 'italic',
-    textAlign: 'center',
   },
 });
 export default SplashScreen;

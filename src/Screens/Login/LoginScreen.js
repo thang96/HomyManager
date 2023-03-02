@@ -30,19 +30,9 @@ const LoginScreen = () => {
   };
   return (
     <ImageBackground
-      source={images.im_backgroundSplash}
+      source={images.im_backgroundLogin}
       style={styles.container}>
       <Text style={styles.title}>Đăng nhập/ Đăng ký</Text>
-      {/* <CustomInput
-        type={'input'}
-        title={'Tài khoản'}
-        placeholder={'Nhập tài khoản'}
-      />
-      <CustomInput
-        type={'input'}
-        title={'Mật khẩu'}
-        placeholder={'Nhập mật khẩu'}
-      /> */}
       <View style={{marginTop: 30}}>
         <Text style={styles.content}>Tài khoản</Text>
         <CustomTextInput
@@ -64,9 +54,25 @@ const LoginScreen = () => {
           styleIconRight={{
             width: 30,
             height: 30,
-            tintColor: isShow ? 'grey' : '#dadee0',
+            tintColor: '#374047',
           }}
           onPressIconRight={() => setIsShow(!isShow)}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          marginTop: 10,
+        }}>
+        <Text style={{fontSize: 13, color: '#7F8A93'}}>
+          Không có tài khoản?
+        </Text>
+        <CustomButton
+          styleLabel={{color: colors.mainColor, fontWeight: '600'}}
+          label={'Đăng ký ngay'}
+          onPress={() => navigation.navigate('RegisterScreen')}
         />
       </View>
       <CustomButton
@@ -92,16 +98,16 @@ const styles = StyleSheet.create({
     width: '100%',
     borderWidth: 2,
     borderRadius: 10,
-    borderColor: '#dadee0',
+    borderColor: '#ACB4B9',
     paddingHorizontal: 10,
-    backgroundColor: '#f8f9f9',
+    backgroundColor: 'white',
   },
   styleButton: {
     width: 200,
     height: 44,
     backgroundColor: colors.mainColor,
     borderRadius: 5,
-    marginTop: 50,
+    marginTop: 30,
     alignSelf: 'center',
   },
   styleLabel: {color: 'white', fontSize: 15},

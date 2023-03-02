@@ -22,6 +22,7 @@ import Utilities from '../../Assets/Svgs/Utilities.svg';
 import Bed from '../../Assets/Svgs/Bed.svg';
 import Wallet from '../../Assets/Svgs/Wallet.svg';
 import Water from '../../Assets/Svgs/Water.svg';
+import LogoApp from '../../Assets/Svgs/LogoApp.svg';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -39,7 +40,7 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <CustomSearchAppBar
-        iconLeft={icons.ic_menu}
+        svgLeft={LogoApp}
         label={'Trang chủ'}
         iconRight={icons.ic_bell}
         iconSecondRight={icons.ic_circleFill}

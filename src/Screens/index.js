@@ -2,6 +2,9 @@
 import SplashScreen from './SplashScreen';
 //Login
 import LoginScreen from './Login/LoginScreen';
+import RegisterScreen from './Login/RegisterScreen';
+import VerifyOTPScreen from './Login/VerifyOTPScreen';
+import ConfirmScreen from './Login/ConfirmScreen';
 //Home
 import HomeScreen from './Home/HomeSreen';
 //--BuildingManager
@@ -30,6 +33,9 @@ export {
   SplashScreen,
   //Login
   LoginScreen,
+  RegisterScreen,
+  VerifyOTPScreen,
+  ConfirmScreen,
   //Home
   HomeScreen,
   //--BuildingManager
