@@ -39,4 +39,10 @@ export default {
   ic_dollar: require('../Assets/Icons/ic_dollar.png'),
   ic_circleFill: require('../Assets/Icons/ic_circleFill.png'),
   ic_hammer: require('../Assets/Icons/ic_hammer.png'),
+  ic_homeTabBar: require('../Assets/Icons/ic_homeTabBar.png'),
+  ic_gearAppBar: require('../Assets/Icons/ic_gearAppBar.png'),
+  ic_chartAppBar: require('../Assets/Icons/ic_chartAppBar.png'),
+  ic_chatAppBar: require('../Assets/Icons/ic_chatAppBar.png'),
+  ic_personAppBar: require('../Assets/Icons/ic_personAppBar.png'),
+  ic_logoApp: require('../Assets/Icons/ic_logoApp.png'),
 };

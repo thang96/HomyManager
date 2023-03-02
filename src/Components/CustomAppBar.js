@@ -12,9 +12,12 @@ const CustomAppBar = props => {
     pressIconLeft,
     pressIconRight,
     pressSeccodIconRight,
+    svgLeft,
   } = props;
+  const ItemIcon = svgLeft;
   return (
     <View style={styles.styleAppBar}>
+      {svgLeft && <ItemIcon width={24} height={24} />}
       {iconLeft && (
         <CustomButton
           styleButton={styles.styleButton}
@@ -26,15 +29,20 @@ const CustomAppBar = props => {
       {label && <Text style={styles.label}>{label}</Text>}
       {iconRight && (
         <CustomButton
-          styleButton={styles.styleButton}
+          styleButton={[{marginRight: 15}]}
           icon={iconRight}
           styleIcon={styles.icon}
           onPress={pressIconRight}
         />
       )}
-      {iconSecondRight && (
+      {typeof iconSecondRight == 'string' ? (
         <CustomButton
-          styleButton={styles.styleButton}
+          icon={iconSecondRight}
+          styleIcon={{width: 30, height: 30, borderRadius: 30}}
+          onPress={pressSeccodIconRight}
+        />
+      ) : (
+        <CustomButton
           icon={iconSecondRight}
           styleIcon={styles.icon}
           onPress={pressSeccodIconRight}
@@ -50,6 +58,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.mainColor,
+    paddingHorizontal: 10,
   },
   icon: {width: 24, height: 24, tintColor: 'white'},
   label: {
@@ -61,6 +70,5 @@ const styles = StyleSheet.create({
     fontFamily: 'sf-pro-text-semibold',
     letterSpacing: -0.5,
   },
-  styleButton: {width: 25, height: 56, marginHorizontal: 10},
 });
 export default CustomAppBar;

@@ -1,11 +1,13 @@
-//Splash
+// SplashScreen
 import SplashScreen from './SplashScreen';
-//Login
+// NotificationScreen
+import NotificationScreen from './NotificationScreen';
+// LoginScreen
 import LoginScreen from './Login/LoginScreen';
 import RegisterScreen from './Login/RegisterScreen';
 import VerifyOTPScreen from './Login/VerifyOTPScreen';
 import ConfirmScreen from './Login/ConfirmScreen';
-//Home
+// HomeScreen -----------------------------------------------------------------
 import HomeScreen from './Home/HomeSreen';
 //--BuildingManager
 import BuildingManager from './Home/BuildingManager/BuildingManager';
@@ -27,16 +29,26 @@ import AddRoom from './Home/BuildingManager/AddRoom';
 import CreateContract from './Home/BuildingManager/CreateContract';
 import TenantList from './Home/BuildingManager/TenantList';
 import AddNewTenant from './Home/BuildingManager/AddNewTenant';
+// WorkScreen -----------------------------------------------------------------
+import WorkScreen from './Work/WorkScreen';
+// StatisticScreen -----------------------------------------------------------------
+import StatisticScreen from './Statistic/StatisticScreen';
+// MessageScreen -----------------------------------------------------------------
+import MessageScreen from './Message/MessageScreen';
+// AccountScreen -----------------------------------------------------------------
+import AccountScreen from './Account/AccountScreen';
 
 export {
-  //Splash
+  // SplashScreen
   SplashScreen,
-  //Login
+  // NotificationScreen
+  NotificationScreen,
+  // LoginScreen
   LoginScreen,
   RegisterScreen,
   VerifyOTPScreen,
   ConfirmScreen,
-  //Home
+  // HomeScreen ------------------------------------------
   HomeScreen,
   //--BuildingManager
   BuildingManager,
@@ -58,4 +70,12 @@ export {
   CreateContract,
   TenantList,
   AddNewTenant,
+  // Work ------------------------------------------
+  WorkScreen,
+  // StatisticScreen ------------------------------------------
+  StatisticScreen,
+  // MessageScreen ------------------------------------------
+  MessageScreen,
+  // AccountScreen ------------------------------------------
+  AccountScreen,
 };

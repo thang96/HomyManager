@@ -3,6 +3,10 @@ import {Image, Text, View, StyleSheet, Animated} from 'react-native';
 import {icons, colors} from '../../Constants';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import StackHomepage from './StackHomePage/StackHomePage';
+import StackWorkpage from './StackWorkPage/StackWorkPage';
+import StackStatisticPage from './StackStatisticPage/StackStatisticPage';
+import StackAccountPage from './StackAccountPage/StackAccountPage';
+import StackMessagePage from './StackMessagePage/StackMessagePage';
 
 const Tab = createBottomTabNavigator();
 
@@ -13,7 +17,7 @@ const HomeNavigation = props => {
         <Image
           source={icon}
           style={[
-            {tintColor: focused ? colors.mainColor : 'black'},
+            {tintColor: focused ? colors.mainColor : '#5F6E78'},
             styles.image,
           ]}
           resizeMode="contain"
@@ -45,18 +49,51 @@ const HomeNavigation = props => {
           tabBarActiveTintColor: colors.mainColor,
           tabBarInactiveTintColor: 'rgb(119,119,119)',
           tabBarIcon: ({color, focused, size}) =>
-            renderTabBar(focused, icons.ic_home, 'Trang chủ'),
+            renderTabBar(focused, icons.ic_homeTabBar, 'Trang chủ'),
         }}
       />
       <Tab.Screen
-        component={StackHomepage}
-        name={'Stack'}
+        component={StackWorkpage}
+        name={'StackWorkpage'}
         options={{
           headerShown: false,
           tabBarActiveTintColor: colors.mainColor,
           tabBarInactiveTintColor: 'rgb(119,119,119)',
           tabBarIcon: ({color, focused, size}) =>
-            renderTabBar(focused, icons.ic_home, 'Tài khoản'),
+            renderTabBar(focused, icons.ic_gearAppBar, 'Công việc'),
+        }}
+      />
+      <Tab.Screen
+        component={StackStatisticPage}
+        name={'StackStatisticPage'}
+        options={{
+          headerShown: false,
+          tabBarActiveTintColor: colors.mainColor,
+          tabBarInactiveTintColor: 'rgb(119,119,119)',
+          tabBarIcon: ({color, focused, size}) =>
+            renderTabBar(focused, icons.ic_chartAppBar, 'Thống kê'),
+        }}
+      />
+      <Tab.Screen
+        component={StackMessagePage}
+        name={'StackMessagePage'}
+        options={{
+          headerShown: false,
+          tabBarActiveTintColor: colors.mainColor,
+          tabBarInactiveTintColor: 'rgb(119,119,119)',
+          tabBarIcon: ({color, focused, size}) =>
+            renderTabBar(focused, icons.ic_chatAppBar, 'Tin nhắn'),
+        }}
+      />
+      <Tab.Screen
+        component={StackAccountPage}
+        name={'StackAccountPage'}
+        options={{
+          headerShown: false,
+          tabBarActiveTintColor: colors.mainColor,
+          tabBarInactiveTintColor: 'rgb(119,119,119)',
+          tabBarIcon: ({color, focused, size}) =>
+            renderTabBar(focused, icons.ic_personAppBar, 'Tài khoản'),
         }}
       />
     </Tab.Navigator>

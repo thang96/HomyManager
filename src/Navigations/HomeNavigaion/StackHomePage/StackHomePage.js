@@ -25,7 +25,7 @@ import {
 const Stack = createStackNavigator();
 const StackHomepage = () => {
   return (
-    <Stack.Navigator initialRouteName="LoginScreen">
+    <Stack.Navigator initialRouteName="HomeScreen">
       <Stack.Screen
         component={HomeScreen}
         name={'HomeScreen'}

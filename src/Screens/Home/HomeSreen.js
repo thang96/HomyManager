@@ -15,14 +15,15 @@ import {
 import CustomButton from '../../Components/CustomButton';
 import CustomSearchAppBar from '../../Components/CustomSearchAppBar';
 import {colors, icons, images, svgs} from '../../Constants';
-import Contract from '../../Assets/Svgs/Contract.svg';
-import Gear from '../../Assets/Svgs/Gear.svg';
-import Document from '../../Assets/Svgs/Document.svg';
-import Utilities from '../../Assets/Svgs/Utilities.svg';
-import Bed from '../../Assets/Svgs/Bed.svg';
-import Wallet from '../../Assets/Svgs/Wallet.svg';
-import Water from '../../Assets/Svgs/Water.svg';
-import LogoApp from '../../Assets/Svgs/LogoApp.svg';
+// import Contract from '../../Assets/Svgs/Contract.svg';
+// import Gear from '../../Assets/Svgs/Gear.svg';
+// import Document from '../../Assets/Svgs/Document.svg';
+// import DocumentGreen from '../../Assets/Svgs/DocumentGreen.svg';
+// import Utilities from '../../Assets/Svgs/Utilities.svg';
+// import Bed from '../../Assets/Svgs/Bed.svg';
+// import Wallet from '../../Assets/Svgs/Wallet.svg';
+// import Water from '../../Assets/Svgs/Water.svg';
+// import LogoApp from '../../Assets/Svgs/LogoApp.svg';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -37,18 +38,22 @@ const HomeScreen = () => {
       setKeyboard(false);
     });
   }, []);
+  let avatar =
+    'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg';
   return (
     <View style={styles.container}>
       <CustomSearchAppBar
-        svgLeft={LogoApp}
+        svgLeft={svgs.LogoApp}
         label={'Trang chủ'}
         iconRight={icons.ic_bell}
-        iconSecondRight={icons.ic_circleFill}
+        iconRightTextInput={icons.ic_option}
+        iconSecondRight={avatar}
         keyboard={keyboard}
         textSearch={textSearch}
         value={textSearch}
         onChangeText={text => setTextSearch(text)}
         placeholder={'Tìm kiếm...'}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
       />
       <ScrollView style={styles.eachContainer}>
         <View style={styles.viewRow}>
@@ -100,23 +105,20 @@ const HomeScreen = () => {
             <CustomOptionBT
               title={'Hợp đồng'}
               content={'8'}
-              svgIcon={Contract}
-              styleImageBG={{tintColor: '#1297c0'}}
+              svgIcon={svgs.Contract}
               styleBGIcon={{backgroundColor: '#ebf9fd'}}
               onPress={() => navigation.navigate('ContractManagement')}
             />
             <CustomOptionBT
               title={'Công việc'}
               content={'12'}
-              svgIcon={Gear}
-              styleImageBG={{tintColor: '#ff8d37'}}
+              svgIcon={svgs.Gear}
               styleBGIcon={{backgroundColor: '#fff3e9'}}
             />
             <CustomOptionBT
               title={'Hóa đơn'}
               content={'20'}
-              svgIcon={Document}
-              styleImageBG={{tintColor: '#7ace68'}}
+              svgIcon={svgs.DocumentGreen}
               styleBGIcon={{backgroundColor: '#e6f6e2'}}
               onPress={() => navigation.navigate('BillManagement')}
             />
@@ -124,28 +126,31 @@ const HomeScreen = () => {
           <View style={[styles.viewRow, {marginTop: 15}]}>
             <CustomOptionBT
               title={'Dịch vụ'}
-              svgIcon={Utilities}
-              styleImageBG={{tintColor: '#21bab5'}}
+              svgIcon={svgs.Utilities}
               styleBGIcon={{backgroundColor: '#edfcfb'}}
               onPress={() => navigation.navigate('ServiceManager')}
             />
             <CustomOptionBT
               title={'Tiện ích'}
-              svgIcon={Bed}
-              styleImageBG={{tintColor: '#21bab5'}}
+              svgIcon={svgs.Bed}
               styleBGIcon={{backgroundColor: '#edfcfb'}}
               onPress={() => navigation.navigate('UtilitiesManager')}
             />
             <CustomOptionBT
               title={'Thanh toán'}
-              svgIcon={Wallet}
-              styleImageBG={{tintColor: '#21bab5'}}
+              svgIcon={svgs.Wallet}
               styleBGIcon={{backgroundColor: '#edfcfb'}}
             />
             <CustomOptionBT
               title={'Điện-nước'}
-              svgIcon={Water}
-              styleImageBG={{tintColor: '#21bab5'}}
+              svgIcon={svgs.Water}
+              styleBGIcon={{backgroundColor: '#edfcfb'}}
+            />
+          </View>
+          <View style={[styles.viewRow, {marginTop: 15}]}>
+            <CustomOptionBT
+              title={'Sổ nợ'}
+              svgIcon={svgs.Document}
               styleBGIcon={{backgroundColor: '#edfcfb'}}
             />
           </View>
@@ -153,9 +158,12 @@ const HomeScreen = () => {
         <View style={[styles.viewRow, {marginTop: 15, marginBottom: 10}]}>
           <Text style={styles.textTitle}>Công việc</Text>
           <CustomButton
-            label={'Xem tất cả >'}
-            styleLabel={{color: '#645cbb', fontSize: 12}}
-            onPress={() => {}}
+            styleButton={{flexDirection: 'row', alignItems: 'center'}}
+            label={'Xem tất cả '}
+            styleLabel={{color: '#0191FF', fontSize: 12}}
+            iconRigght={icons.ic_next}
+            styleIconRight={{width: 18, height: 18, tintColor: '#0191FF'}}
+            onPress={() => navigation.navigate('StackWorkpage')}
           />
         </View>
 
@@ -362,7 +370,7 @@ const CustomViewButton = props => {
       />
       <View style={styles.viewRow}>
         <View style={styleBT.viewIcon}>
-          <Image source={icon} />
+          <Image source={icon} style={{width: 32, height: 32}} />
         </View>
         <Text style={styleBT.labelNumber}>{labelNumber}</Text>
       </View>
@@ -400,30 +408,15 @@ const styleBT = StyleSheet.create({
   },
 });
 const CustomOptionBT = props => {
-  const {
-    icon,
-    styleImageBG,
-    styleButton,
-    styleBGIcon,
-    title,
-    content,
-    onPress,
-    svgIcon,
-  } = props;
+  const {styleButton, styleBGIcon, title, content, onPress, svgIcon, fillSvg} =
+    props;
   const ItemSvg = svgIcon;
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[styleOption.button, styleButton]}>
       <View style={[styleOption.backgroundIcon, styleBGIcon]}>
-        {icon && (
-          <Image
-            style={[styleOption.icon, styleImageBG]}
-            source={icon}
-            resizeMode={'contain'}
-          />
-        )}
-        {svgIcon && <ItemSvg height={24} width={24} />}
+        {svgIcon && <ItemSvg height={24} width={24} fill={fillSvg} />}
       </View>
       {title && <Text style={styleOption.title}>{title}</Text>}
       {content && <Text style={styleOption.content}>{content}</Text>}

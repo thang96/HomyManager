@@ -21,6 +21,7 @@ const CustomSearchAppBar = props => {
     onChangeText,
     onPress,
     svgLeft,
+    iconRightTextInput,
   } = props;
 
   return (
@@ -30,11 +31,11 @@ const CustomSearchAppBar = props => {
         backgroundColor: colors.mainColor,
         borderBottomLeftRadius: 24,
         borderBottomRightRadius: 24,
+        paddingHorizontal: 10,
       }}>
       <View style={styles.styleAppBar}>
         {svgLeft && (
           <CustomButton
-            styleButton={styles.styleButtonTop}
             svgIcon={svgLeft}
             widthSvg={24}
             heightSvg={24}
@@ -43,7 +44,6 @@ const CustomSearchAppBar = props => {
         )}
         {iconLeft && (
           <CustomButton
-            styleButton={styles.styleButtonTop}
             icon={iconLeft}
             styleIcon={styles.icon}
             onPress={pressIconLeft}
@@ -52,15 +52,20 @@ const CustomSearchAppBar = props => {
         {label && <Text style={styles.label}>{label}</Text>}
         {iconRight && (
           <CustomButton
-            styleButton={styles.styleButtonTop}
+            styleButton={{marginHorizontal: 15}}
             icon={iconRight}
             styleIcon={styles.icon}
             onPress={pressIconRight}
           />
         )}
-        {iconSecondRight && (
+        {typeof iconSecondRight == 'string' ? (
           <CustomButton
-            styleButton={styles.styleButtonTop}
+            icon={{uri: iconSecondRight}}
+            styleIcon={{width: 30, height: 30, borderRadius: 30}}
+            onPress={pressSeccodIconRight}
+          />
+        ) : (
+          <CustomButton
             icon={iconSecondRight}
             styleIcon={styles.icon}
             onPress={pressSeccodIconRight}
@@ -79,12 +84,14 @@ const CustomSearchAppBar = props => {
             value={value}
             onChangeText={onChangeText}
           />
-          <CustomButton
-            styleButton={styles.styleButton}
-            styleIcon={styles.styleIcon}
-            icon={icons.ic_option}
-            onPress={onPress}
-          />
+          {iconRightTextInput && (
+            <CustomButton
+              styleButton={styles.styleButton}
+              styleIcon={styles.styleIcon}
+              icon={iconRightTextInput}
+              onPress={onPress}
+            />
+          )}
         </View>
       </View>
     </View>
@@ -105,7 +112,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontFamily: 'OpenSans-Semibold',
   },
-  styleButtonTop: {width: 25, height: 56, marginHorizontal: 10},
   viewContainer: {
     height: 76,
     borderBottomLeftRadius: 10,
@@ -116,7 +122,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.mainColor,
     borderRadius: 15,
     flexDirection: 'row',
-    paddingHorizontal: 10,
     borderTopWidth: 0.5,
     borderTopColor: 'white',
     alignItems: 'center',
