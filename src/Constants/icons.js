@@ -46,4 +46,9 @@ export default {
   ic_personAppBar: require('../Assets/Icons/ic_personAppBar.png'),
   ic_logoApp: require('../Assets/Icons/ic_logoApp.png'),
   ic_calendar: require('../Assets/Icons/ic_calendar.png'),
+  ic_electricity: require('../Assets/Icons/ic_electricity.png'),
+  ic_trash: require('../Assets/Icons/ic_trash.png'),
+  ic_wifi: require('../Assets/Icons/ic_wifi.png'),
+  ic_flame: require('../Assets/Icons/ic_flame.png'),
+  ic_phone: require('../Assets/Icons/ic_phone.png'),
 };

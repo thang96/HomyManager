@@ -15,15 +15,6 @@ import {
 import CustomButton from '../../Components/CustomButton';
 import CustomSearchAppBar from '../../Components/CustomSearchAppBar';
 import {colors, icons, images, svgs} from '../../Constants';
-// import Contract from '../../Assets/Svgs/Contract.svg';
-// import Gear from '../../Assets/Svgs/Gear.svg';
-// import Document from '../../Assets/Svgs/Document.svg';
-// import DocumentGreen from '../../Assets/Svgs/DocumentGreen.svg';
-// import Utilities from '../../Assets/Svgs/Utilities.svg';
-// import Bed from '../../Assets/Svgs/Bed.svg';
-// import Wallet from '../../Assets/Svgs/Wallet.svg';
-// import Water from '../../Assets/Svgs/Water.svg';
-// import LogoApp from '../../Assets/Svgs/LogoApp.svg';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -74,11 +65,7 @@ const HomeScreen = () => {
             icon={icons.ic_appartment}
             label={'Tổng số phòng'}
             labelNumber={'34'}
-            onPress={async () => {
-              await AsyncStorage.setItem('token', '').then(() => {
-                navigation.navigate('LoginNavigation');
-              });
-            }}
+            onPress={async () => {}}
           />
         </View>
         <View style={[styles.viewRow, {marginTop: 20}]}>
@@ -89,6 +76,7 @@ const HomeScreen = () => {
             icon={icons.ic_peoples}
             label={'Tổng số người'}
             labelNumber={'41'}
+            onPress={() => navigation.navigate('TenantManager')}
           />
           <CustomViewButton
             styleButton={{width: widthImage}}

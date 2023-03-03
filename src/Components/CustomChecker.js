@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   icon: {width: 20, height: 20},
-  styleIcon: {width: 18, height: 18, tintColor: '#4dc7c2'},
+  styleIcon: {width: 18, height: 18, tintColor: '#797979'},
   styleButton: {
     position: 'absolute',
     right: 0,

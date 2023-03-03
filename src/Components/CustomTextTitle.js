@@ -33,13 +33,12 @@ const styles = StyleSheet.create({
   },
   styleButton: {
     height: 30,
-    backgroundColor: colors.backgroundButton,
     borderRadius: 4,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  labelButton: {fontSize: 11, color: 'white', marginHorizontal: 3},
-  image: {width: 15, height: 15, tintColor: 'white', marginRight: 3},
+  labelButton: {fontSize: 11, color: colors.mainColor, marginHorizontal: 3},
+  image: {width: 15, height: 15, tintColor: colors.mainColor, marginRight: 3},
 });
 export default CustomTextTitle;

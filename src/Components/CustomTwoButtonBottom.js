@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   styleLeftButton: {
-    borderColor: '#fe7a37',
+    borderColor: colors.mainColor,
     backgroundColor: 'white',
     marginRight: 5,
   },
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.mainColor,
     marginLeft: 5,
   },
-  styleLeftLabel: {color: '#fe7a37', fontSize: 15},
+  styleLeftLabel: {color: colors.mainColor, fontSize: 15},
   styleRightLabel: {color: 'white', fontSize: 15},
 });
 export default CustomTwoButtonBottom;

@@ -14,7 +14,7 @@ import CustomAppBar from '../../../Components/CustomAppBar';
 import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
 import {ScrollView} from 'react-native-virtualized-view';
-import CustomButton from '../../../Components/CustomButton';
+import CustomSuggest from '../../../Components/CustomSuggest';
 import CustomChecker from '../../../Components/CustomChecker';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
 
@@ -64,8 +64,10 @@ const Utilities = props => {
           pressIconLeft={() => navigation.goBack()}
         />
         <ScrollView style={[styles.eachContainer]}>
-          <Text style={styles.content}>Chọn tiện ích cho tòa nhà</Text>
-          <CustomTextTitle label={'Tiện ích đã thêm'} />
+          <CustomSuggest
+            label={'Chọn tiện ích miễn phí đã có hoặc thêm mới tiện ích'}
+          />
+          <CustomTextTitle label={'Tiện ích hiện có'} />
 
           {listSevice.length > 0 ? (
             <FlatList
@@ -79,24 +81,12 @@ const Utilities = props => {
               renderItem={({item, index}) => renderListService(item, index)}
             />
           ) : null}
-
-          <View style={styles.viewButton}>
-            <CustomButton
-              icon={icons.ic_plus}
-              styleButton={styles.styleButton}
-              styleIcon={{width: 20, height: 20, tintColor: 'white'}}
-              onPress={() => navigation.navigate('AddUtilities')}
-            />
-            <Text style={styles.content}>Thêm mới tiện ích</Text>
-          </View>
         </ScrollView>
         <CustomTwoButtonBottom
-          leftLabel={'Trở lại'}
-          rightLabel={'Tiếp tục'}
+          leftLabel={'Lưu'}
+          rightLabel={'Thêm mới'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => {
-            console.log('do some thing');
-          }}
+          onPressRight={() => navigation.navigate('AddUtilities')}
         />
       </KeyboardAvoidingView>
     </View>
@@ -111,12 +101,5 @@ const styles = StyleSheet.create({
   textTitle: {color: '#173b5f', fontSize: 16, fontWeight: 'bold'},
   content: {color: 'rgba(127, 138, 147, 1)', fontSize: 13, fontWeight: '400'},
   viewButton: {alignSelf: 'center', alignItems: 'center', marginVertical: 50},
-  styleButton: {
-    backgroundColor: colors.mainColor,
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    marginBottom: 5,
-  },
 });
 export default Utilities;

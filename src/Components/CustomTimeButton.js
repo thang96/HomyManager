@@ -14,6 +14,8 @@ const CustomTimeButtons = props => {
     valueRight,
     onPressLeft,
     onPressRightt,
+    iconLeft,
+    iconRight,
   } = props;
   return (
     <View style={styleContainer}>
@@ -26,20 +28,32 @@ const CustomTimeButtons = props => {
           <TouchableOpacity
             style={[styles.viewButton, styleButtonLeft]}
             onPress={onPressLeft}>
-            <Text style={styles.label}>{leftLabel}</Text>
+            <Text style={styles.placeholder}>{leftLabel}</Text>
             <View style={styles.backgroundValue}>
               <Text style={styles.time}>{`${valueLeft}`}</Text>
             </View>
+            {iconLeft && (
+              <Image
+                source={iconLeft}
+                style={{width: 20, height: 20, tintColor: '#374047'}}
+              />
+            )}
           </TouchableOpacity>
         )}
         {rightLabel && (
           <TouchableOpacity
             style={[styles.viewButton, styleButtonRight]}
             onPress={onPressRightt}>
-            <Text style={styles.label}>{rightLabel}</Text>
+            <Text style={styles.placeholder}>{rightLabel}</Text>
             <View style={styles.backgroundValue}>
               <Text style={styles.time}>{`${valueRight}`}</Text>
             </View>
+            {iconRight && (
+              <Image
+                source={iconRight}
+                style={{width: 20, height: 20, tintColor: '#374047'}}
+              />
+            )}
           </TouchableOpacity>
         )}
       </View>
@@ -52,7 +66,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  label: {fontSize: 15, color: '#374047'},
+  label: {fontSize: 14, color: '#374047'},
   viewButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -67,8 +81,9 @@ const styles = StyleSheet.create({
   },
   time: {
     borderRadius: 5,
-    color: '#5c6469',
+    color: '#374047',
     fontSize: 14,
+    marginHorizontal: 5,
   },
   backgroundValue: {
     backgroundColor: '#ebedee',
@@ -78,5 +93,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3,
     borderRadius: 4,
   },
+  placeholder: {color: '#5F6E78'},
 });
 export default CustomTimeButtons;

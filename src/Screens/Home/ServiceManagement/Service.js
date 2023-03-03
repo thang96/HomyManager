@@ -81,25 +81,13 @@ const Service = props => {
               renderItem={({item, index}) => renderListService(item, index)}
             />
           ) : null}
-
-          <View style={styles.viewButton}>
-            <CustomButton
-              icon={icons.ic_plus}
-              styleButton={styles.styleButton}
-              styleIcon={{width: 20, height: 20, tintColor: 'white'}}
-              onPress={() => navigation.navigate('AddService')}
-            />
-            <Text style={styles.content}>Thêm mới dịch vụ</Text>
-          </View>
         </ScrollView>
 
         <CustomTwoButtonBottom
-          leftLabel={'Trở lại'}
-          rightLabel={'Xác nhận'}
+          leftLabel={'Lưu'}
+          rightLabel={'Thêm mới'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => {
-            console.log('do some thing');
-          }}
+          onPressRight={() => navigation.navigate('AddService')}
         />
       </KeyboardAvoidingView>
     </View>
@@ -113,13 +101,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundGrey,
   },
   content: {color: 'rgba(127, 138, 147, 1)', fontSize: 13, fontWeight: '400'},
-  viewButton: {alignSelf: 'center', alignItems: 'center', marginVertical: 50},
-  styleButton: {
-    backgroundColor: colors.mainColor,
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    marginBottom: 5,
-  },
 });
 export default Service;

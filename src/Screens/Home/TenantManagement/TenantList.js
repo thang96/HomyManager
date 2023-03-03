@@ -14,10 +14,10 @@ import {
 import CustomButton from '../../../Components/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomManagerInfor from '../../../Components/CustomManagerInfor';
+import CustomManagerInfor from '../../../Components/CustomPersonInfor';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
 import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
-import CustomButtonBottom from '../../../Components/CustomButtonBottom';
+import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
 
 const TenantList = () => {
   const navigation = useNavigation();
@@ -26,9 +26,24 @@ const TenantList = () => {
   const [keyboard, setKeyboard] = useState(null);
   const [textSearch, setTextSearch] = useState('');
   const [listTenants, setListTenants] = useState([
-    {userName: 'Tường Vân', phoneNumber: '123321123', avatar: avatar},
-    {userName: 'Hoàng Khánh', phoneNumber: '025874136', avatar: avatar},
-    {userName: 'Gia Bảo', phoneNumber: '058963145', avatar: avatar},
+    {
+      userName: 'Tường Vân',
+      phoneNumber: '123321123',
+      avatar: avatar,
+      isCheck: false,
+    },
+    {
+      userName: 'Hoàng Khánh',
+      phoneNumber: '025874136',
+      avatar: avatar,
+      isCheck: false,
+    },
+    {
+      userName: 'Gia Bảo',
+      phoneNumber: '058963145',
+      avatar: avatar,
+      isCheck: false,
+    },
   ]);
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -41,15 +56,24 @@ const TenantList = () => {
 
   const renderListTenants = (item, index) => {
     let value = item;
+    let eachIndex = index;
     return (
       <CustomManagerInfor
         styleView={{marginTop: 10}}
         avatar={item?.avatar}
         userName={item?.userName}
         phoneNumber={item?.phoneNumber}
-        onPress={() => {}}
+        isCheck={item?.isCheck}
+        onPressCheck={() => updateItem(value, eachIndex)}
       />
     );
+  };
+
+  const updateItem = (item, index) => {
+    let newListTenants = [...listTenants];
+    let newItem = {...item, isCheck: item?.isCheck == false ? true : false};
+    newListTenants[index] = newItem;
+    setListTenants(newListTenants);
   };
 
   return (
@@ -79,9 +103,11 @@ const TenantList = () => {
         ) : null}
       </ScrollView>
 
-      <CustomButtonBottom
-        label={'Thêm mới người thuê'}
-        onPress={() => navigation.navigate('AddNewTenant')}
+      <CustomTwoButtonBottom
+        leftLabel={'Lưu'}
+        rightLabel={'Thêm mới'}
+        onPressLeft={() => navigation.goBack()}
+        onPressRight={() => navigation.navigate('AddNewTenant')}
       />
     </View>
   );

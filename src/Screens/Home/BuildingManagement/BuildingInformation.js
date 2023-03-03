@@ -15,7 +15,7 @@ import CustomButton from '../../../Components/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import CustomViewInfor from '../../../Components/CustomViewInfor';
-import CustomManagerInfor from '../../../Components/CustomManagerInfor';
+import CustomManagerInfor from '../../../Components/CustomPersonInfor';
 import {FlatList} from 'react-native-gesture-handler';
 import CustomPaidService from '../../../Components/CustomPaidService';
 import CustomFreeService from '../../../Components/CustomFreeService';

@@ -17,6 +17,7 @@ import {icons, colors} from '../../../Constants';
 import CustomChecker from '../../../Components/CustomChecker';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
+import CustomRenderItem from '../../../Components/CustomRenderItem';
 
 const ServiceManager = props => {
   const navigation = useNavigation();
@@ -33,13 +34,13 @@ const ServiceManager = props => {
   }, []);
 
   const [listSevice, setListSevice] = useState([
-    {label: 'Điện', value: '4000/KWH', isCheck: true},
-    {label: 'Nước', value: '5000/M³', isCheck: false},
-    {label: 'Wifi', value: '50000/T', isCheck: false},
-    {label: 'Ga', value: '200000/T', isCheck: true},
-    {label: 'Ga1', value: '200000/T', isCheck: false},
-    {label: 'Ga2', value: '200000/T', isCheck: false},
-    {label: 'Ga3', value: '200000/T', isCheck: true},
+    {label: 'Điện', value: '4000/KWH', icon: icons.ic_electricity},
+    {label: 'Nước', value: '5000/M³', icon: icons.ic_waterDrop},
+    {label: 'Wifi', value: '50000/T', icon: icons.ic_wifi},
+    {label: 'Ga', value: '200000/T', icon: icons.ic_flame},
+    {label: 'Rác', value: '30000/T', icon: icons.ic_trash},
+    {label: 'Ga2', value: '200000/T', icon: icons.ic_electricity},
+    {label: 'Ga3', value: '200000/T', icon: icons.ic_electricity},
   ]);
 
   const renderListService = (item, index) => {
@@ -54,11 +55,10 @@ const ServiceManager = props => {
       setListSevice(newList);
     };
     return (
-      <CustomChecker
-        icon={icons.ic_paidService}
+      <CustomRenderItem
+        icon={item?.icon}
         label={item?.label}
         value={item?.value}
-        isCheck={item?.isCheck}
         onPress={() => updateItem()}
       />
     );
@@ -80,7 +80,10 @@ const ServiceManager = props => {
           placeholder={'Tìm kiếm...'}
         />
 
-        <View style={{flex: 1, paddingHorizontal: 10}}>
+        <View
+          style={{
+            flex: 1,
+          }}>
           <ScrollView style={[styles.eachContainer]}>
             {listSevice.length > 0 ? (
               <FlatList
@@ -98,7 +101,7 @@ const ServiceManager = props => {
 
           <CustomButtonBottom
             label={'Thêm dịch vụ mới'}
-            onPress={() => navigation.navigate('AddService')}
+            onPress={() => navigation.navigate('Service')}
           />
         </View>
       </KeyboardAvoidingView>
@@ -108,9 +111,9 @@ const ServiceManager = props => {
 const styles = StyleSheet.create({
   eachContainer: {
     flex: 1,
-
     paddingTop: 10,
     backgroundColor: colors.backgroundGrey,
+    paddingHorizontal: 10,
   },
   textTitle: {color: '#173b5f', fontSize: 16, fontWeight: 'bold'},
   content: {color: 'grey', fontSize: 14, fontWeight: '500'},

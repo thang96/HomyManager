@@ -16,7 +16,7 @@ import CustomButton from '../../../Components/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
-import CustomManagerInfor from '../../../Components/CustomManagerInfor';
+import CustomManagerInfor from '../../../Components/CustomPersonInfor';
 import {FlatList} from 'react-native-gesture-handler';
 import CustomChecker from '../../../Components/CustomChecker';
 import CustomPaidService from '../../../Components/CustomPaidService';

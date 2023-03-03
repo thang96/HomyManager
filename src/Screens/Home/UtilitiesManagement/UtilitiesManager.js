@@ -16,6 +16,7 @@ import {icons, colors} from '../../../Constants';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomChecker from '../../../Components/CustomChecker';
 import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
+import CustomRenderItem from '../../../Components/CustomRenderItem';
 
 const UtilitiesManager = props => {
   const navigation = useNavigation();
@@ -51,15 +52,7 @@ const UtilitiesManager = props => {
       newList[index] = newItem;
       setListSevice(newList);
     };
-    return (
-      <CustomChecker
-        icon={icons.ic_utilities}
-        label={item?.label}
-        value={item?.value}
-        isCheck={item?.isCheck}
-        onPress={() => updateItem()}
-      />
-    );
+    return <CustomRenderItem label={item?.label} />;
   };
 
   return (
@@ -95,7 +88,7 @@ const UtilitiesManager = props => {
 
           <CustomButtonBottom
             label={'Thêm tiện ích mới'}
-            onPress={() => navigation.navigate('AddUtilities')}
+            onPress={() => navigation.navigate('Utilities')}
           />
         </View>
       </KeyboardAvoidingView>

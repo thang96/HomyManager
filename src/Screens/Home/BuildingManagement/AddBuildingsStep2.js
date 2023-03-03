@@ -18,77 +18,23 @@ import CustomInput from '../../../Components/CustomInput';
 import CustomTimeButtons from '../../../Components/CustomTimeButton';
 import CustomAppBarStep from '../../../Components/CustomAppBarStep';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomButtonValue from '../../../Components/CustomButtonValue';
 
 const AddBuildingsStep2 = props => {
   const navigation = useNavigation();
-  const [toDay, setToDay] = useState(new Date());
-  const [fromDate, setFromDate] = useState(new Date());
-  const [toDate, setToDate] = useState(new Date());
+  const [toDate, setToDate] = useState('1');
+  const [fromDate, setFromDate] = useState('5');
+  const [paymentDate, setPaymentDate] = useState('Cuối tháng');
 
-  const [toDayValue, setToDayValue] = useState('');
-  const [fromDateValue, setFromDateValue] = useState('');
-  const [toDateValue, setToDateValue] = useState('');
-  const [modalToDay, setModalToDay] = useState(false);
-  const [modalFromDate, setModalFromDate] = useState(false);
   const [modalToDate, setModalToDate] = useState(false);
-
-  function dateToYMD(value) {
-    var d = value.getDate();
-    var m = value.getMonth() + 1; //Month from 0 to 11
-    var y = value.getFullYear();
-    return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
-  }
-  useEffect(() => {
-    let newToday = dateToYMD(toDay);
-    setToDayValue(newToday);
-    setFromDateValue(newToday);
-    setToDateValue(newToday);
-  }, []);
+  const [modalfromDate, setModalFromDate] = useState(false);
+  const [modalpaymentDate, setModalPaymentDate] = useState(false);
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
-      {modalToDay && (
-        <CustomModalDateTimePicker
-          onCancel={() => setModalToDay(false)}
-          value={toDay}
-          mode={'date'}
-          openPicker={modalToDay}
-          onDateChange={value => {
-            let newToday = dateToYMD(value);
-            setToDay(value);
-            setToDayValue(newToday);
-          }}
-          onPress={() => setModalToDay(false)}
-        />
-      )}
-      {modalFromDate && (
-        <CustomModalDateTimePicker
-          onCancel={() => setModalFromDate(false)}
-          value={fromDate}
-          mode={'date'}
-          openPicker={modalFromDate}
-          onDateChange={value => {
-            let newToday = dateToYMD(value);
-            setFromDate(value);
-            setFromDateValue(newToday);
-          }}
-          onPress={() => setModalFromDate(false)}
-        />
-      )}
-      {modalToDate && (
-        <CustomModalDateTimePicker
-          onCancel={() => setModalToDate(false)}
-          value={toDay}
-          mode={'date'}
-          openPicker={modalToDay}
-          onDateChange={value => {
-            let newToday = dateToYMD(value);
-            setToDay(value);
-            setToDayValue(newToday);
-          }}
-          onPress={() => setModalToDate(false)}
-        />
-      )}
+      {modalToDate && <View />}
+      {modalfromDate && <View />}
+      {modalpaymentDate && <View />}
       <KeyboardAvoidingView style={{flex: 1}}>
         <CustomAppBarStep
           iconLeft={icons.ic_back}
@@ -104,24 +50,26 @@ const AddBuildingsStep2 = props => {
           </Text>
           <CustomTextTitle label={'Thiết lập tiền nhà'} />
 
-          <CustomInput
+          <CustomButtonValue
             important={true}
             type={'button'}
             title={'Ngày chốt tiền'}
             placeholder={'Chọn ngày'}
-            value={toDayValue}
-            onPress={() => setModalToDay(true)}
+            value={paymentDate}
+            onPress={() => setModalFromDate(true)}
           />
 
           <CustomTimeButtons
             styleContainer={{marginTop: 20}}
             title={'Thời gian nộp tiền phòng'}
-            leftLabel={'Từ'}
-            rightLabel={'Đến'}
+            leftLabel={'Từ ngày'}
+            rightLabel={'Đến ngày'}
+            iconLeft={icons.ic_down}
+            iconRight={icons.ic_down}
             styleButtonLeft={{marginRight: 5}}
             styleButtonRight={{marginLeft: 5}}
-            valueLeft={fromDateValue}
-            valueRight={toDateValue}
+            valueLeft={toDate}
+            valueRight={fromDate}
             onPressLeft={() => setModalFromDate(true)}
             onPressRightt={() => setModalToDate(true)}
           />

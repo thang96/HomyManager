@@ -21,6 +21,7 @@ import {
   UtilitiesManager,
   ContractManagement,
   BillManagement,
+  TenantManager,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -33,7 +34,6 @@ const StackHomepage = () => {
           headerShown: false,
         }}
       />
-      {/*--BuildingManager*/}
       <Stack.Screen
         component={BuildingManager}
         name={'BuildingManager'}
@@ -163,6 +163,13 @@ const StackHomepage = () => {
       <Stack.Screen
         component={AddNewTenant}
         name={'AddNewTenant'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={TenantManager}
+        name={'TenantManager'}
         options={{
           headerShown: false,
         }}

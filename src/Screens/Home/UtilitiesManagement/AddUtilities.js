@@ -50,12 +50,10 @@ const AddUtilities = props => {
         </ScrollView>
 
         <CustomTwoButtonBottom
-          leftLabel={'Trở lại'}
-          rightLabel={'Hoàn tất'}
+          leftLabel={'Lưu'}
+          rightLabel={'Thêm mới'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => {
-            console.log('do some thing');
-          }}
+          onPressRight={() => {}}
         />
       </KeyboardAvoidingView>
     </View>

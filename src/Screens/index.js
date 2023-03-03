@@ -11,24 +11,30 @@ import ConfirmScreen from './Login/ConfirmScreen';
 import HomeScreen from './Home/HomeSreen';
 //----------- BuildingManager
 import BuildingManager from './Home/BuildingManagement/BuildingManager';
-import UtilitiesManager from './Home/UtilitiesManagement/UtilitiesManager';
-import ServiceManager from './Home/ServiceManagement/ServiceManager';
-import ContractManagement from './Home/ContractManagement/ContractManagement';
-import BillManagement from './Home/BillManagement/BillManagement';
+import BuildingInformation from './Home/BuildingManagement/BuildingInformation';
 import AddBuildings from './Home/BuildingManagement/AddBuildings';
 import AddBuildingsStep2 from './Home/BuildingManagement/AddBuildingsStep2';
 import AddBuildingsStep3 from './Home/BuildingManagement/AddBuildingsStep3';
+import RoomInformation from './Home/BuildingManagement/RoomInformation';
+import FloorInformation from './Home/BuildingManagement/FloorInformation';
+import AddRoom from './Home/BuildingManagement/AddRoom';
+//----------- ServiceManager
+import ServiceManager from './Home/ServiceManagement/ServiceManager';
 import Service from './Home/ServiceManagement/Service';
 import AddService from './Home/ServiceManagement/AddService';
+//----------- UtilitiesManager
+import UtilitiesManager from './Home/UtilitiesManagement/UtilitiesManager';
 import Utilities from './Home/UtilitiesManagement/Utilities';
 import AddUtilities from './Home/UtilitiesManagement/AddUtilities';
-import BuildingInformation from './Home/BuildingManagement/BuildingInformation';
-import FloorInformation from './Home/BuildingManagement/FloorInformation';
-import RoomInformation from './Home/BuildingManagement/RoomInformation';
-import AddRoom from './Home/BuildingManagement/AddRoom';
+//----------- UtilitiesManager
+import ContractManagement from './Home/ContractManagement/ContractManagement';
 import CreateContract from './Home/ContractManagement/CreateContract';
-import TenantList from './Home/BuildingManagement/TenantList';
-import AddNewTenant from './Home/BuildingManagement/AddNewTenant';
+//----------- BillManagement
+import BillManagement from './Home/BillManagement/BillManagement';
+//----------- TenantManager
+import TenantManager from './Home/TenantManagement/TenantManager';
+import TenantList from './Home/TenantManagement/TenantList';
+import AddNewTenant from './Home/TenantManagement/AddNewTenant';
 // WorkScreen -----------------------------------------------------------------
 import WorkScreen from './Work/WorkScreen';
 // StatisticScreen -----------------------------------------------------------------
@@ -50,24 +56,30 @@ export {
   ConfirmScreen,
   // HomeScreen ------------------------------------------
   HomeScreen,
-  //--BuildingManager
+  //-- BuildingManager
   BuildingManager,
-  UtilitiesManager,
   BuildingInformation,
-  ContractManagement,
-  BillManagement,
+  FloorInformation,
+  RoomInformation,
   AddBuildings,
   AddBuildingsStep2,
   AddBuildingsStep3,
-  Service,
+  //-- ContractManagement
+  ContractManagement,
+  CreateContract,
+  //-- BillManagement
+  BillManagement,
+  //-- ServiceManager
   ServiceManager,
+  Service,
   AddService,
+  //-- UtilitiesManager
+  UtilitiesManager,
   Utilities,
   AddUtilities,
-  FloorInformation,
-  RoomInformation,
   AddRoom,
-  CreateContract,
+  //-- TenantManager
+  TenantManager,
   TenantList,
   AddNewTenant,
   // Work ------------------------------------------

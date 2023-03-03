@@ -12,7 +12,7 @@ import {
   FlatList,
 } from 'react-native';
 import CustomButton from '../../../Components/CustomButton';
-import CustomManagerInfor from '../../../Components/CustomManagerInfor';
+import CustomManagerInfor from '../../../Components/CustomPersonInfor';
 import CustomModalDateTimePicker from '../../../Components/CustomModalDateTimePicker';
 import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
@@ -257,7 +257,7 @@ const AddBuildings = props => {
 
           <View style={styles.line} />
 
-          <CustomTextTitle label={'Quản lý tòa nhà'} labelButton={'Thêm mới'} />
+          <CustomTextTitle label={'Quản lý tòa nhà'} labelButton={'Thêm '} />
 
           <CustomManagerInfor
             styleView={{marginTop: 10}}
@@ -362,8 +362,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginTop: 5,
     borderRadius: 10,
-    borderColor: 'grey',
-    backgroundColor: '#f8f9f9',
+    borderColor: '#ACB4B9',
+    // backgroundColor: '#f8f9f9',
   },
   viewRow: {
     flexDirection: 'row',
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: '#e2e5e6',
     height: 120,
-    backgroundColor: '#f8f9f9',
+    // backgroundColor: '#f8f9f9',
   },
   line: {
     width: '100%',
