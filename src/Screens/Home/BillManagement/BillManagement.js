@@ -12,11 +12,15 @@ import {
   Text,
   ScrollView,
 } from 'react-native';
-import {icons, colors} from '../../../../Constants';
+import {icons, colors} from '../../../Constants';
 // import {ScrollView} from 'react-native-virtualized-view';
-import CustomButton from '../../../../Components/CustomButton';
-import CustomButtonBottom from '../../../../Components/CustomButtonBottom';
-import CustomSearchAppBar from '../../../../Components/CustomSearchAppBar';
+import CustomButton from '../../../Components/CustomButton';
+import CustomButtonBottom from '../../../Components/CustomButtonBottom';
+import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
+import BillNotCreatedYet from './BillNotCreatedYet';
+import BillUnpaid from './BillUnpaid';
+import BillIsOverdue from './BillIsOverdue';
+import BillPaid from './BillPaid';
 
 const BillManagement = props => {
   const navigation = useNavigation();
@@ -49,78 +53,67 @@ const BillManagement = props => {
           placeholder={'Tìm kiếm...'}
         />
         <View style={{flex: 1, paddingHorizontal: 10}}>
-          <ScrollView style={[styles.eachContainer]}>
-            <ScrollView horizontal style={{height: 45}}>
+          <View style={styles.viewButtonTop}>
+            <ScrollView horizontal>
               <CustomButton
-                label={'Chưa tạo'}
-                styleLabel={[
-                  styles.labelTop,
-                  {color: isActive == 1 ? colors.backgroundButton : 'grey'},
-                ]}
                 styleButton={[
-                  styles.topButton,
                   {
-                    borderBottomColor:
-                      isActive == 1
-                        ? colors.backgroundButton
-                        : colors.backgroundGrey,
+                    backgroundColor:
+                      isActive == 1 ? colors.backgroundOrange : 'white',
                   },
+                  styles.viewButton,
                 ]}
+                label={'Chưa tạo'}
+                styleLabel={{color: isActive == 1 ? 'white' : '#7F8A93'}}
                 onPress={() => setIsActive(1)}
               />
               <CustomButton
-                label={'Chưa thanh toán'}
-                styleLabel={[
-                  styles.labelTop,
-                  {color: isActive == 2 ? colors.backgroundButton : 'grey'},
-                ]}
                 styleButton={[
-                  styles.topButton,
                   {
-                    borderBottomColor:
-                      isActive == 2
-                        ? colors.backgroundButton
-                        : colors.backgroundGrey,
+                    backgroundColor:
+                      isActive == 2 ? colors.backgroundOrange : 'white',
                   },
+                  styles.viewButton,
                 ]}
+                label={'Chưa thanh toán'}
+                styleLabel={{color: isActive == 2 ? 'white' : '#7F8A93'}}
                 onPress={() => setIsActive(2)}
               />
               <CustomButton
-                label={'Quá hạn'}
-                styleLabel={[
-                  styles.labelTop,
-                  {color: isActive == 3 ? colors.backgroundButton : 'grey'},
-                ]}
                 styleButton={[
-                  styles.topButton,
                   {
-                    borderBottomColor:
-                      isActive == 3
-                        ? colors.backgroundButton
-                        : colors.backgroundGrey,
+                    backgroundColor:
+                      isActive == 3 ? colors.backgroundOrange : 'white',
                   },
+                  styles.viewButton,
                 ]}
+                label={'Quá hạn'}
+                styleLabel={{color: isActive == 3 ? 'white' : '#7F8A93'}}
                 onPress={() => setIsActive(3)}
               />
               <CustomButton
-                label={'Đã thanh toán'}
-                styleLabel={[
-                  styles.labelTop,
-                  {color: isActive == 4 ? colors.backgroundButton : 'grey'},
-                ]}
                 styleButton={[
-                  styles.topButton,
                   {
-                    borderBottomColor:
-                      isActive == 4
-                        ? colors.backgroundButton
-                        : colors.backgroundGrey,
+                    backgroundColor:
+                      isActive == 4 ? colors.backgroundOrange : 'white',
                   },
+                  styles.viewButton,
                 ]}
+                label={'Đã thanh toán'}
+                styleLabel={{color: isActive == 4 ? 'white' : '#7F8A93'}}
                 onPress={() => setIsActive(4)}
               />
             </ScrollView>
-          </ScrollView>
+          </View>
+          {isActive == 1 ? (
+            <BillNotCreatedYet />
+          ) : isActive == 2 ? (
+            <BillUnpaid />
+          ) : isActive == 3 ? (
+            <BillIsOverdue />
+          ) : isActive == 4 ? (
+            <BillPaid />
+          ) : null}
           <CustomButtonBottom
             label={'Thêm dịch vụ mới'}
             onPress={() => navigation.navigate('AddService')}
@@ -136,8 +129,29 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: colors.backgroundGrey,
   },
-  styleLabel: {color: 'white', fontWeight: '500', marginLeft: 5},
-  topButton: {marginRight: 15, borderBottomWidth: 3},
-  labelTop: {color: colors.backgroundButton, fontWeight: 'bold', fontSize: 16},
+  viewButtonTop: {
+    backgroundColor: 'white',
+    borderRadius: 4,
+    height: 48,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginVertical: 10,
+    paddingHorizontal: 5,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  viewButton: {
+    height: 42,
+    borderRadius: 4,
+    paddingHorizontal: 5,
+    marginHorizontal: 5,
+  },
 });
 export default BillManagement;

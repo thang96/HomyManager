@@ -45,4 +45,5 @@ export default {
   ic_chatAppBar: require('../Assets/Icons/ic_chatAppBar.png'),
   ic_personAppBar: require('../Assets/Icons/ic_personAppBar.png'),
   ic_logoApp: require('../Assets/Icons/ic_logoApp.png'),
+  ic_calendar: require('../Assets/Icons/ic_calendar.png'),
 };

@@ -9,26 +9,26 @@ import VerifyOTPScreen from './Login/VerifyOTPScreen';
 import ConfirmScreen from './Login/ConfirmScreen';
 // HomeScreen -----------------------------------------------------------------
 import HomeScreen from './Home/HomeSreen';
-//--BuildingManager
-import BuildingManager from './Home/BuildingManager/BuildingManager';
-import UtilitiesManager from './Home/BuildingManager/UtilitiesManager';
-import ServiceManager from './Home/BuildingManager/ServiceManager';
-import ContractManagement from './Home/BuildingManager/ContractManagement/ContractManagement';
-import BillManagement from './Home/BuildingManager/BillManagement/BillManagement';
-import AddBuildings from './Home/BuildingManager/AddBuildings';
-import AddBuildingsStep2 from './Home/BuildingManager/AddBuildingsStep2';
-import AddBuildingsStep3 from './Home/BuildingManager/AddBuildingsStep3';
-import Service from './Home/BuildingManager/Service';
-import AddService from './Home/BuildingManager/AddService';
-import Utilities from './Home/BuildingManager/Utilities';
-import AddUtilities from './Home/BuildingManager/AddUtilities';
-import BuildingInformation from './Home/BuildingManager/BuildingInformation';
-import FloorInformation from './Home/BuildingManager/FloorInformation';
-import RoomInformation from './Home/BuildingManager/RoomInformation';
-import AddRoom from './Home/BuildingManager/AddRoom';
-import CreateContract from './Home/BuildingManager/CreateContract';
-import TenantList from './Home/BuildingManager/TenantList';
-import AddNewTenant from './Home/BuildingManager/AddNewTenant';
+//----------- BuildingManager
+import BuildingManager from './Home/BuildingManagement/BuildingManager';
+import UtilitiesManager from './Home/UtilitiesManagement/UtilitiesManager';
+import ServiceManager from './Home/ServiceManagement/ServiceManager';
+import ContractManagement from './Home/ContractManagement/ContractManagement';
+import BillManagement from './Home/BillManagement/BillManagement';
+import AddBuildings from './Home/BuildingManagement/AddBuildings';
+import AddBuildingsStep2 from './Home/BuildingManagement/AddBuildingsStep2';
+import AddBuildingsStep3 from './Home/BuildingManagement/AddBuildingsStep3';
+import Service from './Home/ServiceManagement/Service';
+import AddService from './Home/ServiceManagement/AddService';
+import Utilities from './Home/UtilitiesManagement/Utilities';
+import AddUtilities from './Home/UtilitiesManagement/AddUtilities';
+import BuildingInformation from './Home/BuildingManagement/BuildingInformation';
+import FloorInformation from './Home/BuildingManagement/FloorInformation';
+import RoomInformation from './Home/BuildingManagement/RoomInformation';
+import AddRoom from './Home/BuildingManagement/AddRoom';
+import CreateContract from './Home/ContractManagement/CreateContract';
+import TenantList from './Home/BuildingManagement/TenantList';
+import AddNewTenant from './Home/BuildingManagement/AddNewTenant';
 // WorkScreen -----------------------------------------------------------------
 import WorkScreen from './Work/WorkScreen';
 // StatisticScreen -----------------------------------------------------------------
