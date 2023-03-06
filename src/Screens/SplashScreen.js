@@ -3,6 +3,8 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import {AuthenticationAPi} from '../Api/Login/LoginApis';
+import CustomLoading from '../Components/CustomLoading';
 import {colors, images} from '../Constants';
 import {updateToken} from '../Store/slices/tokenSlice';
 
@@ -10,17 +12,20 @@ const SplashScreen = () => {
   const navigation = useNavigation();
   const token = useSelector(state => state?.token?.token);
   const user = useSelector(state => state?.userInfor?.userInfor);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+
   useEffect(() => {
     loginTokenApi();
-  }, [token, user]);
+  }, []);
+
   const loginTokenApi = async () => {
     try {
-      await AsyncStorage.getItem('token').then(token => {
-        if (token) {
-          dispatch(updateToken(token));
-          callApiToken(token);
-        } else if (!token) {
+      await AsyncStorage.getItem('user').then(user => {
+        let userStore = JSON.parse(user);
+        if (userStore != null && userStore != undefined && userStore != '') {
+          callApiToken(userStore);
+        } else {
           navigation.navigate('LoginNavigation');
         }
       });
@@ -28,11 +33,30 @@ const SplashScreen = () => {
       console.log(error);
     }
   };
-  const callApiToken = async () => {
-    navigation.navigate('HomeNavigation');
+  const callApiToken = async userStore => {
+    setLoading(true);
+    let username = userStore?.username;
+    let password = userStore?.password;
+    await AuthenticationAPi(password, username)
+      .then(async res => {
+        if (200 >= res?.status <= 204) {
+          console.log(res?.data?.token);
+          let token = res?.data?.token;
+          await AsyncStorage.setItem('token', token);
+          dispatch(updateToken(token));
+          setLoading(false);
+          navigation.navigate('HomeNavigation');
+        }
+      })
+      .catch(error => {
+        // Alert.alert('Lỗi', `${error}`)
+        setLoading(false);
+        console.log(error);
+      });
   };
   return (
     <View style={styles.container}>
+      {loading && <CustomLoading modalVisible={loading} />}
       <Image
         source={images.im_backgroundSplash}
         style={{width: '100%', height: '100%'}}

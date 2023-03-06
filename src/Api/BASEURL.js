@@ -1,2 +1,1 @@
-// export const BASEURL = 'https://api-capquang-dev.iwannatechvn.com';
-export const BASEURL = 'https://api-capquang.iwannatechvn.com';
+export const BASEURL = 'http://45.77.176.188:8081/api';

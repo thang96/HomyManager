@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -11,7 +11,7 @@ import {
   Dimensions,
   ImageBackground,
 } from 'react-native';
-import CustomButton from '../../../Components/CustomButton';
+import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import CustomViewInfor from '../../../Components/CustomViewInfor';
@@ -21,74 +21,70 @@ import CustomPaidService from '../../../Components/CustomPaidService';
 import CustomFreeService from '../../../Components/CustomFreeService';
 import CustomAppBarBuildingInfor from '../../../Components/CustomAppBarBuildingInfor';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomLoading from '../../../Components/CustomLoading';
+import {HauseDetailApi} from '../../../Api/Home/HomeApis';
 
 const BuildingInformation = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const [loading, setLoading] = useState(true);
+  const [hauseInfor, setHauseInfor] = useState();
+
+  useEffect(() => {
+    getDataHause();
+  }, []);
+
+  const getDataHause = async () => {
+    let hauseId = route.params;
+    await AsyncStorage.getItem('token').then(async token => {
+      if (token != null && token != undefined && token != '') {
+        await HauseDetailApi(token, hauseId)
+          .then(res => {
+            if (res?.status == 200) {
+              setHauseInfor(res?.data);
+              setLoading(false);
+            }
+          })
+          .catch(error => console.error(error));
+      }
+    });
+  };
+
   let avatar =
     'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Ragdoll_Kater%2C_drei_Jahre_alt%2C_RAG_n_21_seal-tabby-colourpoint%2C_Januar_2015.JPG/330px-Ragdoll_Kater%2C_drei_Jahre_alt%2C_RAG_n_21_seal-tabby-colourpoint%2C_Januar_2015.JPG';
 
-  const [listPaidSevice, setListPaidSevice] = useState([
-    {label: 'Điện', value: '4000/KWH'},
-    {label: 'Nước', value: '5000/M³'},
-    {label: 'Wifi', value: '50000/T'},
-    {label: 'Ga', value: '200000/T'},
-    {label: 'Ga1', value: '200000/T'},
-    {label: 'Ga2', value: '200000/T'},
-    {label: 'Ga3', value: '200000/T'},
-  ]);
-  const [listFreeSevice, setListFreeSevice] = useState([
-    {label: 'Máy lạnh', value: '1'},
-    {label: 'WC riêng', value: '2'},
-    {label: 'Chỗ để xe', value: '3'},
-    {label: 'Tủ lạnh', value: '4'},
-    {label: 'Máy giặt', value: '5'},
-    {label: 'Giờ tự do', value: '6'},
-    {label: 'Chăn - màn', value: '7'},
-  ]);
-
   const renderPaidSevice = (item, index) => {
-    let value = item;
     return (
       <CustomPaidService
-        label={item?.label}
-        value={item?.value}
-        onPress={() => {
-          deletePaidService(value);
-        }}
+        label={item?.name}
+        value={item?.price}
+        icon={item?.icon}
       />
     );
   };
-  const deletePaidService = (item, index) => {
-    let result = [...listPaidSevice];
-    let newResult = result.filter(itemResult => itemResult !== item);
-    setListPaidSevice(newResult);
-  };
+
   const renderFreeSevice = (item, index) => {
-    let value = item;
-    return (
-      <CustomFreeService
-        label={item?.label}
-        value={item?.value}
-        onPress={() => {
-          deleteFreeSevice(value);
-        }}
-      />
-    );
-  };
-  const deleteFreeSevice = (item, index) => {
-    let result = [...listFreeSevice];
-    let newResult = result.filter(itemResult => itemResult !== item);
-    setListFreeSevice(newResult);
+    return <CustomFreeService label={item?.name} />;
   };
 
   return (
     <View style={styles.container}>
-      <CustomAppBarBuildingInfor onPressLeft={() => navigation.goBack()} />
+      {loading && (
+        <CustomLoading
+          modalVisible={loading}
+          pressBack={() => navigation.goBack()}
+        />
+      )}
+      <CustomAppBarBuildingInfor
+        nameBuilding={`${hauseInfor?.name}`}
+        addressBuilding={`${hauseInfor?.city?.name}, ${hauseInfor?.district?.name}, ${hauseInfor?.ward?.name}, ${hauseInfor?.address}`}
+        onPressLeft={() => navigation.goBack()}
+      />
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 20}}>
         <View style={styles.viewUtils}>
           <CustomOptionBT
             title={'Phòng'}
-            content={'12'}
+            content={`${hauseInfor?.units.length}`}
             icon={icons.ic_bed}
             styleImageBG={{tintColor: '#1297c0'}}
             styleBGIcon={{backgroundColor: '#ebf9fd'}}
@@ -119,43 +115,36 @@ const BuildingInformation = () => {
 
         <View style={styles.line} />
 
-        <CustomTextTitle label={'Thông tin tòa nhà'} />
+        <CustomTextTitle
+          label={'Thông tin tòa nhà'}
+          labelButton={'Chỉnh sửa'}
+        />
         <View style={[styles.viewRow, {marginBottom: 10}]}>
           <CustomViewInfor
             title={'Giờ mở cửa'}
-            label={'08:00'}
+            label={`${hauseInfor?.openHour}`}
             content={'AM'}
           />
           <CustomViewInfor
             title={'Giờ đóng cửa'}
-            label={'23:00'}
+            label={`${hauseInfor?.closeHour}`}
             content={'PM'}
           />
         </View>
         <CustomViewInfor
           title={'Chi phí thuê'}
-          label={'30000000'}
+          label={`${hauseInfor?.rentingPrice}`}
           content={'VNĐ'}
         />
 
         <View style={styles.line} />
 
-        <CustomTextTitle label={'Quản lý tòa nhà'} />
+        <CustomTextTitle
+          label={'Quản lý tòa nhà'}
+          labelButton={'Thêm'}
+          icon={icons.ic_plus}
+        />
 
-        <CustomManagerInfor
-          styleView={{marginTop: 10}}
-          avatar={avatar}
-          userName={'Trường Vân'}
-          phoneNumber={`0123456789`}
-          onPress={() => {}}
-        />
-        <CustomManagerInfor
-          styleView={{marginTop: 10}}
-          avatar={avatar}
-          userName={'Trường Vân'}
-          phoneNumber={`0123456789`}
-          onPress={() => {}}
-        />
         <CustomManagerInfor
           styleView={{marginTop: 10}}
           avatar={avatar}
@@ -175,60 +164,68 @@ const BuildingInformation = () => {
 
         <View style={styles.line} />
 
-        <CustomTextTitle label={'Dịch vụ có phí'} />
-        {listPaidSevice.length > 0 ? (
+        <CustomTextTitle
+          label={'Dịch vụ có phí'}
+          labelButton={'Thêm'}
+          icon={icons.ic_plus}
+        />
+        {hauseInfor?.services.length > 0 ? (
           <FlatList
             listKey="listPaidSevice"
             horizontal={false}
             scrollEnabled={false}
             numColumns={2}
-            keyExtractor={key => key.label}
-            data={listPaidSevice}
+            keyExtractor={key => key.id}
+            data={hauseInfor?.services}
             renderItem={({item, index}) => renderPaidSevice(item, index)}
           />
         ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
-          <Text style={styles.pickerTotal}>{`${listPaidSevice.length}`}</Text>
+          <Text
+            style={
+              styles.pickerTotal
+            }>{`${hauseInfor?.services?.length}`}</Text>
         </View>
 
         <View style={styles.line} />
 
         <CustomTextTitle label={'Tiện ích miễn phí'} />
-        {listFreeSevice.length > 0 ? (
+        {hauseInfor?.amenities.length > 0 ? (
           <FlatList
             listKey="listFreeSevice"
             horizontal={false}
             scrollEnabled={false}
             numColumns={3}
-            keyExtractor={key => key.value}
-            data={listFreeSevice}
+            keyExtractor={key => key.id}
+            data={hauseInfor?.amenities}
             renderItem={({item, index}) => renderFreeSevice(item, index)}
           />
         ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
-          <Text style={styles.pickerTotal}>{`${listFreeSevice.length}`}</Text>
+          <Text
+            style={
+              styles.pickerTotal
+            }>{`${hauseInfor?.amenities.length}`}</Text>
         </View>
-
-        <View style={styles.line} />
-
-        <CustomTextTitle label={'Lưu ý'} />
-        <Text style={{color: '#7F8A93', fontSize: 15, fontWeight: '400'}}>
-          {
-            'Ăn ở bẩn thịu hoặc làm ảnh hưởng người xung quanh sẽ bị đơn phương chấm dứt hợp đồng'
-          }
-        </Text>
 
         <View style={{marginBottom: 56}} />
       </ScrollView>
-      <View style={styles.viewEdit}>
-        <CustomButton
-          label={'Chỉnh sửa'}
-          styleLabel={styles.textEdit}
-          styleButton={styles.styleButton}
-        />
-      </View>
+      <CustomTwoButtonBottom
+        leftLabel={'Hủy'}
+        styleButtonLeft={{
+          borderColor: colors.backgroundOrange,
+          backgroundColor: 'white',
+          marginRight: 5,
+        }}
+        styleLabelLeft={{
+          color: colors.backgroundOrange,
+          fontSize: 15,
+          fontWeight: '600',
+        }}
+        rightLabel={'Lưu'}
+      />
     </View>
   );
 };
@@ -273,23 +270,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   pickerTotal: {fontSize: 15, color: 'orange', fontWeight: 'bold'},
-  styleButton: {
-    height: 44,
-    borderWidth: 2,
-    width: 358,
-    borderRadius: 5,
-    borderColor: '#fe7a37',
-  },
-  textEdit: {color: '#fe7e3d', fontSize: 15, fontWeight: '400'},
-  viewEdit: {
-    height: 70,
-    borderTopColor: 'grey',
-    borderTopWidth: 0.5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
-  },
 });
 
 const CustomOptionBT = props => {

@@ -4,19 +4,35 @@ import {colors, icons} from '../Constants';
 import CustomButton from './CustomButton';
 
 const CustomTwoButtonBottom = props => {
-  const {styleView, leftLabel, rightLabel, onPressLeft, onPressRight} = props;
+  const {
+    styleView,
+    leftLabel,
+    styleLabelLeft,
+    styleButtonLeft,
+    rightLabel,
+    styleLabelRight,
+    styleButtonRight,
+    onPressLeft,
+    onPressRight,
+  } = props;
   return (
     <View style={[styles.container, styleView]}>
       <CustomButton
         label={leftLabel}
-        styleButton={[styles.styleButton, styles.styleLeftButton]}
-        styleLabel={styles.styleLeftLabel}
+        styleButton={[
+          styles.styleButton,
+          styleButtonLeft ?? styles.styleLeftButton,
+        ]}
+        styleLabel={[styleLabelLeft ?? styles.styleLeftLabel]}
         onPress={onPressLeft}
       />
       <CustomButton
         label={rightLabel}
-        styleButton={[styles.styleButton, styles.styleRightButton]}
-        styleLabel={styles.styleRightLabel}
+        styleButton={[
+          styles.styleButton,
+          styleButtonRight ?? styles.styleRightButton,
+        ]}
+        styleLabel={[styleLabelRight ?? styles.styleRightLabel]}
         onPress={onPressRight}
       />
     </View>
@@ -48,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.mainColor,
     marginLeft: 5,
   },
-  styleLeftLabel: {color: colors.mainColor, fontSize: 15},
-  styleRightLabel: {color: 'white', fontSize: 15},
+  styleLeftLabel: {color: colors.mainColor, fontSize: 15, fontWeight: '600'},
+  styleRightLabel: {color: 'white', fontSize: 15, fontWeight: '600'},
 });
 export default CustomTwoButtonBottom;

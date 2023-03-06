@@ -12,18 +12,12 @@ import CustomButton from './CustomButton';
 
 const CustomFreeService = props => {
   const widthImage = Dimensions.get('window').width / 3 - 10;
-  const {label, value, onPress} = props;
+  const {label} = props;
   return (
     <View style={[styles.container, {width: widthImage}]}>
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Text style={[styles.text]}>{label}</Text>
       </View>
-      <CustomButton
-        icon={icons.ic_close}
-        styleIcon={styles.styleIcon}
-        styleButton={styles.styleButton}
-        onPress={onPress}
-      />
     </View>
   );
 };

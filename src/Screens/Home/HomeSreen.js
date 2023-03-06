@@ -12,15 +12,20 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import {GetAllHauseApi} from '../../Api/Home/HomeApis';
 import CustomButton from '../../Components/CustomButton';
+import CustomLoading from '../../Components/CustomLoading';
 import CustomSearchAppBar from '../../Components/CustomSearchAppBar';
 import {colors, icons, images, svgs} from '../../Constants';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [keyboard, setKeyboard] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
+  const [listHause, setListHause] = useState([]);
   const widthImage = Dimensions.get('window').width / 2 - 20;
+
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
       setKeyboard(true);
@@ -29,10 +34,29 @@ const HomeScreen = () => {
       setKeyboard(false);
     });
   }, []);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    await AsyncStorage.getItem('token').then(async tokenStore => {
+      if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
+        await GetAllHauseApi(tokenStore)
+          .then(res => {
+            setLoading(false);
+            setListHause(res?.data);
+          })
+          .catch(error => console.log(error));
+      }
+    });
+  };
+
   let avatar =
     'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg';
   return (
     <View style={styles.container}>
+      {loading && <CustomLoading modalVisible={loading} />}
       <CustomSearchAppBar
         svgLeft={svgs.LogoApp}
         label={'Trang chủ'}
@@ -54,7 +78,7 @@ const HomeScreen = () => {
             imageBG={images.im_frame1}
             icon={icons.ic_building}
             label={'Số tòa nhà'}
-            labelNumber={'2'}
+            labelNumber={`${listHause.length}`}
             onPress={() => navigation.navigate('BuildingManager')}
           />
 

@@ -14,24 +14,43 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {updateToken} from '../../Store/slices/tokenSlice';
-import CustomInput from '../../Components/CustomInput';
+import {AuthenticationAPi} from '../../Api/Login/LoginApis';
+import CustomLoading from '../../Components/CustomLoading';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isShow, setIsShow] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+
   const loginFuntion = async () => {
-    await AsyncStorage.setItem('token', '123456').then(() => {
-      navigation.navigate('HomeNavigation');
-      dispatch(updateToken('123465'));
-    });
+    let user = {username: username, password: password};
+    setLoading(true);
+    await AuthenticationAPi(password, username)
+      .then(async res => {
+        if (200 >= res?.status <= 204) {
+          let token = res?.data?.token;
+          await AsyncStorage.setItem('token', token);
+          await AsyncStorage.setItem('user', JSON.stringify(user));
+          dispatch(updateToken(token));
+          setLoading(false);
+          navigation.navigate('HomeNavigation');
+        }
+      })
+      .catch(error => {
+        // Alert.alert('Lỗi', `${error}`)
+        setLoading(false);
+        console.log(error);
+      });
   };
+
   return (
     <ImageBackground
       source={images.im_backgroundLogin}
       style={styles.container}>
+      {loading && <CustomLoading modalVisible={loading} />}
       <Text style={styles.title}>Đăng nhập/ Đăng ký</Text>
       <View style={{marginTop: 30}}>
         <Text style={styles.content}>Tài khoản</Text>
@@ -76,7 +95,7 @@ const LoginScreen = () => {
         />
       </View>
       <CustomButton
-        label={'Tiếp tục'}
+        label={'Đăng nhập'}
         styleButton={styles.styleButton}
         styleLabel={styles.styleLabel}
         onPress={() => loginFuntion()}

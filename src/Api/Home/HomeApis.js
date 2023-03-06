@@ -1,15 +1,14 @@
 import axios from 'axios';
 import {BASEURL} from '../BASEURL';
-export const LoginAccessToken = (username, password) => {
-  const formData = new FormData();
-  formData.append('username', `${username}` ?? '');
-  formData.append('password', `${password}` ?? '');
+
+export const GetAllHauseApi = token => {
   return new Promise((resolve, reject) => {
     axios
-      .post(`${BASEURL}/api/v1/login/access-token`, formData, {
+      .get(`${BASEURL}/house`, {
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
       })
       .then(res => {
@@ -21,12 +20,13 @@ export const LoginAccessToken = (username, password) => {
   });
 };
 
-export const LoginTestToken = token => {
+export const HauseDetailApi = (token, hauseId) => {
   return new Promise((resolve, reject) => {
     axios
-      .post(`${BASEURL}/api/v1/login/test-token`, null, {
+      .get(`${BASEURL}/house/${hauseId}`, {
         headers: {
           Accept: 'application/json',
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       })

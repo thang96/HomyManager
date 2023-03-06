@@ -7,41 +7,24 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {icons} from '../Constants';
+import {colors, icons} from '../Constants';
 import CustomButton from './CustomButton';
 
 const CustomPaidService = props => {
   const widthImage = Dimensions.get('window').width / 2 - 15;
-  const {label, value, onPress} = props;
+  const {label, value, icon} = props;
   return (
     <View style={[styles.container, {width: widthImage}]}>
-      <Image
-        style={[styles.icon]}
-        resizeMode={'contain'}
-        source={icons.ic_service}
-      />
+      <Image style={[styles.icon]} resizeMode={'contain'} source={icon} />
       <View style={{marginLeft: 5}}>
-        <Text
-          style={[
-            styles.text,
-            {color: 'rgba(127, 138, 147, 1)', fontWeight: '600'},
-          ]}>
+        <Text style={[styles.text, {color: '#374047', fontWeight: '600'}]}>
           {label}
         </Text>
         <Text
-          style={[
-            styles.text,
-            {color: 'rgba(100, 92, 187, 1)', fontWeight: '400'},
-          ]}>
+          style={[styles.text, {color: colors.mainColor, fontWeight: '400'}]}>
           {value}
         </Text>
       </View>
-      <CustomButton
-        icon={icons.ic_close}
-        styleIcon={styles.styleIcon}
-        styleButton={styles.styleButton}
-        onPress={onPress}
-      />
     </View>
   );
 };

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
@@ -10,17 +11,23 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  FlatList,
 } from 'react-native';
+import {GetAllHauseApi} from '../../../Api/Home/HomeApis';
 import CustomButton from '../../../Components/CustomButton';
 import CustomButtonBottom from '../../../Components/CustomButtonBottom';
+import CustomLoading from '../../../Components/CustomLoading';
 import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
 import {colors, icons, images} from '../../../Constants';
 
 const BuildingManager = () => {
   const navigation = useNavigation();
-  const [keyboard, setKeyboard] = useState(null);
+  const [keyboard, setKeyboard] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
+  const [listHause, setListHause] = useState([]);
+
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
       setKeyboard(true);
@@ -29,6 +36,39 @@ const BuildingManager = () => {
       setKeyboard(false);
     });
   }, []);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    await AsyncStorage.getItem('token').then(async tokenStore => {
+      if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
+        await GetAllHauseApi(tokenStore)
+          .then(res => {
+            if (res?.status == 200) {
+              setLoading(false);
+              setListHause(res?.data);
+            }
+          })
+          .catch(error => console.log(error));
+      }
+    });
+  };
+
+  const renderListHause = (item, index) => {
+    return (
+      <CustomRenderBuilding
+        name={`${item?.name}`}
+        address={`${item?.city?.name} - ${item?.district?.name} - ${item?.ward?.name} - ${item?.address}`}
+        numberRooms={`${item?.rooms ?? 0}`}
+        onPress={() => {
+          let hauseId = item?.id;
+          navigation.navigate('BuildingInformation', hauseId);
+        }}
+      />
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -45,22 +85,26 @@ const BuildingManager = () => {
         pressIconLeft={() => navigation.goBack()}
       />
 
-      <ScrollView style={{paddingHorizontal: 10}}>
-        <CustomTextTitle label={'Tòa nhà hiện có'} />
-        <CustomRenderBuilding
-          image={images.im_frame1}
-          name={'Tòa nhà D1'}
-          address={'448 Lê Văn Việt, Tăng Nhơn Phú A, TP. Thủ Đức'}
-          numberOfRoom={12}
-          emptRoom={4}
-          issue={2}
-          onPress={() => navigation.navigate('BuildingInformation')}
+      <View style={{flex: 1}}>
+        {loading && (
+          <CustomLoading
+            modalVisible={loading}
+            pressBack={() => navigation.goBack()}
+          />
+        )}
+        <View style={{paddingHorizontal: 10, flex: 1}}>
+          <CustomTextTitle label={'Tòa nhà hiện có'} />
+          <FlatList
+            data={listHause}
+            keyExtractor={(item, index) => `${item[index]?.id}`}
+            renderItem={({item, index}) => renderListHause(item, index)}
+          />
+        </View>
+        <CustomButtonBottom
+          label={'Thêm tòa nhà mới'}
+          onPress={() => navigation.navigate('AddBuildings')}
         />
-      </ScrollView>
-      <CustomButtonBottom
-        label={'Thêm tòa nhà mới'}
-        onPress={() => navigation.navigate('AddBuildings')}
-      />
+      </View>
     </View>
   );
 };
@@ -72,10 +116,10 @@ const styles = StyleSheet.create({
 });
 
 const CustomRenderBuilding = props => {
-  const {name, address, onPress, image} = props;
+  const {name, address, onPress, numberRooms} = props;
   return (
     <TouchableOpacity onPress={onPress} style={styleRender.button}>
-      <Image source={image} style={styleRender.image} />
+      <Image source={icons.ic_building} style={styleRender.image} />
       <View
         style={{
           flex: 1,
@@ -90,13 +134,33 @@ const CustomRenderBuilding = props => {
         </View>
         <Text style={styleRender.address}>{address}</Text>
         <View style={[styleRender.viewRow]}>
-          <CustomButton
-            disabled={true}
-            label={'12'}
-            icon={icons.ic_home}
-            styleIcon={styleRender.icon}
-            styleButton={styleRender.styleButton}
-          />
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 30,
+                backgroundColor: colors.backgroundInput,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={icons.ic_home}
+                style={{width: 20, height: 20, tintColor: colors.mainColor}}
+              />
+            </View>
+            <View style={{alignItems: 'center', height: 40}}>
+              <Text
+                style={{
+                  fontSize: 11,
+                  fontWeight: '600',
+                  color: '#5F6E78',
+                }}>
+                {numberRooms}
+              </Text>
+              <Text style={{fontSize: 10, color: '#7F8A93'}}>Phòng</Text>
+            </View>
+          </View>
           <CustomButton
             disabled={true}
             label={'4'}
@@ -119,13 +183,12 @@ const CustomRenderBuilding = props => {
 const styleRender = StyleSheet.create({
   button: {
     flexDirection: 'row',
-    flex: 1,
-    height: 116,
+    height: 120,
     alignItems: 'center',
-    padding: 10,
     backgroundColor: 'white',
     margin: 2,
-    padding: 10,
+    padding: 5,
+
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -137,7 +200,13 @@ const styleRender = StyleSheet.create({
     borderRadius: 4,
     marginBottom: 20,
   },
-  image: {width: 76, height: 92, borderRadius: 10},
+  image: {
+    width: 76,
+    height: 92,
+    borderRadius: 10,
+    borderWidth: 1,
+    backgroundColor: 'grey',
+  },
   viewRow: {
     flexDirection: 'row',
     alignItems: 'center',

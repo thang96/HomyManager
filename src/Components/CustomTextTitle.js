@@ -5,14 +5,14 @@ import {colors, icons} from '../Constants';
 import CustomButton from './CustomButton';
 
 const CustomTextTitle = props => {
-  const {label, labelButton, onPress, viewTitle} = props;
+  const {label, labelButton, onPress, viewTitle, icon} = props;
   return (
     <View style={[styles.viewContainer, viewTitle]}>
       <Text style={styles.title}>{label}</Text>
       {labelButton && (
         <TouchableOpacity onPress={onPress} style={styles.styleButton}>
           <Text style={styles.labelButton}>{labelButton}</Text>
-          <Image source={icons.ic_plus} style={styles.image} />
+          {icon && <Image source={icon} style={styles.image} />}
         </TouchableOpacity>
       )}
     </View>
