@@ -15,7 +15,15 @@ const CustomPaidService = props => {
   const {label, value, icon} = props;
   return (
     <View style={[styles.container, {width: widthImage}]}>
-      <Image style={[styles.icon]} resizeMode={'contain'} source={icon} />
+      <Image
+        style={[styles.icon]}
+        resizeMode={'contain'}
+        source={
+          typeof icon == 'string' && icon != ''
+            ? {uri: `${icon}`}
+            : icons.ic_service
+        }
+      />
       <View style={{marginLeft: 5}}>
         <Text style={[styles.text, {color: '#374047', fontWeight: '600'}]}>
           {label}
@@ -50,7 +58,7 @@ const styles = StyleSheet.create({
 
     elevation: 3,
   },
-  icon: {width: 24, height: 24},
+  icon: {width: 24, height: 24, marginRight: 5},
   styleIcon: {width: 15, height: 15, tintColor: '#000000'},
   styleButton: {
     position: 'absolute',

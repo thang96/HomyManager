@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  labelButton: {fontSize: 11, color: colors.mainColor, marginHorizontal: 3},
+  labelButton: {fontSize: 12, color: colors.mainColor, marginHorizontal: 3},
   image: {width: 15, height: 15, tintColor: colors.mainColor, marginRight: 3},
 });
 export default CustomTextTitle;

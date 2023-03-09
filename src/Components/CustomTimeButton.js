@@ -75,9 +75,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     alignItems: 'center',
-    borderColor: '#dadee0',
+    borderColor: colors.borderInput,
     paddingHorizontal: 5,
-    backgroundColor: colors.backgroundButtonGrey,
   },
   time: {
     borderRadius: 5,

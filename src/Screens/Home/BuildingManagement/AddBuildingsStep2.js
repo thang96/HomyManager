@@ -14,7 +14,7 @@ import {
 import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
 import CustomModalDateTimePicker from '../../../Components/CustomModalDateTimePicker';
 import {icons, colors} from '../../../Constants';
-import CustomInput from '../../../Components/CustomInput';
+import CustomSuggest from '../../../Components//CustomSuggest';
 import CustomTimeButtons from '../../../Components/CustomTimeButton';
 import CustomAppBarStep from '../../../Components/CustomAppBarStep';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
@@ -45,9 +45,10 @@ const AddBuildingsStep2 = props => {
           step={2}
         />
         <ScrollView style={[styles.eachContainer]}>
-          <Text style={styles.content}>
-            Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc
-          </Text>
+          <CustomSuggest
+            label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
+          />
+
           <CustomTextTitle label={'Thiết lập tiền nhà'} />
 
           <CustomButtonValue
@@ -91,7 +92,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: colors.backgroundGrey,
   },
-  content: {color: 'rgba(127, 138, 147, 1)', fontSize: 13},
   viewButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -102,18 +102,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: 'grey',
     paddingHorizontal: 5,
-  },
-  time: {
-    backgroundColor: '#ebedee',
-    borderRadius: 5,
-    color: 'black',
-    fontSize: 14,
-  },
-  title: {fontWeight: 'bold', fontSize: 16, color: '#163a5f'},
-  viewRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
   },
 });
 export default AddBuildingsStep2;

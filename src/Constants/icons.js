@@ -51,4 +51,5 @@ export default {
   ic_wifi: require('../Assets/Icons/ic_wifi.png'),
   ic_flame: require('../Assets/Icons/ic_flame.png'),
   ic_phone: require('../Assets/Icons/ic_phone.png'),
+  ic_launcher: require('../Assets/Icons/ic_launcher.png'),
 };

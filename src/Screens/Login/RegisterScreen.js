@@ -24,6 +24,12 @@ const RegisterScreen = () => {
     <ImageBackground
       style={styles.container}
       source={images.im_backgroundLogin}>
+      <CustomButton
+        icon={icons.ic_back}
+        styleIcon={styles.iconBack}
+        styleButton={styles.buttonBack}
+        onPress={() => navigation.goBack()}
+      />
       <ScrollView style={{paddingTop: 260}}>
         <Text style={styles.title}>Đăng ký tài khoản</Text>
         <CustomSuggest
@@ -102,5 +108,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   styleLabel: {color: 'white', fontSize: 15},
+  buttonBack: {position: 'absolute', top: 10, left: 10, zIndex: 1},
+  iconBack: {width: 24, height: 24, tintColor: 'white'},
 });
 export default RegisterScreen;

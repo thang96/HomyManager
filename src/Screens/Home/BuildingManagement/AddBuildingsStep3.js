@@ -12,70 +12,92 @@ import {
 } from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomAppBar from '../../../Components/CustomAppBar';
-import CustomButton from '../../../Components/CustomButton';
+import CustomSuggest from '../../../Components/CustomSuggest';
 import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
 import CustomPaidService from '../../../Components/CustomPaidService';
 import CustomFreeService from '../../../Components/CustomFreeService';
 import CustomAppBarStep from '../../../Components/CustomAppBarStep';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {GetAmenityApi, GetServiceApi} from '../../../Api/Home/HomeApis';
 
 const AddBuildingsStep3 = props => {
   const navigation = useNavigation();
-  const [listPaidSevice, setListPaidSevice] = useState([
-    {label: 'Điện', value: '4000/KWH'},
-    {label: 'Nước', value: '5000/M³'},
-    {label: 'Wifi', value: '50000/T'},
-    {label: 'Ga', value: '200000/T'},
-    {label: 'Ga1', value: '200000/T'},
-    {label: 'Ga2', value: '200000/T'},
-    {label: 'Ga3', value: '200000/T'},
-  ]);
-  const [listFreeSevice, setListFreeSevice] = useState([
-    {label: 'Máy lạnh', value: '1'},
-    {label: 'WC riêng', value: '2'},
-    {label: 'Chỗ để xe', value: '3'},
-    {label: 'Tủ lạnh', value: '4'},
-    {label: 'Máy giặt', value: '5'},
-    {label: 'Giờ tự do', value: '6'},
-    {label: 'Chăn - màn', value: '7'},
-    {label: 'Thoải mái nói chuyện sau 10h đêm', value: '8'},
-  ]);
+  const [token, setToken] = useState();
+  const [loading, setLoading] = useState(true);
+
+  const [noteForTenant, setNoteForTenant] = useState('');
+  const [noteForInvoice, setNoteForInvoice] = useState('');
+  const [serviceIds, setServiceIds] = useState([]);
+  const [amenityIds, setAmenityIds] = useState([]);
+  console.log(amenityIds);
+
+  const [listService, setListService] = useState([]);
+  const [listAmenity, setListAmenity] = useState([]);
+
+  useEffect(() => {
+    setListData();
+  }, [listService, listAmenity]);
+  const setListData = () => {
+    let eachServiceIds = [];
+    let eachAmenityIds = [];
+    for (let index = 0; index < listService.length; index++) {
+      const element = listService[index];
+      eachServiceIds.push(element?.id);
+    }
+    for (let index = 0; index < listAmenity.length; index++) {
+      const element = listAmenity[index];
+      eachAmenityIds.push(element?.id);
+    }
+    setServiceIds(eachServiceIds);
+    setAmenityIds(eachAmenityIds);
+  };
+
+  useEffect(() => {
+    getListData();
+  }, []);
+
+  const getListData = async () => {
+    await AsyncStorage.getItem('token')
+      .then(async tokenStore => {
+        if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
+          await GetServiceApi(tokenStore)
+            .then(res => {
+              if (res?.status == 200) {
+                setListService(res?.data);
+                setLoading(false);
+              }
+            })
+            .catch(error => console.log(error));
+          await GetAmenityApi(tokenStore)
+            .then(res => {
+              if (res?.status == 200) {
+                setListAmenity(res?.data);
+                setLoading(false);
+              }
+            })
+            .catch(error => console.log(error));
+        }
+      })
+      .catch(error => console.log(error));
+  };
 
   const renderPaidSevice = (item, index) => {
     let value = item;
     return (
       <CustomPaidService
-        label={item?.label}
-        value={item?.value}
-        onPress={() => {
-          deletePaidService(value);
-        }}
+        label={item?.name}
+        value={item?.price}
+        icon={item?.icon}
       />
     );
   };
-  const deletePaidService = (item, index) => {
-    let result = [...listPaidSevice];
-    let newResult = result.filter(itemResult => itemResult !== item);
-    setListPaidSevice(newResult);
-  };
+
   const renderFreeSevice = (item, index) => {
-    let value = item;
-    return (
-      <CustomFreeService
-        label={item?.label}
-        value={item?.value}
-        onPress={() => {
-          deleteFreeSevice(value);
-        }}
-      />
-    );
+    return <CustomFreeService label={item?.name} />;
   };
-  const deleteFreeSevice = (item, index) => {
-    let result = [...listFreeSevice];
-    let newResult = result.filter(itemResult => itemResult !== item);
-    setListFreeSevice(newResult);
-  };
+
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       <KeyboardAvoidingView style={{flex: 1}}>
@@ -89,57 +111,58 @@ const AddBuildingsStep3 = props => {
         />
 
         <ScrollView style={[styles.eachContainer]}>
-          <Text style={styles.content}>
-            Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc
-          </Text>
+          <CustomSuggest
+            label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
+          />
 
           <CustomTextTitle
             label={'Dịch vụ có phí'}
-            labelButton={'Thêm mới'}
+            labelButton={'Thêm'}
+            icon={icons.ic_plus}
             onPress={() => navigation.navigate('Service')}
           />
 
-          {listPaidSevice.length > 0 ? (
+          {listService.length > 0 ? (
             <FlatList
-              listKey="listPaidSevice"
-              style={{justifyContent: 'space-between'}}
+              listKey="listService"
               horizontal={false}
               scrollEnabled={false}
               numColumns={2}
-              keyExtractor={key => key.label}
-              data={listPaidSevice}
+              keyExtractor={item => `${item?.id}`}
+              data={listService}
               renderItem={({item, index}) => renderPaidSevice(item, index)}
             />
           ) : null}
 
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.textPicker}>Đã chọn </Text>
-            <Text style={styles.pickerTotal}>{`${listPaidSevice.length}`}</Text>
+            <Text style={styles.pickerTotal}>{`${listService.length}`}</Text>
           </View>
 
           <View style={styles.line} />
 
           <CustomTextTitle
             label={'Tiện ích miễn phí'}
-            labelButton={'Thêm mới'}
+            labelButton={'Thêm'}
+            icon={icons.ic_plus}
             onPress={() => navigation.navigate('Utilities')}
           />
 
-          {listFreeSevice.length > 0 ? (
+          {listAmenity.length > 0 ? (
             <FlatList
-              listKey="listFreeSevice"
+              listKey="listAmenity"
               style={{justifyContent: 'space-between'}}
               horizontal={false}
               scrollEnabled={false}
               numColumns={3}
               keyExtractor={key => key.value}
-              data={listFreeSevice}
+              data={listAmenity}
               renderItem={({item, index}) => renderFreeSevice(item, index)}
             />
           ) : null}
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.textPicker}>Đã chọn </Text>
-            <Text style={styles.pickerTotal}>{`${listFreeSevice.length}`}</Text>
+            <Text style={styles.pickerTotal}>{`${listAmenity.length}`}</Text>
           </View>
 
           <View style={styles.line} />
@@ -149,14 +172,27 @@ const AddBuildingsStep3 = props => {
           <Text style={[styles.label]}>Lưu ý của tòa nhà</Text>
           <View style={styles.viewTextInput}>
             <TextInput
+              style={{color: 'black'}}
               multiline
               placeholder="Nhập lưu ý của tòa nhà cho người thuê phòng"
+              defaultValue={noteForTenant}
+              onEndEditing={nativeEvent => {
+                console.log(nativeEvent);
+              }}
             />
           </View>
 
           <Text style={[styles.label, {marginTop: 20}]}>Ghi chú hóa đơn</Text>
           <View style={styles.viewTextInput}>
-            <TextInput multiline placeholder="Nhập ghi chú hóa đơn" />
+            <TextInput
+              style={{color: 'black'}}
+              multiline
+              placeholder="Nhập ghi chú hóa đơn"
+              value={noteForInvoice}
+              onChangeText={text => {
+                setNoteForInvoice(text);
+              }}
+            />
           </View>
 
           <View style={{marginBottom: 56}} />
@@ -202,7 +238,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: colors.borderInput,
     height: 120,
-    backgroundColor: colors.backgroundInput,
   },
   label: {fontSize: 15, color: 'rgba(55, 64, 71, 1)', fontWeight: '400'},
 });

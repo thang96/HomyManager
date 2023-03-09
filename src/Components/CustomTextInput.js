@@ -31,7 +31,7 @@ const CustomInputText = props => {
       <TextInput
         numberOfLines={numberOfLines ? numberOfLines : 1}
         secureTextEntry={secureTextEntry}
-        style={[{flex: 1}, styleTextinput]}
+        style={[{flex: 1, color: 'black'}, styleTextinput]}
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}

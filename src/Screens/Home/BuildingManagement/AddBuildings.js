@@ -23,29 +23,102 @@ import CustomInput from '../../../Components/CustomInput';
 import CustomTimeButtons from '../../../Components/CustomTimeButton';
 import CustomAppBarStep from '../../../Components/CustomAppBarStep';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomSuggest from '../../../Components/CustomSuggest';
+import CustomModalPicker from '../../../Components/CustomModalPicker';
+import CustomLoading from '../../../Components/CustomLoading';
+import {
+  GetAllCityApi,
+  GetDistrictByCityIdApi,
+  GetWardByCityIdApi,
+} from '../../../Api/Home/HomeApis';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddBuildings = props => {
   const navigation = useNavigation();
+  const [token, setToken] = useState();
+  const [loading, setLoading] = useState(true);
+
   let avatar =
     'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Ragdoll_Kater%2C_drei_Jahre_alt%2C_RAG_n_21_seal-tabby-colourpoint%2C_Januar_2015.JPG/330px-Ragdoll_Kater%2C_drei_Jahre_alt%2C_RAG_n_21_seal-tabby-colourpoint%2C_Januar_2015.JPG';
-  const [buildingName, setBuildingName] = useState('');
-  const [numberOfFloors, setNumberOfFloors] = useState('');
-  const [fromTime, setFromTime] = useState(new Date());
-  const [toTime, setToTime] = useState(new Date());
+
+  const [name, setName] = useState('');
+  const [floorTotal, setFloorTotal] = useState('');
+  const [openHour, setOpenHour] = useState('08:00:00');
+  const [closeHour, setCloseHour] = useState('23:00:00');
+  const [rentingPrice, setRentingPrice] = useState('');
+  const [description, setDescription] = useState('');
+  const [cityId, setCityId] = useState('');
+  const [districtId, setDistrictId] = useState('');
+  const [wardId, setWardId] = useState('');
+  const [address, setAddress] = useState('');
+
   const [albumImage, setAlbumImage] = useState([]);
 
-  const [fromTimeValue, setFromTimeValue] = useState('08:00');
-  const [toTimeValue, setToTimeValue] = useState('23:00');
+  const [fromTime, setFromTime] = useState(new Date());
+  const [toTime, setToTime] = useState(new Date());
+
+  const [listCity, setListCity] = useState([]);
+  const [listDistrict, setListDistrict] = useState([]);
+  const [listWard, setListWard] = useState([]);
+  const [cityName, setCityName] = useState('');
+  const [districtName, setDistrictName] = useState('');
+  const [wardName, setWardName] = useState('');
+
   const [modalFromTime, setModalFromTime] = useState(false);
   const [modalToTime, setModalToTime] = useState(false);
   const [modalCamera, setModalCamera] = useState(false);
+  const [modalCity, setModalCity] = useState(false);
+  const [modalDistrict, setModalDistrict] = useState(false);
+  const [modalWard, setModalWard] = useState(false);
 
   useEffect(() => {
-    let newFromTime = fromTime.toLocaleTimeString('en-VN');
-    let newToTime = toTime.toLocaleTimeString('en-VN');
-    setFromTimeValue(newFromTime);
-    setToTimeValue(newToTime);
+    getCityData();
   }, []);
+
+  const getCityData = async () => {
+    await AsyncStorage.getItem('token')
+      .then(async value => {
+        setToken(value);
+        await GetAllCityApi(value)
+          .then(res => {
+            if (res?.status == 200) {
+              setListCity(res?.data);
+              setLoading(false);
+            }
+          })
+          .catch(error => console.log(error));
+      })
+      .catch(error => console.log(error));
+  };
+
+  const getDistrictData = async item => {
+    setCityName(item?.name);
+    setCityId(item?.id);
+    setLoading(true);
+    await GetDistrictByCityIdApi(token, item?.id)
+      .then(res => {
+        if (res?.status == 200) {
+          setListDistrict(res?.data);
+          setLoading(false);
+        }
+      })
+      .catch(error => console.log(error));
+  };
+
+  const getWardData = async item => {
+    setDistrictName(item?.name);
+    setDistrictId(item?.id);
+    setLoading(true);
+    await GetWardByCityIdApi(token, item?.id)
+      .then(res => {
+        console.log(res?.data);
+        if (res?.status == 200) {
+          setListWard(res?.data);
+          setLoading(false);
+        }
+      })
+      .catch(error => console.log(error));
+  };
 
   const openCamera = () => {
     ImagePicker.openCamera({width: 300, height: 400})
@@ -112,8 +185,10 @@ const AddBuildings = props => {
 
     setAlbumImage(newResult);
   };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
+      {loading && <CustomLoading />}
       <KeyboardAvoidingView style={{flex: 1}}>
         {modalCamera && (
           <CustomModalCamera
@@ -133,7 +208,7 @@ const AddBuildings = props => {
             onDateChange={value => {
               let newTime = value.toLocaleTimeString('en-VN');
               setFromTime(value);
-              setFromTimeValue(newTime);
+              setOpenHour(newTime);
             }}
             onPress={() => setModalFromTime(false)}
           />
@@ -141,15 +216,49 @@ const AddBuildings = props => {
         {modalToTime && (
           <CustomModalDateTimePicker
             onCancel={() => setModalToTime(false)}
-            value={fromTime}
+            value={toTime}
             mode={'time'}
             openPicker={modalToTime}
             onDateChange={value => {
               let newTime = value.toLocaleTimeString('en-VN');
               setToTime(value);
-              setToTimeValue(newTime);
+              setCloseHour(newTime);
             }}
             onPress={() => setModalToTime(false)}
+          />
+        )}
+        {modalCity && (
+          <CustomModalPicker
+            modalVisible={modalCity}
+            data={listCity}
+            pressClose={() => setModalCity(false)}
+            onPressItem={item => {
+              setModalCity(false);
+              getDistrictData(item);
+            }}
+          />
+        )}
+        {modalDistrict && (
+          <CustomModalPicker
+            modalVisible={modalDistrict}
+            data={listDistrict}
+            pressClose={() => setModalDistrict(false)}
+            onPressItem={item => {
+              setModalDistrict(false);
+              getWardData(item);
+            }}
+          />
+        )}
+        {modalWard && (
+          <CustomModalPicker
+            modalVisible={modalWard}
+            data={listWard}
+            pressClose={() => setModalWard(false)}
+            onPressItem={item => {
+              setWardName(item?.name);
+              setWardId(item?.id);
+              setModalWard(false);
+            }}
           />
         )}
 
@@ -163,21 +272,18 @@ const AddBuildings = props => {
         />
 
         <ScrollView style={[styles.eachContainer]}>
-          <Text style={styles.content}>
-            Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc
-          </Text>
-
+          <CustomSuggest
+            label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
+          />
           <CustomTextTitle label={'Thông tin tòa nhà'} />
-
           <CustomInput
             important={true}
             type={'input'}
             title={'Tên tòa nhà'}
             placeholder={'Nhập tên tòa nhà'}
-            value={buildingName}
-            onChangeText={text => setBuildingName(text)}
+            value={name}
+            onChangeText={text => set(text)}
           />
-
           <CustomInput
             important={true}
             keyboardType={'numeric'}
@@ -185,8 +291,8 @@ const AddBuildings = props => {
             styleViewInput={{marginTop: 10}}
             title={'Số tầng'}
             placeholder={'Nhập số tầng'}
-            value={numberOfFloors}
-            onChangeText={text => setNumberOfFloors(text)}
+            value={floorTotal}
+            onChangeText={text => setFloorTotal(text)}
           />
 
           <CustomTimeButtons
@@ -196,17 +302,18 @@ const AddBuildings = props => {
             rightLabel={'Đến'}
             styleButtonLeft={{marginRight: 5}}
             styleButtonRight={{marginLeft: 5}}
-            valueLeft={fromTimeValue}
-            valueRight={toTimeValue}
+            valueLeft={openHour}
+            valueRight={closeHour}
             onPressLeft={() => setModalFromTime(true)}
             onPressRightt={() => setModalToTime(true)}
           />
-
           <Text style={[styles.label, {marginTop: 10}]}>Chi phí thuê nhà</Text>
           <View style={styles.viewSurrounded}>
             <TextInput
               keyboardType="numeric"
               placeholder="Nhập chi phí thuê nhà (Nếu có)"
+              value={rentingPrice}
+              onChangeText={text => setRentingPrice(text)}
               style={{flex: 1}}
             />
             <View style={styles.viewTime}>
@@ -216,63 +323,51 @@ const AddBuildings = props => {
 
           <Text style={[styles.label, {marginTop: 10}]}>Mô tả</Text>
           <View style={styles.viewTextInput}>
-            <TextInput multiline placeholder="Nhập mô tả cho tòa nhà" />
+            <TextInput
+              multiline
+              placeholder="Nhập mô tả cho tòa nhà"
+              value={description}
+              onChangeText={text => setDescription(text)}
+            />
           </View>
 
           <View style={styles.line} />
-
           <CustomTextTitle label={'Địa chỉ tòa nhà'} />
-
           <CustomInput
             type={'button'}
             styleViewInput={{marginTop: 10}}
             title={'Tỉnh/ Thành phố'}
             placeholder={'Chọn Tỉnh/ Thành phố'}
-            value={numberOfFloors}
-            onPress={() => {}}
+            value={cityName}
+            onPress={() => setModalCity(true)}
           />
-
           <CustomInput
             type={'button'}
             styleViewInput={{marginTop: 10}}
             title={'Quận/ Huyện'}
             placeholder={'Chọn Quận/ Huyện'}
-            value={numberOfFloors}
-            onPress={() => {}}
+            value={districtName}
+            onPress={() => setModalDistrict(true)}
           />
-
           <CustomInput
             type={'button'}
             styleViewInput={{marginTop: 10}}
             title={'Phường/ Xã'}
             placeholder={'Chọn Phường/ Xã'}
-            value={numberOfFloors}
-            onPress={() => {}}
+            value={wardName}
+            onPress={() => setModalWard(true)}
           />
-
           <Text style={[styles.label, {marginTop: 10}]}>Địa chỉ cụ thể</Text>
           <View style={styles.viewTextInput}>
-            <TextInput multiline placeholder="Nhập địa chỉ cụ thể" />
+            <TextInput
+              multiline
+              placeholder="Nhập địa chỉ cụ thể"
+              value={address}
+              onChangeText={text => setAddress(text)}
+            />
           </View>
-
           <View style={styles.line} />
-
           <CustomTextTitle label={'Quản lý tòa nhà'} labelButton={'Thêm '} />
-
-          <CustomManagerInfor
-            styleView={{marginTop: 10}}
-            avatar={avatar}
-            userName={'Trường Vân'}
-            phoneNumber={`0123456789`}
-            onPress={() => {}}
-          />
-          <CustomManagerInfor
-            styleView={{marginTop: 10}}
-            avatar={avatar}
-            userName={'Trường Vân'}
-            phoneNumber={`0123456789`}
-            onPress={() => {}}
-          />
           <CustomManagerInfor
             styleView={{marginTop: 10}}
             avatar={avatar}
@@ -282,11 +377,9 @@ const AddBuildings = props => {
           />
 
           <View style={styles.line} />
-
           <Text style={[styles.textTitle, {marginVertical: 5}]}>
             Thêm ảnh tòa nhà
           </Text>
-
           <View
             style={{
               height: 200,
@@ -313,14 +406,12 @@ const AddBuildings = props => {
               />
             )}
           </View>
-
           <CustomButton
             styleButton={[styles.buttonUploadIM]}
             label={'Tải lên ảnh đại diện tòa nhà'}
             styleLabel={styles.labelUploadIM}
             onPress={() => setModalCamera(true)}
           />
-
           <View style={{marginBottom: 56}} />
         </ScrollView>
         <CustomTwoButtonBottom
@@ -341,7 +432,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: colors.backgroundGrey,
   },
-  content: {color: 'grey', fontSize: 13},
+  content: {color: 'grey', fontSize: 12},
   label: {fontSize: 15, color: '#5f666b'},
   viewTime: {
     height: 32,

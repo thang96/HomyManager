@@ -30,6 +30,7 @@ const LoginScreen = () => {
     setLoading(true);
     await AuthenticationAPi(password, username)
       .then(async res => {
+        console.log(res);
         if (200 >= res?.status <= 204) {
           let token = res?.data?.token;
           await AsyncStorage.setItem('token', token);
@@ -40,8 +41,7 @@ const LoginScreen = () => {
         }
       })
       .catch(error => {
-        // Alert.alert('Lỗi', `${error}`)
-        setLoading(false);
+        Alert.alert('Lỗi', `${error}`);
         console.log(error);
       });
   };

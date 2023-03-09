@@ -36,7 +36,9 @@ const CustomInput = props => {
         <TouchableOpacity
           onPress={onPress}
           style={[styles.viewButton, {paddingHorizontal: 10}, styleButton]}>
-          <Text>{value ? value : placeholder}</Text>
+          <Text style={{color: value ? 'black' : 'grey'}}>
+            {value ? value : placeholder}
+          </Text>
           <Image
             source={icons.ic_down}
             resizeMode={'contain'}
