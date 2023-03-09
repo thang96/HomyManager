@@ -26,7 +26,9 @@ import AddService from './Home/ServiceManagement/AddService';
 import UtilitiesManager from './Home/UtilitiesManagement/UtilitiesManager';
 import Utilities from './Home/UtilitiesManagement/Utilities';
 import AddUtilities from './Home/UtilitiesManagement/AddUtilities';
-//----------- UtilitiesManager
+//----------- WaterAndElectricityManagement
+import WaterAndElectricityManagement from './Home/WaterAndElectricityManagement/WaterAndElectricityManager';
+//----------- ContractManagement
 import ContractManagement from './Home/ContractManagement/ContractManagement';
 import CreateContract from './Home/ContractManagement/CreateContract';
 //----------- BillManagement
@@ -64,6 +66,7 @@ export {
   AddBuildings,
   AddBuildingsStep2,
   AddBuildingsStep3,
+  AddRoom,
   //-- ContractManagement
   ContractManagement,
   CreateContract,
@@ -77,7 +80,8 @@ export {
   UtilitiesManager,
   Utilities,
   AddUtilities,
-  AddRoom,
+  //-- WaterAndElectricityManagement
+  WaterAndElectricityManagement,
   //-- TenantManager
   TenantManager,
   TenantList,

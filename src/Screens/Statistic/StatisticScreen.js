@@ -16,7 +16,9 @@ const StatisticScreen = () => {
         svgLeft={svgs.LogoApp}
         label={'Thống kê'}
         iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconSecondRight={avatar}
+        pressSeccodIconRight={() => navigation.navigate('StackAccountPage')}
         pressLogo={() => navigation.navigate('StackHomepage')}
       />
     </View>

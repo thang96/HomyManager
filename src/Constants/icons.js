@@ -54,4 +54,5 @@ export default {
   ic_launcher: require('../Assets/Icons/ic_launcher.png'),
   ic_plusUser: require('../Assets/Icons/ic_plusUser.png'),
   ic_lock: require('../Assets/Icons/ic_lock.png'),
+  ic_logOut: require('../Assets/Icons/ic_logOut.png'),
 };

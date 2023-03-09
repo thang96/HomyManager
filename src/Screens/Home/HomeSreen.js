@@ -61,14 +61,15 @@ const HomeScreen = () => {
         svgLeft={svgs.LogoApp}
         label={'Trang chủ'}
         iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconRightTextInput={icons.ic_option}
         iconSecondRight={avatar}
+        pressSeccodIconRight={() => navigation.navigate('StackAccountPage')}
         keyboard={keyboard}
         textSearch={textSearch}
         value={textSearch}
         onChangeText={text => setTextSearch(text)}
         placeholder={'Tìm kiếm...'}
-        pressIconRight={() => navigation.navigate('NotificationScreen')}
       />
       <ScrollView style={styles.eachContainer}>
         <View style={styles.viewRow}>

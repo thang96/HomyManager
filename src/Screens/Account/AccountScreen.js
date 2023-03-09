@@ -17,6 +17,7 @@ const AccountScreen = () => {
         svgLeft={svgs.LogoApp}
         label={'Tài khoản'}
         iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         pressLogo={() => navigation.navigate('StackHomepage')}
       />
       <ScrollView style={styles.scrollView}>
@@ -36,14 +37,35 @@ const AccountScreen = () => {
           <CustomButton label={'Chỉnh sửa'} styleLabel={styles.styleLabel} />
         </View>
         <CustomComponentButton
-          styleButton={{marginTop: 20}}
+          styleButton={[styles.viewShadow, {marginTop: 20}]}
           icon={icons.ic_plusUser}
           label={'Nhân sự'}
         />
         <CustomComponentButton
-          styleButton={{marginTop: 20}}
+          styleButton={[styles.viewShadow, {marginTop: 20}]}
           icon={icons.ic_lock}
           label={'Đổi mật khẩu'}
+        />
+
+        <View style={[styles.viewMidle, styles.viewShadow, {marginTop: 20}]}>
+          <CustomComponentButton icon={icons.ic_trash} label={'Chính sách'} />
+          <View style={styles.viewLine} />
+          <CustomComponentButton
+            icon={icons.ic_trash}
+            label={'Điều khoản sử dụng'}
+          />
+          <View style={styles.viewLine} />
+          <CustomComponentButton icon={icons.ic_trash} label={'Phiên bản'} />
+        </View>
+        <CustomComponentButton
+          styleButton={[styles.viewShadow, {marginTop: 20}]}
+          icon={icons.ic_trash}
+          label={'Xóa tài khoản'}
+        />
+        <CustomComponentButton
+          styleButton={[styles.viewShadow, {marginTop: 20}]}
+          icon={icons.ic_logOut}
+          label={'Đăng xuất'}
         />
       </ScrollView>
     </View>
@@ -57,6 +79,27 @@ const styles = StyleSheet.create({
   numberPhone: {color: '#374047'},
   userName: {fontSize: 15, fontWeight: '600', color: '#374047'},
   styleLabel: {color: colors.mainColor},
+  viewMidle: {
+    minHeight: 155,
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: 8,
+  },
+  viewShadow: {
+    shadowColor: colors.backgroundButtonGrey,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  viewLine: {
+    height: 0.5,
+    backgroundColor: colors.borderInput,
+    marginHorizontal: 10,
+  },
 });
 export default AccountScreen;
 
@@ -71,14 +114,6 @@ const CustomComponentButton = props => {
           height: 50,
           width: '100%',
           backgroundColor: 'white',
-          shadowColor: colors.borderInput,
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 8,
-          elevation: 5,
           flexDirection: 'row',
           alignItems: 'center',
         },

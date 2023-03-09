@@ -34,8 +34,10 @@ const WorkScreen = () => {
         svgLeft={LogoApp}
         label={'Công việc'}
         iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconRightTextInput={icons.ic_option}
         iconSecondRight={avatar}
+        pressSeccodIconRight={() => navigation.navigate('StackAccountPage')}
         keyboard={keyboard}
         textSearch={textSearch}
         value={textSearch}

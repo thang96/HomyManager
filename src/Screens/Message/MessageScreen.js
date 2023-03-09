@@ -26,6 +26,8 @@ const MessageScreen = () => {
         svgLeft={LogoApp}
         label={'Tin nhắn'}
         iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        pressSeccodIconRight={() => navigation.navigate('StackAccountPage')}
         iconSecondRight={avatar}
         keyboard={keyboard}
         textSearch={textSearch}
