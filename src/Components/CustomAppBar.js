@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {colors} from '../Constants';
 import CustomButton from './CustomButton';
 
@@ -13,11 +14,16 @@ const CustomAppBar = props => {
     pressIconRight,
     pressSeccodIconRight,
     svgLeft,
+    pressLogo,
   } = props;
   const ItemIcon = svgLeft;
   return (
     <View style={styles.styleAppBar}>
-      {svgLeft && <ItemIcon width={24} height={24} />}
+      {svgLeft && (
+        <TouchableOpacity onPress={pressLogo}>
+          <ItemIcon width={30} height={30} />
+        </TouchableOpacity>
+      )}
       {iconLeft && (
         <CustomButton
           styleButton={styles.styleButton}
@@ -35,7 +41,7 @@ const CustomAppBar = props => {
           onPress={pressIconRight}
         />
       )}
-      {typeof iconSecondRight == 'string' ? (
+      {typeof iconSecondRight == 'string' && iconSecondRight ? (
         <CustomButton
           icon={iconSecondRight}
           styleIcon={{width: 30, height: 30, borderRadius: 30}}

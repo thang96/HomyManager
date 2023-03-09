@@ -3,7 +3,6 @@ import {View, StyleSheet, Text} from 'react-native';
 import CustomTextInput from './CustomTextInput';
 import CustomButton from './CustomButton';
 import {icons, colors, fonts} from '../Constants';
-import LogoApp from '../Assets/Svgs/LogoApp.svg';
 
 const CustomSearchAppBar = props => {
   const {
@@ -37,8 +36,8 @@ const CustomSearchAppBar = props => {
         {svgLeft && (
           <CustomButton
             svgIcon={svgLeft}
-            widthSvg={24}
-            heightSvg={24}
+            widthSvg={30}
+            heightSvg={30}
             onPress={pressIconLeft}
           />
         )}

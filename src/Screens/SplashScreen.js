@@ -15,7 +15,8 @@ const SplashScreen = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      loginTokenApi();
+      // loginTokenApi();
+      navigation.navigate('HomeNavigation');
     }, 300);
   }, []);
 

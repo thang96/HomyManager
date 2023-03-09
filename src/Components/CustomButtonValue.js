@@ -10,12 +10,12 @@ import {
 import {colors, icons} from '../Constants';
 
 const CustomButtonValue = props => {
-  const {title, important, placeholder, value, type} = props;
+  const {title, important, placeholder, value, type, icon} = props;
   return (
     <View>
       <View
         style={{flexDirection: 'row', alignItems: 'center', marginBottom: 5}}>
-        <Text style={styles.label}>{title}</Text>
+        {title && <Text style={styles.label}>{title}</Text>}
         {important && <Text style={{color: 'red', fontSize: 14}}> *</Text>}
       </View>
       {type == 'button' && (
@@ -25,10 +25,12 @@ const CustomButtonValue = props => {
             <View style={styles.backgroundValue}>
               <Text style={{fontSize: 13, color: '#374047'}}>{value}</Text>
             </View>
-            <Image
-              source={icons.ic_down}
-              style={{width: 20, height: 20, marginLeft: 10}}
-            />
+            {icon && (
+              <Image
+                source={icon}
+                style={{width: 20, height: 20, marginLeft: 10}}
+              />
+            )}
           </View>
         </TouchableOpacity>
       )}

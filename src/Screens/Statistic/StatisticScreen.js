@@ -7,6 +7,7 @@ import CustomSearchAppBar from '../../Components/CustomSearchAppBar';
 import CustomAppBar from '../../Components/CustomAppBar';
 
 const StatisticScreen = () => {
+  const navigation = useNavigation();
   let avatar =
     'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg';
   return (
@@ -16,6 +17,7 @@ const StatisticScreen = () => {
         label={'Thống kê'}
         iconRight={icons.ic_bell}
         iconSecondRight={avatar}
+        pressLogo={() => navigation.navigate('StackHomepage')}
       />
     </View>
   );

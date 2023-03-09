@@ -23,7 +23,7 @@ export default {
   ic_user: require('../Assets/Icons/ic_user.png'),
   ic_upload: require('../Assets/Icons/ic_upload.png'),
   ic_down: require('../Assets/Icons/ic_down.png'),
-  ic_service: require('../Assets/Icons/ic_service.png'),
+  ic_businessBuilding: require('../Assets/Icons/ic_businessBuilding.png'),
   ic_close: require('../Assets/Icons/ic_close.png'),
   ic_waterDrop: require('../Assets/Icons/ic_waterDrop.png'),
   ic_bed: require('../Assets/Icons/ic_bed.png'),
@@ -52,4 +52,6 @@ export default {
   ic_flame: require('../Assets/Icons/ic_flame.png'),
   ic_phone: require('../Assets/Icons/ic_phone.png'),
   ic_launcher: require('../Assets/Icons/ic_launcher.png'),
+  ic_plusUser: require('../Assets/Icons/ic_plusUser.png'),
+  ic_lock: require('../Assets/Icons/ic_lock.png'),
 };
