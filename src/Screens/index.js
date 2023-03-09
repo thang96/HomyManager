@@ -28,6 +28,7 @@ import Utilities from './Home/UtilitiesManagement/Utilities';
 import AddUtilities from './Home/UtilitiesManagement/AddUtilities';
 //----------- WaterAndElectricityManagement
 import WaterAndElectricityManagement from './Home/WaterAndElectricityManagement/WaterAndElectricityManager';
+import WaterAndElectricityInfor from './Home/WaterAndElectricityManagement/WaterAndElectricityInfor';
 //----------- ContractManagement
 import ContractManagement from './Home/ContractManagement/ContractManagement';
 import CreateContract from './Home/ContractManagement/CreateContract';
@@ -82,6 +83,7 @@ export {
   AddUtilities,
   //-- WaterAndElectricityManagement
   WaterAndElectricityManagement,
+  WaterAndElectricityInfor,
   //-- TenantManager
   TenantManager,
   TenantList,

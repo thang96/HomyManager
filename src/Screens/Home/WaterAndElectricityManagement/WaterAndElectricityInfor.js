@@ -3,11 +3,13 @@ import {StyleSheet, View, Text} from 'react-native';
 import {colors, icons, images, svgs} from '../../../Constants';
 import CustomAppBar from '../../../Components/CustomAppBar';
 import {useNavigation} from '@react-navigation/native';
-import CustomButton from '../../../Components/CustomButton';
+import CustomTextTitle from '../../../Components/CustomTextTitle';
 import CustomButtonValue from '../../../Components/CustomButtonValue';
-import ComponentUnfinished from './ComponentUnfinished';
+import CustomPersonInfor from '../../../Components/CustomPersonInfor';
+import {ScrollView} from 'react-native-virtualized-view';
+import CustomWaterAndElectric from '../../../Components/CustomWaterAndElectric';
 
-const WaterAndElectricityManagement = () => {
+const WaterAndElectricityInfor = () => {
   const navigation = useNavigation();
   const [isActive, setIsActive] = useState(1);
   return (
@@ -15,7 +17,7 @@ const WaterAndElectricityManagement = () => {
       <CustomAppBar
         iconLeft={icons.ic_back}
         pressIconLeft={() => navigation.goBack()}
-        label={'Chốt điện nước'}
+        label={'Thông tin điện nước'}
       />
       <View style={{paddingHorizontal: 10}}>
         <CustomButtonValue
@@ -25,36 +27,17 @@ const WaterAndElectricityManagement = () => {
           placeholder={'Chọn tòa nhà'}
           value={'Tòa nhà D2'}
         />
-        <View style={styles.viewButtonTop}>
-          <CustomButton
-            styleButton={[
-              {
-                backgroundColor:
-                  isActive == 1 ? colors.backgroundOrange : 'white',
-              },
-              styles.viewButton,
-            ]}
-            label={'Chưa chốt'}
-            styleLabel={{color: isActive == 1 ? 'white' : '#7F8A93'}}
-            onPress={() => setIsActive(1)}
-          />
-          <CustomButton
-            styleButton={[
-              {
-                backgroundColor:
-                  isActive == 2 ? colors.backgroundOrange : 'white',
-              },
-              styles.viewButton,
-            ]}
-            label={'Đã chốt'}
-            styleLabel={{color: isActive == 2 ? 'white' : '#7F8A93'}}
-            onPress={() => setIsActive(2)}
-          />
-        </View>
       </View>
-      {isActive == 1 ? (
-        <ComponentUnfinished />
-      ) : isActive == 2 ? null : isActive == 3 ? null : null}
+      <ScrollView style={{paddingHorizontal: 10}}>
+        <CustomTextTitle label={'Người gửi'} />
+        <CustomPersonInfor userName={'Kiều Anh'} phoneNumber={'012234456'} />
+        <CustomTextTitle label={'Quản lý ghi chỉ số'} />
+        <CustomPersonInfor userName={'Đức Thắng'} phoneNumber={'012234456'} />
+        <CustomTextTitle label={'Chỉ số trước'} />
+        <View style={[styles.viewBetween, styles.shadowView, {height: 80}]}>
+          <CustomWaterAndElectric />
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -85,5 +68,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     flex: 1,
   },
+  viewBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  shadowView: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    margin: 1,
+  },
 });
-export default WaterAndElectricityManagement;
+export default WaterAndElectricityInfor;

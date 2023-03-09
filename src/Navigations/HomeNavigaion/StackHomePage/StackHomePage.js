@@ -23,6 +23,7 @@ import {
   BillManagement,
   TenantManager,
   WaterAndElectricityManagement,
+  WaterAndElectricityInfor,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -122,6 +123,13 @@ const StackHomepage = () => {
       <Stack.Screen
         component={WaterAndElectricityManagement}
         name={'WaterAndElectricityManagement'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={WaterAndElectricityInfor}
+        name={'WaterAndElectricityInfor'}
         options={{
           headerShown: false,
         }}
