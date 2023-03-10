@@ -24,6 +24,7 @@ import {
   TenantManager,
   WaterAndElectricityManagement,
   WaterAndElectricityInfor,
+  RequestResend,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -130,6 +131,13 @@ const StackHomepage = () => {
       <Stack.Screen
         component={WaterAndElectricityInfor}
         name={'WaterAndElectricityInfor'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={RequestResend}
+        name={'RequestResend'}
         options={{
           headerShown: false,
         }}

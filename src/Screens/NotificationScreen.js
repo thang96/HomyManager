@@ -1,13 +1,51 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
+import {ScrollView} from 'react-native-virtualized-view';
 import CustomAppBar from '../Components/CustomAppBar';
+import CustomButton from '../Components/CustomButton';
+import CustomTextTitle from '../Components/CustomTextTitle';
 import {colors, icons, images} from '../Constants';
-import {updateToken} from '../Store/slices/tokenSlice';
+
 const NotificationScreen = props => {
   const navigation = useNavigation();
+  const [data, setData] = useState(FAKE_DATA);
+
+  const renderItem = (item, index) => {
+    return (
+      <View style={{marginBottom: 10}}>
+        <Text style={styles.time}>{item?.time}</Text>
+        {item?.event.map((item, index) => {
+          return (
+            <TouchableOpacity
+              key={`${index.toString()}`}
+              style={[styles.buttonRender, styles.shadowView]}>
+              <CustomButton
+                disabled={true}
+                icon={icons.ic_bell}
+                styleIcon={{tintColor: colors.mainColor, width: 22, height: 22}}
+                styleButton={styles.viewBell}
+              />
+              <View>
+                <Text style={styles.title}>{item?.title}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text style={styles.duration}>{`${item?.time}  `}</Text>
+                  <Text style={styles.duration}>{item?.day}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
       <CustomAppBar
@@ -15,10 +53,68 @@ const NotificationScreen = props => {
         pressIconLeft={() => navigation.goBack()}
         label={'Thông báo'}
       />
+      <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
+        {data && (
+          <FlatList
+            data={data}
+            keyExtractor={key => key?.time}
+            renderItem={({item, index}) => renderItem(item, index)}
+          />
+        )}
+      </ScrollView>
     </View>
   );
 };
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: colors.backgroundGrey},
+  time: {color: '#374047', fontWeight: '600', fontSize: 15},
+  shadowView: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    margin: 1,
+    elevation: 5,
+  },
+  buttonRender: {
+    height: 64,
+    borderWidth: 1,
+    backgroundColor: 'white',
+    marginBottom: 10,
+    borderColor: 'white',
+    borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  viewBell: {
+    width: 45,
+    height: 45,
+    borderRadius: 50,
+    backgroundColor: '#EDFCFB',
+    marginHorizontal: 10,
+  },
+  title: {fontSize: 15, fontWeight: '600', color: '#374047'},
+  duration: {fontSize: 13, fontWeight: '400', color: '#374047'},
 });
 export default NotificationScreen;
+
+const FAKE_DATA = [
+  {
+    time: '03-10-2023',
+    event: [
+      {title: 'Tiêu đề thông báo', time: '16h30', day: '03-10-2023'},
+      {title: 'Tiêu đề thông báo', time: '20h30', day: '03-10-2023'},
+    ],
+  },
+  {
+    time: '02-10-2023',
+    event: [
+      {title: 'Tiêu đề thông báo', time: '9h30', day: '02-10-2023'},
+      {title: 'Tiêu đề thông báo', time: '10h30', day: '02-10-2023'},
+      {title: 'Tiêu đề thông báo', time: '12h30', day: '02-10-2023'},
+    ],
+  },
+];

@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {MessageScreen} from '../../../Screens';
+import {ChatScreen, MessageScreen} from '../../../Screens';
 const Stack = createStackNavigator();
 const StackMessagePage = () => {
   return (
@@ -8,6 +8,13 @@ const StackMessagePage = () => {
       <Stack.Screen
         component={MessageScreen}
         name={'MessageScreen'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={ChatScreen}
+        name={'ChatScreen'}
         options={{
           headerShown: false,
         }}

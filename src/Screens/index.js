@@ -29,6 +29,7 @@ import AddUtilities from './Home/UtilitiesManagement/AddUtilities';
 //----------- WaterAndElectricityManagement
 import WaterAndElectricityManagement from './Home/WaterAndElectricityManagement/WaterAndElectricityManager';
 import WaterAndElectricityInfor from './Home/WaterAndElectricityManagement/WaterAndElectricityInfor';
+import RequestResend from './Home/WaterAndElectricityManagement/RequestResend';
 //----------- ContractManagement
 import ContractManagement from './Home/ContractManagement/ContractManagement';
 import CreateContract from './Home/ContractManagement/CreateContract';
@@ -44,6 +45,8 @@ import WorkScreen from './Work/WorkScreen';
 import StatisticScreen from './Statistic/StatisticScreen';
 // MessageScreen -----------------------------------------------------------------
 import MessageScreen from './Message/MessageScreen';
+//----------- ChatScreen
+import ChatScreen from './Message/ChatScreen';
 // AccountScreen -----------------------------------------------------------------
 import AccountScreen from './Account/AccountScreen';
 
@@ -84,6 +87,7 @@ export {
   //-- WaterAndElectricityManagement
   WaterAndElectricityManagement,
   WaterAndElectricityInfor,
+  RequestResend,
   //-- TenantManager
   TenantManager,
   TenantList,
@@ -94,6 +98,7 @@ export {
   StatisticScreen,
   // MessageScreen ------------------------------------------
   MessageScreen,
+  ChatScreen,
   // AccountScreen ------------------------------------------
   AccountScreen,
 };
