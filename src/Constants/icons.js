@@ -55,4 +55,7 @@ export default {
   ic_plusUser: require('../Assets/Icons/ic_plusUser.png'),
   ic_lock: require('../Assets/Icons/ic_lock.png'),
   ic_logOut: require('../Assets/Icons/ic_logOut.png'),
+  ic_mic: require('../Assets/Icons/ic_mic.png'),
+  ic_emoji: require('../Assets/Icons/ic_emoji.png'),
+  ic_addCircle: require('../Assets/Icons/ic_addCircle.png'),
 };

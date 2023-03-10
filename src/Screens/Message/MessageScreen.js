@@ -134,14 +134,16 @@ const FAKE_DATA = [
     time: '9h30',
     message: 'Có nghe ko thế,đi đâu rồi?',
     numberOfUnreadMessages: 2,
+    status: true,
     id: 1,
   },
   {
     url: 'https://haycafe.vn/wp-content/uploads/2022/02/Anh-gai-xinh-Viet-Nam.jpg',
     name: 'Kiều Anh',
     time: '9h30',
-    message: 'Alo đang làm gì đấy',
+    message: 'Alo đang trốn đâu đấy',
     numberOfUnreadMessages: 1,
+    status: true,
     id: 2,
   },
   {
@@ -150,6 +152,7 @@ const FAKE_DATA = [
     time: '9h30',
     message: 'Mày về nhà xem,tao cho mày no đòn con ạ',
     numberOfUnreadMessages: 1,
+    status: false,
     id: 3,
   },
   {
@@ -158,6 +161,7 @@ const FAKE_DATA = [
     time: '9h30',
     message: 'Không cần về nữa đâu',
     numberOfUnreadMessages: 0,
+    status: false,
     id: 4,
   },
 ];
