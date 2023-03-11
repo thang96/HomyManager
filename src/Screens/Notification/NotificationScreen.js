@@ -9,10 +9,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
-import CustomAppBar from '../Components/CustomAppBar';
-import CustomButton from '../Components/CustomButton';
-import CustomTextTitle from '../Components/CustomTextTitle';
-import {colors, icons, images} from '../Constants';
+import CustomAppBar from '../../Components/CustomAppBar';
+import CustomButton from '../../Components/CustomButton';
+import CustomTextTitle from '../../Components/CustomTextTitle';
+import {colors, icons, images} from '../../Constants';
 
 const NotificationScreen = props => {
   const navigation = useNavigation();
@@ -25,6 +25,7 @@ const NotificationScreen = props => {
         {item?.event.map((item, index) => {
           return (
             <TouchableOpacity
+              onPress={() => navigation.navigate('DetailNotification', item)}
               key={`${index.toString()}`}
               style={[styles.buttonRender, styles.shadowView]}>
               <CustomButton
@@ -105,16 +106,41 @@ const FAKE_DATA = [
   {
     time: '03-10-2023',
     event: [
-      {title: 'Tiêu đề thông báo', time: '16h30', day: '03-10-2023'},
-      {title: 'Tiêu đề thông báo', time: '20h30', day: '03-10-2023'},
+      {
+        title: 'Tiêu đề thông báo',
+        time: '16h30',
+        day: '03-10-2023',
+        content: 'Test render nội dung thông báo',
+      },
+      {
+        title: 'Tiêu đề thông báo',
+        time: '20h30',
+        day: '03-10-2023',
+        content: 'Test render nội dung thông báo',
+      },
     ],
   },
   {
     time: '02-10-2023',
     event: [
-      {title: 'Tiêu đề thông báo', time: '9h30', day: '02-10-2023'},
-      {title: 'Tiêu đề thông báo', time: '10h30', day: '02-10-2023'},
-      {title: 'Tiêu đề thông báo', time: '12h30', day: '02-10-2023'},
+      {
+        title: 'Tiêu đề thông báo',
+        time: '9h30',
+        day: '02-10-2023',
+        content: 'Test render nội dung thông báo',
+      },
+      {
+        title: 'Tiêu đề thông báo',
+        time: '10h30',
+        day: '02-10-2023',
+        content: 'Test render nội dung thông báo',
+      },
+      {
+        title: 'Tiêu đề thông báo',
+        time: '12h30',
+        day: '02-10-2023',
+        content: 'Test render nội dung thông báo',
+      },
     ],
   },
 ];

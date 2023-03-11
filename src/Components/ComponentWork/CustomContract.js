@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import CustomButtonValue from '../../Components/CustomButtonValue';
-import CustomTextTitle from '../../Components/CustomTextTitle';
+import CustomButtonValue from '../CustomButtonValue';
+import CustomTextTitle from '../CustomTextTitle';
 import {icons} from '../../Constants';
 
 const CustomContract = props => {

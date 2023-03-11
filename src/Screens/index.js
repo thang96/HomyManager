@@ -1,7 +1,8 @@
 // SplashScreen
 import SplashScreen from './SplashScreen';
 // NotificationScreen
-import NotificationScreen from './NotificationScreen';
+import NotificationScreen from './Notification/NotificationScreen';
+import DetailNotification from './Notification/DetailNotification';
 // LoginScreen
 import LoginScreen from './Login/LoginScreen';
 import RegisterScreen from './Login/RegisterScreen';
@@ -41,6 +42,10 @@ import TenantList from './Home/TenantManagement/TenantList';
 import AddNewTenant from './Home/TenantManagement/AddNewTenant';
 // WorkScreen -----------------------------------------------------------------
 import WorkScreen from './Work/WorkScreen';
+import IssueInformation from './Work/IssueInformation';
+import MarkTheIssue from './Work/MarkTheIssue';
+import BillOfIssue from './Work/BillOfIssue';
+import AddExtraFee from './Work/AddExtraFee';
 // StatisticScreen -----------------------------------------------------------------
 import StatisticScreen from './Statistic/StatisticScreen';
 // MessageScreen -----------------------------------------------------------------
@@ -55,6 +60,7 @@ export {
   SplashScreen,
   // NotificationScreen
   NotificationScreen,
+  DetailNotification,
   // LoginScreen
   LoginScreen,
   RegisterScreen,
@@ -94,6 +100,10 @@ export {
   AddNewTenant,
   // Work ------------------------------------------
   WorkScreen,
+  IssueInformation,
+  MarkTheIssue,
+  BillOfIssue,
+  AddExtraFee,
   // StatisticScreen ------------------------------------------
   StatisticScreen,
   // MessageScreen ------------------------------------------

@@ -1,6 +1,12 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {WorkScreen} from '../../../Screens';
+import {
+  IssueInformation,
+  MarkTheIssue,
+  WorkScreen,
+  BillOfIssue,
+  AddExtraFee,
+} from '../../../Screens';
 const Stack = createStackNavigator();
 const StackWorkpage = () => {
   return (
@@ -8,6 +14,34 @@ const StackWorkpage = () => {
       <Stack.Screen
         component={WorkScreen}
         name={'WorkScreen'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={IssueInformation}
+        name={'IssueInformation'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={MarkTheIssue}
+        name={'MarkTheIssue'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={BillOfIssue}
+        name={'BillOfIssue'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={AddExtraFee}
+        name={'AddExtraFee'}
         options={{
           headerShown: false,
         }}

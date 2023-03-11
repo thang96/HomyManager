@@ -1,15 +1,17 @@
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import CustomButtonValue from '../../Components/CustomButtonValue';
-import CustomTextTitle from '../../Components/CustomTextTitle';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import CustomButtonValue from '../CustomButtonValue';
+import CustomTextTitle from '../CustomTextTitle';
 import {icons} from '../../Constants';
 
 const CustomIssue = props => {
+  const {pressIssue} = props;
   const [data, setData] = useState(FAKE_DATE);
-
   const renderItemIssue = (item, index) => {
     return (
-      <View style={styles.viewRender}>
+      <TouchableOpacity
+        onPress={() => pressIssue(item)}
+        style={styles.viewRender}>
         <View style={{flexDirection: 'row', width: '60%'}}>
           <View style={styles.lineOrange} />
           <View>
@@ -23,7 +25,7 @@ const CustomIssue = props => {
           <Text
             style={[{marginTop: 15}, styles.label]}>{`Từ: ${item?.name}`}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 

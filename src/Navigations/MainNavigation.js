@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 
-import {NotificationScreen, SplashScreen} from '../Screens';
+import {DetailNotification, NotificationScreen, SplashScreen} from '../Screens';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeNavigation from './HomeNavigaion/HomeNavigation';
 import LoginNavigation from './LoginNavigation/LoginNavigation';
@@ -27,6 +27,11 @@ const MainNavigation = () => {
       <Stack.Screen
         component={NotificationScreen}
         name={'NotificationScreen'}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={DetailNotification}
+        name={'DetailNotification'}
         options={{headerShown: false}}
       />
       <Stack.Screen

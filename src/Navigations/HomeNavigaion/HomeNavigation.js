@@ -40,7 +40,7 @@ const HomeNavigation = props => {
         tabBarHideOnKeyboard: true,
         tabBarStyle: {height: 56},
       })}
-      initialRouteName="StackStatisticPage">
+      initialRouteName="StackWorkpage">
       <Tab.Screen
         component={StackHomepage}
         name={'StackHomepage'}
@@ -102,6 +102,6 @@ const HomeNavigation = props => {
 const styles = StyleSheet.create({
   view: {justifyContent: 'center', alignItems: 'center'},
   image: {width: 28, height: 28},
-  text: {textAlign: 'center', fontSize: 10},
+  text: {textAlign: 'center', fontSize: 10, width: 80},
 });
 export default HomeNavigation;

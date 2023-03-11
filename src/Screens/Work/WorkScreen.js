@@ -5,10 +5,9 @@ import LogoApp from '../../Assets/Svgs/LogoApp.svg';
 import {useNavigation} from '@react-navigation/native';
 import CustomSearchAppBar from '../../Components/CustomSearchAppBar';
 import CustomButton from '../../Components/CustomButton';
-import CustomButtonBottom from '../../Components/CustomButtonBottom';
-import CustomContract from './CustomContract';
-import CustomIssue from './CustomIssue';
-import CustomBill from './CustomBill';
+import CustomContract from '../../Components/ComponentWork/CustomContract';
+import CustomIssue from '../../Components/ComponentWork/CustomIssue';
+import CustomBill from '../../Components/ComponentWork/CustomBill';
 
 const WorkScreen = () => {
   const navigation = useNavigation();
@@ -88,7 +87,9 @@ const WorkScreen = () => {
         ) : isActive == 2 ? (
           <CustomBill />
         ) : isActive == 3 ? (
-          <CustomIssue />
+          <CustomIssue
+            pressIssue={item => navigation.navigate('IssueInformation', item)}
+          />
         ) : null}
       </View>
     </View>

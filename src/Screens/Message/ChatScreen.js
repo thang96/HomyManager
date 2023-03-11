@@ -38,10 +38,10 @@ const ChatScreen = props => {
             alignItems: item?.id == myId ? 'flex-end' : 'flex-start',
           }}>
           <View
-            style={{
-              backgroundColor: item?.id == myId ? colors.mainColor : '#EBEDEE',
-              borderRadius: 5,
-            }}>
+            style={[
+              {backgroundColor: item?.id == myId ? colors.mainColor : 'white'},
+              styles.shadowView,
+            ]}>
             <Text
               style={{
                 maxWidth: 300,
@@ -99,6 +99,18 @@ const ChatScreen = props => {
 };
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: colors.backgroundGrey},
+  shadowView: {
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    margin: 1,
+    elevation: 5,
+  },
 });
 export default ChatScreen;
 
