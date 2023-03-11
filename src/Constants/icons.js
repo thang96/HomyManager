@@ -58,4 +58,7 @@ export default {
   ic_mic: require('../Assets/Icons/ic_mic.png'),
   ic_emoji: require('../Assets/Icons/ic_emoji.png'),
   ic_addCircle: require('../Assets/Icons/ic_addCircle.png'),
+  ic_book: require('../Assets/Icons/ic_book.png'),
+  ic_questionMark: require('../Assets/Icons/ic_questionMark.png'),
+  ic_exclamationMark: require('../Assets/Icons/ic_exclamationMark.png'),
 };

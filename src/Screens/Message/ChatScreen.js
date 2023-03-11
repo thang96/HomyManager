@@ -1,6 +1,6 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, Text, View, FlatList, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, Keyboard, ScrollView} from 'react-native';
 import ComponentChatBarBottom from '../../Components/ComponentChatBarBottom';
 import CustomAppBarChatScreen from '../../Components/CustomAppBarChatScreen';
 import {colors, icons} from '../../Constants';
@@ -10,9 +10,18 @@ const avatar =
 const ChatScreen = props => {
   const route = useRoute();
   const navigation = useNavigation();
+  const [keyboard, setKeyboard] = useState(false);
   const [data, setData] = useState(FAKE_DATA);
   const scrollViewRef = useRef();
   const [message, setMessage] = useState('');
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboard(true);
+    });
+    Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboard(false);
+    });
+  }, []);
   const myId = 1;
 
   const renderItem = (item, index) => {
@@ -55,13 +64,14 @@ const ChatScreen = props => {
 
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({animated: true});
-  }, [data]);
+  }, [data, keyboard]);
 
   const sendMessage = () => {
     let eachMS = [...data];
     if (message != '') {
       eachMS.push({id: 1, message: message});
       setData(eachMS);
+      setMessage('');
     }
   };
 
@@ -79,6 +89,7 @@ const ChatScreen = props => {
         {data.map((item, index) => renderItem(item, index))}
       </ScrollView>
       <ComponentChatBarBottom
+        value={message}
         placeholder={'Nhập tin nhắn'}
         onChangeText={text => setMessage(text)}
         pressSendMessage={() => sendMessage()}

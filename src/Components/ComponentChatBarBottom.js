@@ -6,7 +6,7 @@ import {colors, icons} from '../Constants';
 import CustomButton from './CustomButton';
 
 const ComponentChatBarBottom = props => {
-  const {placeholder, onChangeText, pressSendMessage} = props;
+  const {placeholder, onChangeText, pressSendMessage, value} = props;
   return (
     <View style={styles.styleChatBar}>
       <CustomButton
@@ -18,6 +18,7 @@ const ComponentChatBarBottom = props => {
         style={{flex: 1}}
         placeholder={placeholder}
         onChangeText={onChangeText}
+        value={value}
       />
       <CustomButton
         styleButton={{width: 40, height: 50}}

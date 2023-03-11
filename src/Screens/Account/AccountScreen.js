@@ -48,14 +48,17 @@ const AccountScreen = () => {
         />
 
         <View style={[styles.viewMidle, styles.viewShadow, {marginTop: 20}]}>
-          <CustomComponentButton icon={icons.ic_trash} label={'Chính sách'} />
+          <CustomComponentButton icon={icons.ic_book} label={'Chính sách'} />
           <View style={styles.viewLine} />
           <CustomComponentButton
-            icon={icons.ic_trash}
+            icon={icons.ic_questionMark}
             label={'Điều khoản sử dụng'}
           />
           <View style={styles.viewLine} />
-          <CustomComponentButton icon={icons.ic_trash} label={'Phiên bản'} />
+          <CustomComponentButton
+            icon={icons.ic_exclamationMark}
+            label={'Phiên bản'}
+          />
         </View>
         <CustomComponentButton
           styleButton={[styles.viewShadow, {marginTop: 20}]}
