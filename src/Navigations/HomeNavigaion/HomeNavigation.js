@@ -40,7 +40,7 @@ const HomeNavigation = props => {
         tabBarHideOnKeyboard: true,
         tabBarStyle: {height: 56},
       })}
-      initialRouteName="StackWorkpage">
+      initialRouteName="StackStatisticPage">
       <Tab.Screen
         component={StackHomepage}
         name={'StackHomepage'}
