@@ -25,11 +25,12 @@ import {
   WaterAndElectricityManagement,
   WaterAndElectricityInfor,
   RequestResend,
+  ServiceDetail,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
   return (
-    <Stack.Navigator initialRouteName="WaterAndElectricityManagement">
+    <Stack.Navigator initialRouteName="HomeScreen">
       <Stack.Screen
         component={HomeScreen}
         name={'HomeScreen'}
@@ -96,6 +97,13 @@ const StackHomepage = () => {
       <Stack.Screen
         component={AddService}
         name={'AddService'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={ServiceDetail}
+        name={'ServiceDetail'}
         options={{
           headerShown: false,
         }}

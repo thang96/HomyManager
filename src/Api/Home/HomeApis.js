@@ -1,10 +1,10 @@
 import axios from 'axios';
 import {BASEURL} from '../BASEURL';
 
-export const GetAllHauseApi = token => {
+export const GetListHausesApi = token => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/house`, {
+      .get(`${BASEURL}/houses`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -39,10 +39,10 @@ export const HauseDetailApi = (token, hauseId) => {
   });
 };
 
-export const GetAllCityApi = token => {
+export const GetLocationCitysApi = token => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/locations/city`, {
+      .get(`${BASEURL}/locations/cites`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export const GetAllCityApi = token => {
 export const GetDistrictByCityIdApi = (token, cityId) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/locations/city/${cityId}/district?name=`, {
+      .get(`${BASEURL}/locations/cites/${cityId}/districts`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -77,10 +77,10 @@ export const GetDistrictByCityIdApi = (token, cityId) => {
   });
 };
 
-export const GetWardByCityIdApi = (token, districtId) => {
+export const GetWardByDistrictIdApi = (token, districtId) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/locations/district/${districtId}/ward?name=`, {
+      .get(`${BASEURL}/locations/districts/${districtId}/wards`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

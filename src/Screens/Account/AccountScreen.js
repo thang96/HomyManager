@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 import {colors, icons, images, svgs} from '../../Constants';
-import LogoApp from '../../Assets/Svgs/LogoApp.svg';
 import {useNavigation} from '@react-navigation/native';
-import CustomSearchAppBar from '../../Components/CustomSearchAppBar';
 import CustomAppBar from '../../Components/CustomAppBar';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import CustomButton from '../../Components/CustomButton';
+import {useSelector} from 'react-redux';
+import {userInfor} from '../../Store/slices/userInfoSlice';
 
 const AccountScreen = () => {
   const navigation = useNavigation();
-  const [userInfo, setUserInfo] = useState(FAKE_DATA);
+  const userStore = useSelector(userInfor);
+
   return (
     <View style={styles.container}>
       <CustomAppBar
@@ -25,13 +26,14 @@ const AccountScreen = () => {
           <View style={styles.viewRow}>
             <Image
               source={
-                userInfo?.avatar ? {uri: userInfo?.avatar} : icons.ic_user
+                userStore?.avatar ? {uri: userStore?.avatar} : icons.ic_user
               }
               style={styles.avatar}
             />
             <View>
-              <Text style={styles.numberPhone}>0943437458</Text>
-              <Text style={styles.userName}>Bùi Đức Thắng</Text>
+              <Text
+                style={styles.numberPhone}>{`${userStore?.phoneNumber}`}</Text>
+              <Text style={styles.userName}>{`${userStore?.fullName}`}</Text>
             </View>
           </View>
           <CustomButton label={'Chỉnh sửa'} styleLabel={styles.styleLabel} />
@@ -130,9 +132,4 @@ const CustomComponentButton = props => {
       <Text style={{color: '#374047', fontSize: 15}}>{label}</Text>
     </TouchableOpacity>
   );
-};
-
-const FAKE_DATA = {
-  avatar:
-    'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg',
 };

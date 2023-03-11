@@ -12,19 +12,26 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {GetAllHauseApi} from '../../Api/Home/HomeApis';
+import {useDispatch, useSelector} from 'react-redux';
+import {GetListHausesApi} from '../../Api/Home/HomeApis';
+import {GetUserAPi} from '../../Api/User/UserApis';
 import CustomButton from '../../Components/CustomButton';
 import CustomLoading from '../../Components/CustomLoading';
 import CustomSearchAppBar from '../../Components/CustomSearchAppBar';
 import {colors, icons, images, svgs} from '../../Constants';
+import {token} from '../../Store/slices/tokenSlice';
+import {updateUserInfor, userInfor} from '../../Store/slices/userInfoSlice';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [keyboard, setKeyboard] = useState(false);
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
-  const [listHause, setListHause] = useState([]);
+  const [listHauses, setlistHausess] = useState([]);
   const widthImage = Dimensions.get('window').width / 2 - 20;
+  const dispatch = useDispatch();
+  const tokenStore = useSelector(token);
+  // const userStore = useSelector(userInfor);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -40,20 +47,26 @@ const HomeScreen = () => {
   }, []);
 
   const getData = async () => {
-    await AsyncStorage.getItem('token').then(async tokenStore => {
-      if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
-        await GetAllHauseApi(tokenStore)
-          .then(res => {
+    if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
+      await GetUserAPi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
             setLoading(false);
-            setListHause(res?.data);
-          })
-          .catch(error => console.log(error));
-      }
-    });
+            dispatch(updateUserInfor(res?.data));
+          }
+        })
+        .catch(error => console.log(error));
+
+      await GetListHausesApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            setlistHausess(res?.data);
+          }
+        })
+        .catch(error => console.log(error));
+    }
   };
 
-  let avatar =
-    'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg';
   return (
     <View style={styles.container}>
       {loading && <CustomLoading modalVisible={loading} />}
@@ -63,7 +76,7 @@ const HomeScreen = () => {
         iconRight={icons.ic_bell}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconRightTextInput={icons.ic_option}
-        iconSecondRight={avatar}
+        iconSecondRight={null}
         pressSeccodIconRight={() => navigation.navigate('StackAccountPage')}
         keyboard={keyboard}
         textSearch={textSearch}
@@ -79,7 +92,7 @@ const HomeScreen = () => {
             imageBG={images.im_frame1}
             icon={icons.ic_building}
             label={'Số tòa nhà'}
-            labelNumber={`${listHause.length}`}
+            labelNumber={`${listHauses.length}`}
             onPress={() => navigation.navigate('BuildingManager')}
           />
 

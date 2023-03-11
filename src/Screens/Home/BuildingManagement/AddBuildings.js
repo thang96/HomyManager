@@ -27,15 +27,16 @@ import CustomSuggest from '../../../Components/CustomSuggest';
 import CustomModalPicker from '../../../Components/CustomModalPicker';
 import CustomLoading from '../../../Components/CustomLoading';
 import {
-  GetAllCityApi,
+  GetLocationCitysApi,
   GetDistrictByCityIdApi,
-  GetWardByCityIdApi,
+  GetWardByDistrictIdApi,
 } from '../../../Api/Home/HomeApis';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
 
 const AddBuildings = props => {
   const navigation = useNavigation();
-  const [token, setToken] = useState();
+  const tokenStore = useSelector(token);
   const [loading, setLoading] = useState(true);
 
   let avatar =
@@ -76,17 +77,12 @@ const AddBuildings = props => {
   }, []);
 
   const getCityData = async () => {
-    await AsyncStorage.getItem('token')
-      .then(async value => {
-        setToken(value);
-        await GetAllCityApi(value)
-          .then(res => {
-            if (res?.status == 200) {
-              setListCity(res?.data);
-              setLoading(false);
-            }
-          })
-          .catch(error => console.log(error));
+    await GetLocationCitysApi(tokenStore)
+      .then(res => {
+        if (res?.status == 200) {
+          setListCity(res?.data);
+          setLoading(false);
+        }
       })
       .catch(error => console.log(error));
   };
@@ -95,7 +91,7 @@ const AddBuildings = props => {
     setCityName(item?.name);
     setCityId(item?.id);
     setLoading(true);
-    await GetDistrictByCityIdApi(token, item?.id)
+    await GetDistrictByCityIdApi(tokenStore, item?.id)
       .then(res => {
         if (res?.status == 200) {
           setListDistrict(res?.data);
@@ -109,9 +105,8 @@ const AddBuildings = props => {
     setDistrictName(item?.name);
     setDistrictId(item?.id);
     setLoading(true);
-    await GetWardByCityIdApi(token, item?.id)
+    await GetWardByDistrictIdApi(tokenStore, item?.id)
       .then(res => {
-        console.log(res?.data);
         if (res?.status == 200) {
           setListWard(res?.data);
           setLoading(false);

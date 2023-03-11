@@ -21,59 +21,65 @@ import {ScrollView} from 'react-native-virtualized-view';
 const RegisterScreen = () => {
   const navigation = useNavigation();
   return (
-    <ImageBackground
-      style={styles.container}
-      source={images.im_backgroundLogin}>
-      <CustomButton
-        icon={icons.ic_back}
-        styleIcon={styles.iconBack}
-        styleButton={styles.buttonBack}
-        onPress={() => navigation.goBack()}
-      />
-      <ScrollView style={{paddingTop: 260}}>
-        <Text style={styles.title}>Đăng ký tài khoản</Text>
-        <CustomSuggest
-          labelStyle={{textAlign: 'center'}}
-          label={
-            'Vui lòng cung cấp thông tin dưới đây để đăng ký tài khoản cho số điện thoại '
-          }
-        />
-        <Text style={[styles.content, {marginTop: 10}]}>Họ và tên</Text>
-        <CustomTextInput
-          styleViewTextInput={styles.styleViewTextInput}
-          placeholder={'Nhập họ và tên'}
-          value={''}
-          onChangeText={text => {}}
-        />
-        <Text style={[styles.content, {marginTop: 10}]}>Email</Text>
-        <CustomTextInput
-          styleViewTextInput={styles.styleViewTextInput}
-          placeholder={'Nhập email'}
-          value={''}
-          onChangeText={text => {}}
-        />
-        <Text style={[styles.content, {marginTop: 10}]}>Mật khẩu</Text>
-        <CustomTextInput
-          styleViewTextInput={styles.styleViewTextInput}
-          placeholder={'Nhập mật khẩu'}
-          value={''}
-          onChangeText={text => {}}
-        />
-        <Text style={[styles.content, {marginTop: 10}]}>Nhập lại mật khẩu</Text>
-        <CustomTextInput
-          styleViewTextInput={styles.styleViewTextInput}
-          placeholder={'Nhập lại mật khẩu'}
-          value={''}
-          onChangeText={text => {}}
-        />
+    <View style={{flex: 1}}>
+      <ImageBackground
+        style={styles.container}
+        source={images.im_backgroundLogin}>
         <CustomButton
-          label={'Tiếp tục'}
-          styleButton={styles.styleButton}
-          styleLabel={styles.styleLabel}
-          onPress={() => navigation.navigate('VerifyOTPScreen')}
+          icon={icons.ic_back}
+          styleIcon={styles.iconBack}
+          styleButton={styles.buttonBack}
+          onPress={() => navigation.goBack()}
         />
-      </ScrollView>
-    </ImageBackground>
+        <ScrollView style={{paddingTop: 260}}>
+          <Text style={styles.title}>Đăng ký tài khoản</Text>
+          <CustomSuggest
+            labelStyle={{textAlign: 'center'}}
+            label={
+              'Vui lòng cung cấp thông tin dưới đây để đăng ký tài khoản cho số điện thoại '
+            }
+          />
+          <Text style={[styles.content, {marginTop: 10}]}>Họ và tên</Text>
+          <CustomTextInput
+            styleViewTextInput={styles.styleViewTextInput}
+            placeholder={'Nhập họ và tên'}
+            value={''}
+            onChangeText={text => {}}
+          />
+          <Text style={[styles.content, {marginTop: 10}]}>Email</Text>
+          <CustomTextInput
+            styleViewTextInput={styles.styleViewTextInput}
+            placeholder={'Nhập email'}
+            value={''}
+            onChangeText={text => {}}
+          />
+          <Text style={[styles.content, {marginTop: 10}]}>Mật khẩu</Text>
+          <CustomTextInput
+            styleViewTextInput={styles.styleViewTextInput}
+            placeholder={'Nhập mật khẩu'}
+            value={''}
+            onChangeText={text => {}}
+          />
+          <Text style={[styles.content, {marginTop: 10}]}>
+            Nhập lại mật khẩu
+          </Text>
+          <CustomTextInput
+            styleViewTextInput={styles.styleViewTextInput}
+            placeholder={'Nhập lại mật khẩu'}
+            value={''}
+            onChangeText={text => {}}
+          />
+          <CustomButton
+            label={'Tiếp tục'}
+            styleButton={styles.styleButton}
+            styleLabel={styles.styleLabel}
+            onPress={() => navigation.navigate('VerifyOTPScreen')}
+          />
+
+          <View style={{height: 350}} />
+        </ScrollView>
+      </ImageBackground>
+    </View>
   );
 };
 const styles = StyleSheet.create({

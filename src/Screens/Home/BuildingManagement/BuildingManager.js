@@ -13,7 +13,7 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-import {GetAllHauseApi} from '../../../Api/Home/HomeApis';
+import {GetListHausesApi} from '../../../Api/Home/HomeApis';
 import CustomButton from '../../../Components/CustomButton';
 import CustomButtonBottom from '../../../Components/CustomButtonBottom';
 import CustomLoading from '../../../Components/CustomLoading';
@@ -26,7 +26,7 @@ const BuildingManager = () => {
   const [keyboard, setKeyboard] = useState(false);
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
-  const [listHause, setListHause] = useState([]);
+  const [listHauses, setListHauses] = useState([]);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -44,11 +44,11 @@ const BuildingManager = () => {
   const getData = async () => {
     await AsyncStorage.getItem('token').then(async tokenStore => {
       if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
-        await GetAllHauseApi(tokenStore)
+        await GetListHausesApi(tokenStore)
           .then(res => {
             if (res?.status == 200) {
               setLoading(false);
-              setListHause(res?.data);
+              setListHauses(res?.data);
             }
           })
           .catch(error => console.log(error));
@@ -56,7 +56,7 @@ const BuildingManager = () => {
     });
   };
 
-  const renderListHause = (item, index) => {
+  const renderlistHauses = (item, index) => {
     return (
       <CustomRenderBuilding
         name={`${item?.name}`}
@@ -95,9 +95,9 @@ const BuildingManager = () => {
         <View style={{paddingHorizontal: 10, flex: 1}}>
           <CustomTextTitle label={'Tòa nhà hiện có'} />
           <FlatList
-            data={listHause}
+            data={listHauses}
             keyExtractor={(item, index) => `${item[index]?.id}`}
-            renderItem={({item, index}) => renderListHause(item, index)}
+            renderItem={({item, index}) => renderlistHauses(item, index)}
           />
         </View>
         <CustomButtonBottom

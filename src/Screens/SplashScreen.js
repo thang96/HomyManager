@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AuthenticationAPi} from '../Api/Login/LoginApis';
 import CustomLoading from '../Components/CustomLoading';
 import {colors, icons, images} from '../Constants';
-import {updateToken} from '../Store/slices/tokenSlice';
+import {token, updateToken} from '../Store/slices/tokenSlice';
 
 const SplashScreen = () => {
   const navigation = useNavigation();
@@ -15,8 +15,7 @@ const SplashScreen = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      // loginTokenApi();
-      navigation.navigate('HomeNavigation');
+      loginTokenApi();
     }, 300);
   }, []);
 
@@ -26,6 +25,7 @@ const SplashScreen = () => {
         let userStore = JSON.parse(user);
         if (userStore != null && userStore != undefined && userStore != '') {
           callApiToken(userStore);
+          dispatch(updateToken(userStore));
         } else {
           navigation.navigate('LoginNavigation');
         }

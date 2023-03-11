@@ -14,15 +14,21 @@ import {
 
 import CustomButtonBottom from '../../../Components/CustomButtonBottom';
 import {icons, colors} from '../../../Constants';
-import CustomChecker from '../../../Components/CustomChecker';
+import CustomLoading from '../../../Components/CustomLoading';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
 import CustomRenderItem from '../../../Components/CustomRenderItem';
+import {useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
+import {GetListServicesAPi} from '../../../Api/Home/Service/ServiceApis';
+import RenderService from '../../../Components/ComponentHome/RenderService';
 
 const ServiceManager = props => {
   const navigation = useNavigation();
   const [keyboard, setKeyboard] = useState(false);
   const [textSearch, setTextSearch] = useState('');
+  const [loading, setLoading] = useState(true);
+  const tokenStore = useSelector(token);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -32,16 +38,23 @@ const ServiceManager = props => {
       setKeyboard(false);
     });
   }, []);
+  useEffect(() => {
+    getListService();
+  }, []);
 
-  const [listSevice, setListSevice] = useState([
-    {label: 'Điện', value: '4000/KWH', icon: icons.ic_electricity},
-    {label: 'Nước', value: '5000/M³', icon: icons.ic_waterDrop},
-    {label: 'Wifi', value: '50000/T', icon: icons.ic_wifi},
-    {label: 'Ga', value: '200000/T', icon: icons.ic_flame},
-    {label: 'Rác', value: '30000/T', icon: icons.ic_trash},
-    {label: 'Ga2', value: '200000/T', icon: icons.ic_electricity},
-    {label: 'Ga3', value: '200000/T', icon: icons.ic_electricity},
-  ]);
+  const getListService = async () => {
+    await GetListServicesAPi(tokenStore)
+      .then(res => {
+        if (res?.status == 200) {
+          setListSevice(res?.data);
+          setLoading(false);
+        }
+      })
+      .catch(error => console.log(error));
+  };
+
+  const [listSevice, setListSevice] = useState([]);
+  console.log(listSevice);
 
   const renderListService = (item, index) => {
     const updateItem = () => {
@@ -55,17 +68,18 @@ const ServiceManager = props => {
       setListSevice(newList);
     };
     return (
-      <CustomRenderItem
+      <RenderService
         icon={item?.icon}
-        label={item?.label}
-        value={item?.value}
-        onPress={() => updateItem()}
+        label={item?.name}
+        value={item?.fee}
+        onPress={() => navigation.navigate('ServiceDetail', item?.id)}
       />
     );
   };
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {loading && <CustomLoading />}
       <KeyboardAvoidingView style={{flex: 1}}>
         <CustomSearchAppBar
           iconLeft={icons.ic_back}
@@ -93,7 +107,7 @@ const ServiceManager = props => {
                 scrollEnabled={false}
                 numColumns={2}
                 data={listSevice}
-                keyExtractor={key => key.label}
+                keyExtractor={key => key.id}
                 renderItem={({item, index}) => renderListService(item, index)}
               />
             ) : null}
@@ -101,7 +115,7 @@ const ServiceManager = props => {
 
           <CustomButtonBottom
             label={'Thêm dịch vụ mới'}
-            onPress={() => navigation.navigate('Service')}
+            onPress={() => navigation.navigate('AddService')}
           />
         </View>
       </KeyboardAvoidingView>

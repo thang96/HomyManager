@@ -23,6 +23,7 @@ import AddRoom from './Home/BuildingManagement/AddRoom';
 import ServiceManager from './Home/ServiceManagement/ServiceManager';
 import Service from './Home/ServiceManagement/Service';
 import AddService from './Home/ServiceManagement/AddService';
+import ServiceDetail from './Home/ServiceManagement/ServiceDetail';
 //----------- UtilitiesManager
 import UtilitiesManager from './Home/UtilitiesManagement/UtilitiesManager';
 import Utilities from './Home/UtilitiesManagement/Utilities';
@@ -86,6 +87,7 @@ export {
   ServiceManager,
   Service,
   AddService,
+  ServiceDetail,
   //-- UtilitiesManager
   UtilitiesManager,
   Utilities,

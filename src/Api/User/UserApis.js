@@ -1,18 +1,14 @@
 import axios from 'axios';
 import {BASEURL} from '../BASEURL';
 
-export const AuthenticationAPi = (password, username) => {
-  let data = {
-    password: password,
-    username: username,
-  };
+export const GetUserAPi = token => {
   return new Promise((resolve, reject) => {
     axios
-      .post(`${BASEURL}/auth`, data, {
+      .get(`${BASEURL}/users/me`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          // Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       .then(res => {

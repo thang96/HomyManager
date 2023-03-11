@@ -63,13 +63,13 @@ const CustomSearchAppBar = props => {
             styleIcon={{width: 30, height: 30, borderRadius: 30}}
             onPress={pressSeccodIconRight}
           />
-        ) : (
+        ) : iconSecondRight == null || iconSecondRight == undefined ? (
           <CustomButton
-            icon={iconSecondRight}
-            styleIcon={styles.icon}
+            icon={icons.ic_user}
+            styleIcon={{width: 24, height: 24}}
             onPress={pressSeccodIconRight}
           />
-        )}
+        ) : null}
       </View>
       <View style={styles.viewContainer}>
         <View style={styles.viewSearch}>

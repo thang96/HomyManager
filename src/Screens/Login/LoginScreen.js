@@ -6,6 +6,7 @@ import {
   Alert,
   Text,
   ImageBackground,
+  ScrollView,
 } from 'react-native';
 import {colors, icons, images} from '../../Constants';
 import CustomTextInput from '../../Components/CustomTextInput';
@@ -30,7 +31,6 @@ const LoginScreen = () => {
     setLoading(true);
     await AuthenticationAPi(password, username)
       .then(async res => {
-        console.log(res);
         if (200 >= res?.status <= 204) {
           let token = res?.data?.token;
           await AsyncStorage.setItem('token', token);
@@ -47,64 +47,81 @@ const LoginScreen = () => {
   };
 
   return (
-    <ImageBackground
-      source={images.im_backgroundLogin}
-      style={styles.container}>
-      {loading && <CustomLoading modalVisible={loading} />}
-      <Text style={styles.title}>Đăng nhập/ Đăng ký</Text>
-      <View style={{marginTop: 30}}>
-        <Text style={styles.content}>Tài khoản</Text>
-        <CustomTextInput
-          styleViewTextInput={styles.styleViewTextInput}
-          placeholder={'nhập tài khoản'}
-          value={username}
-          onChangeText={text => setUsername(text)}
-        />
-      </View>
-      <View style={{marginTop: 15}}>
-        <Text style={styles.content}>Mật khẩu</Text>
-        <CustomTextInput
-          secureTextEntry={isShow ? false : true}
-          styleViewTextInput={styles.styleViewTextInput}
-          placeholder={'nhập mật khẩu'}
-          value={password}
-          onChangeText={text => setPassword(text)}
-          iconRight={isShow ? icons.ic_show : icons.ic_hide}
-          styleIconRight={{
-            width: 30,
-            height: 30,
-            tintColor: '#374047',
-          }}
-          onPressIconRight={() => setIsShow(!isShow)}
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          marginTop: 10,
-        }}>
-        <Text style={{fontSize: 13, color: '#7F8A93'}}>
-          Không có tài khoản?
-        </Text>
-        <CustomButton
-          styleLabel={{color: colors.mainColor, fontWeight: '600'}}
-          label={'Đăng ký ngay'}
-          onPress={() => navigation.navigate('RegisterScreen')}
-        />
-      </View>
-      <CustomButton
-        label={'Đăng nhập'}
-        styleButton={styles.styleButton}
-        styleLabel={styles.styleLabel}
-        onPress={() => loginFuntion()}
-      />
-    </ImageBackground>
+    <View style={{flex: 1}}>
+      <ImageBackground
+        source={images.im_backgroundLogin}
+        style={styles.container}>
+        {loading && <CustomLoading modalVisible={loading} />}
+        <ScrollView style={{paddingTop: 220}}>
+          <Text style={styles.title}>Đăng nhập/ Đăng ký</Text>
+          <View style={{marginTop: 30}}>
+            <Text style={styles.content}>Tài khoản</Text>
+            <CustomTextInput
+              styleViewTextInput={styles.styleViewTextInput}
+              placeholder={'nhập tài khoản'}
+              value={username}
+              onChangeText={text => setUsername(text)}
+            />
+          </View>
+          <View style={{marginTop: 15}}>
+            <Text style={styles.content}>Mật khẩu</Text>
+            <CustomTextInput
+              secureTextEntry={isShow ? false : true}
+              styleViewTextInput={styles.styleViewTextInput}
+              placeholder={'nhập mật khẩu'}
+              value={password}
+              onChangeText={text => setPassword(text)}
+              iconRight={isShow ? icons.ic_show : icons.ic_hide}
+              styleIconRight={{
+                width: 30,
+                height: 30,
+                tintColor: '#374047',
+              }}
+              onPressIconRight={() => setIsShow(!isShow)}
+            />
+          </View>
+
+          <CustomButton
+            styleButton={{alignSelf: 'flex-end', marginTop: 10}}
+            styleLabel={{color: colors.mainColor, fontWeight: '600'}}
+            label={'Quên mật khẩu'}
+          />
+
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              marginTop: 10,
+            }}>
+            <Text style={{fontSize: 13, color: '#7F8A93'}}>
+              Không có tài khoản?
+            </Text>
+            <CustomButton
+              styleLabel={{color: colors.mainColor, fontWeight: '600'}}
+              label={'Đăng ký ngay'}
+              onPress={() => navigation.navigate('RegisterScreen')}
+            />
+          </View>
+          <CustomButton
+            label={'Đăng nhập'}
+            styleButton={styles.styleButton}
+            styleLabel={styles.styleLabel}
+            onPress={() => loginFuntion()}
+          />
+          <View style={{height: 250}} />
+        </ScrollView>
+      </ImageBackground>
+    </View>
   );
 };
 const styles = StyleSheet.create({
-  container: {flex: 1, justifyContent: 'center', paddingHorizontal: 10},
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    paddingTop: 50,
+  },
   title: {
     color: colors.mainColor,
     fontWeight: 'bold',
