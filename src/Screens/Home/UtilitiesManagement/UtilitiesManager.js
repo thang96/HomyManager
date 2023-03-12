@@ -88,7 +88,7 @@ const UtilitiesManager = props => {
 
           <CustomButtonBottom
             label={'Thêm tiện ích mới'}
-            onPress={() => navigation.navigate('Utilities')}
+            onPress={() => navigation.navigate('AddUtilities')}
           />
         </View>
       </KeyboardAvoidingView>

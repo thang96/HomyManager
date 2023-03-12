@@ -9,88 +9,128 @@ import {
   Image,
   KeyboardAvoidingView,
   FlatList,
+  Keyboard,
 } from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
-import CustomAppBar from '../../../Components/CustomAppBar';
 import CustomSuggest from '../../../Components/CustomSuggest';
 import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
-import CustomPaidService from '../../../Components/CustomPaidService';
 import CustomFreeService from '../../../Components/CustomFreeService';
 import CustomAppBarStep from '../../../Components/CustomAppBarStep';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {GetAmenityApi, GetServiceApi} from '../../../Api/Home/HomeApis';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  commonState,
+  serviceState,
+  amenityState,
+  updateServices,
+  updateAmenity,
+} from '../../../Store/slices/commonSlice';
+import {token} from '../../../Store/slices/tokenSlice';
+import RenderService from '../../../Components/ComponentHome/RenderService';
+import CustomLoading from '../../../Components/CustomLoading';
+import {GetAmenitysApi, GetServicesApi} from '../../../Api/Home/HomeApis';
+import {CreateBuildingApi} from '../../../Api/Home/HomeApis';
 
 const AddBuildingsStep3 = props => {
   const navigation = useNavigation();
-  const [token, setToken] = useState();
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const createBuildingInfor = useSelector(commonState);
+  const serviceSelect = useSelector(serviceState);
+  const amenitySelect = useSelector(amenityState);
+  const tokenStore = useSelector(token);
 
-  const [noteForTenant, setNoteForTenant] = useState('');
-  const [noteForInvoice, setNoteForInvoice] = useState('');
   const [serviceIds, setServiceIds] = useState([]);
   const [amenityIds, setAmenityIds] = useState([]);
-  console.log(amenityIds);
+  const [notice, setNotice] = useState('');
+  const [billNotice, setBillNotice] = useState('');
 
   const [listService, setListService] = useState([]);
   const [listAmenity, setListAmenity] = useState([]);
 
   useEffect(() => {
-    setListData();
-  }, [listService, listAmenity]);
-  const setListData = () => {
-    let eachServiceIds = [];
-    let eachAmenityIds = [];
-    for (let index = 0; index < listService.length; index++) {
-      const element = listService[index];
-      eachServiceIds.push(element?.id);
-    }
-    for (let index = 0; index < listAmenity.length; index++) {
-      const element = listAmenity[index];
-      eachAmenityIds.push(element?.id);
-    }
-    setServiceIds(eachServiceIds);
-    setAmenityIds(eachAmenityIds);
-  };
-
-  useEffect(() => {
+    const getListData = async () => {
+      await GetServicesApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachData = res?.data;
+            let eachArray = [];
+            eachData.map((data, index) => {
+              let newData = {...data, isCheck: false};
+              eachArray.push(newData);
+            });
+            dispatch(updateServices(eachArray));
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+      await GetAmenitysApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachData = res?.data;
+            let eachArray = [];
+            eachData.map((data, index) => {
+              let newData = {...data, isCheck: false};
+              eachArray.push(newData);
+            });
+            dispatch(updateAmenity(eachArray));
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+    };
     getListData();
   }, []);
 
-  const getListData = async () => {
-    await AsyncStorage.getItem('token')
-      .then(async tokenStore => {
-        if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
-          await GetServiceApi(tokenStore)
-            .then(res => {
-              if (res?.status == 200) {
-                setListService(res?.data);
-                setLoading(false);
-              }
-            })
-            .catch(error => console.log(error));
-          await GetAmenityApi(tokenStore)
-            .then(res => {
-              if (res?.status == 200) {
-                setListAmenity(res?.data);
-                setLoading(false);
-              }
-            })
-            .catch(error => console.log(error));
+  useEffect(() => {
+    let eachService = [];
+    if (serviceSelect.length > 0) {
+      serviceSelect.map((item, index) => {
+        if (item?.isCheck == true) {
+          eachService.push(item);
         }
-      })
-      .catch(error => console.log(error));
-  };
+      });
+      setListService(eachService);
+    }
+    let eachAmenityIds = [];
+    if (amenitySelect.length > 0) {
+      amenitySelect.map((item, index) => {
+        if (item?.isCheck == true) {
+          eachAmenityIds.push(item);
+        }
+      });
+      setListAmenity(eachAmenityIds);
+    }
+  }, [serviceSelect, amenitySelect]);
+
+  useEffect(() => {
+    const setListData = () => {
+      let eachServiceIds = [];
+      let eachAmenityIds = [];
+      listService.map((item, index) => {
+        eachServiceIds.push(item?.id);
+      });
+      listAmenity.map((item, index) => {
+        eachAmenityIds.push(item?.id);
+      });
+      setServiceIds(eachServiceIds);
+      setAmenityIds(eachAmenityIds);
+    };
+    setListData();
+  }, [listService, listAmenity]);
 
   const renderPaidSevice = (item, index) => {
-    let value = item;
     return (
-      <CustomPaidService
-        label={item?.name}
-        value={item?.price}
-        icon={item?.icon}
-      />
+      <View>
+        {item?.isCheck == true && (
+          <RenderService
+            label={item?.name}
+            value={item?.fee}
+            icon={item?.icon}
+          />
+        )}
+      </View>
     );
   };
 
@@ -98,8 +138,26 @@ const AddBuildingsStep3 = props => {
     return <CustomFreeService label={item?.name} />;
   };
 
+  const createNewBuilding = async () => {
+    let data = {
+      ...createBuildingInfor,
+      serviceIds: serviceIds,
+      amenityIds: amenityIds,
+      notice: notice,
+      billNotice: billNotice,
+    };
+    await CreateBuildingApi(tokenStore, data)
+      .then(res => {
+        if (res?.status == 200) {
+          console.log(res?.data);
+        }
+      })
+      .catch(error => console.log(error));
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {loading && <CustomLoading />}
       <KeyboardAvoidingView style={{flex: 1}}>
         <CustomAppBarStep
           iconLeft={icons.ic_back}
@@ -128,7 +186,7 @@ const AddBuildingsStep3 = props => {
               horizontal={false}
               scrollEnabled={false}
               numColumns={2}
-              keyExtractor={item => `${item?.id}`}
+              keyExtractor={key => `${key?.id}`}
               data={listService}
               renderItem={({item, index}) => renderPaidSevice(item, index)}
             />
@@ -155,7 +213,7 @@ const AddBuildingsStep3 = props => {
               horizontal={false}
               scrollEnabled={false}
               numColumns={3}
-              keyExtractor={key => key.value}
+              keyExtractor={key => `${key?.id}`}
               data={listAmenity}
               renderItem={({item, index}) => renderFreeSevice(item, index)}
             />
@@ -175,10 +233,8 @@ const AddBuildingsStep3 = props => {
               style={{color: 'black'}}
               multiline
               placeholder="Nhập lưu ý của tòa nhà cho người thuê phòng"
-              defaultValue={noteForTenant}
-              onEndEditing={nativeEvent => {
-                console.log(nativeEvent);
-              }}
+              defaultValue={notice}
+              onEndEditing={evt => setNotice(evt.nativeEvent.text)}
             />
           </View>
 
@@ -188,10 +244,8 @@ const AddBuildingsStep3 = props => {
               style={{color: 'black'}}
               multiline
               placeholder="Nhập ghi chú hóa đơn"
-              value={noteForInvoice}
-              onChangeText={text => {
-                setNoteForInvoice(text);
-              }}
+              defaultValue={billNotice}
+              onEndEditing={evt => setBillNotice(evt.nativeEvent.text)}
             />
           </View>
 
@@ -202,9 +256,7 @@ const AddBuildingsStep3 = props => {
           leftLabel={'Trở lại'}
           rightLabel={'Hoàn tất'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => {
-            console.log('Ok');
-          }}
+          onPressRight={() => createNewBuilding()}
         />
       </KeyboardAvoidingView>
     </View>
@@ -238,6 +290,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: colors.borderInput,
     height: 120,
+    backgroundColor: 'white',
   },
   label: {fontSize: 15, color: 'rgba(55, 64, 71, 1)', fontWeight: '400'},
 });

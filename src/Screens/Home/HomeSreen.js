@@ -24,7 +24,7 @@ import {updateUserInfor, userInfor} from '../../Store/slices/userInfoSlice';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [keyboard, setKeyboard] = useState(false);
+
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
   const [listHauses, setlistHausess] = useState([]);
@@ -32,7 +32,7 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
   // const userStore = useSelector(userInfor);
-
+  const [keyboard, setKeyboard] = useState(false);
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
       setKeyboard(true);

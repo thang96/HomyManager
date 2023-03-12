@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: '#ACB4B9',
     paddingHorizontal: 5,
-    // backgroundColor: '#f8f9f9',
+    backgroundColor: 'white',
     borderColor: '#dadee0',
   },
   viewInput: {
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
     backgroundColor: 'white',
-    height: 48,
+    height: 50,
   },
   icon: {width: 20, height: 20},
 });

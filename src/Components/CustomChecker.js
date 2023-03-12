@@ -16,10 +16,14 @@ const CustomChecker = props => {
 
   return (
     <View style={[styles.container, {width: widthImage}]}>
-      <Image style={[styles.icon]} resizeMode={'contain'} source={icon} />
-      <View style={{marginLeft: 5}}>
-        <Text style={[styles.text, {color: 'black'}]}>{label}</Text>
-        <Text style={[styles.text, {color: 'purple'}]}>{value}</Text>
+      {icon && (
+        <Image style={[styles.icon]} resizeMode={'contain'} source={icon} />
+      )}
+      <View style={{marginLeft: 5, flex: 1}}>
+        {label && <Text style={[styles.text, {color: 'black'}]}>{label}</Text>}
+        {value && (
+          <Text style={[styles.text, {color: colors.mainColor}]}>{value}</Text>
+        )}
       </View>
       <View style={styles.styleButton}>
         {isCheck ? (
@@ -66,11 +70,9 @@ const styles = StyleSheet.create({
   icon: {width: 20, height: 20},
   styleIcon: {width: 18, height: 18, tintColor: '#797979'},
   styleButton: {
-    position: 'absolute',
-    right: 0,
     alignSelf: 'center',
-    width: 50,
-    height: 50,
+    width: 30,
+    minHeight: 50,
   },
   text: {fontSize: 12},
 });

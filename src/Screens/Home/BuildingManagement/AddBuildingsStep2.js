@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -19,22 +19,37 @@ import CustomTimeButtons from '../../../Components/CustomTimeButton';
 import CustomAppBarStep from '../../../Components/CustomAppBarStep';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
 import CustomButtonValue from '../../../Components/CustomButtonValue';
+import {useDispatch, useSelector} from 'react-redux';
+import {commonState, updateCommon} from '../../../Store/slices/commonSlice';
 
 const AddBuildingsStep2 = props => {
   const navigation = useNavigation();
-  const [toDate, setToDate] = useState('1');
-  const [fromDate, setFromDate] = useState('5');
-  const [paymentDate, setPaymentDate] = useState('Cuối tháng');
+  const dispatch = useDispatch();
+  const createBuildingInfor = useSelector(commonState);
 
-  const [modalToDate, setModalToDate] = useState(false);
-  const [modalfromDate, setModalFromDate] = useState(false);
-  const [modalpaymentDate, setModalPaymentDate] = useState(false);
+  const [billingDate, setBillingDate] = useState(0);
+  const [paymentDateTo, setPaymentDateTo] = useState(0);
+  const [paymentDateFrom, setPaymentDateFrom] = useState(0);
 
+  const goToStepThree = () => {
+    let eachData = {
+      ...createBuildingInfor,
+      billingDate: billingDate,
+      paymentDateTo: paymentDateTo,
+      paymentDateFrom: paymentDateFrom,
+    };
+    dispatch(updateCommon(eachData));
+    navigation.navigate('AddBuildingsStep3');
+  };
+
+  const [modalpaymentDateTo, setModalpaymentDateTo] = useState(false);
+  const [modalpaymentDateFrom, setModalpaymentDateFrom] = useState(false);
+  const [modalbillingDate, setModalbillingDate] = useState(false);
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
-      {modalToDate && <View />}
-      {modalfromDate && <View />}
-      {modalpaymentDate && <View />}
+      {modalpaymentDateTo && <View />}
+      {modalpaymentDateFrom && <View />}
+      {modalbillingDate && <View />}
       <KeyboardAvoidingView style={{flex: 1}}>
         <CustomAppBarStep
           iconLeft={icons.ic_back}
@@ -56,8 +71,8 @@ const AddBuildingsStep2 = props => {
             type={'button'}
             title={'Ngày chốt tiền'}
             placeholder={'Chọn ngày'}
-            value={paymentDate}
-            onPress={() => setModalFromDate(true)}
+            value={billingDate}
+            onPress={() => setModalpaymentDateFrom(true)}
           />
 
           <CustomTimeButtons
@@ -69,17 +84,17 @@ const AddBuildingsStep2 = props => {
             iconRight={icons.ic_down}
             styleButtonLeft={{marginRight: 5}}
             styleButtonRight={{marginLeft: 5}}
-            valueLeft={toDate}
-            valueRight={fromDate}
-            onPressLeft={() => setModalFromDate(true)}
-            onPressRightt={() => setModalToDate(true)}
+            valueLeft={paymentDateTo}
+            valueRight={paymentDateFrom}
+            onPressLeft={() => setModalpaymentDateFrom(true)}
+            onPressRightt={() => setModalpaymentDateTo(true)}
           />
         </ScrollView>
         <CustomTwoButtonBottom
           leftLabel={'Trở lại'}
           rightLabel={'Tiếp tục'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => navigation.navigate('AddBuildingsStep3')}
+          onPressRight={() => goToStepThree()}
         />
       </KeyboardAvoidingView>
     </View>

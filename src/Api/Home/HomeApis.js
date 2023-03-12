@@ -42,7 +42,7 @@ export const HauseDetailApi = (token, hauseId) => {
 export const GetLocationCitysApi = token => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/locations/cites`, {
+      .get(`${BASEURL}/locations/cities`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -95,10 +95,10 @@ export const GetWardByDistrictIdApi = (token, districtId) => {
       });
   });
 };
-export const GetServiceApi = token => {
+export const GetServicesApi = token => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/service`, {
+      .get(`${BASEURL}/services`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -114,10 +114,10 @@ export const GetServiceApi = token => {
   });
 };
 
-export const GetAmenityApi = token => {
+export const GetAmenitysApi = token => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/amenity`, {
+      .get(`${BASEURL}/amenities`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -130,5 +130,25 @@ export const GetAmenityApi = token => {
       .catch(errors => {
         reject(errors);
       });
+  });
+};
+
+export const CreateBuildingApi = (token, data) => {
+  return new Promise((resolve, reject) => {
+    console.log(data);
+    // axios
+    //   .post(`${BASEURL}/amenities`, data, {
+    //     headers: {
+    //       Accept: 'application/json',
+    //       'Content-Type': 'application/json',
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   })
+    //   .then(res => {
+    //     resolve(res);
+    //   })
+    //   .catch(errors => {
+    //     reject(errors);
+    //   });
   });
 };

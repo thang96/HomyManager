@@ -5,11 +5,12 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity,
+  Keyboard,
   TextInput,
   Image,
   KeyboardAvoidingView,
   FlatList,
+  Alert,
 } from 'react-native';
 import CustomButton from '../../../Components/CustomButton';
 import CustomManagerInfor from '../../../Components/CustomPersonInfor';
@@ -31,32 +32,60 @@ import {
   GetDistrictByCityIdApi,
   GetWardByDistrictIdApi,
 } from '../../../Api/Home/HomeApis';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
+import {updateCommon} from '../../../Store/slices/commonSlice';
 
 const AddBuildings = props => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-
-  let avatar =
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Ragdoll_Kater%2C_drei_Jahre_alt%2C_RAG_n_21_seal-tabby-colourpoint%2C_Januar_2015.JPG/330px-Ragdoll_Kater%2C_drei_Jahre_alt%2C_RAG_n_21_seal-tabby-colourpoint%2C_Januar_2015.JPG';
+  const [keyboard, setKeyboard] = useState(false);
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboard(true);
+    });
+    Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboard(false);
+    });
+  }, []);
 
   const [name, setName] = useState('');
-  const [floorTotal, setFloorTotal] = useState('');
-  const [openHour, setOpenHour] = useState('08:00:00');
-  const [closeHour, setCloseHour] = useState('23:00:00');
-  const [rentingPrice, setRentingPrice] = useState('');
+  const [numberOfFloor, setNumberOfFloor] = useState('');
+  const [openTime, setOpenTime] = useState(new Date());
+  const [closeTime, setCloseTime] = useState(new Date());
+  const [leasingFee, setLeasingFee] = useState('');
   const [description, setDescription] = useState('');
   const [cityId, setCityId] = useState('');
   const [districtId, setDistrictId] = useState('');
   const [wardId, setWardId] = useState('');
+
+  const goToStepTwo = () => {
+    let data = {
+      name: name,
+      numberOfFloor: numberOfFloor,
+      openTime: openTime,
+      closeTime: closeTime,
+      leasingFee: leasingFee,
+      description: description,
+      cityId: cityId,
+      districtId: districtId,
+      wardId: wardId,
+    };
+    if (name == '' && numberOfFloor == '') {
+      Alert.alert(
+        'Thiếu trường thông tin',
+        'Vui lòng điền đầy đủ mục thông tin có dấu *',
+      );
+    } else {
+      dispatch(updateCommon(data));
+      navigation.navigate('AddBuildingsStep2');
+    }
+  };
+
   const [address, setAddress] = useState('');
-
   const [albumImage, setAlbumImage] = useState([]);
-
-  const [fromTime, setFromTime] = useState(new Date());
-  const [toTime, setToTime] = useState(new Date());
 
   const [listCity, setListCity] = useState([]);
   const [listDistrict, setListDistrict] = useState([]);
@@ -65,16 +94,24 @@ const AddBuildings = props => {
   const [districtName, setDistrictName] = useState('');
   const [wardName, setWardName] = useState('');
 
-  const [modalFromTime, setModalFromTime] = useState(false);
-  const [modalToTime, setModalToTime] = useState(false);
+  const [openTimeValue, setOpenTimeValue] = useState('08:00:00');
+  const [closeTimeValue, setCloseTimeValue] = useState('23:00:00');
+  const [modalopenTime, setModalopenTime] = useState(false);
+  const [modalcloseTime, setModalcloseTime] = useState(false);
   const [modalCamera, setModalCamera] = useState(false);
   const [modalCity, setModalCity] = useState(false);
   const [modalDistrict, setModalDistrict] = useState(false);
   const [modalWard, setModalWard] = useState(false);
 
   useEffect(() => {
+    let eachOpenTime = new Date('Sun Mar 12 2023 08:00:00 GMT+0700');
+    let eachCloseTime = new Date('Sun Mar 12 2023 23:00:00 GMT+0700');
+    setOpenTimeValue(eachOpenTime.toLocaleTimeString('en-VN'));
+    setOpenTime(eachOpenTime);
+    setCloseTimeValue(eachCloseTime.toLocaleTimeString('en-VN'));
+    setCloseTime(eachCloseTime);
     getCityData();
-  }, []);
+  }, [tokenStore]);
 
   const getCityData = async () => {
     await GetLocationCitysApi(tokenStore)
@@ -194,32 +231,32 @@ const AddBuildings = props => {
             cancel={() => setModalCamera(false)}
           />
         )}
-        {modalFromTime && (
+        {modalopenTime && (
           <CustomModalDateTimePicker
-            onCancel={() => setModalFromTime(false)}
-            value={fromTime}
+            onCancel={() => setModalopenTime(false)}
+            value={openTime}
             mode={'time'}
-            openPicker={modalFromTime}
+            openPicker={modalopenTime}
             onDateChange={value => {
               let newTime = value.toLocaleTimeString('en-VN');
-              setFromTime(value);
-              setOpenHour(newTime);
+              setOpenTime(value);
+              setOpenTimeValue(newTime);
             }}
-            onPress={() => setModalFromTime(false)}
+            onPress={() => setModalopenTime(false)}
           />
         )}
-        {modalToTime && (
+        {modalcloseTime && (
           <CustomModalDateTimePicker
-            onCancel={() => setModalToTime(false)}
-            value={toTime}
+            onCancel={() => setModalcloseTime(false)}
+            value={closeTime}
             mode={'time'}
-            openPicker={modalToTime}
+            openPicker={modalcloseTime}
             onDateChange={value => {
               let newTime = value.toLocaleTimeString('en-VN');
-              setToTime(value);
-              setCloseHour(newTime);
+              setCloseTime(value);
+              setCloseTimeValue(newTime);
             }}
-            onPress={() => setModalToTime(false)}
+            onPress={() => setModalcloseTime(false)}
           />
         )}
         {modalCity && (
@@ -277,7 +314,7 @@ const AddBuildings = props => {
             title={'Tên tòa nhà'}
             placeholder={'Nhập tên tòa nhà'}
             value={name}
-            onChangeText={text => set(text)}
+            onChangeText={text => setName(text)}
           />
           <CustomInput
             important={true}
@@ -286,8 +323,8 @@ const AddBuildings = props => {
             styleViewInput={{marginTop: 10}}
             title={'Số tầng'}
             placeholder={'Nhập số tầng'}
-            value={floorTotal}
-            onChangeText={text => setFloorTotal(text)}
+            value={numberOfFloor}
+            onChangeText={text => setNumberOfFloor(text)}
           />
 
           <CustomTimeButtons
@@ -297,18 +334,18 @@ const AddBuildings = props => {
             rightLabel={'Đến'}
             styleButtonLeft={{marginRight: 5}}
             styleButtonRight={{marginLeft: 5}}
-            valueLeft={openHour}
-            valueRight={closeHour}
-            onPressLeft={() => setModalFromTime(true)}
-            onPressRightt={() => setModalToTime(true)}
+            valueLeft={openTimeValue}
+            valueRight={closeTimeValue}
+            onPressLeft={() => setModalopenTime(true)}
+            onPressRightt={() => setModalcloseTime(true)}
           />
           <Text style={[styles.label, {marginTop: 10}]}>Chi phí thuê nhà</Text>
           <View style={styles.viewSurrounded}>
             <TextInput
               keyboardType="numeric"
               placeholder="Nhập chi phí thuê nhà (Nếu có)"
-              value={rentingPrice}
-              onChangeText={text => setRentingPrice(text)}
+              value={leasingFee}
+              onChangeText={text => setLeasingFee(text)}
               style={{flex: 1}}
             />
             <View style={styles.viewTime}>
@@ -365,7 +402,7 @@ const AddBuildings = props => {
           <CustomTextTitle label={'Quản lý tòa nhà'} labelButton={'Thêm '} />
           <CustomManagerInfor
             styleView={{marginTop: 10}}
-            avatar={avatar}
+            avatar={null}
             userName={'Trường Vân'}
             phoneNumber={`0123456789`}
             onPress={() => {}}
@@ -379,9 +416,10 @@ const AddBuildings = props => {
             style={{
               height: 200,
               borderWidth: 0.5,
-              borderColor: colors.mainColor,
+              borderColor: colors.borderInput,
               marginVertical: 5,
               borderRadius: 10,
+              backgroundColor: 'white',
             }}>
             {albumImage.length > 0 ? (
               <FlatList
@@ -409,12 +447,14 @@ const AddBuildings = props => {
           />
           <View style={{marginBottom: 56}} />
         </ScrollView>
-        <CustomTwoButtonBottom
-          leftLabel={'Hủy'}
-          rightLabel={'Tiếp tục'}
-          onPressLeft={() => navigation.goBack()}
-          onPressRight={() => navigation.navigate('AddBuildingsStep2')}
-        />
+        {!keyboard && (
+          <CustomTwoButtonBottom
+            leftLabel={'Hủy'}
+            rightLabel={'Tiếp tục'}
+            onPressLeft={() => navigation.goBack()}
+            onPressRight={() => goToStepTwo()}
+          />
+        )}
       </KeyboardAvoidingView>
     </View>
   );
@@ -449,7 +489,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 10,
     borderColor: '#ACB4B9',
-    // backgroundColor: '#f8f9f9',
+    backgroundColor: 'white',
   },
   viewRow: {
     flexDirection: 'row',
@@ -463,7 +503,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: '#e2e5e6',
     height: 120,
-    // backgroundColor: '#f8f9f9',
+    backgroundColor: 'white',
   },
   line: {
     width: '100%',
