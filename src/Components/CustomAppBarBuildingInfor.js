@@ -43,7 +43,7 @@ const CustomAppBarBuildingInfor = props => {
             <Location width={32} height={32} />
           </View>
           <View style={{marginLeft: 10, flex: 1}}>
-            <Text style={{color: 'white', fontSize: 11}}>
+            <Text style={{color: 'white', fontSize: 10}}>
               {addressBuilding}
             </Text>
           </View>

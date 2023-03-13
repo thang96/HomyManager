@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -29,7 +29,7 @@ import {
 import {token} from '../../../Store/slices/tokenSlice';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import CustomLoading from '../../../Components/CustomLoading';
-import {CreateBuildingApi} from '../../../Api/Home/HomeApis';
+import {CreateNewBuildingApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
 import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 
@@ -146,11 +146,12 @@ const AddBuildingsStep3 = props => {
       amenityIds: amenityIds,
       notice: notice,
       billNotice: billNotice,
+      organizationId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
     };
-    await CreateBuildingApi(tokenStore, data)
+    await CreateNewBuildingApi(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
-          console.log(res?.data);
+          alert('Thành công');
         }
       })
       .catch(error => console.log(error));
@@ -159,107 +160,105 @@ const AddBuildingsStep3 = props => {
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       {loading && <CustomLoading />}
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <CustomAppBarStep
-          iconLeft={icons.ic_back}
-          label={'Thiết lập dịch vụ'}
-          iconRight={icons.ic_bell}
-          iconSecondRight={icons.ic_moreOption}
-          pressIconLeft={() => navigation.goBack()}
-          step={3}
+      <CustomAppBarStep
+        iconLeft={icons.ic_back}
+        label={'Thiết lập dịch vụ'}
+        iconRight={icons.ic_bell}
+        iconSecondRight={icons.ic_moreOption}
+        pressIconLeft={() => navigation.goBack()}
+        step={3}
+      />
+
+      <ScrollView style={[styles.eachContainer]}>
+        <CustomSuggest
+          label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
         />
 
-        <ScrollView style={[styles.eachContainer]}>
-          <CustomSuggest
-            label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
-          />
-
-          <CustomTextTitle
-            label={'Dịch vụ có phí'}
-            labelButton={'Thêm'}
-            icon={icons.ic_plus}
-            onPress={() => navigation.navigate('Service')}
-          />
-
-          {listService.length > 0 ? (
-            <FlatList
-              listKey="listService"
-              horizontal={false}
-              scrollEnabled={false}
-              numColumns={2}
-              keyExtractor={key => `${key?.id}`}
-              data={listService}
-              renderItem={({item, index}) => renderPaidSevice(item, index)}
-            />
-          ) : null}
-
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={styles.textPicker}>Đã chọn </Text>
-            <Text style={styles.pickerTotal}>{`${listService.length}`}</Text>
-          </View>
-
-          <View style={styles.line} />
-
-          <CustomTextTitle
-            label={'Tiện ích miễn phí'}
-            labelButton={'Thêm'}
-            icon={icons.ic_plus}
-            onPress={() => navigation.navigate('Utilities')}
-          />
-
-          {listAmenity.length > 0 ? (
-            <FlatList
-              listKey="listAmenity"
-              style={{justifyContent: 'space-between'}}
-              horizontal={false}
-              scrollEnabled={false}
-              numColumns={3}
-              keyExtractor={key => `${key?.id}`}
-              data={listAmenity}
-              renderItem={({item, index}) => renderFreeSevice(item, index)}
-            />
-          ) : null}
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={styles.textPicker}>Đã chọn </Text>
-            <Text style={styles.pickerTotal}>{`${listAmenity.length}`}</Text>
-          </View>
-
-          <View style={styles.line} />
-
-          <CustomTextTitle label={'Lưu ý'} />
-
-          <Text style={[styles.label]}>Lưu ý của tòa nhà</Text>
-          <View style={styles.viewTextInput}>
-            <TextInput
-              style={{color: 'black'}}
-              multiline
-              placeholder="Nhập lưu ý của tòa nhà cho người thuê phòng"
-              defaultValue={notice}
-              onEndEditing={evt => setNotice(evt.nativeEvent.text)}
-            />
-          </View>
-
-          <Text style={[styles.label, {marginTop: 20}]}>Ghi chú hóa đơn</Text>
-          <View style={styles.viewTextInput}>
-            <TextInput
-              style={{color: 'black'}}
-              multiline
-              placeholder="Nhập ghi chú hóa đơn"
-              defaultValue={billNotice}
-              onEndEditing={evt => setBillNotice(evt.nativeEvent.text)}
-            />
-          </View>
-
-          <View style={{marginBottom: 56}} />
-        </ScrollView>
-
-        <CustomTwoButtonBottom
-          leftLabel={'Trở lại'}
-          rightLabel={'Hoàn tất'}
-          onPressLeft={() => navigation.goBack()}
-          onPressRight={() => createNewBuilding()}
+        <CustomTextTitle
+          label={'Dịch vụ có phí'}
+          labelButton={'Thêm'}
+          icon={icons.ic_plus}
+          onPress={() => navigation.navigate('Service')}
         />
-      </KeyboardAvoidingView>
+
+        {listService.length > 0 ? (
+          <FlatList
+            listKey="listService"
+            horizontal={false}
+            scrollEnabled={false}
+            numColumns={2}
+            keyExtractor={key => `${key?.id}`}
+            data={listService}
+            renderItem={({item, index}) => renderPaidSevice(item, index)}
+          />
+        ) : null}
+
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text style={styles.textPicker}>Đã chọn </Text>
+          <Text style={styles.pickerTotal}>{`${listService.length}`}</Text>
+        </View>
+
+        <View style={styles.line} />
+
+        <CustomTextTitle
+          label={'Tiện ích miễn phí'}
+          labelButton={'Thêm'}
+          icon={icons.ic_plus}
+          onPress={() => navigation.navigate('Utilities')}
+        />
+
+        {listAmenity.length > 0 ? (
+          <FlatList
+            listKey="listAmenity"
+            style={{justifyContent: 'space-between'}}
+            horizontal={false}
+            scrollEnabled={false}
+            numColumns={3}
+            keyExtractor={key => `${key?.id}`}
+            data={listAmenity}
+            renderItem={({item, index}) => renderFreeSevice(item, index)}
+          />
+        ) : null}
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text style={styles.textPicker}>Đã chọn </Text>
+          <Text style={styles.pickerTotal}>{`${listAmenity.length}`}</Text>
+        </View>
+
+        <View style={styles.line} />
+
+        <CustomTextTitle label={'Lưu ý'} />
+
+        <Text style={[styles.label]}>Lưu ý của tòa nhà</Text>
+        <View style={styles.viewTextInput}>
+          <TextInput
+            style={{color: 'black', width: '100%'}}
+            multiline={true}
+            placeholder="Nhập lưu ý của tòa nhà cho người thuê phòng"
+            defaultValue={notice}
+            onEndEditing={evt => setNotice(evt.nativeEvent.text)}
+          />
+        </View>
+
+        <Text style={[styles.label, {marginTop: 20}]}>Ghi chú hóa đơn</Text>
+        <View style={styles.viewTextInput}>
+          <TextInput
+            style={{color: 'black'}}
+            multiline={true}
+            placeholder="Nhập ghi chú hóa đơn"
+            defaultValue={billNotice}
+            onEndEditing={evt => setBillNotice(evt.nativeEvent.text)}
+          />
+        </View>
+
+        <View style={{marginBottom: 56}} />
+      </ScrollView>
+
+      <CustomTwoButtonBottom
+        leftLabel={'Trở lại'}
+        rightLabel={'Hoàn tất'}
+        onPressLeft={() => navigation.goBack()}
+        onPressRight={() => createNewBuilding()}
+      />
     </View>
   );
 };

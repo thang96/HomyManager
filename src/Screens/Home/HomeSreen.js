@@ -13,7 +13,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetListHausesApi} from '../../Api/Home/HomeApis';
+import {GetListHausesApi} from '../../Api/Home/BuildingApis/BuildingApis';
 import {GetUserAPi} from '../../Api/User/UserApis';
 import CustomButton from '../../Components/CustomButton';
 import CustomLoading from '../../Components/CustomLoading';

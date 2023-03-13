@@ -10,7 +10,8 @@ import {
 import {colors, icons} from '../Constants';
 
 const CustomButtonValue = props => {
-  const {title, important, placeholder, value, type, icon, styleView} = props;
+  const {title, important, placeholder, value, type, icon, styleView, onPress} =
+    props;
   return (
     <View style={styleView}>
       <View
@@ -19,7 +20,7 @@ const CustomButtonValue = props => {
         {important && <Text style={{color: 'red', fontSize: 14}}> *</Text>}
       </View>
       {type == 'button' && (
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity onPress={onPress} style={styles.button}>
           <Text>{placeholder}</Text>
           <View style={styles.viewRow}>
             <View style={styles.backgroundValue}>
@@ -48,6 +49,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: 'white',
   },
   viewRow: {flexDirection: 'row', alignItems: 'center'},
   backgroundValue: {

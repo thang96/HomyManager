@@ -36,7 +36,7 @@ const AddUtilities = props => {
             Alert.alert('Thành công', 'Tạo tiện ích thành công', [
               {
                 text: 'OK',
-                onPress: () => navigation.navigate('UtilitiesManager'),
+                onPress: () => navigation.goBack(),
               },
             ]);
           }

@@ -31,7 +31,7 @@ import {
   GetLocationCitysApi,
   GetDistrictByCityIdApi,
   GetWardByDistrictIdApi,
-} from '../../../Api/Home/HomeApis';
+} from '../../../Api/Home/BuildingApis/BuildingApis';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {updateCommon} from '../../../Store/slices/commonSlice';
@@ -60,18 +60,20 @@ const AddBuildings = props => {
   const [cityId, setCityId] = useState('');
   const [districtId, setDistrictId] = useState('');
   const [wardId, setWardId] = useState('');
+  const [address, setAddress] = useState('');
 
   const goToStepTwo = () => {
     let data = {
       name: name,
       numberOfFloor: numberOfFloor,
-      openTime: openTime,
-      closeTime: closeTime,
-      leasingFee: leasingFee,
+      openTime: `${openTime}`,
+      closeTime: `${closeTime}`,
+      leasingFee: parseInt(leasingFee),
       description: description,
       cityId: cityId,
       districtId: districtId,
       wardId: wardId,
+      address: address,
     };
     if (name == '' && numberOfFloor == '') {
       Alert.alert(
@@ -84,7 +86,6 @@ const AddBuildings = props => {
     }
   };
 
-  const [address, setAddress] = useState('');
   const [albumImage, setAlbumImage] = useState([]);
 
   const [listCity, setListCity] = useState([]);
@@ -127,6 +128,10 @@ const AddBuildings = props => {
   const getDistrictData = async item => {
     setCityName(item?.name);
     setCityId(item?.id);
+    setDistrictName('');
+    setDistrictId('');
+    setWardName('');
+    setWardId('');
     setLoading(true);
     await GetDistrictByCityIdApi(tokenStore, item?.id)
       .then(res => {
@@ -141,6 +146,8 @@ const AddBuildings = props => {
   const getWardData = async item => {
     setDistrictName(item?.name);
     setDistrictId(item?.id);
+    setWardName('');
+    setWardId('');
     setLoading(true);
     await GetWardByDistrictIdApi(tokenStore, item?.id)
       .then(res => {

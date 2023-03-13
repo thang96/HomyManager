@@ -41,7 +41,7 @@ const AddService = props => {
       .then(res => {
         if (res?.status == 200) {
           Alert.alert('Thành công', 'Tạo dịch vụ thành công', [
-            {text: 'OK', onPress: () => navigation.navigate('ServiceManager')},
+            {text: 'OK', onPress: () => navigation.goBack()},
           ]);
         }
       })

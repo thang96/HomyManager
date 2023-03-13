@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -22,17 +22,21 @@ import CustomFreeService from '../../../Components/CustomFreeService';
 import CustomAppBarBuildingInfor from '../../../Components/CustomAppBarBuildingInfor';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
 import CustomLoading from '../../../Components/CustomLoading';
-import {HauseDetailApi} from '../../../Api/Home/HomeApis';
+import {HauseDetailApi} from '../../../Api/Home/BuildingApis/BuildingApis';
+import RenderService from '../../../Components/ComponentHome/RenderService';
 
 const BuildingInformation = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const isFocused = useIsFocused();
   const [loading, setLoading] = useState(true);
   const [hauseInfor, setHauseInfor] = useState();
+  const [openTimeValue, setOpenTimeValue] = useState('');
+  const [closeTimeValue, setCloseTimeValue] = useState('');
 
   useEffect(() => {
     getDataHause();
-  }, []);
+  }, [isFocused]);
 
   const getDataHause = async () => {
     let hauseId = route.params;
@@ -41,6 +45,10 @@ const BuildingInformation = () => {
         await HauseDetailApi(token, hauseId)
           .then(res => {
             if (res?.status == 200) {
+              let eachOpenTime = new Date(`${res?.data?.openTime}`);
+              let eachCloseTime = new Date(`${res?.data?.closeTime}`);
+              setOpenTimeValue(eachOpenTime.toLocaleTimeString('en-VN'));
+              setCloseTimeValue(eachCloseTime.toLocaleTimeString('en-VN'));
               setHauseInfor(res?.data);
               setLoading(false);
             }
@@ -50,20 +58,13 @@ const BuildingInformation = () => {
     });
   };
 
-  let avatar =
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Ragdoll_Kater%2C_drei_Jahre_alt%2C_RAG_n_21_seal-tabby-colourpoint%2C_Januar_2015.JPG/330px-Ragdoll_Kater%2C_drei_Jahre_alt%2C_RAG_n_21_seal-tabby-colourpoint%2C_Januar_2015.JPG';
-
-  const renderPaidSevice = (item, index) => {
+  const renderSevices = (item, index) => {
     return (
-      <CustomPaidService
-        label={item?.name}
-        value={item?.price}
-        icon={item?.icon}
-      />
+      <RenderService label={item?.name} value={item?.fee} icon={item?.icon} />
     );
   };
 
-  const renderFreeSevice = (item, index) => {
+  const renderAmenitys = (item, index) => {
     return <CustomFreeService label={item?.name} />;
   };
 
@@ -84,7 +85,7 @@ const BuildingInformation = () => {
         <View style={styles.viewUtils}>
           <CustomOptionBT
             title={'Phòng'}
-            content={`${hauseInfor?.units.length}`}
+            content={hauseInfor?.units ? `${hauseInfor?.units}` : '0'}
             icon={icons.ic_bed}
             styleImageBG={{tintColor: '#1297c0'}}
             styleBGIcon={{backgroundColor: '#ebf9fd'}}
@@ -122,18 +123,18 @@ const BuildingInformation = () => {
         <View style={[styles.viewRow, {marginBottom: 10}]}>
           <CustomViewInfor
             title={'Giờ mở cửa'}
-            label={`${hauseInfor?.openHour}`}
+            label={openTimeValue}
             content={'AM'}
           />
           <CustomViewInfor
             title={'Giờ đóng cửa'}
-            label={`${hauseInfor?.closeHour}`}
+            label={closeTimeValue}
             content={'PM'}
           />
         </View>
         <CustomViewInfor
           title={'Chi phí thuê'}
-          label={`${hauseInfor?.rentingPrice}`}
+          label={`${hauseInfor?.leasingFee}`}
           content={'VNĐ'}
         />
 
@@ -147,7 +148,6 @@ const BuildingInformation = () => {
 
         <CustomManagerInfor
           styleView={{marginTop: 10}}
-          avatar={avatar}
           userName={'Trường Vân'}
           phoneNumber={`0123456789`}
           onPress={() => {}}
@@ -157,10 +157,21 @@ const BuildingInformation = () => {
         <CustomTextTitle label={'Thông tin thanh toán'} />
 
         <View style={[styles.viewRow, {marginBottom: 10}]}>
-          <CustomViewInfor title={'Thời gian đóng tiền'} label={'Ngày 2'} />
-          <CustomViewInfor title={'Hạn'} label={'Ngày 8'} />
+          <CustomViewInfor
+            title={'Thời gian đóng tiền'}
+            label={`Ngày ${hauseInfor?.paymentDateFrom}`}
+          />
+          <CustomViewInfor
+            title={'Hạn'}
+            label={`Ngày ${hauseInfor?.paymentDateTo}`}
+          />
         </View>
-        <CustomViewInfor title={'Ngày chốt tiền'} label={'Ngày 28'} />
+        <CustomViewInfor
+          title={'Ngày chốt tiền'}
+          label={
+            hauseInfor?.billingDate == 0 ? 'Cuối tháng' : 'Ngày 1 tháng sau'
+          }
+        />
 
         <View style={styles.line} />
 
@@ -169,15 +180,15 @@ const BuildingInformation = () => {
           labelButton={'Thêm'}
           icon={icons.ic_plus}
         />
-        {hauseInfor?.services.length > 0 ? (
+        {hauseInfor?.chargeServices?.length > 0 ? (
           <FlatList
-            listKey="listPaidSevice"
+            listKey="chargeServices"
             horizontal={false}
             scrollEnabled={false}
             numColumns={2}
-            keyExtractor={key => key.id}
-            data={hauseInfor?.services}
-            renderItem={({item, index}) => renderPaidSevice(item, index)}
+            keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
+            data={hauseInfor?.chargeServices}
+            renderItem={({item, index}) => renderSevices(item, index)}
           />
         ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -185,7 +196,7 @@ const BuildingInformation = () => {
           <Text
             style={
               styles.pickerTotal
-            }>{`${hauseInfor?.services?.length}`}</Text>
+            }>{`${hauseInfor?.chargeServices?.length}`}</Text>
         </View>
 
         <View style={styles.line} />
@@ -193,13 +204,13 @@ const BuildingInformation = () => {
         <CustomTextTitle label={'Tiện ích miễn phí'} />
         {hauseInfor?.amenities.length > 0 ? (
           <FlatList
-            listKey="listFreeSevice"
+            listKey="amenities"
             horizontal={false}
             scrollEnabled={false}
             numColumns={3}
-            keyExtractor={key => key.id}
+            keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
             data={hauseInfor?.amenities}
-            renderItem={({item, index}) => renderFreeSevice(item, index)}
+            renderItem={({item, index}) => renderAmenitys(item, index)}
           />
         ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>

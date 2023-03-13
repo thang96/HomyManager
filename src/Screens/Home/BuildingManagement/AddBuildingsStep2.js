@@ -21,35 +21,72 @@ import CustomTextTitle from '../../../Components/CustomTextTitle';
 import CustomButtonValue from '../../../Components/CustomButtonValue';
 import {useDispatch, useSelector} from 'react-redux';
 import {commonState, updateCommon} from '../../../Store/slices/commonSlice';
+import CustomPickerDay from '../../../Components/CommonComponent/CustomPickerDay';
+import {
+  BILLINGDATE,
+  PAYMENTDATEFROM,
+  PAYMENTDATETO,
+} from '../../../Resource/DataPicker';
 
 const AddBuildingsStep2 = props => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const createBuildingInfor = useSelector(commonState);
 
-  const [billingDate, setBillingDate] = useState(0);
-  const [paymentDateTo, setPaymentDateTo] = useState(0);
-  const [paymentDateFrom, setPaymentDateFrom] = useState(0);
+  const [billingDate, setBillingDate] = useState(BILLINGDATE[0]);
+  const [paymentDateFrom, setPaymentDateFrom] = useState(PAYMENTDATEFROM[0]);
+  const [paymentDateTo, setPaymentDateTo] = useState(PAYMENTDATETO[4]);
+
+  const [modalbillingDate, setModalbillingDate] = useState(false);
+  const [modalpaymentDateFrom, setModalpaymentDateFrom] = useState(false);
+  const [modalpaymentDateTo, setModalpaymentDateTo] = useState(false);
 
   const goToStepThree = () => {
     let eachData = {
       ...createBuildingInfor,
-      billingDate: billingDate,
-      paymentDateTo: paymentDateTo,
-      paymentDateFrom: paymentDateFrom,
+      billingDate: billingDate.value,
+      paymentDateTo: paymentDateTo.value,
+      paymentDateFrom: paymentDateFrom.value,
     };
     dispatch(updateCommon(eachData));
     navigation.navigate('AddBuildingsStep3');
   };
-
-  const [modalpaymentDateTo, setModalpaymentDateTo] = useState(false);
-  const [modalpaymentDateFrom, setModalpaymentDateFrom] = useState(false);
-  const [modalbillingDate, setModalbillingDate] = useState(false);
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
-      {modalpaymentDateTo && <View />}
-      {modalpaymentDateFrom && <View />}
-      {modalbillingDate && <View />}
+      {modalbillingDate && (
+        <CustomPickerDay
+          data={BILLINGDATE}
+          modalVisible={modalbillingDate}
+          onRequestClose={() => setModalbillingDate(false)}
+          onPress={item => {
+            setBillingDate(item);
+            setModalbillingDate(false);
+          }}
+        />
+      )}
+      {modalpaymentDateTo && (
+        <CustomPickerDay
+          data={PAYMENTDATETO}
+          modalVisible={modalpaymentDateTo}
+          onRequestClose={() => setModalpaymentDateTo(false)}
+          onPress={item => {
+            setPaymentDateTo(item);
+            setModalpaymentDateTo(false);
+          }}
+        />
+      )}
+      {modalpaymentDateFrom && (
+        <CustomPickerDay
+          data={PAYMENTDATEFROM}
+          modalVisible={modalpaymentDateFrom}
+          onRequestClose={() => setModalpaymentDateFrom(false)}
+          onPress={item => {
+            setPaymentDateFrom(item);
+            setModalpaymentDateFrom(false);
+          }}
+        />
+      )}
+
       <KeyboardAvoidingView style={{flex: 1}}>
         <CustomAppBarStep
           iconLeft={icons.ic_back}
@@ -68,11 +105,12 @@ const AddBuildingsStep2 = props => {
 
           <CustomButtonValue
             important={true}
+            icon={icons.ic_down}
             type={'button'}
             title={'Ngày chốt tiền'}
             placeholder={'Chọn ngày'}
-            value={billingDate}
-            onPress={() => setModalpaymentDateFrom(true)}
+            value={billingDate?.key}
+            onPress={() => setModalbillingDate(true)}
           />
 
           <CustomTimeButtons
@@ -84,8 +122,8 @@ const AddBuildingsStep2 = props => {
             iconRight={icons.ic_down}
             styleButtonLeft={{marginRight: 5}}
             styleButtonRight={{marginLeft: 5}}
-            valueLeft={paymentDateTo}
-            valueRight={paymentDateFrom}
+            valueLeft={paymentDateFrom?.value}
+            valueRight={paymentDateTo?.value}
             onPressLeft={() => setModalpaymentDateFrom(true)}
             onPressRightt={() => setModalpaymentDateTo(true)}
           />

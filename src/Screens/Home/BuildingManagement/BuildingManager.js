@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -13,13 +13,15 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-import {GetListHausesApi} from '../../../Api/Home/HomeApis';
+import {useSelector} from 'react-redux';
+import {GetListHausesApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import CustomButton from '../../../Components/CustomButton';
 import CustomButtonBottom from '../../../Components/CustomButtonBottom';
 import CustomLoading from '../../../Components/CustomLoading';
 import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
 import {colors, icons, images} from '../../../Constants';
+import {token} from '../../../Store/slices/tokenSlice';
 
 const BuildingManager = () => {
   const navigation = useNavigation();
@@ -27,6 +29,8 @@ const BuildingManager = () => {
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
   const [listHauses, setListHauses] = useState([]);
+  const tokenStore = useSelector(token);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -39,21 +43,17 @@ const BuildingManager = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [isFocused]);
 
   const getData = async () => {
-    await AsyncStorage.getItem('token').then(async tokenStore => {
-      if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
-        await GetListHausesApi(tokenStore)
-          .then(res => {
-            if (res?.status == 200) {
-              setLoading(false);
-              setListHauses(res?.data);
-            }
-          })
-          .catch(error => console.log(error));
-      }
-    });
+    await GetListHausesApi(tokenStore)
+      .then(res => {
+        if (res?.status == 200) {
+          setLoading(false);
+          setListHauses(res?.data);
+        }
+      })
+      .catch(error => console.log(error));
   };
 
   const renderlistHauses = (item, index) => {
@@ -96,7 +96,7 @@ const BuildingManager = () => {
           <CustomTextTitle label={'Tòa nhà hiện có'} />
           <FlatList
             data={listHauses}
-            keyExtractor={(item, index) => `${item[index]?.id}`}
+            keyExtractor={(item, index) => `${item?.id}`}
             renderItem={({item, index}) => renderlistHauses(item, index)}
           />
         </View>
