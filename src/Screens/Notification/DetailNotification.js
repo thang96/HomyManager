@@ -1,9 +1,8 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import CustomAppBar from '../../Components/CustomAppBar';
-import CustomTextTitle from '../../Components/CustomTextTitle';
-import CustomSuggest from '../../Components/CustomSuggest';
+import CustomAppBar from '../../Components/CommonComponent/CustomAppBar';
+import CustomTextTitle from '../../Components/CommonComponent/CustomTextTitle';
 import {icons} from '../../Constants';
 const DetailNotification = props => {
   const route = useRoute();

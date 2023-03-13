@@ -2,10 +2,10 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import CustomNote from '../../Components/CommonComponent/CustomNote';
-import CustomTextTitle from '../../Components/CustomTextTitle';
-import CustomTwoButtonBottom from '../../Components/CustomTwoButtonBottom';
-import CustomAppBar from '../../Components/CustomAppBar';
-import CustomButton from '../../Components/CustomButton';
+import CustomTextTitle from '../../Components/CommonComponent/CustomTextTitle';
+import CustomTwoButtonBottom from '../../Components/CommonComponent/CustomTwoButtonBottom';
+import CustomAppBar from '../../Components/CommonComponent/CustomAppBar';
+import CustomButton from '../../Components/CommonComponent/CustomButton';
 import {colors, icons} from '../../Constants';
 const arrayLine = Array(20).fill('');
 const BillOfIssue = props => {

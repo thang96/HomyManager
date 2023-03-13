@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {colors, icons, images, svgs} from '../../../Constants';
-import CustomAppBar from '../../../Components/CustomAppBar';
+import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import {useNavigation} from '@react-navigation/native';
-import CustomButton from '../../../Components/CustomButton';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomButtonValue from '../../../Components/CustomButtonValue';
 import ComponentUnfinished from './ComponentUnfinished';
 

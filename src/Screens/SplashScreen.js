@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, Image, ImageBackground} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {AuthenticationAPi} from '../Api/Login/LoginApis';
-import CustomLoading from '../Components/CustomLoading';
+import CustomLoading from '../Components/CommonComponent/CustomLoading';
 import {colors, icons, images} from '../Constants';
 import {token, updateToken} from '../Store/slices/tokenSlice';
 

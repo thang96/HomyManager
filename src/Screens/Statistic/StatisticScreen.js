@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Keyboard, View, Text, Dimensions} from 'react-native';
 import {colors, icons, images, svgs} from '../../Constants';
 import {useNavigation} from '@react-navigation/native';
-import CustomAppBar from '../../Components/CustomAppBar';
+import CustomAppBar from '../../Components/CommonComponent/CustomAppBar';
 import {
   LineChart,
   BarChart,
@@ -12,7 +12,7 @@ import {
   StackedBarChart,
 } from 'react-native-chart-kit';
 import {ScrollView} from 'react-native-virtualized-view';
-import CustomButton from '../../Components/CustomButton';
+import CustomButton from '../../Components/CommonComponent/CustomButton';
 import CustomButtonValue from '../../Components/CustomButtonValue';
 const avatar =
   'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg';

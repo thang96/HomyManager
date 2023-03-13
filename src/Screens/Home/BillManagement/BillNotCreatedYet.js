@@ -12,13 +12,11 @@ import {
   Text,
   ScrollView,
 } from 'react-native';
-import CustomAppBar from '../../../Components/CustomAppBar';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
 // import {ScrollView} from 'react-native-virtualized-view';
-import CustomButton from '../../../Components/CustomButton';
-import CustomSuggest from '../../../Components/CustomSuggest';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
+import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomButtonCarendar from '../../../Components/CustomButtonCarendar';
 
 const breakLine = Array(19).fill('');

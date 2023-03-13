@@ -11,19 +11,18 @@ import {
   Dimensions,
   ImageBackground,
 } from 'react-native';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import CustomViewInfor from '../../../Components/CustomViewInfor';
-import CustomManagerInfor from '../../../Components/CustomPersonInfor';
+import CustomManagerInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import {FlatList} from 'react-native-gesture-handler';
-import CustomPaidService from '../../../Components/CustomPaidService';
-import CustomFreeService from '../../../Components/CustomFreeService';
 import CustomAppBarBuildingInfor from '../../../Components/CustomAppBarBuildingInfor';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
-import CustomLoading from '../../../Components/CustomLoading';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {HauseDetailApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import RenderService from '../../../Components/ComponentHome/RenderService';
+import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 
 const BuildingInformation = () => {
   const navigation = useNavigation();
@@ -65,7 +64,7 @@ const BuildingInformation = () => {
   };
 
   const renderAmenitys = (item, index) => {
-    return <CustomFreeService label={item?.name} />;
+    return <RenderAmenity label={item?.name} />;
   };
 
   return (

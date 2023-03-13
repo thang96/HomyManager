@@ -15,11 +15,11 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {GetListHausesApi} from '../../../Api/Home/BuildingApis/BuildingApis';
-import CustomButton from '../../../Components/CustomButton';
-import CustomButtonBottom from '../../../Components/CustomButtonBottom';
-import CustomLoading from '../../../Components/CustomLoading';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
+import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {colors, icons, images} from '../../../Constants';
 import {token} from '../../../Store/slices/tokenSlice';
 

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -11,25 +11,39 @@ import {
   Dimensions,
   SectionList,
 } from 'react-native';
-import CustomButton from '../../../Components/CustomButton';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomPersonInfor from '../../../Components/CustomPersonInfor';
+import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
 import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
-import CustomButtonBottom from '../../../Components/CustomButtonBottom';
-
+import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
+import {useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
+import {GetListTenants} from '../../../Api/Home/TenantApis/TenantApis';
 const TenantManager = () => {
   const navigation = useNavigation();
-  const avatar =
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Ragdoll_Kater%2C_drei_Jahre_alt%2C_RAG_n_21_seal-tabby-colourpoint%2C_Januar_2015.JPG/330px-Ragdoll_Kater%2C_drei_Jahre_alt%2C_RAG_n_21_seal-tabby-colourpoint%2C_Januar_2015.JPG';
   const [keyboard, setKeyboard] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
-  const [listTenants, setListTenants] = useState([
-    {userName: 'Tường Vân', phoneNumber: '123321123', avatar: avatar},
-    {userName: 'Hoàng Khánh', phoneNumber: '025874136', avatar: avatar},
-    {userName: 'Gia Bảo', phoneNumber: '058963145', avatar: avatar},
-  ]);
+  const [listTenants, setListTenants] = useState([]);
+  const tokenStore = useSelector(token);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    const getListTenants = async () => {
+      await GetListTenants(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            setListTenants(res?.data);
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getListTenants();
+  }, [isFocused]);
+
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
       setKeyboard(true);
@@ -67,6 +81,7 @@ const TenantManager = () => {
         pressIconLeft={() => navigation.goBack()}
       />
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
+        {loading && <CustomLoading />}
         {listTenants.length > 0 ? (
           <FlatList
             listKey="listTenants"
@@ -81,7 +96,7 @@ const TenantManager = () => {
 
       <CustomButtonBottom
         label={'Thêm mới người thuê'}
-        onPress={() => navigation.navigate('TenantList')}
+        onPress={() => navigation.navigate('AddNewTenant')}
       />
     </View>
   );

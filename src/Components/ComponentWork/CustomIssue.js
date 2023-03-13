@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import CustomButtonValue from '../CustomButtonValue';
-import CustomTextTitle from '../CustomTextTitle';
+import CustomTextTitle from '../CommonComponent/CustomTextTitle';
 import {icons} from '../../Constants';
 
 const CustomIssue = props => {

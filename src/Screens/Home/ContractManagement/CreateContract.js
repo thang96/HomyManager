@@ -11,24 +11,23 @@ import {
   Dimensions,
   SectionList,
 } from 'react-native';
-import CustomAppBar from '../../../Components/CustomAppBar';
-import CustomButton from '../../../Components/CustomButton';
+import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import CustomInputValue from '../../../Components/CustomInputValue';
-import CustomManagerInfor from '../../../Components/CustomPersonInfor';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
-import CustomPaidService from '../../../Components/CustomPaidService';
-import CustomFreeService from '../../../Components/CustomFreeService';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {uuid} from '../../../utils/uuid';
-import CustomInput from '../../../Components/CustomInput';
+import CustomInput from '../../../Components/CommonComponent/CustomInput';
 import CustomTimeButtons from '../../../Components/CustomTimeButton';
-import CustomModalDateTimePicker from '../../../Components/CustomModalDateTimePicker';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
+import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import ImagePicker from 'react-native-image-crop-picker';
-import CustomModalCamera from '../../../Components/CustomModalCamera';
-import CustomSuggest from '../../../Components/CustomSuggest';
+import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
+import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
+import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
+import RenderService from '../../../Components/ComponentHome/RenderService';
 
 const CreateContract = () => {
   const navigation = useNavigation();
@@ -79,7 +78,7 @@ const CreateContract = () => {
   const renderPaidSevice = (item, index) => {
     let value = item;
     return (
-      <CustomPaidService
+      <RenderService
         label={item?.label}
         value={item?.value}
         onPress={() => {
@@ -96,7 +95,7 @@ const CreateContract = () => {
   const renderFreeSevice = (item, index) => {
     let value = item;
     return (
-      <CustomFreeService
+      <RenderAmenity
         label={item?.label}
         value={item?.value}
         onPress={() => {

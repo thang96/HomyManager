@@ -7,11 +7,11 @@ import {
   KeyboardAvoidingView,
   FlatList,
 } from 'react-native';
-import CustomAppBar from '../../../Components/CustomAppBar';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
+import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
 import CustomChecker from '../../../Components/CustomChecker';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {ScrollView} from 'react-native-virtualized-view';
 import {useDispatch, useSelector} from 'react-redux';
 import {updateServices, serviceState} from '../../../Store/slices/commonSlice';

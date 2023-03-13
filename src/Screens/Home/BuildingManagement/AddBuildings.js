@@ -12,21 +12,21 @@ import {
   FlatList,
   Alert,
 } from 'react-native';
-import CustomButton from '../../../Components/CustomButton';
-import CustomManagerInfor from '../../../Components/CustomPersonInfor';
-import CustomModalDateTimePicker from '../../../Components/CustomModalDateTimePicker';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
+import CustomManagerInfor from '../../../Components/CommonComponent/CustomPersonInfor';
+import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
 import ImagePicker from 'react-native-image-crop-picker';
-import CustomModalCamera from '../../../Components/CustomModalCamera';
+import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
 import {uuid} from '../../../utils/uuid';
-import CustomInput from '../../../Components/CustomInput';
+import CustomInput from '../../../Components/CommonComponent/CustomInput';
 import CustomTimeButtons from '../../../Components/CustomTimeButton';
 import CustomAppBarStep from '../../../Components/CustomAppBarStep';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
-import CustomSuggest from '../../../Components/CustomSuggest';
-import CustomModalPicker from '../../../Components/CustomModalPicker';
-import CustomLoading from '../../../Components/CustomLoading';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
+import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
+import CustomModalPicker from '../../../Components/CommonComponent/CustomModalPicker';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {
   GetLocationCitysApi,
   GetDistrictByCityIdApi,

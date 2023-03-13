@@ -12,12 +12,12 @@ import {
   Keyboard,
 } from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
-import CustomSuggest from '../../../Components/CustomSuggest';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
+import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
-import CustomFreeService from '../../../Components/CustomFreeService';
+import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 import CustomAppBarStep from '../../../Components/CustomAppBarStep';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   commonState,
@@ -28,7 +28,7 @@ import {
 } from '../../../Store/slices/commonSlice';
 import {token} from '../../../Store/slices/tokenSlice';
 import RenderService from '../../../Components/ComponentHome/RenderService';
-import CustomLoading from '../../../Components/CustomLoading';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {CreateNewBuildingApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
 import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
@@ -136,7 +136,7 @@ const AddBuildingsStep3 = props => {
   };
 
   const renderFreeSevice = (item, index) => {
-    return <CustomFreeService label={item?.name} />;
+    return <RenderAmenity label={item?.name} />;
   };
 
   const createNewBuilding = async () => {

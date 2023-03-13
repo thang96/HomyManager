@@ -12,13 +12,12 @@ import {
   Text,
 } from 'react-native';
 import {icons, colors} from '../../../Constants';
-import {ScrollView} from 'react-native-virtualized-view';
-import CustomButton from '../../../Components/CustomButton';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
 import CustomIsActive from './CustomIsActive';
 import CustomOutOfDate from './CustomOutOfDate';
 import CustomLiquidated from './CustomLiquidated';
-import CustomButtonBottom from '../../../Components/CustomButtonBottom';
+import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 
 const ContractManagement = props => {
   const navigation = useNavigation();

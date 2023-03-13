@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import {colors, icons} from '../Constants';
+import {colors, icons} from '../../Constants';
 import CustomButton from './CustomButton';
 
 const CustomButtonBottom = props => {

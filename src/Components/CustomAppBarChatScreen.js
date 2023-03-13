@@ -1,9 +1,8 @@
 import {useRoute} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {colors, icons} from '../Constants';
-import CustomButton from './CustomButton';
+import CustomButton from './CommonComponent/CustomButton';
 
 const CustomAppBarChatScreen = props => {
   const {

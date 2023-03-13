@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import CustomButton from '../../../Components/CustomButton';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {colors, icons} from '../../../Constants';
 const FACE_DATA = [
   {

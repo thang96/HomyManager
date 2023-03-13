@@ -10,13 +10,13 @@ import {
 } from 'react-native';
 import {colors, icons, images} from '../../Constants';
 import CustomTextInput from '../../Components/CustomTextInput';
-import CustomButton from '../../Components/CustomButton';
+import CustomButton from '../../Components/CommonComponent/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {updateToken} from '../../Store/slices/tokenSlice';
 import {AuthenticationAPi} from '../../Api/Login/LoginApis';
-import CustomLoading from '../../Components/CustomLoading';
+import CustomLoading from '../../Components/CommonComponent/CustomLoading';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');

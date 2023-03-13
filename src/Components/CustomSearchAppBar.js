@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import CustomTextInput from './CustomTextInput';
-import CustomButton from './CustomButton';
+import CustomButton from './CommonComponent/CustomButton';
 import {icons, colors, fonts} from '../Constants';
 
 const CustomSearchAppBar = props => {

@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import {colors, icons, images} from '../Constants';
-import CustomButton from './CustomButton';
+import CustomButton from './CommonComponent/CustomButton';
 import Location from '../Assets/Svgs/Location.svg';
 const widthLine = Dimensions.get('window').width - 20;
 

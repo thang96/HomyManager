@@ -11,32 +11,43 @@ import {
   Dimensions,
   SectionList,
 } from 'react-native';
-import CustomAppBar from '../../../Components/CustomAppBar';
-import CustomButton from '../../../Components/CustomButton';
+import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomViewInfor from '../../../Components/CustomViewInfor';
-import CustomManagerInfor from '../../../Components/CustomPersonInfor';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
-import CustomChecker from '../../../Components/CustomChecker';
-import CustomPaidService from '../../../Components/CustomPaidService';
-import CustomFreeService from '../../../Components/CustomFreeService';
 import {uuid} from '../../../utils/uuid';
-import CustomInput from '../../../Components/CustomInput';
-import CustomTimeButtons from '../../../Components/CustomTimeButton';
-import CustomModalDateTimePicker from '../../../Components/CustomModalDateTimePicker';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
+import CustomInput from '../../../Components/CommonComponent/CustomInput';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import ImagePicker from 'react-native-image-crop-picker';
-import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
-import CustomModalCamera from '../../../Components/CustomModalCamera';
-import CustomSuggest from '../../../Components/CustomSuggest';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
-import CustomInputValue from '../../../Components/CustomInputValue';
+import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
+import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
+import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
+import {dateToYMD} from '../../../utils/common';
 
 const AddNewTenant = () => {
   const navigation = useNavigation();
+  const [userName, setUserName] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [birthDay, setBirthDay] = useState(new Date());
+  const [identityNumber, setIdentityNumber] = useState('');
+  const [identityIssueDate, setIdentityIssueDate] = useState(new Date());
+  const [identityIssuePlace, setIdentityIssuePlace] = useState('');
+  const [address, setAddress] = useState('');
+  const [password, setPassword] = useState('');
+
+  console.log(`${birthDay}`);
+
   const [albumImage, setAlbumImage] = useState([]);
+
   const [modalCamera, setModalCamera] = useState(false);
+  const [birthDayValue, setBirthDayValue] = useState('');
+  const [modalBirthDay, setModalBirthDay] = useState(false);
+  const [identityIssueDateValue, setIdentityIssueDateValue] = useState('');
+  const [modalIdentityIssueDate, setModalIdentityIssueDate] = useState(false);
 
   const openCamera = () => {
     ImagePicker.openCamera({width: 300, height: 400})
@@ -116,6 +127,32 @@ const AddNewTenant = () => {
           cancel={() => setModalCamera(false)}
         />
       )}
+      {modalBirthDay && (
+        <CustomModalDateTimePicker
+          onCancel={() => setModalBirthDay(false)}
+          value={birthDay}
+          mode={'date'}
+          onDateChange={value => {
+            let newTime = dateToYMD(value);
+            setBirthDay(value);
+            setBirthDayValue(newTime);
+          }}
+          onPress={() => setModalBirthDay(false)}
+        />
+      )}
+      {modalIdentityIssueDate && (
+        <CustomModalDateTimePicker
+          onCancel={() => setModalIdentityIssueDate(false)}
+          value={identityIssueDate}
+          mode={'date'}
+          onDateChange={value => {
+            let newTime = dateToYMD(value);
+            setIdentityIssueDate(value);
+            setIdentityIssueDateValue(newTime);
+          }}
+          onPress={() => setModalIdentityIssueDate(false)}
+        />
+      )}
       <CustomAppBar
         iconLeft={icons.ic_back}
         label={'Thêm người thuê'}
@@ -135,6 +172,8 @@ const AddNewTenant = () => {
           placeholder={'Nhập số điện thoại'}
           keyboardType={'numeric'}
           important={true}
+          defaultValue={phoneNumber}
+          onEndEditing={evt => setPhoneNumber(evt.nativeEvent.text)}
         />
 
         <CustomInput
@@ -142,15 +181,16 @@ const AddNewTenant = () => {
           styleViewInput={{marginTop: 20}}
           title={'Họ và tên'}
           placeholder="Nhập họ và tên"
-          onPress={() => {}}
+          defaultValue={userName}
+          onEndEditing={evt => setUserName(evt.nativeEvent.text)}
         />
 
         <CustomInput
           type={'input'}
           styleViewInput={{marginTop: 20}}
           title={'Email'}
-          placeholder="Nhập email"
-          onPress={() => {}}
+          defaultValue={email}
+          onEndEditing={evt => setEmail(evt.nativeEvent.text)}
         />
 
         <CustomInput
@@ -158,7 +198,8 @@ const AddNewTenant = () => {
           styleViewInput={{marginTop: 20}}
           title={'Ngày sinh'}
           placeholder={'Chọn ngày sinh'}
-          onPress={() => {}}
+          value={birthDayValue}
+          onPress={() => setModalBirthDay(true)}
         />
 
         <CustomInput
@@ -167,6 +208,8 @@ const AddNewTenant = () => {
           title={'Số CMND/ CCCD'}
           placeholder={'Nhập số CMND/ CCCD'}
           keyboardType={'numeric'}
+          defaultValue={userName}
+          onEndEditing={evt => setUserName(evt.nativeEvent.text)}
         />
 
         <CustomInput
@@ -174,7 +217,8 @@ const AddNewTenant = () => {
           styleViewInput={{marginTop: 20}}
           title={'Ngày cấp'}
           placeholder={'Chọn ngày cấp'}
-          onPress={() => {}}
+          value={identityIssueDateValue}
+          onPress={() => setModalIdentityIssueDate(true)}
         />
 
         <CustomInput

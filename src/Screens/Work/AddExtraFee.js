@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import CustomAppBar from '../../Components/CustomAppBar';
+import CustomAppBar from '../../Components/CommonComponent/CustomAppBar';
 import {colors, icons} from '../../Constants';
-import CustomInput from '../../Components/CustomInput';
-import CustomTextTitle from '../../Components/CustomTextTitle';
-import CustomTwoButtonBottom from '../../Components/CustomTwoButtonBottom';
+import CustomInput from '../../Components/CommonComponent/CustomInput';
+import CustomTextTitle from '../../Components/CommonComponent/CustomTextTitle';
+import CustomTwoButtonBottom from '../../Components/CommonComponent/CustomTwoButtonBottom';
 import {useNavigation} from '@react-navigation/native';
 const AddExtraFee = props => {
   const navigation = useNavigation();

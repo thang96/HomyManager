@@ -3,8 +3,8 @@ import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {GetServiceDetailAPi} from '../../../Api/Home/ServiceApis/ServiceApis';
-import CustomAppBar from '../../../Components/CustomAppBar';
-import CustomLoading from '../../../Components/CustomLoading';
+import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {colors, icons} from '../../../Constants';
 import {token} from '../../../Store/slices/tokenSlice';
 

@@ -12,12 +12,11 @@ import {
   Keyboard,
 } from 'react-native';
 
-import CustomButtonBottom from '../../../Components/CustomButtonBottom';
+import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import {icons, colors} from '../../../Constants';
-import CustomLoading from '../../../Components/CustomLoading';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
-import CustomRenderItem from '../../../Components/CustomRenderItem';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import RenderService from '../../../Components/ComponentHome/RenderService';

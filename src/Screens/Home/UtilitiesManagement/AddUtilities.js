@@ -11,12 +11,12 @@ import {
   FlatList,
   Alert,
 } from 'react-native';
-import CustomAppBar from '../../../Components/CustomAppBar';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
+import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
 import {ScrollView} from 'react-native-virtualized-view';
-import CustomInput from '../../../Components/CustomInput';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomInput from '../../../Components/CommonComponent/CustomInput';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {CreateNewAmenityApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';

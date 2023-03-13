@@ -8,12 +8,10 @@ import {
   ImageBackground,
 } from 'react-native';
 import {colors, icons, images} from '../../Constants';
-import CustomSuggest from '../../Components/CustomSuggest';
-import CustomButton from '../../Components/CustomButton';
+import CustomSuggest from '../../Components/CommonComponent/CustomSuggest';
+import CustomButton from '../../Components/CommonComponent/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
-import {updateToken} from '../../Store/slices/tokenSlice';
 
 const VerifyOTPScreen = () => {
   const navigation = useNavigation();

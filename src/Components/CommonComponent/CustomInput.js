@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, Image, Text, View} from 'react-native';
-import {colors, icons} from '../Constants';
-import CustomInputText from './CustomTextInput';
+import {colors, icons} from '../../Constants';
+import CustomInputText from '../CustomTextInput';
 
 const CustomInput = props => {
   const {

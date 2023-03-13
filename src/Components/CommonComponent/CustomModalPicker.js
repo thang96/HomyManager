@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
-import {colors, icons} from '../Constants';
+import {colors, icons} from '../../Constants';
 import CustomButton from './CustomButton';
 
 const CustomModalPicker = props => {

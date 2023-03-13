@@ -9,13 +9,9 @@ import {
 } from 'react-native';
 import {colors, icons, images} from '../../Constants';
 import CustomTextInput from '../../Components/CustomTextInput';
-import CustomButton from '../../Components/CustomButton';
+import CustomButton from '../../Components/CommonComponent/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch} from 'react-redux';
-import {updateToken} from '../../Store/slices/tokenSlice';
-import CustomSuggest from '../../Components/CustomSuggest';
-import CustomInput from '../../Components/CustomInput';
+import CustomSuggest from '../../Components/CommonComponent/CustomSuggest';
 import {ScrollView} from 'react-native-virtualized-view';
 
 const RegisterScreen = () => {

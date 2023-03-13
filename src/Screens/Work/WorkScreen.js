@@ -4,7 +4,7 @@ import {colors, icons, images, svgs} from '../../Constants';
 import LogoApp from '../../Assets/Svgs/LogoApp.svg';
 import {useNavigation} from '@react-navigation/native';
 import CustomSearchAppBar from '../../Components/CustomSearchAppBar';
-import CustomButton from '../../Components/CustomButton';
+import CustomButton from '../../Components/CommonComponent/CustomButton';
 import CustomContract from '../../Components/ComponentWork/CustomContract';
 import CustomIssue from '../../Components/ComponentWork/CustomIssue';
 import CustomBill from '../../Components/ComponentWork/CustomBill';

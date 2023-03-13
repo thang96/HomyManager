@@ -11,13 +11,12 @@ import {
   KeyboardAvoidingView,
   FlatList,
 } from 'react-native';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
-import CustomModalDateTimePicker from '../../../Components/CustomModalDateTimePicker';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
-import CustomSuggest from '../../../Components//CustomSuggest';
+import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTimeButtons from '../../../Components/CustomTimeButton';
 import CustomAppBarStep from '../../../Components/CustomAppBarStep';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomButtonValue from '../../../Components/CustomButtonValue';
 import {useDispatch, useSelector} from 'react-redux';
 import {commonState, updateCommon} from '../../../Store/slices/commonSlice';

@@ -1,6 +1,5 @@
 import React from 'react';
 import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
-import {icons} from '../Constants';
 const CustomButton = props => {
   const {
     styleButton,

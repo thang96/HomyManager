@@ -12,13 +12,10 @@ import {
   Text,
   ScrollView,
 } from 'react-native';
-import CustomAppBar from '../../../Components/CustomAppBar';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
 // import {ScrollView} from 'react-native-virtualized-view';
-import CustomButton from '../../../Components/CustomButton';
-import CustomChecker from '../../../Components/CustomChecker';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 
 const CustomIsActive = props => {
   const [listContract, setListContract] = useState(FAKE_DATA);

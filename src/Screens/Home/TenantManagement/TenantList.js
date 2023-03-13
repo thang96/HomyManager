@@ -11,13 +11,12 @@ import {
   Dimensions,
   SectionList,
 } from 'react-native';
-import CustomButton from '../../../Components/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomManagerInfor from '../../../Components/CustomPersonInfor';
+import CustomManagerInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
 import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 
 const TenantList = () => {
   const navigation = useNavigation();

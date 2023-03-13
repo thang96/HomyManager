@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 import {colors, icons, images, svgs} from '../../Constants';
 import {useNavigation} from '@react-navigation/native';
-import CustomAppBar from '../../Components/CustomAppBar';
+import CustomAppBar from '../../Components/CommonComponent/CustomAppBar';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import CustomButton from '../../Components/CustomButton';
+import CustomButton from '../../Components/CommonComponent/CustomButton';
 import {useSelector} from 'react-redux';
 import {userInfor} from '../../Store/slices/userInfoSlice';
 

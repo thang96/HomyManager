@@ -1,8 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {colors, icons} from '../Constants';
-import CustomButton from './CustomButton';
+import {colors, icons} from '../../Constants';
 
 const CustomTextTitle = props => {
   const {label, labelButton, onPress, viewTitle, icon} = props;

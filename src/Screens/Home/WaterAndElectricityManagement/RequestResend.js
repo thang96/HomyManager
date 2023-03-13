@@ -1,13 +1,13 @@
 import React from 'react';
 import {StyleSheet, Text, View, TextInput} from 'react-native';
-import CustomAppBar from '../../../Components/CustomAppBar';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {colors, icons} from '../../../Constants';
 import {ScrollView} from 'react-native-virtualized-view';
 import {useNavigation} from '@react-navigation/native';
-import CustomPersonInfor from '../../../Components/CustomPersonInfor';
+import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import CustomWaterAndElectric from '../../../Components/CustomWaterAndElectric';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 
 const RequestResend = props => {
   const navigation = useNavigation();

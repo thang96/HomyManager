@@ -9,9 +9,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
-import CustomAppBar from '../../Components/CustomAppBar';
-import CustomButton from '../../Components/CustomButton';
-import CustomTextTitle from '../../Components/CustomTextTitle';
+import CustomAppBar from '../../Components/CommonComponent/CustomAppBar';
+import CustomButton from '../../Components/CommonComponent/CustomButton';
 import {colors, icons, images} from '../../Constants';
 
 const NotificationScreen = props => {

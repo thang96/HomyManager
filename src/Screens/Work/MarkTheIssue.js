@@ -2,10 +2,10 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
-import CustomAppBar from '../../Components/CustomAppBar';
-import CustomTextTitle from '../../Components/CustomTextTitle';
-import CustomPersonInfor from '../../Components/CustomPersonInfor';
-import CustomTwoButtonBottom from '../../Components/CustomTwoButtonBottom';
+import CustomAppBar from '../../Components/CommonComponent/CustomAppBar';
+import CustomTextTitle from '../../Components/CommonComponent/CustomTextTitle';
+import CustomPersonInfor from '../../Components/CommonComponent/CustomPersonInfor';
+import CustomTwoButtonBottom from '../../Components/CommonComponent/CustomTwoButtonBottom';
 import {colors, icons} from '../../Constants';
 import BoxShowInfor from '../../Components/CommonComponent/BoxShowInfor';
 const MarkTheIssue = props => {

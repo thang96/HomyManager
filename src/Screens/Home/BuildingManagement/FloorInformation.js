@@ -11,18 +11,13 @@ import {
   Dimensions,
   SectionList,
 } from 'react-native';
-import CustomAppBar from '../../../Components/CustomAppBar';
-import CustomButton from '../../../Components/CustomButton';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
-import CustomManagerInfor from '../../../Components/CustomPersonInfor';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {FlatList} from 'react-native-gesture-handler';
-import CustomChecker from '../../../Components/CustomChecker';
-import CustomPaidService from '../../../Components/CustomPaidService';
-import CustomButtonBottom from '../../../Components/CustomButtonBottom';
+import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import {uuid} from '../../../utils/uuid';
-import CustomAppBarRoomInfor from '../../../Components/CustomAppBarRoomInfor';
 import CustomAppBarFloorInfor from '../../../Components/CustomAppBarFloorInfor';
 
 const FLOORINFOR = [

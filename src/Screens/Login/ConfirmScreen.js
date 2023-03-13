@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {ImageBackground, StyleSheet, Text, View} from 'react-native';
-import CustomSuggest from '../../Components/CustomSuggest';
+import CustomSuggest from '../../Components/CommonComponent/CustomSuggest';
 import {colors, icons, images, svgs} from '../../Constants';
 import CustomTextInput from '../../Components/CustomTextInput';
-import CustomButton from '../../Components/CustomButton';
+import CustomButton from '../../Components/CommonComponent/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';

@@ -15,8 +15,8 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {GetListHausesApi} from '../../Api/Home/BuildingApis/BuildingApis';
 import {GetUserAPi} from '../../Api/User/UserApis';
-import CustomButton from '../../Components/CustomButton';
-import CustomLoading from '../../Components/CustomLoading';
+import CustomButton from '../../Components/CommonComponent/CustomButton';
+import CustomLoading from '../../Components/CommonComponent/CustomLoading';
 import CustomSearchAppBar from '../../Components/CustomSearchAppBar';
 import {colors, icons, images, svgs} from '../../Constants';
 import {token} from '../../Store/slices/tokenSlice';

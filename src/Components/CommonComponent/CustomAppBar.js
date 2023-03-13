@@ -1,8 +1,8 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {colors} from '../Constants';
-import CustomButton from './CustomButton';
+import {colors} from '../../Constants';
+import CustomButton from '../CommonComponent/CustomButton';
 
 const CustomAppBar = props => {
   const {

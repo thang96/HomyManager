@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {colors, icons, images, svgs} from '../../../Constants';
-import CustomAppBar from '../../../Components/CustomAppBar';
+import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import {useNavigation} from '@react-navigation/native';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomButtonValue from '../../../Components/CustomButtonValue';
-import CustomPersonInfor from '../../../Components/CustomPersonInfor';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
+import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomWaterAndElectric from '../../../Components/CustomWaterAndElectric';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Modal, StyleSheet} from 'react-native';
-import {colors} from '../Constants';
+import {colors} from '../../Constants';
 import DatePicker from 'react-native-date-picker';
 
 const CustomModalDateTimePicker = props => {
@@ -26,7 +26,7 @@ const CustomModalDateTimePicker = props => {
           <View style={styles.eachContainer}>
             <DatePicker
               mode={mode}
-              open={openPicker}
+              open={true}
               date={value}
               onCancel={onCancel}
               onConfirm={onConfirm}

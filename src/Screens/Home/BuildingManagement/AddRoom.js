@@ -11,21 +11,18 @@ import {
   Dimensions,
   SectionList,
 } from 'react-native';
-import CustomAppBar from '../../../Components/CustomAppBar';
-import CustomButton from '../../../Components/CustomButton';
+import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomViewInfor from '../../../Components/CustomViewInfor';
-import CustomManagerInfor from '../../../Components/CustomPersonInfor';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
-import CustomChecker from '../../../Components/CustomChecker';
-import CustomPaidService from '../../../Components/CustomPaidService';
-import CustomFreeService from '../../../Components/CustomFreeService';
+import RenderService from '../../../Components/ComponentHome/RenderService';
+import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 import {uuid} from '../../../utils/uuid';
-import CustomInput from '../../../Components/CustomInput';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
-import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
-import CustomModalCamera from '../../../Components/CustomModalCamera';
+import CustomInput from '../../../Components/CommonComponent/CustomInput';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
+import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
 import ImagePicker from 'react-native-image-crop-picker';
 import CustomInputValue from '../../../Components/CustomInputValue';
 
@@ -54,7 +51,7 @@ const AddRoom = () => {
   const renderPaidSevice = (item, index) => {
     let value = item;
     return (
-      <CustomPaidService
+      <RenderService
         label={item?.label}
         value={item?.value}
         onPress={() => {
@@ -71,7 +68,7 @@ const AddRoom = () => {
   const renderFreeSevice = (item, index) => {
     let value = item;
     return (
-      <CustomFreeService
+      <RenderAmenity
         label={item?.label}
         value={item?.value}
         onPress={() => {

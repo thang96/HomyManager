@@ -11,17 +11,16 @@ import {
   Dimensions,
   SectionList,
 } from 'react-native';
-import CustomButtonBottom from '../../../Components/CustomButtonBottom';
-import CustomButton from '../../../Components/CustomButton';
+import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import CustomViewInfor from '../../../Components/CustomViewInfor';
-import CustomTextTitle from '../../../Components/CustomTextTitle';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {FlatList} from 'react-native-gesture-handler';
 import File from '../../../Assets/Svgs/File.svg';
-import CustomPaidService from '../../../Components/CustomPaidService';
-import CustomFreeService from '../../../Components/CustomFreeService';
-import {uuid} from '../../../utils/uuid';
+import RenderService from '../../../Components/ComponentHome/RenderService';
+import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 import CustomAppBarRoomInfor from '../../../Components/CustomAppBarRoomInfor';
 
 const RoomInformation = props => {
@@ -47,7 +46,7 @@ const RoomInformation = props => {
   const renderPaidSevice = (item, index) => {
     let value = item;
     return (
-      <CustomPaidService
+      <RenderService
         label={item?.label}
         value={item?.value}
         onPress={() => {
@@ -64,7 +63,7 @@ const RoomInformation = props => {
   const renderFreeSevice = (item, index) => {
     let value = item;
     return (
-      <CustomFreeService
+      <RenderAmenity
         label={item?.label}
         value={item?.value}
         onPress={() => {

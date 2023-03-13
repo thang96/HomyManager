@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Modal, StyleSheet} from 'react-native';
-import {colors} from '../Constants';
+import {colors} from '../../Constants';
 
 const CustomModalCamera = props => {
   const {onRequestClose, modalVisible, openCamera, openGallery, cancel} = props;
