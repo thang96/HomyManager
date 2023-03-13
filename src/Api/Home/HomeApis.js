@@ -95,43 +95,6 @@ export const GetWardByDistrictIdApi = (token, districtId) => {
       });
   });
 };
-export const GetServicesApi = token => {
-  return new Promise((resolve, reject) => {
-    axios
-      .get(`${BASEURL}/services`, {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(res => {
-        resolve(res);
-      })
-      .catch(errors => {
-        reject(errors);
-      });
-  });
-};
-
-export const GetAmenitysApi = token => {
-  return new Promise((resolve, reject) => {
-    axios
-      .get(`${BASEURL}/amenities`, {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(res => {
-        resolve(res);
-      })
-      .catch(errors => {
-        reject(errors);
-      });
-  });
-};
 
 export const CreateBuildingApi = (token, data) => {
   return new Promise((resolve, reject) => {

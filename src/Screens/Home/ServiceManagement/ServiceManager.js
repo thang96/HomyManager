@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -20,12 +20,13 @@ import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
 import CustomRenderItem from '../../../Components/CustomRenderItem';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
-import {GetListServicesAPi} from '../../../Api/Home/Service/ServiceApis';
 import RenderService from '../../../Components/ComponentHome/RenderService';
+import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
 
 const ServiceManager = props => {
   const navigation = useNavigation();
   const [keyboard, setKeyboard] = useState(false);
+  const isFocused = useIsFocused();
   const [textSearch, setTextSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const tokenStore = useSelector(token);
@@ -38,12 +39,13 @@ const ServiceManager = props => {
       setKeyboard(false);
     });
   }, []);
+
   useEffect(() => {
     getListService();
-  }, []);
+  }, [isFocused]);
 
   const getListService = async () => {
-    await GetListServicesAPi(tokenStore)
+    await GetListServicesApi(tokenStore)
       .then(res => {
         if (res?.status == 200) {
           setListSevice(res?.data);
@@ -54,7 +56,6 @@ const ServiceManager = props => {
   };
 
   const [listSevice, setListSevice] = useState([]);
-  console.log(listSevice);
 
   const renderListService = (item, index) => {
     const updateItem = () => {

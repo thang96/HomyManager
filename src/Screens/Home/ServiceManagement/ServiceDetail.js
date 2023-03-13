@@ -2,7 +2,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
-import {GetServiceDetailAPi} from '../../../Api/Home/Service/ServiceApis';
+import {GetServiceDetailAPi} from '../../../Api/Home/ServiceApis/ServiceApis';
 import CustomAppBar from '../../../Components/CustomAppBar';
 import CustomLoading from '../../../Components/CustomLoading';
 import {colors, icons} from '../../../Constants';

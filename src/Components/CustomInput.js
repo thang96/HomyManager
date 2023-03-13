@@ -15,6 +15,8 @@ const CustomInput = props => {
     onChangeText,
     onPress,
     styleButton,
+    onEndEditing,
+    defaultValue,
   } = props;
   return (
     <View style={styleViewInput}>
@@ -30,6 +32,8 @@ const CustomInput = props => {
           placeholder={placeholder}
           onChangeText={onChangeText}
           value={value}
+          onEndEditing={onEndEditing}
+          defaultValue={defaultValue}
         />
       )}
       {type == 'button' && (

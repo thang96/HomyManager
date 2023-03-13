@@ -18,6 +18,8 @@ const CustomInputText = props => {
     iconLeft,
     styleIconLeft,
     onPressIconLeft,
+    defaultValue,
+    onEndEditing,
   } = props;
   return (
     <View style={[styleViewTextInput, styles.viewInput]}>
@@ -36,6 +38,8 @@ const CustomInputText = props => {
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
+        defaultValue={defaultValue}
+        onEndEditing={onEndEditing}
       />
       {iconRight && (
         <CustomButton

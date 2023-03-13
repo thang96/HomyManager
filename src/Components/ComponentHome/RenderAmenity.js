@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {colors, icons} from '../Constants';
+import {colors, icons} from '../../Constants';
 
 const RenderAmenity = props => {
   const widthImage = Dimensions.get('window').width / 3 - 10;

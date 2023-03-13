@@ -29,8 +29,9 @@ import {
 import {token} from '../../../Store/slices/tokenSlice';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import CustomLoading from '../../../Components/CustomLoading';
-import {GetAmenitysApi, GetServicesApi} from '../../../Api/Home/HomeApis';
 import {CreateBuildingApi} from '../../../Api/Home/HomeApis';
+import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
+import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 
 const AddBuildingsStep3 = props => {
   const navigation = useNavigation();
@@ -51,7 +52,7 @@ const AddBuildingsStep3 = props => {
 
   useEffect(() => {
     const getListData = async () => {
-      await GetServicesApi(tokenStore)
+      await GetListServicesApi(tokenStore)
         .then(res => {
           if (res?.status == 200) {
             let eachData = res?.data;
@@ -65,7 +66,7 @@ const AddBuildingsStep3 = props => {
           }
         })
         .catch(error => console.log(error));
-      await GetAmenitysApi(tokenStore)
+      await GetListAmenitysApi(tokenStore)
         .then(res => {
           if (res?.status == 200) {
             let eachData = res?.data;

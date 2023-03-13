@@ -9,6 +9,7 @@ import {
   Image,
   KeyboardAvoidingView,
   FlatList,
+  Alert,
 } from 'react-native';
 import CustomAppBar from '../../../Components/CustomAppBar';
 import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
@@ -16,15 +17,43 @@ import {icons, colors} from '../../../Constants';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomInput from '../../../Components/CustomInput';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
+import {useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
+import {CreateNewService} from '../../../Api/Home/ServiceApis/ServiceApis';
 
 const AddService = props => {
   const navigation = useNavigation();
+  const tokenStore = useSelector(token);
+  const [name, setName] = useState('');
+  const [calculateMethod, setCalculateMethod] = useState(0);
+  const [calculateUnit, setCalculateUnit] = useState('');
+  const [fee, setFee] = useState(0);
+  const [description, setDescription] = useState('');
+  const createNewService = async () => {
+    let data = {
+      name: name,
+      calculateMethod: calculateMethod,
+      calculateUnit: calculateUnit,
+      fee: fee,
+      description: description,
+    };
+    await CreateNewService(tokenStore, data)
+      .then(res => {
+        if (res?.status == 200) {
+          Alert.alert('Thành công', 'Tạo dịch vụ thành công', [
+            {text: 'OK', onPress: () => navigation.navigate('ServiceManager')},
+          ]);
+        }
+      })
+      .catch(error => console.log(error));
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       <KeyboardAvoidingView style={{flex: 1}}>
         <CustomAppBar
           iconLeft={icons.ic_back}
+          pressIconRight={() => navigation.navigate('NotificationScreen')}
           label={'Thêm dịch vụ'}
           iconRight={icons.ic_bell}
           iconSecondRight={icons.ic_moreOption}
@@ -35,39 +64,55 @@ const AddService = props => {
             Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ
           </Text>
           <CustomTextTitle label={'Thông tin dịch vụ'} />
-          <CustomInput
+          {/* <CustomInput
             type={'button'}
             title={'Loại dịch vụ'}
             placeholder={'Chọn loại dịch vụ'}
-          />
+          /> */}
           <CustomInput
+            important={true}
             styleViewInput={{marginTop: 20}}
             type={'input'}
             title={'Tên dịch vụ'}
             placeholder={'Nhập tên dịch vụ'}
+            defaultValue={name}
+            onEndEditing={evt => setName(evt.nativeEvent.text)}
           />
           <CustomInput
+            important={true}
             styleViewInput={{marginTop: 20}}
             type={'button'}
             title={'Thu phí dựa trên'}
             placeholder={'Lũy tiến theo chỉ số'}
+            value={calculateMethod}
           />
           <CustomInput
+            important={true}
             styleViewInput={{marginTop: 20}}
             type={'input'}
             title={'Đợn vị đo'}
             placeholder={'Đơn vị đo'}
+            defaultValue={calculateUnit}
+            onEndEditing={evt => setCalculateUnit(evt.nativeEvent.text)}
           />
           <CustomInput
+            important={true}
             styleViewInput={{marginTop: 20}}
             type={'input'}
             title={'Phí dịch vụ'}
             placeholder={'Nhập phí dịch vụ'}
             keyboardType={'numeric'}
+            defaultValue={fee}
+            onEndEditing={evt => setFee(evt.nativeEvent.text)}
           />
           <Text style={[styles.label, {marginTop: 20}]}>Ghi chú</Text>
           <View style={styles.viewTextInput}>
-            <TextInput multiline placeholder="Nhập ghi chú" />
+            <TextInput
+              multiline
+              placeholder="Nhập ghi chú"
+              defaultValue={description}
+              onEndEditing={evt => setDescription(evt.nativeEvent.text)}
+            />
           </View>
           <View style={{marginBottom: 56}} />
         </ScrollView>
@@ -76,9 +121,7 @@ const AddService = props => {
           leftLabel={'Trở lại'}
           rightLabel={'Hoàn tất'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => {
-            console.log('do some thing');
-          }}
+          onPressRight={() => createNewService()}
         />
       </KeyboardAvoidingView>
     </View>
@@ -99,7 +142,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: colors.borderInput,
     padding: 10,
-    backgroundColor: colors.backgroundInput,
+    backgroundColor: 'white',
   },
 });
 export default AddService;

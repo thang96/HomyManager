@@ -9,6 +9,7 @@ import {
   Image,
   KeyboardAvoidingView,
   FlatList,
+  Alert,
 } from 'react-native';
 import CustomAppBar from '../../../Components/CustomAppBar';
 import CustomTwoButtonBottom from '../../../Components/CustomTwoButtonBottom';
@@ -16,9 +17,33 @@ import {icons, colors} from '../../../Constants';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomInput from '../../../Components/CustomInput';
 import CustomTextTitle from '../../../Components/CustomTextTitle';
+import {CreateNewAmenityApi} from '../../../Api/Home/AmenityApis/AmenityApis';
+import {useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
 
 const AddUtilities = props => {
   const navigation = useNavigation();
+  const tokenStore = useSelector(token);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+
+  const createNewAmenity = async () => {
+    let data = {name: name, description: description};
+    await CreateNewAmenityApi(tokenStore, data)
+      .then(res => {
+        if (res?.status == 200) {
+          if (res?.status == 200) {
+            Alert.alert('Thành công', 'Tạo tiện ích thành công', [
+              {
+                text: 'OK',
+                onPress: () => navigation.navigate('UtilitiesManager'),
+              },
+            ]);
+          }
+        }
+      })
+      .catch(error => console.log(error));
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
@@ -40,11 +65,18 @@ const AddUtilities = props => {
             type={'input'}
             title={'Tên tiện ích'}
             placeholder={'Nhập tên tiện ích'}
+            onEndEditing={evt => setName(evt.nativeEvent.text)}
+            defaultValue={name}
           />
 
           <Text style={[styles.label, {marginTop: 20}]}>Ghi chú</Text>
           <View style={styles.viewTextInput}>
-            <TextInput multiline placeholder="Nhập ghi chú cho tiện ích" />
+            <TextInput
+              multiline
+              placeholder="Nhập ghi chú cho tiện ích"
+              onEndEditing={evt => setDescription(evt.nativeEvent.text)}
+              defaultValue={description}
+            />
           </View>
           <View style={{marginBottom: 56}} />
         </ScrollView>
@@ -53,7 +85,7 @@ const AddUtilities = props => {
           leftLabel={'Lưu'}
           rightLabel={'Thêm mới'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => {}}
+          onPressRight={() => createNewAmenity()}
         />
       </KeyboardAvoidingView>
     </View>
@@ -74,7 +106,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: colors.borderInput,
     padding: 10,
-    backgroundColor: colors.backgroundInput,
+    backgroundColor: 'white',
   },
 });
 export default AddUtilities;

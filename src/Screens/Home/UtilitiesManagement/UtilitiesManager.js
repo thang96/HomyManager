@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -14,14 +14,44 @@ import {
 import CustomButtonBottom from '../../../Components/CustomButtonBottom';
 import {icons, colors} from '../../../Constants';
 import {ScrollView} from 'react-native-virtualized-view';
-import CustomChecker from '../../../Components/CustomChecker';
 import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
 import CustomRenderItem from '../../../Components/CustomRenderItem';
+import {useDispatch, useSelector} from 'react-redux';
+import {amenityState, updateAmenity} from '../../../Store/slices/commonSlice';
+import {token} from '../../../Store/slices/tokenSlice';
+import CustomLoading from '../../../Components/CustomLoading';
+import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
+import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 
 const UtilitiesManager = props => {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const tokenStore = useSelector(token);
+  const dispatch = useDispatch();
   const [keyboard, setKeyboard] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [textSearch, setTextSearch] = useState('');
+
+  useEffect(() => {
+    const getListData = async () => {
+      await GetListAmenitysApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachData = res?.data;
+            let eachArray = [];
+            eachData.map((data, index) => {
+              let newData = {...data, isCheck: false};
+              eachArray.push(newData);
+            });
+            dispatch(updateAmenity(eachArray));
+            setListSevice(res?.data);
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getListData();
+  }, [isFocused]);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -31,15 +61,7 @@ const UtilitiesManager = props => {
       setKeyboard(false);
     });
   }, []);
-  const [listSevice, setListSevice] = useState([
-    {label: 'Điện', value: '4000/KWH', isCheck: true},
-    {label: 'Nước', value: '5000/M³', isCheck: false},
-    {label: 'Wifi', value: '50000/T', isCheck: false},
-    {label: 'Ga', value: '200000/T', isCheck: true},
-    {label: 'Ga1', value: '200000/T', isCheck: false},
-    {label: 'Ga2', value: '200000/T', isCheck: false},
-    {label: 'Ga3', value: '200000/T', isCheck: true},
-  ]);
+  const [listSevice, setListSevice] = useState([]);
 
   const renderListService = (item, index) => {
     const updateItem = () => {
@@ -52,7 +74,7 @@ const UtilitiesManager = props => {
       newList[index] = newItem;
       setListSevice(newList);
     };
-    return <CustomRenderItem label={item?.label} />;
+    return <RenderAmenity label={item?.name} />;
   };
 
   return (
@@ -71,6 +93,7 @@ const UtilitiesManager = props => {
           placeholder={'Tìm kiếm...'}
         />
         <View style={{flex: 1, paddingHorizontal: 10}}>
+          {loading && <CustomLoading />}
           <ScrollView style={[styles.eachContainer]}>
             {listSevice.length > 0 ? (
               <FlatList
@@ -78,9 +101,9 @@ const UtilitiesManager = props => {
                 style={{justifyContent: 'space-between'}}
                 horizontal={false}
                 scrollEnabled={false}
-                numColumns={2}
+                numColumns={3}
                 data={listSevice}
-                keyExtractor={key => key.label}
+                keyExtractor={key => key.id}
                 renderItem={({item, index}) => renderListService(item, index)}
               />
             ) : null}
