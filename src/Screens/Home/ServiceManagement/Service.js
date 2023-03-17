@@ -12,13 +12,21 @@ import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwo
 import {icons, colors} from '../../../Constants';
 import CustomChecker from '../../../Components/CustomChecker';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {ScrollView} from 'react-native-virtualized-view';
 import {useDispatch, useSelector} from 'react-redux';
-import {updateServices, serviceState} from '../../../Store/slices/commonSlice';
+import {
+  updateServices,
+  serviceState,
+  updateAmenity,
+} from '../../../Store/slices/commonSlice';
+import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
+import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
+import {token} from '../../../Store/slices/tokenSlice';
 
 const Service = props => {
   const listServices = useSelector(serviceState);
-
+  const tokenStore = useSelector(token);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [services, setServices] = useState([]);
@@ -40,8 +48,8 @@ const Service = props => {
     };
     return (
       <CustomChecker
-        label={item?.name}
-        value={item?.fee}
+        label={`${item?.name}`}
+        value={`${item?.fee}`}
         isCheck={item?.isCheck}
         onPress={() => updateItem()}
       />
@@ -50,7 +58,7 @@ const Service = props => {
 
   const updateservices = () => {
     dispatch(updateServices(services));
-    navigation.navigate('AddBuildingsStep3');
+    navigation.goBack();
   };
 
   return (

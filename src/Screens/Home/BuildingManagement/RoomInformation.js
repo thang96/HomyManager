@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -22,27 +22,35 @@ import File from '../../../Assets/Svgs/File.svg';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 import CustomAppBarRoomInfor from '../../../Components/CustomAppBarRoomInfor';
+import {GetUnitDetailAPi} from '../../../Api/Home/UnitApis/UnitApis';
+import {useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 
 const RoomInformation = props => {
+  const route = useRoute();
+  const unitId = route.params;
+  const tokenStore = useSelector(token);
   const navigation = useNavigation();
-  const [listPaidSevice, setListPaidSevice] = useState([
-    {label: 'Điện', value: '4000/KWH'},
-    {label: 'Nước', value: '5000/M³'},
-    {label: 'Wifi', value: '50000/T'},
-    {label: 'Ga', value: '200000/T'},
-    {label: 'Ga1', value: '200000/T'},
-    {label: 'Ga2', value: '200000/T'},
-    {label: 'Ga3', value: '200000/T'},
-  ]);
-  const [listFreeSevice, setListFreeSevice] = useState([
-    {label: 'Máy lạnh', value: '1'},
-    {label: 'WC riêng', value: '2'},
-    {label: 'Chỗ để xe', value: '3'},
-    {label: 'Tủ lạnh', value: '4'},
-    {label: 'Máy giặt', value: '5'},
-    {label: 'Giờ tự do', value: '6'},
-    {label: 'Chăn - màn', value: '7'},
-  ]);
+  const [unit, setUnit] = useState();
+  const [loading, setLoading] = useState(true);
+  const [listPaidSevice, setListPaidSevice] = useState([]);
+  const [listFreeSevice, setListFreeSevice] = useState([]);
+
+  useEffect(() => {
+    const getListData = async () => {
+      await GetUnitDetailAPi(tokenStore, unitId)
+        .then(res => {
+          if (res?.status == 200) {
+            setUnit(res?.data);
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error, 'error unit detail'));
+    };
+    getListData();
+  }, []);
+
   const renderPaidSevice = (item, index) => {
     let value = item;
     return (
@@ -79,6 +87,7 @@ const RoomInformation = props => {
   };
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {loading && <CustomLoading />}
       <CustomAppBarRoomInfor onPressLeft={() => navigation.goBack()} />
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
         <CustomTextTitle label={'Thông tin phòng'} />

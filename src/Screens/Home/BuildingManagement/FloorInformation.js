@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -17,94 +17,65 @@ import {colors, icons, images} from '../../../Constants';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {FlatList} from 'react-native-gesture-handler';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {uuid} from '../../../utils/uuid';
 import CustomAppBarFloorInfor from '../../../Components/CustomAppBarFloorInfor';
-
-const FLOORINFOR = [
-  {
-    numberFloor: 1,
-    rooms: [
-      {
-        numberRoom: 'P101',
-        status: true,
-        username: 'Hà Lê Chí Bảo',
-        price: '1500000',
-      },
-      {
-        numberRoom: 'P102',
-        status: false,
-        username: 'Hà Lê Chí Bảo',
-        price: '1500000',
-      },
-      {
-        numberRoom: 'P103',
-        status: false,
-        username: 'Hà Lê Chí Bảo',
-        price: '1500000',
-      },
-      {
-        numberRoom: 'P104',
-        status: true,
-        username: 'Hà Lê Chí Bảo',
-        price: '1500000',
-      },
-    ],
-  },
-  {
-    numberFloor: 2,
-    rooms: [
-      {
-        numberRoom: 'P201',
-        status: true,
-        username: 'Hà Lê Chí Bảo',
-        price: '1500000',
-      },
-      {
-        numberRoom: 'P202',
-        status: false,
-        username: 'Hà Lê Chí Bảo',
-        price: '1500000',
-      },
-      {
-        numberRoom: 'P203',
-        status: false,
-        username: 'Hà Lê Chí Bảo',
-        price: '1500000',
-      },
-      {
-        numberRoom: 'P204',
-        status: true,
-        username: 'Hà Lê Chí Bảo',
-        price: '1500000',
-      },
-    ],
-  },
-];
+import {GetListUnitsApi} from '../../../Api/Home/UnitApis/UnitApis';
+import {token} from '../../../Store/slices/tokenSlice';
+import {useSelector} from 'react-redux';
 
 const FloorInformation = () => {
   const navigation = useNavigation();
-  const [listFloors, setListFloors] = useState(FLOORINFOR);
+  const route = useRoute();
+  const tokenStore = useSelector(token);
+  const [listFloors, setListFloors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const hauseId = route.params;
+  const focusAdd = useIsFocused();
+
+  useEffect(() => {
+    const getListUnit = async () => {
+      await GetListUnitsApi(tokenStore, hauseId)
+        .then(res => {
+          if (res?.status == 200) {
+            setListFloors(res?.data);
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getListUnit();
+  }, [hauseId, focusAdd]);
 
   const renderListFloor = (item, index) => {
     return (
       <View key={`${uuid}${index}`}>
         <CustomTextTitle
           viewTitle={{paddingHorizontal: 10}}
-          label={`Tầng ${item?.numberFloor}`}
+          label={`Tầng ${item?.floorNumber}`}
           labelButton={'Thêm phòng'}
         />
-        <FlatList
-          listKey={`${uuid}${index}`}
+        <CustomFloorInfor
+          numberRoom={`${item?.name}`}
+          status={`${item?.isActive}`}
+          username={`${item?.username}`}
+          price={`${item?.rentMonthlyFee}`}
+          onPress={() => {
+            navigation.navigate('RoomInformation', item?.id);
+          }}
+        />
+        {/* <FlatList
+          listKey={`${item?.id}${index}`}
           horizontal={false}
           scrollEnabled={false}
           numColumns={2}
-          keyExtractor={key => key?.numberRoom}
-          data={item?.rooms}
+          keyExtractor={key => key?.id}
+          data={listFloors}
           renderItem={({item, index}) => {
             return (
               <CustomFloorInfor
-                numberRoom={`${item?.numberRoom}`}
-                status={`${item?.status}`}
+                numberRoom={`${item?.name}`}
+                status={`${item?.isActive}`}
                 username={`${item?.username}`}
                 price={`${item?.price}`}
                 onPress={() => {
@@ -113,13 +84,14 @@ const FloorInformation = () => {
               />
             );
           }}
-        />
+        /> */}
       </View>
     );
   };
 
   return (
     <View style={styles.container}>
+      {loading && <CustomLoading />}
       <CustomAppBarFloorInfor onPressLeft={() => navigation.goBack()} />
 
       <ScrollView style={{paddingHorizontal: 5, paddingTop: 10}}>
@@ -130,8 +102,9 @@ const FloorInformation = () => {
         <View style={{height: 56}} />
       </ScrollView>
       <CustomButtonBottom
-        styleButton={{backgroundColor: colors.backgroundButton}}
+        styleButton={{backgroundColor: colors.mainColor}}
         label={'Thêm tầng mới'}
+        onPress={() => navigation.navigate('AddRoom', hauseId)}
       />
     </View>
   );

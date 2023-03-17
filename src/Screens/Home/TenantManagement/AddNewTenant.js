@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Dimensions,
   SectionList,
+  Alert,
 } from 'react-native';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
@@ -25,21 +26,25 @@ import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
 import {dateToYMD} from '../../../utils/common';
+import {CreateNewTenant} from '../../../Api/Home/TenantApis/TenantApis';
+import {useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
 
 const AddNewTenant = () => {
   const navigation = useNavigation();
+  const tokenStore = useSelector(token);
+  const timeNow = new Date();
+
   const [userName, setUserName] = useState('');
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
-  const [birthDay, setBirthDay] = useState(new Date());
+  const [birthDay, setBirthDay] = useState('');
   const [identityNumber, setIdentityNumber] = useState('');
   const [identityIssueDate, setIdentityIssueDate] = useState(new Date());
   const [identityIssuePlace, setIdentityIssuePlace] = useState('');
   const [address, setAddress] = useState('');
   const [password, setPassword] = useState('');
-
-  console.log(`${birthDay}`);
 
   const [albumImage, setAlbumImage] = useState([]);
 
@@ -116,6 +121,33 @@ const AddNewTenant = () => {
     setAlbumImage(newResult);
   };
 
+  const createNewTenant = async () => {
+    let data = {
+      userName: phoneNumber,
+      fullName: fullName,
+      phoneNumber: phoneNumber,
+      email: email,
+      birthDay: `${birthDay}`,
+      identityNumber: identityNumber,
+      identityIssueDate: `${identityIssueDate}`,
+      identityIssuePlace: identityIssuePlace,
+      address: address,
+      password: '',
+    };
+    await CreateNewTenant(tokenStore, data)
+      .then(res => {
+        if (res?.status == 200) {
+          Alert.alert('Thành công', 'Tạo người thuê thành công', [
+            {
+              text: 'OK',
+              onPress: () => navigation.goBack(),
+            },
+          ]);
+        }
+      })
+      .catch(error => console.log(error));
+  };
+  console.log(`${birthDay}`);
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       {modalCamera && (
@@ -130,11 +162,12 @@ const AddNewTenant = () => {
       {modalBirthDay && (
         <CustomModalDateTimePicker
           onCancel={() => setModalBirthDay(false)}
-          value={birthDay}
+          value={timeNow}
           mode={'date'}
           onDateChange={value => {
+            setBirthDay(`${value}`);
+            console.log(value, 'value');
             let newTime = dateToYMD(value);
-            setBirthDay(value);
             setBirthDayValue(newTime);
           }}
           onPress={() => setModalBirthDay(false)}
@@ -181,14 +214,15 @@ const AddNewTenant = () => {
           styleViewInput={{marginTop: 20}}
           title={'Họ và tên'}
           placeholder="Nhập họ và tên"
-          defaultValue={userName}
-          onEndEditing={evt => setUserName(evt.nativeEvent.text)}
+          defaultValue={fullName}
+          onEndEditing={evt => setFullName(evt.nativeEvent.text)}
         />
 
         <CustomInput
           type={'input'}
           styleViewInput={{marginTop: 20}}
           title={'Email'}
+          placeholder="Nhập email"
           defaultValue={email}
           onEndEditing={evt => setEmail(evt.nativeEvent.text)}
         />
@@ -208,8 +242,8 @@ const AddNewTenant = () => {
           title={'Số CMND/ CCCD'}
           placeholder={'Nhập số CMND/ CCCD'}
           keyboardType={'numeric'}
-          defaultValue={userName}
-          onEndEditing={evt => setUserName(evt.nativeEvent.text)}
+          defaultValue={identityNumber}
+          onEndEditing={evt => setIdentityNumber(evt.nativeEvent.text)}
         />
 
         <CustomInput
@@ -226,6 +260,8 @@ const AddNewTenant = () => {
           styleViewInput={{marginTop: 20}}
           title={'Nơi cấp'}
           placeholder={'Nhập nơi cấp'}
+          defaultValue={identityIssuePlace}
+          onEndEditing={evt => setIdentityIssuePlace(evt.nativeEvent.text)}
         />
 
         <CustomInput
@@ -233,6 +269,8 @@ const AddNewTenant = () => {
           styleViewInput={{marginTop: 20}}
           title={'Địa chỉ'}
           placeholder={'Nhập địa chỉ'}
+          defaultValue={address}
+          onEndEditing={evt => setAddress(evt.nativeEvent.text)}
         />
 
         <View style={styles.line} />
@@ -267,15 +305,13 @@ const AddNewTenant = () => {
         />
 
         <View style={{height: 56}} />
+        <CustomTwoButtonBottom
+          leftLabel={'Lưu'}
+          rightLabel={'Thêm mới'}
+          onPressLeft={() => navigation.goBack()}
+          onPressRight={() => createNewTenant()}
+        />
       </ScrollView>
-      <CustomTwoButtonBottom
-        leftLabel={'Lưu'}
-        rightLabel={'Thêm mới'}
-        onPressLeft={() => navigation.goBack()}
-        onPressRight={() => {
-          console.log('Ok');
-        }}
-      />
     </View>
   );
 };

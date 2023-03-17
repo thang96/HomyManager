@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Dimensions,
   SectionList,
+  Alert,
 } from 'react-native';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
@@ -25,63 +26,145 @@ import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwo
 import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
 import ImagePicker from 'react-native-image-crop-picker';
 import CustomInputValue from '../../../Components/CustomInputValue';
+import {useDispatch, useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
+import {GetListHausesApi} from '../../../Api/Home/BuildingApis/BuildingApis';
+import CustomModalPicker from '../../../Components/CommonComponent/CustomModalPicker';
+import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
+import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
+import {
+  amenityState,
+  serviceState,
+  updateAmenity,
+  updateServices,
+} from '../../../Store/slices/commonSlice';
+import {CreateNewUnit} from '../../../Api/Home/UnitApis/UnitApis';
 
 const AddRoom = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const tokenStore = useSelector(token);
+  const serviceSelect = useSelector(serviceState);
+  const amenitySelect = useSelector(amenityState);
+  const dispatch = useDispatch();
+  const hauseId = route.params;
+
+  const [hause, setHause] = useState('');
+  const [name, setName] = useState('');
+  const [floorNumber, setFloorNumber] = useState('');
+  const [roomType, setRoomType] = useState('');
+  const [rentMonthlyFee, setRentMonthlyFee] = useState('');
+  const [area, setArea] = useState('');
+  const [limitTenantNumber, setLimitTenantNumber] = useState('');
+  const [depositMoney, setDepositMoney] = useState('');
+  const [description, setDescription] = useState('');
+  const [notice, setNotice] = useState('');
+  const [serviceIds, setServiceIds] = useState([]);
+  const [amenityIds, setAmenityIds] = useState([]);
   const [albumImage, setAlbumImage] = useState([]);
+
+  const [listHauses, setListHauses] = useState([]);
+  const [listService, setListService] = useState([]);
+  const [listAmenity, setListAmenity] = useState([]);
+
+  const [loading, setLoading] = useState(false);
   const [modalCamera, setModalCamera] = useState(false);
-  const [listPaidSevice, setListPaidSevice] = useState([
-    {label: 'Điện', value: '4000/KWH'},
-    {label: 'Nước', value: '5000/M³'},
-    {label: 'Wifi', value: '50000/T'},
-    {label: 'Ga', value: '200000/T'},
-    {label: 'Ga1', value: '200000/T'},
-    {label: 'Ga2', value: '200000/T'},
-    {label: 'Ga3', value: '200000/T'},
-  ]);
-  const [listFreeSevice, setListFreeSevice] = useState([
-    {label: 'Máy lạnh', value: '1'},
-    {label: 'WC riêng', value: '2'},
-    {label: 'Chỗ để xe', value: '3'},
-    {label: 'Tủ lạnh', value: '4'},
-    {label: 'Máy giặt', value: '5'},
-    {label: 'Giờ tự do', value: '6'},
-    {label: 'Chăn - màn', value: '7'},
-  ]);
+  const [modalHauses, setModalHauses] = useState(false);
+
+  useEffect(() => {
+    const getListData = async () => {
+      await GetListHausesApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            setListHauses(res?.data);
+          }
+        })
+        .catch(error => console.log(error, 'listHauses'));
+
+      await GetListServicesApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachData = res?.data;
+            let eachArray = [];
+            eachData.map((data, index) => {
+              let newData = {...data, isCheck: false};
+              eachArray.push(newData);
+            });
+            dispatch(updateServices(eachArray));
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+
+      await GetListAmenitysApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachData = res?.data;
+            let eachArray = [];
+            eachData.map((data, index) => {
+              let newData = {...data, isCheck: false};
+              eachArray.push(newData);
+            });
+            dispatch(updateAmenity(eachArray));
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getListData();
+  }, []);
+
+  useEffect(() => {
+    let eachService = [];
+    if (serviceSelect.length > 0) {
+      serviceSelect.map((item, index) => {
+        if (item?.isCheck == true) {
+          eachService.push(item);
+        }
+      });
+      setListService(eachService);
+    }
+    let eachAmenityIds = [];
+    if (amenitySelect.length > 0) {
+      amenitySelect.map((item, index) => {
+        if (item?.isCheck == true) {
+          eachAmenityIds.push(item);
+        }
+      });
+      setListAmenity(eachAmenityIds);
+    }
+  }, [serviceSelect, amenitySelect]);
+
+  useEffect(() => {
+    const setListData = () => {
+      let eachServiceIds = [];
+      let eachAmenityIds = [];
+      listService.map((item, index) => {
+        eachServiceIds.push(item?.id);
+      });
+      listAmenity.map((item, index) => {
+        eachAmenityIds.push(item?.id);
+      });
+      setServiceIds(eachServiceIds);
+      setAmenityIds(eachAmenityIds);
+    };
+    setListData();
+  }, [listService, listAmenity]);
+
   const renderPaidSevice = (item, index) => {
     let value = item;
-    return (
-      <RenderService
-        label={item?.label}
-        value={item?.value}
-        onPress={() => {
-          deletePaidService(value);
-        }}
-      />
-    );
+    return <RenderService label={item?.name} value={item?.fee} />;
   };
-  const deletePaidService = (item, index) => {
-    let result = [...listPaidSevice];
-    let newResult = result.filter(itemResult => itemResult !== item);
-    setListPaidSevice(newResult);
-  };
+
   const renderFreeSevice = (item, index) => {
     let value = item;
-    return (
-      <RenderAmenity
-        label={item?.label}
-        value={item?.value}
-        onPress={() => {
-          deleteFreeSevice(value);
-        }}
-      />
-    );
+    return <RenderAmenity label={item?.name} />;
   };
-  const deleteFreeSevice = (item, index) => {
-    let result = [...listFreeSevice];
-    let newResult = result.filter(itemResult => itemResult !== item);
-    setListFreeSevice(newResult);
-  };
+  // const deleteFreeSevice = (item, index) => {
+  //   let result = [...listAmenity];
+  //   let newResult = result.filter(itemResult => itemResult !== item);
+  //   setListAmenity(newResult);
+  // };
 
   const openCamera = () => {
     ImagePicker.openCamera({width: 300, height: 400})
@@ -150,8 +233,47 @@ const AddRoom = () => {
     setAlbumImage(newResult);
   };
 
+  const createNewUnit = async () => {
+    let data = {
+      name: name,
+      floorNumber: floorNumber,
+      openTime: '',
+      rentMonthlyFee: parseInt(rentMonthlyFee),
+      roomType: roomType,
+      area: parseInt(area),
+      limitTenantNumber: parseInt(limitTenantNumber),
+      depositMoney: parseInt(depositMoney),
+      description: description,
+      notice: notice,
+      serviceIds: serviceIds,
+      amenityIds: amenityIds,
+    };
+    await CreateNewUnit(tokenStore, hauseId, data)
+      .then(res => {
+        if (res?.status == 200) {
+          Alert.alert('Thành công', 'Tạo phòng thành công', [
+            {
+              text: 'OK',
+              onPress: () => navigation.navigate('FloorInformation'),
+            },
+          ]);
+        }
+      })
+      .catch(error => console.log(error));
+  };
+
   return (
     <View style={styles.container}>
+      {modalHauses && (
+        <CustomModalPicker
+          pressClose={() => setModalHauses(false)}
+          data={listHauses}
+          onPressItem={item => {
+            setHause(item);
+            setModalHauses(false);
+          }}
+        />
+      )}
       {modalCamera && (
         <CustomModalCamera
           openCamera={() => openCamera()}
@@ -178,7 +300,8 @@ const AddRoom = () => {
           type={'button'}
           title={'Tòa nhà'}
           placeholder={'Chọn tòa nhà'}
-          onPress={() => {}}
+          value={hause?.name}
+          onPress={() => setModalHauses(true)}
         />
         <CustomInput
           important={true}
@@ -187,8 +310,8 @@ const AddRoom = () => {
           styleViewInput={{marginTop: 10}}
           title={'Tầng'}
           placeholder={'Nhập số tầng'}
-          value={''}
-          onChangeText={text => {}}
+          defaultValue={floorNumber}
+          onEndEditing={event => setFloorNumber(event.nativeEvent.text)}
         />
         <CustomInput
           important={true}
@@ -196,8 +319,8 @@ const AddRoom = () => {
           styleViewInput={{marginTop: 10}}
           title={'Tên phòng'}
           placeholder={'Nhập tên phòng'}
-          value={''}
-          onChangeText={text => {}}
+          defaultValue={name}
+          onEndEditing={event => setName(event.nativeEvent.text)}
         />
         <CustomInput
           important={true}
@@ -206,16 +329,17 @@ const AddRoom = () => {
           styleViewInput={{marginTop: 10}}
           title={'Giá thuê phòng'}
           placeholder={'Nhập giá thuê phòng'}
-          value={''}
-          onChangeText={text => {}}
+          defaultValue={rentMonthlyFee}
+          onEndEditing={event => setRentMonthlyFee(event.nativeEvent.text)}
         />
         <CustomInput
           important={true}
-          type={'button'}
+          type={'input'}
           styleViewInput={{marginTop: 10}}
           title={'Loại phòng'}
-          placeholder={'Chọn loại phòng'}
-          onPress={() => {}}
+          placeholder={'Nhập loại phòng'}
+          defaultValue={roomType}
+          onEndEditing={event => setRoomType(event.nativeEvent.text)}
         />
 
         <CustomInputValue
@@ -225,6 +349,8 @@ const AddRoom = () => {
           placeholder={'Nhập diện tích'}
           keyboardType={'numeric'}
           unit={'m2'}
+          defaultValue={area}
+          onEndEditing={event => setArea(event.nativeEvent.text)}
         />
 
         <CustomInputValue
@@ -234,6 +360,8 @@ const AddRoom = () => {
           placeholder={'Nhập số người'}
           keyboardType={'numeric'}
           unit={'Người'}
+          defaultValue={limitTenantNumber}
+          onEndEditing={event => setLimitTenantNumber(event.nativeEvent.text)}
         />
 
         <CustomInputValue
@@ -244,60 +372,82 @@ const AddRoom = () => {
           placeholder={'Nhập số tiền cọc khi khách thuê'}
           keyboardType={'numeric'}
           unit={'VNĐ'}
+          defaultValue={depositMoney}
+          onEndEditing={event => setDepositMoney(event.nativeEvent.text)}
         />
 
         <Text style={[styles.label, {marginTop: 10}]}>Mô tả</Text>
         <View style={styles.viewTextInput}>
-          <TextInput placeholder={'Nhập mô tả phòng'} />
+          <TextInput
+            placeholder={'Nhập mô tả phòng'}
+            multiline
+            defaultValue={description}
+            onEndEditing={event => setDescription(event.nativeEvent.text)}
+          />
         </View>
 
         <Text style={[styles.label, {marginTop: 10}]}>
           Lưu ý cho người thuê
         </Text>
         <View style={styles.viewTextInput}>
-          <TextInput placeholder={'Nhập lưu ý cho người thuê'} />
+          <TextInput
+            placeholder={'Nhập lưu ý cho người thuê'}
+            multiline
+            defaultValue={notice}
+            onEndEditing={event => setNotice(event.nativeEvent.text)}
+          />
         </View>
 
         <View style={styles.line} />
-        <CustomTextTitle label={'Dịch vụ có phí'} />
+        <CustomTextTitle
+          label={'Dịch vụ có phí'}
+          labelButton={'Thêm'}
+          icon={icons.ic_plus}
+          onPress={() => navigation.navigate('Service')}
+        />
         <Text style={{fontSize: 13, color: '#7F8A93'}}>
           Chỉnh sửa dịch vụ phòng sẽ không ảnh hưởng đến dịch vụ của tòa nhà
         </Text>
-        {listPaidSevice.length > 0 ? (
+        {listService.length > 0 ? (
           <FlatList
-            listKey="listPaidSevice"
+            listKey="listService"
             horizontal={false}
             scrollEnabled={false}
             numColumns={2}
-            keyExtractor={key => key.label}
-            data={listPaidSevice}
+            keyExtractor={key => key.id}
+            data={listService}
             renderItem={({item, index}) => renderPaidSevice(item, index)}
           />
         ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
-          <Text style={styles.pickerTotal}>{`${listPaidSevice.length}`}</Text>
+          <Text style={styles.pickerTotal}>{`${listService.length}`}</Text>
         </View>
         <View style={styles.line} />
 
-        <CustomTextTitle label={'Tiện ích miễn phí'} />
+        <CustomTextTitle
+          label={'Tiện ích miễn phí'}
+          labelButton={'Thêm'}
+          icon={icons.ic_plus}
+          onPress={() => navigation.navigate('Utilities')}
+        />
         <Text style={{fontSize: 13, color: '#7F8A93'}}>
           Chỉnh sửa dịch vụ phòng sẽ không ảnh hưởng đến dịch vụ của tòa nhà
         </Text>
-        {listFreeSevice.length > 0 ? (
+        {listAmenity.length > 0 ? (
           <FlatList
-            listKey="listFreeSevice"
+            listKey="listAmenity"
             horizontal={false}
             scrollEnabled={false}
             numColumns={3}
-            keyExtractor={key => key.value}
-            data={listFreeSevice}
+            keyExtractor={key => key.id}
+            data={listAmenity}
             renderItem={({item, index}) => renderFreeSevice(item, index)}
           />
         ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
-          <Text style={styles.pickerTotal}>{`${listFreeSevice.length}`}</Text>
+          <Text style={styles.pickerTotal}>{`${listAmenity.length}`}</Text>
         </View>
 
         <View style={styles.line} />
@@ -338,15 +488,13 @@ const AddRoom = () => {
         />
 
         <View style={{height: 56}} />
+        <CustomTwoButtonBottom
+          leftLabel={'Trở lại'}
+          rightLabel={'Tiếp tục'}
+          onPressLeft={() => navigation.goBack()}
+          onPressRight={() => createNewUnit()}
+        />
       </ScrollView>
-      <CustomTwoButtonBottom
-        leftLabel={'Trở lại'}
-        rightLabel={'Tiếp tục'}
-        onPressLeft={() => navigation.goBack()}
-        onPressRight={() => {
-          console.log('Ok');
-        }}
-      />
     </View>
   );
 };
@@ -360,7 +508,7 @@ const styles = StyleSheet.create({
   viewTextInput: {
     minHeight: 120,
     borderWidth: 1,
-    backgroundColor: 'rgba(116,116,116,0.1)',
+    backgroundColor: 'white',
     borderRadius: 10,
     paddingHorizontal: 10,
     borderColor: colors.borderInput,

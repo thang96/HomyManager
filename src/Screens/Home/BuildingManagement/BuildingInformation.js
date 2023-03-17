@@ -88,7 +88,9 @@ const BuildingInformation = () => {
             icon={icons.ic_bed}
             styleImageBG={{tintColor: '#1297c0'}}
             styleBGIcon={{backgroundColor: '#ebf9fd'}}
-            onPress={() => navigation.navigate('FloorInformation')}
+            onPress={() =>
+              navigation.navigate('FloorInformation', hauseInfor?.id)
+            }
           />
           <CustomOptionBT
             title={'Trống'}

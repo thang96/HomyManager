@@ -18,12 +18,17 @@ import CustomIsActive from './CustomIsActive';
 import CustomOutOfDate from './CustomOutOfDate';
 import CustomLiquidated from './CustomLiquidated';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
+import {GetListContractsApi} from '../../../Api/Home/ContractApis/ContractApis';
+import {useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
 
 const ContractManagement = props => {
   const navigation = useNavigation();
   const [keyboard, setKeyboard] = useState(false);
   const [textSearch, setTextSearch] = useState('');
   const [isActive, setIsActive] = useState(1);
+  const [listContracts, setListContracts] = useState([]);
+  const tokenStore = useSelector(token);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -32,6 +37,19 @@ const ContractManagement = props => {
     Keyboard.addListener('keyboardDidHide', () => {
       setKeyboard(false);
     });
+  }, []);
+
+  useEffect(() => {
+    const getListContracts = async () => {
+      await GetListContractsApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            setListContracts(res?.data);
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getListContracts();
   }, []);
 
   return (

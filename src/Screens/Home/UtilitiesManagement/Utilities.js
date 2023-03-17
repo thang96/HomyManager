@@ -45,7 +45,7 @@ const Utilities = props => {
     };
     return (
       <CustomChecker
-        label={item?.name}
+        label={`${item?.name}`}
         isCheck={item?.isCheck}
         onPress={() => updateItem()}
       />
@@ -54,7 +54,7 @@ const Utilities = props => {
 
   const updateAmenitys = () => {
     dispatch(updateAmenity(amenitys));
-    navigation.navigate('AddBuildingsStep3');
+    navigation.goBack();
   };
 
   return (

@@ -56,24 +56,8 @@ const CreateContract = () => {
     setToDateValue(newToday);
   }, []);
 
-  const [listPaidSevice, setListPaidSevice] = useState([
-    {label: 'Điện', value: '4000/KWH'},
-    {label: 'Nước', value: '5000/M³'},
-    {label: 'Wifi', value: '50000/T'},
-    {label: 'Ga', value: '200000/T'},
-    {label: 'Ga1', value: '200000/T'},
-    {label: 'Ga2', value: '200000/T'},
-    {label: 'Ga3', value: '200000/T'},
-  ]);
-  const [listFreeSevice, setListFreeSevice] = useState([
-    {label: 'Máy lạnh', value: '1'},
-    {label: 'WC riêng', value: '2'},
-    {label: 'Chỗ để xe', value: '3'},
-    {label: 'Tủ lạnh', value: '4'},
-    {label: 'Máy giặt', value: '5'},
-    {label: 'Giờ tự do', value: '6'},
-    {label: 'Chăn - màn', value: '7'},
-  ]);
+  const [listPaidSevice, setListPaidSevice] = useState([]);
+  const [listFreeSevice, setListFreeSevice] = useState([]);
 
   const renderPaidSevice = (item, index) => {
     let value = item;

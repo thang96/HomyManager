@@ -17,6 +17,8 @@ const CustomInputValue = props => {
     important,
     viewContainer,
     value,
+    defaultValue,
+    onEndEditing,
   } = props;
   return (
     <View style={viewContainer}>
@@ -31,6 +33,8 @@ const CustomInputValue = props => {
             style={{flex: 1}}
             placeholder={placeholder}
             keyboardType={keyboardType}
+            defaultValue={defaultValue}
+            onEndEditing={onEndEditing}
           />
           <View style={styles.viewUnit}>
             <Text style={styles.textUnit}>{unit}</Text>
@@ -54,7 +58,7 @@ const styles = StyleSheet.create({
   viewContainer: {
     height: 48,
     flexDirection: 'row',
-    backgroundColor: '#f8f9f9',
+    backgroundColor: 'white',
     flex: 1,
     borderWidth: 1,
     borderRadius: 4,
@@ -65,7 +69,7 @@ const styles = StyleSheet.create({
   viewUnit: {
     height: 32,
     paddingHorizontal: 5,
-    backgroundColor: '#ebedee',
+    backgroundColor: '#EBEDEE',
     borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
