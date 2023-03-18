@@ -16,11 +16,11 @@ import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
-import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
+import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
-import {GetListTenants} from '../../../Api/Home/TenantApis/TenantApis';
+import {GetListTenantsApi} from '../../../Api/Home/TenantApis/TenantApis';
 const TenantManager = () => {
   const navigation = useNavigation();
   const [keyboard, setKeyboard] = useState(null);
@@ -32,7 +32,7 @@ const TenantManager = () => {
 
   useEffect(() => {
     const getListTenants = async () => {
-      await GetListTenants(tokenStore)
+      await GetListTenantsApi(tokenStore)
         .then(res => {
           if (res?.status == 200) {
             setListTenants(res?.data);
@@ -61,7 +61,7 @@ const TenantManager = () => {
         avatar={item?.avatar}
         userName={item?.userName}
         phoneNumber={item?.phoneNumber}
-        onPress={() => {}}
+        pressAvatar={() => navigation.navigate('TenantList', item?.id)}
       />
     );
   };

@@ -26,22 +26,23 @@ import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
 import {dateToYMD} from '../../../utils/common';
-import {CreateNewTenant} from '../../../Api/Home/TenantApis/TenantApis';
+import {CreateNewTenantApi} from '../../../Api/Home/TenantApis/TenantApis';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 
 const AddNewTenant = () => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
-  const timeNow = new Date();
-
+  // console.log(tokenStore);
+  const [timeNow, setTimeNow] = useState(new Date());
+  const [timeNowIssueDate, setTimeNowIssueDate] = useState(new Date());
   const [userName, setUserName] = useState('');
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [birthDay, setBirthDay] = useState('');
   const [identityNumber, setIdentityNumber] = useState('');
-  const [identityIssueDate, setIdentityIssueDate] = useState(new Date());
+  const [identityIssueDate, setIdentityIssueDate] = useState('');
   const [identityIssuePlace, setIdentityIssuePlace] = useState('');
   const [address, setAddress] = useState('');
   const [password, setPassword] = useState('');
@@ -121,6 +122,12 @@ const AddNewTenant = () => {
     setAlbumImage(newResult);
   };
 
+  const formatDate = value => {
+    var d = value.getDate();
+    var m = value.getMonth() + 1; //Month from 0 to 11
+    var y = value.getFullYear();
+    return y + '-' + (m <= 9 ? '0' + m : m) + '-' + '' + (d <= 9 ? '0' + d : d);
+  };
   const createNewTenant = async () => {
     let data = {
       userName: phoneNumber,
@@ -134,7 +141,7 @@ const AddNewTenant = () => {
       address: address,
       password: '',
     };
-    await CreateNewTenant(tokenStore, data)
+    await CreateNewTenantApi(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
           Alert.alert('Thành công', 'Tạo người thuê thành công', [
@@ -147,7 +154,7 @@ const AddNewTenant = () => {
       })
       .catch(error => console.log(error));
   };
-  console.log(`${birthDay}`);
+  console.log(`${birthDay}`, 'birthDay');
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       {modalCamera && (
@@ -165,9 +172,10 @@ const AddNewTenant = () => {
           value={timeNow}
           mode={'date'}
           onDateChange={value => {
-            setBirthDay(`${value}`);
-            console.log(value, 'value');
+            setTimeNow(value);
+            let eachBirthDay = formatDate(value);
             let newTime = dateToYMD(value);
+            setBirthDay(eachBirthDay);
             setBirthDayValue(newTime);
           }}
           onPress={() => setModalBirthDay(false)}
@@ -176,11 +184,13 @@ const AddNewTenant = () => {
       {modalIdentityIssueDate && (
         <CustomModalDateTimePicker
           onCancel={() => setModalIdentityIssueDate(false)}
-          value={identityIssueDate}
+          value={timeNowIssueDate}
           mode={'date'}
           onDateChange={value => {
+            setTimeNowIssueDate(value);
+            let eachIssueDate = formatDate(value);
             let newTime = dateToYMD(value);
-            setIdentityIssueDate(value);
+            setIdentityIssueDate(eachIssueDate);
             setIdentityIssueDateValue(newTime);
           }}
           onPress={() => setModalIdentityIssueDate(false)}

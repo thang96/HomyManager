@@ -14,7 +14,7 @@ import {
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import {icons, colors} from '../../../Constants';
 import {ScrollView} from 'react-native-virtualized-view';
-import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
+import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
 import {useDispatch, useSelector} from 'react-redux';
 import {amenityState, updateAmenity} from '../../../Store/slices/commonSlice';
 import {token} from '../../../Store/slices/tokenSlice';

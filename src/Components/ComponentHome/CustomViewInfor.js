@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
-import {colors, icons} from '../Constants';
+import {colors, icons} from '../../Constants';
 
 const CustomViewInfor = props => {
   const widthView = Dimensions.get('window').width / 2 - 15;

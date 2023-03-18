@@ -4,7 +4,7 @@ import {colors, icons, images, svgs} from '../../../Constants';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
-import CustomButtonValue from '../../../Components/CustomButtonValue';
+import CustomButtonValue from '../../../Components/CommonComponent/CustomButtonValue';
 import ComponentUnfinished from './ComponentUnfinished';
 
 const WaterAndElectricityManagement = () => {

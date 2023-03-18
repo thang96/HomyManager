@@ -6,7 +6,7 @@ import {colors, icons} from '../../../Constants';
 import {ScrollView} from 'react-native-virtualized-view';
 import {useNavigation} from '@react-navigation/native';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
-import CustomWaterAndElectric from '../../../Components/CustomWaterAndElectric';
+import CustomWaterAndElectric from '../../../Components/ComponentHome/CustomWaterAndElectric';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 
 const RequestResend = props => {

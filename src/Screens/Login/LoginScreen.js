@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import {colors, icons, images} from '../../Constants';
-import CustomTextInput from '../../Components/CustomTextInput';
+import CustomTextInput from '../../Components/CommonComponent/CustomTextInput';
 import CustomButton from '../../Components/CommonComponent/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';

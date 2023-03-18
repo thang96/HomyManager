@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -15,35 +15,24 @@ import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import CustomManagerInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
-import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
+import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
+import {useDispatch, useSelector} from 'react-redux';
+import {tenantState, updateTenants} from '../../../Store/slices/commonSlice';
 
 const TenantList = () => {
   const navigation = useNavigation();
-  const avatar =
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Ragdoll_Kater%2C_drei_Jahre_alt%2C_RAG_n_21_seal-tabby-colourpoint%2C_Januar_2015.JPG/330px-Ragdoll_Kater%2C_drei_Jahre_alt%2C_RAG_n_21_seal-tabby-colourpoint%2C_Januar_2015.JPG';
+  const route = useRoute();
+  const dispatch = useDispatch();
+  const tenantsSelect = useSelector(tenantState);
   const [keyboard, setKeyboard] = useState(null);
   const [textSearch, setTextSearch] = useState('');
-  const [listTenants, setListTenants] = useState([
-    {
-      userName: 'Tường Vân',
-      phoneNumber: '123321123',
-      avatar: avatar,
-      isCheck: false,
-    },
-    {
-      userName: 'Hoàng Khánh',
-      phoneNumber: '025874136',
-      avatar: avatar,
-      isCheck: false,
-    },
-    {
-      userName: 'Gia Bảo',
-      phoneNumber: '058963145',
-      avatar: avatar,
-      isCheck: false,
-    },
-  ]);
+  const [listTenants, setListTenants] = useState([]);
+
+  useEffect(() => {
+    setListTenants(tenantsSelect);
+  }, [tenantsSelect]);
+
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
       setKeyboard(true);
@@ -56,11 +45,21 @@ const TenantList = () => {
   const renderListTenants = (item, index) => {
     let value = item;
     let eachIndex = index;
+    const updateItem = () => {
+      let newList = [...listTenants];
+      let itemCheck = newList[index];
+      let newItem = {
+        ...itemCheck,
+        isCheck: itemCheck?.isCheck == false ? true : false,
+      };
+      newList[index] = newItem;
+      setListTenants(newList);
+    };
     return (
       <CustomManagerInfor
         styleView={{marginTop: 10}}
         avatar={item?.avatar}
-        userName={item?.userName}
+        userName={item?.fullName}
         phoneNumber={item?.phoneNumber}
         isCheck={item?.isCheck}
         onPressCheck={() => updateItem(value, eachIndex)}
@@ -68,11 +67,9 @@ const TenantList = () => {
     );
   };
 
-  const updateItem = (item, index) => {
-    let newListTenants = [...listTenants];
-    let newItem = {...item, isCheck: item?.isCheck == false ? true : false};
-    newListTenants[index] = newItem;
-    setListTenants(newListTenants);
+  const updateTenantList = () => {
+    dispatch(updateTenants(listTenants));
+    navigation.goBack();
   };
 
   return (
@@ -105,7 +102,7 @@ const TenantList = () => {
       <CustomTwoButtonBottom
         leftLabel={'Lưu'}
         rightLabel={'Thêm mới'}
-        onPressLeft={() => navigation.goBack()}
+        onPressLeft={() => updateTenantList()}
         onPressRight={() => navigation.navigate('AddNewTenant')}
       />
     </View>

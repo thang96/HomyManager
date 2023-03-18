@@ -25,7 +25,7 @@ import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
 import ImagePicker from 'react-native-image-crop-picker';
-import CustomInputValue from '../../../Components/CustomInputValue';
+import CustomInputValue from '../../../Components/CommonComponent/CustomInputValue';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetListHausesApi} from '../../../Api/Home/BuildingApis/BuildingApis';
@@ -77,6 +77,7 @@ const AddRoom = () => {
         .then(res => {
           if (res?.status == 200) {
             setListHauses(res?.data);
+            setLoading(false);
           }
         })
         .catch(error => console.log(error, 'listHauses'));
@@ -91,7 +92,6 @@ const AddRoom = () => {
               eachArray.push(newData);
             });
             dispatch(updateServices(eachArray));
-            setLoading(false);
           }
         })
         .catch(error => console.log(error));
@@ -106,7 +106,6 @@ const AddRoom = () => {
               eachArray.push(newData);
             });
             dispatch(updateAmenity(eachArray));
-            setLoading(false);
           }
         })
         .catch(error => console.log(error));

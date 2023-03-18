@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
-import {colors} from '../Constants';
+import {colors} from '../../Constants';
 
 const CustomButtonCarendar = props => {
   const {styleButton, label, value, icon, onPress} = props;

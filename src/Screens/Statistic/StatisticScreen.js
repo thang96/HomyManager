@@ -13,7 +13,7 @@ import {
 } from 'react-native-chart-kit';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomButton from '../../Components/CommonComponent/CustomButton';
-import CustomButtonValue from '../../Components/CustomButtonValue';
+import CustomButtonValue from '../../Components/CommonComponent/CustomButtonValue';
 const avatar =
   'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg';
 const StatisticScreen = () => {

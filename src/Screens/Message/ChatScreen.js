@@ -1,8 +1,8 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View, Keyboard, ScrollView} from 'react-native';
-import ComponentChatBarBottom from '../../Components/ComponentChatBarBottom';
-import CustomAppBarChatScreen from '../../Components/CustomAppBarChatScreen';
+import ComponentChatBarBottom from '../../Components/ComponentChat/ComponentChatBarBottom';
+import CustomAppBarChatScreen from '../../Components/CommonComponent/CustomAppBarChatScreen';
 import {colors, icons} from '../../Constants';
 const avatar =
   'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg';

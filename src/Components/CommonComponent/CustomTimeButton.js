@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, TouchableOpacity, Text, Image, StyleSheet} from 'react-native';
-import {colors, icons} from '../Constants';
+import {colors, icons} from '../../Constants';
 
 const CustomTimeButtons = props => {
   const {

@@ -16,9 +16,25 @@ import {icons, colors} from '../../../Constants';
 // import {ScrollView} from 'react-native-virtualized-view';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
+import {useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
+import {GetListContractsApi} from '../../../Api/Home/ContractApis/ContractApis';
 
 const CustomIsActive = props => {
-  const [listContract, setListContract] = useState(FAKE_DATA);
+  const tokenStore = useSelector(token);
+  useEffect(() => {
+    const getListData = async () => {
+      await GetListContractsApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            setListContract(res?.data);
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getListData();
+  }, []);
+  const [listContract, setListContract] = useState([]);
   const renderContract = (item, index) => {
     return (
       <View style={styles.viewContract}>
@@ -122,27 +138,3 @@ const styles = StyleSheet.create({
   },
 });
 export default CustomIsActive;
-
-const FAKE_DATA = [
-  {
-    contractCode: '#1234567',
-    dateOfHire: '09-02-2023',
-    expirationDate: '09-02-2025',
-    place: 'Tòa nhà D2 - P101',
-    creator: 'Nguyễn Hưng',
-  },
-  {
-    contractCode: '#1234568',
-    dateOfHire: '09-02-2023',
-    expirationDate: '09-02-2025',
-    place: 'Tòa nhà D2 - P102',
-    creator: 'Nguyễn Hưng',
-  },
-  {
-    contractCode: '#1234569',
-    dateOfHire: '09-02-2023',
-    expirationDate: '09-02-2025',
-    place: 'Tòa nhà D2 - P103',
-    creator: 'Nguyễn Hưng',
-  },
-];

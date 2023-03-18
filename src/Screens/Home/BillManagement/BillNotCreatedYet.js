@@ -17,7 +17,7 @@ import {icons, colors} from '../../../Constants';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomButtonCarendar from '../../../Components/CustomButtonCarendar';
+import CustomButtonCarendar from '../../../Components/ComponentHome/CustomButtonCarendar';
 
 const breakLine = Array(19).fill('');
 

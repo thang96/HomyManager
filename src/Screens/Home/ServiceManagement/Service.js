@@ -10,9 +10,8 @@ import {
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
-import CustomChecker from '../../../Components/CustomChecker';
+import CustomChecker from '../../../Components/ComponentHome/CustomChecker';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {ScrollView} from 'react-native-virtualized-view';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -20,8 +19,6 @@ import {
   serviceState,
   updateAmenity,
 } from '../../../Store/slices/commonSlice';
-import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
-import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 import {token} from '../../../Store/slices/tokenSlice';
 
 const Service = props => {

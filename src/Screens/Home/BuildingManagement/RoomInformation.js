@@ -15,13 +15,13 @@ import CustomButtonBottom from '../../../Components/CommonComponent/CustomButton
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomViewInfor from '../../../Components/CustomViewInfor';
+import CustomViewInfor from '../../../Components/ComponentHome/CustomViewInfor';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {FlatList} from 'react-native-gesture-handler';
 import File from '../../../Assets/Svgs/File.svg';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
-import CustomAppBarRoomInfor from '../../../Components/CustomAppBarRoomInfor';
+import CustomAppBarRoomInfor from '../../../Components/CommonComponent/CustomAppBarRoomInfor';
 import {GetUnitDetailAPi} from '../../../Api/Home/UnitApis/UnitApis';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';

@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import CustomButton from './CommonComponent/CustomButton';
-import {icons, colors, fonts} from '../Constants';
+import CustomButton from './CustomButton';
+import {icons, colors, fonts} from '../../Constants';
 
-const CustomAppBarStep = props => {
+const CustomStepAppBar = props => {
   const {
     iconLeft,
     label,
@@ -149,4 +149,4 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
 });
-export default CustomAppBarStep;
+export default CustomStepAppBar;

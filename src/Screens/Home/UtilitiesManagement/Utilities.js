@@ -15,7 +15,7 @@ import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwo
 import {icons, colors} from '../../../Constants';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
-import CustomChecker from '../../../Components/CustomChecker';
+import CustomChecker from '../../../Components/ComponentHome/CustomChecker';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {useDispatch, useSelector} from 'react-redux';
 import {amenityState, updateAmenity} from '../../../Store/slices/commonSlice';

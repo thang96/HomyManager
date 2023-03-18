@@ -4,11 +4,11 @@ import {colors, icons, images, svgs} from '../../../Constants';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import {useNavigation} from '@react-navigation/native';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomButtonValue from '../../../Components/CustomButtonValue';
+import CustomButtonValue from '../../../Components/CommonComponent/CustomButtonValue';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {ScrollView} from 'react-native-virtualized-view';
-import CustomWaterAndElectric from '../../../Components/CustomWaterAndElectric';
+import CustomWaterAndElectric from '../../../Components/ComponentHome/CustomWaterAndElectric';
 
 const WaterAndElectricityInfor = () => {
   const navigation = useNavigation();

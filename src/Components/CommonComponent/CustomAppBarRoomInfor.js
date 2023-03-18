@@ -6,9 +6,9 @@ import {
   Text,
   View,
 } from 'react-native';
-import {colors, icons, images} from '../Constants';
-import CustomButton from './CommonComponent/CustomButton';
-import Money from '../Assets/Svgs/Money.svg';
+import {colors, icons, images} from '../../Constants';
+import CustomButton from './CustomButton';
+import Money from '../../Assets/Svgs/Money.svg';
 const widthLine = Dimensions.get('window').width - 20;
 
 const CustomAppBarRoomInfor = props => {

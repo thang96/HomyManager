@@ -15,7 +15,7 @@ import {
 import {icons, colors} from '../../../Constants';
 // import {ScrollView} from 'react-native-virtualized-view';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomButtonCarendar from '../../../Components/CustomButtonCarendar';
+import CustomButtonCarendar from '../../../Components/ComponentHome/CustomButtonCarendar';
 
 const BillUnpaid = props => {
   const [listContract, setListContract] = useState(FAKE_DATA);

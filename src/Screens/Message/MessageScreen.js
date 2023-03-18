@@ -11,7 +11,7 @@ import {
 import {colors, icons, images, svgs} from '../../Constants';
 import LogoApp from '../../Assets/Svgs/LogoApp.svg';
 import {useNavigation} from '@react-navigation/native';
-import CustomSearchAppBar from '../../Components/CustomSearchAppBar';
+import CustomSearchAppBar from '../../Components/CommonComponent/CustomSearchAppBar';
 import {ScrollView} from 'react-native-virtualized-view';
 const avatar =
   'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg';

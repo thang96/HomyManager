@@ -18,7 +18,7 @@ import {GetListHausesApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
-import CustomSearchAppBar from '../../../Components/CustomSearchAppBar';
+import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {colors, icons, images} from '../../../Constants';
 import {token} from '../../../Store/slices/tokenSlice';

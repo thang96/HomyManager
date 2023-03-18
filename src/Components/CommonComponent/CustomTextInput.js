@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Image, TextInput} from 'react-native';
-import {icons} from '../Constants';
-import CustomButton from './CommonComponent/CustomButton';
+import {icons} from '../../Constants';
+import CustomButton from './CustomButton';
 const CustomInputText = props => {
   const {
     styleViewTextInput,

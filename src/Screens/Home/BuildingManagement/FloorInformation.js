@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
@@ -15,11 +14,10 @@ import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import {FlatList} from 'react-native-gesture-handler';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {uuid} from '../../../utils/uuid';
-import CustomAppBarFloorInfor from '../../../Components/CustomAppBarFloorInfor';
+import CustomAppBarFloorInfor from '../../../Components/CommonComponent/CustomAppBarFloorInfor';
 import {GetListUnitsApi} from '../../../Api/Home/UnitApis/UnitApis';
 import {token} from '../../../Store/slices/tokenSlice';
 import {useSelector} from 'react-redux';

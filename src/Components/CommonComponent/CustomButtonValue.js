@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {colors, icons} from '../Constants';
+import {colors, icons} from '../../Constants';
 
 const CustomButtonValue = props => {
   const {title, important, placeholder, value, type, icon, styleView, onPress} =

@@ -10,88 +10,204 @@ import {
   TouchableOpacity,
   Dimensions,
   SectionList,
+  Alert,
 } from 'react-native';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomInputValue from '../../../Components/CustomInputValue';
+import CustomInputValue from '../../../Components/CommonComponent/CustomInputValue';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {uuid} from '../../../utils/uuid';
 import CustomInput from '../../../Components/CommonComponent/CustomInput';
-import CustomTimeButtons from '../../../Components/CustomTimeButton';
+import CustomTimeButtons from '../../../Components/CommonComponent/CustomTimeButton';
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import ImagePicker from 'react-native-image-crop-picker';
 import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
+import CustomModalPicker from '../../../Components/CommonComponent/CustomModalPicker';
+import CustomPickerDay from '../../../Components/CommonComponent/CustomPickerDay';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 import RenderService from '../../../Components/ComponentHome/RenderService';
+import {useDispatch, useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
+import {GetListHausesApi} from '../../../Api/Home/BuildingApis/BuildingApis';
+import {GetListUnitsApi} from '../../../Api/Home/UnitApis/UnitApis';
+import {dateToDMY, dateToYMD} from '../../../utils/common';
+import {PAYMENTDURATION} from '../../../Resource/DataPicker';
+import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
+import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
+import {GetListTenantsApi} from '../../../Api/Home/TenantApis/TenantApis';
+import {
+  amenityState,
+  serviceState,
+  tenantState,
+  updateAmenity,
+  updateServices,
+  updateTenants,
+} from '../../../Store/slices/commonSlice';
+import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
+import {CreateNewContractApi} from '../../../Api/Home/ContractApis/ContractApis';
 
 const CreateContract = () => {
   const navigation = useNavigation();
-  const [toDay, setToDay] = useState(new Date());
-  const [fromDate, setFromDate] = useState(new Date());
-  const [toDate, setToDate] = useState(new Date());
+  const dispatch = useDispatch();
+  const tokenStore = useSelector(token);
+  const serviceSelect = useSelector(serviceState);
+  const amenitySelect = useSelector(amenityState);
+  const tenantSelect = useSelector(tenantState);
+  const timeNow = new Date();
+  const [loading, setLoading] = useState(true);
+
+  const [startDate, setStartDate] = useState('Chọn ngày');
+  const [endDate, setEndDate] = useState('Chọn ngày');
+  const [startChargeDate, setStartChargeDate] = useState();
+  const [paymentDuration, setpaymentDuration] = useState();
+  const [leasingFee, setLeasingFee] = useState();
+  const [depositMoney, setDepositMoney] = useState();
+  const [description, setDescription] = useState();
+  const [unitId, setUnitId] = useState();
+  const [serviceIds, setServiceIds] = useState([]);
+  const [amenityIds, setAmenityIds] = useState([]);
+  const [tenantIds, setTenantIds] = useState([]);
+
   const [albumImage, setAlbumImage] = useState([]);
 
-  const [toDayValue, setToDayValue] = useState('');
-  const [fromDateValue, setFromDateValue] = useState('');
-  const [toDateValue, setToDateValue] = useState('');
-  const [modalFromDate, setModalFromDate] = useState(false);
-  const [modalToDate, setModalToDate] = useState(false);
+  const [startDateValue, setStartDateValue] = useState('Chọn ngày');
+  const [endDateValue, setEndDateValue] = useState('Chọn ngày');
+  const [startChargeDateValue, setStartChargeDateValue] = useState('');
+  const [modalStartDate, setModalStartDate] = useState(false);
+  const [modalEndDate, setModalEndDate] = useState(false);
+  const [modalStartChargeDate, setModalStartChargeDate] = useState(false);
+  const [modalPaymentDuration, setModalPaymentDuration] = useState(false);
   const [modalCamera, setModalCamera] = useState(false);
 
-  function dateToYMD(value) {
-    var d = value.getDate();
-    var m = value.getMonth() + 1; //Month from 0 to 11
-    var y = value.getFullYear();
-    return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
-  }
+  const [hause, setHause] = useState('');
+  const [unit, setUnit] = useState('');
+  const [listHauses, setListHauses] = useState([]);
+  const [listUnits, setListUnits] = useState([]);
+  const [listService, setListService] = useState([]);
+  const [listAmenity, setListAmenity] = useState([]);
+  const [listTenant, setListTenant] = useState([]);
+  const [modalHause, setModalHause] = useState(false);
+  const [modalUnit, setModalUnit] = useState(false);
+
   useEffect(() => {
-    let newToday = dateToYMD(toDay);
-    setToDayValue(newToday);
-    setFromDateValue(newToday);
-    setToDateValue(newToday);
+    const getListData = async () => {
+      await GetListHausesApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            setListHauses(res?.data);
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+
+      await GetListServicesApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachData = res?.data;
+            let eachArray = [];
+            eachData.map((data, index) => {
+              let newData = {...data, isCheck: false};
+              eachArray.push(newData);
+            });
+            dispatch(updateServices(eachArray));
+          }
+        })
+        .catch(error => console.log(error));
+
+      await GetListAmenitysApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachData = res?.data;
+            let eachArray = [];
+            eachData.map((data, index) => {
+              let newData = {...data, isCheck: false};
+              eachArray.push(newData);
+            });
+            dispatch(updateAmenity(eachArray));
+          }
+        })
+        .catch(error => console.log(error));
+
+      await GetListTenantsApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachData = res?.data;
+            let eachArray = [];
+            eachData.map((data, index) => {
+              let newData = {...data, isCheck: false};
+              eachArray.push(newData);
+            });
+            dispatch(updateTenants(eachArray));
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getListData();
   }, []);
 
-  const [listPaidSevice, setListPaidSevice] = useState([]);
-  const [listFreeSevice, setListFreeSevice] = useState([]);
+  useEffect(() => {
+    let eachService = [];
+    if (serviceSelect.length > 0) {
+      serviceSelect.map((item, index) => {
+        if (item?.isCheck == true) {
+          eachService.push(item);
+        }
+      });
+      setListService(eachService);
+    }
+    let eachAmenityIds = [];
+    if (amenitySelect.length > 0) {
+      amenitySelect.map((item, index) => {
+        if (item?.isCheck == true) {
+          eachAmenityIds.push(item);
+        }
+      });
+      setListAmenity(eachAmenityIds);
+    }
+    let eachTenants = [];
+    if (amenitySelect.length > 0) {
+      tenantSelect.map((item, index) => {
+        if (item?.isCheck == true) {
+          eachTenants.push(item);
+        }
+      });
+      setListTenant(eachTenants);
+    }
+  }, [serviceSelect, amenitySelect, tenantSelect]);
 
-  const renderPaidSevice = (item, index) => {
-    let value = item;
-    return (
-      <RenderService
-        label={item?.label}
-        value={item?.value}
-        onPress={() => {
-          deletePaidService(value);
-        }}
-      />
-    );
+  useEffect(() => {
+    const setListData = () => {
+      let eachServiceIds = [];
+      let eachAmenityIds = [];
+      let eachTenantIds = [];
+      listService.map((item, index) => {
+        eachServiceIds.push(item?.id);
+      });
+      listAmenity.map((item, index) => {
+        eachAmenityIds.push(item?.id);
+      });
+      listTenant.map((item, index) => {
+        eachTenantIds.push(item?.id);
+      });
+      setServiceIds(eachServiceIds);
+      setAmenityIds(eachAmenityIds);
+      setTenantIds(eachAmenityIds);
+    };
+    setListData();
+  }, [listService, listAmenity, listTenant]);
+
+  const renderSelectSevice = (item, index) => {
+    return <RenderService label={item?.name} value={item?.fee} />;
   };
-  const deletePaidService = (item, index) => {
-    let result = [...listPaidSevice];
-    let newResult = result.filter(itemResult => itemResult !== item);
-    setListPaidSevice(newResult);
-  };
-  const renderFreeSevice = (item, index) => {
-    let value = item;
-    return (
-      <RenderAmenity
-        label={item?.label}
-        value={item?.value}
-        onPress={() => {
-          deleteFreeSevice(value);
-        }}
-      />
-    );
-  };
-  const deleteFreeSevice = (item, index) => {
-    let result = [...listFreeSevice];
-    let newResult = result.filter(itemResult => itemResult !== item);
-    setListFreeSevice(newResult);
+
+  const renderSelectAmenity = (item, index) => {
+    return <RenderAmenity label={item?.name} />;
   };
 
   const openCamera = () => {
@@ -160,9 +276,124 @@ const CreateContract = () => {
 
     setAlbumImage(newResult);
   };
+  const getListUnit = async item => {
+    setLoading(true);
+    setHause(item);
+    setModalHause(false);
+    let hauseId = item?.id;
+    await GetListUnitsApi(tokenStore, hauseId)
+      .then(res => {
+        if (res?.status == 200) {
+          setListUnits(res?.data);
+          setLoading(false);
+        }
+      })
+      .catch(error => console.log(error));
+  };
+  const renderSelectTenant = (item, index) => {
+    return (
+      <CustomPersonInfor
+        styleView={{marginBottom: 10}}
+        userName={`${item?.fullName}`}
+        phoneNumber={`${item?.phoneNumber}`}
+      />
+    );
+  };
+  const createNewContract = async () => {
+    let data = {
+      startDate: startDate,
+      endDate: endDate,
+      startChargeDate: startChargeDate,
+      paymentDuration: parseInt(paymentDuration?.value),
+      leasingFee: parseInt(leasingFee),
+      depositMoney: parseInt(depositMoney),
+      unitId: unitId?.id,
+      serviceIds: serviceIds,
+      amenityIds: amenityIds,
+      tenantIds: tenantIds,
+      description: '',
+    };
+    await CreateNewContractApi(tokenStore, data)
+      .then(res => {
+        if (res?.status == 200) {
+          Alert.alert('Thành công', 'Tạo hợp đồng thành công', [
+            {text: 'OK', onPress: () => navigation.goBack()},
+          ]);
+        }
+      })
+      .catch(error => console.log(error));
+  };
 
   return (
     <View style={styles.container}>
+      {loading && <CustomLoading />}
+      {modalHause && (
+        <CustomModalPicker
+          data={listHauses}
+          pressClose={() => setModalHause(false)}
+          onPressItem={item => getListUnit(item)}
+        />
+      )}
+      {modalUnit && (
+        <CustomModalPicker
+          data={listUnits}
+          pressClose={() => setModalUnit(false)}
+          onPressItem={item => {
+            setUnitId(item);
+            setModalUnit(false);
+          }}
+        />
+      )}
+      {modalStartDate && (
+        <CustomModalDateTimePicker
+          onCancel={() => setModalStartDate(false)}
+          value={timeNow}
+          mode={'date'}
+          openPicker={modalStartDate}
+          onDateChange={value => {
+            setStartDate(dateToYMD(value));
+            setStartDateValue(dateToDMY(value));
+          }}
+          onPress={() => setModalStartDate(false)}
+        />
+      )}
+      {modalEndDate && (
+        <CustomModalDateTimePicker
+          onCancel={() => setModalEndDate(false)}
+          value={timeNow}
+          mode={'date'}
+          openPicker={modalEndDate}
+          onDateChange={value => {
+            setEndDate(dateToYMD(value));
+            setEndDateValue(dateToDMY(value));
+          }}
+          onPress={() => setModalEndDate(false)}
+        />
+      )}
+      {modalStartChargeDate && (
+        <CustomModalDateTimePicker
+          onCancel={() => setModalStartChargeDate(false)}
+          value={timeNow}
+          mode={'date'}
+          openPicker={modalStartChargeDate}
+          onDateChange={value => {
+            setStartChargeDate(dateToYMD(value));
+            setStartChargeDateValue(dateToDMY(value));
+          }}
+          onPress={() => setModalStartChargeDate(false)}
+        />
+      )}
+      {modalPaymentDuration && (
+        <CustomPickerDay
+          data={PAYMENTDURATION}
+          modalVisible={modalPaymentDuration}
+          onRequestClose={() => setModalPaymentDuration(false)}
+          onPress={item => {
+            setpaymentDuration(item);
+            setModalPaymentDuration(false);
+          }}
+        />
+      )}
       {modalCamera && (
         <CustomModalCamera
           openCamera={() => openCamera()}
@@ -172,38 +403,11 @@ const CreateContract = () => {
           cancel={() => setModalCamera(false)}
         />
       )}
-      {modalFromDate && (
-        <CustomModalDateTimePicker
-          onCancel={() => setModalFromDate(false)}
-          value={fromDate}
-          mode={'date'}
-          openPicker={modalFromDate}
-          onDateChange={value => {
-            let newToday = dateToYMD(value);
-            setFromDate(value);
-            setFromDateValue(newToday);
-          }}
-          onPress={() => setModalFromDate(false)}
-        />
-      )}
-      {modalToDate && (
-        <CustomModalDateTimePicker
-          onCancel={() => setModalToDate(false)}
-          value={toDay}
-          mode={'date'}
-          openPicker={modalToDate}
-          onDateChange={value => {
-            let newToday = dateToYMD(value);
-            setToDate(value);
-            setToDateValue(newToday);
-          }}
-          onPress={() => setModalToDate(false)}
-        />
-      )}
       <CustomAppBar
         iconLeft={icons.ic_back}
         label={'Tạo hợp đồng'}
         iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
@@ -218,7 +422,8 @@ const CreateContract = () => {
           styleViewInput={{marginTop: 10}}
           title={'Tòa nhà'}
           placeholder={'Chọn tòa nhà'}
-          onPress={() => {}}
+          value={hause?.name}
+          onPress={() => setModalHause(true)}
         />
         <CustomInput
           important={true}
@@ -226,15 +431,8 @@ const CreateContract = () => {
           styleViewInput={{marginTop: 20}}
           title={'Phòng'}
           placeholder={'Chọn phòng'}
-          onPress={() => {}}
-        />
-        <CustomInput
-          important={true}
-          type={'button'}
-          styleViewInput={{marginTop: 20}}
-          title={'Đại diện người cho thuê'}
-          placeholder={'Chọn đại diện người cho thuê'}
-          onPress={() => {}}
+          value={unitId?.name}
+          onPress={() => setModalUnit(true)}
         />
 
         <CustomTimeButtons
@@ -244,10 +442,10 @@ const CreateContract = () => {
           rightLabel={'Đến'}
           styleButtonLeft={{marginRight: 5}}
           styleButtonRight={{marginLeft: 5}}
-          valueLeft={fromDateValue}
-          valueRight={toDateValue}
-          onPressLeft={() => setModalFromDate(true)}
-          onPressRightt={() => setModalToDate(true)}
+          valueLeft={startDateValue}
+          valueRight={endDateValue}
+          onPressLeft={() => setModalStartDate(true)}
+          onPressRightt={() => setModalEndDate(true)}
         />
 
         <CustomInput
@@ -255,8 +453,9 @@ const CreateContract = () => {
           type={'button'}
           styleViewInput={{marginTop: 20}}
           title={'Ngày bắt đầu tính tiền'}
-          placeholder={'09/02/2023'}
-          onPress={() => {}}
+          placeholder={'Chọn ngày'}
+          value={startChargeDateValue}
+          onPress={() => setModalStartChargeDate(true)}
         />
 
         <CustomInput
@@ -264,25 +463,32 @@ const CreateContract = () => {
           type={'button'}
           styleViewInput={{marginTop: 20}}
           title={'Kỳ thanh toán tiền phòng'}
-          placeholder={`${1} tháng`}
-          onPress={() => {}}
+          placeholder={`Chọn kỳ thanh toán`}
+          value={paymentDuration?.key}
+          onPress={() => setModalPaymentDuration(true)}
         />
 
         <CustomTextTitle label={'Tiền phòng'} />
         <CustomInputValue
-          type={'button'}
+          type={'input'}
           label={'Tiền thuê phòng'}
           important={true}
-          value={'1500000'}
           unit={'VNĐ'}
+          placeholder={'Nhập tiền thuê phòng'}
+          keyboardType={'numeric'}
+          defaultValue={leasingFee}
+          onEndEditing={event => setLeasingFee(event.nativeEvent.text)}
         />
         <CustomInputValue
           viewContainer={{marginTop: 20}}
-          type={'button'}
+          type={'input'}
           label={'Tiền cọc'}
           important={true}
-          value={'500000'}
           unit={'VNĐ'}
+          placeholder={'Nhập tiền cọc'}
+          keyboardType={'numeric'}
+          defaultValue={depositMoney}
+          onEndEditing={event => setDepositMoney(event.nativeEvent.text)}
         />
 
         <View style={styles.line} />
@@ -290,54 +496,85 @@ const CreateContract = () => {
         <CustomTextTitle
           label={'Đại diện người cho thuê'}
           labelButton={'Thêm mới'}
+          // onPress={() => navigation.navigate('TenantList')}
         />
 
         <View style={styles.line} />
 
-        <CustomTextTitle label={'Dịch vụ có phí'} labelButton={'Thêm mới'} />
+        <CustomTextTitle
+          label={'Dịch vụ có phí'}
+          labelButton={'Thêm'}
+          icon={icons.ic_plus}
+          onPress={() => navigation.navigate('Service')}
+        />
 
         <CustomSuggest
           label={'Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ'}
         />
 
-        {listPaidSevice.length > 0 ? (
+        {listService.length > 0 ? (
           <FlatList
-            listKey="listPaidSevice"
+            listKey="listService"
             horizontal={false}
             scrollEnabled={false}
             numColumns={2}
             keyExtractor={key => key.label}
-            data={listPaidSevice}
-            renderItem={({item, index}) => renderPaidSevice(item, index)}
+            data={listService}
+            renderItem={({item, index}) => renderSelectSevice(item, index)}
           />
         ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
-          <Text style={styles.pickerTotal}>{`${listPaidSevice.length}`}</Text>
+          <Text style={styles.pickerTotal}>{`${listService.length}`}</Text>
         </View>
 
         <View style={styles.line} />
 
-        <CustomTextTitle label={'Tiện ích miễn phí'} labelButton={'Thêm mới'} />
+        <CustomTextTitle
+          label={'Tiện ích miễn phí'}
+          labelButton={'Thêm'}
+          icon={icons.ic_plus}
+          onPress={() => navigation.navigate('Utilities')}
+        />
 
         <CustomSuggest
           label={'Chọn tiện ích miễn phí đã có hoặc thêm mới tiện ích'}
         />
-        {listFreeSevice.length > 0 ? (
+        {listAmenity.length > 0 ? (
           <FlatList
-            listKey="listFreeSevice"
+            listKey="listAmenity"
             horizontal={false}
             scrollEnabled={false}
             numColumns={3}
             keyExtractor={key => key.value}
-            data={listFreeSevice}
-            renderItem={({item, index}) => renderFreeSevice(item, index)}
+            data={listAmenity}
+            renderItem={({item, index}) => renderSelectAmenity(item, index)}
           />
         ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
-          <Text style={styles.pickerTotal}>{`${listFreeSevice.length}`}</Text>
+          <Text style={styles.pickerTotal}>{`${listAmenity.length}`}</Text>
         </View>
+
+        <View style={styles.line} />
+
+        <CustomTextTitle
+          label={'Danh sách người ở'}
+          labelButton={'Thêm'}
+          icon={icons.ic_plus}
+          onPress={() => navigation.navigate('TenantList')}
+        />
+        {listTenant.length > 0 ? (
+          <FlatList
+            listKey="listTenant"
+            horizontal={false}
+            scrollEnabled={false}
+            numColumns={1}
+            keyExtractor={key => key.id}
+            data={listTenant}
+            renderItem={({item, index}) => renderSelectTenant(item, index)}
+          />
+        ) : null}
 
         <View style={styles.line} />
 
@@ -369,24 +606,14 @@ const CreateContract = () => {
           onPress={() => setModalCamera(true)}
         />
 
-        <View style={styles.line} />
-
-        <CustomTextTitle
-          label={'Danh sách người thuê'}
-          labelButton={'Thêm mới'}
-          onPress={() => navigation.navigate('TenantList')}
-        />
-
         <View style={{height: 56}} />
+        <CustomTwoButtonBottom
+          leftLabel={'Trở lại'}
+          rightLabel={'Tiếp tục'}
+          onPressLeft={() => navigation.goBack()}
+          onPressRight={() => createNewContract()}
+        />
       </ScrollView>
-      <CustomTwoButtonBottom
-        leftLabel={'Trở lại'}
-        rightLabel={'Tiếp tục'}
-        onPressLeft={() => navigation.goBack()}
-        onPressRight={() => {
-          console.log('Ok');
-        }}
-      />
     </View>
   );
 };

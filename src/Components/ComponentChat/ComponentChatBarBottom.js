@@ -2,8 +2,8 @@ import {useRoute} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, View, Text, Image, TextInput} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {colors, icons} from '../Constants';
-import CustomButton from './CommonComponent/CustomButton';
+import {colors, icons} from '../../Constants';
+import CustomButton from '../CommonComponent/CustomButton';
 
 const ComponentChatBarBottom = props => {
   const {placeholder, onChangeText, pressSendMessage, value} = props;

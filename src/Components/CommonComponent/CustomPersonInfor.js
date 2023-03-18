@@ -1,11 +1,18 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {colors, icons} from '../../Constants';
 import CustomButton from './CustomButton';
 
 const CustomPersonInfor = props => {
-  const {styleView, avatar, userName, phoneNumber, isCheck, onPressCheck} =
-    props;
+  const {
+    styleView,
+    avatar,
+    userName,
+    phoneNumber,
+    isCheck,
+    onPressCheck,
+    pressAvatar,
+  } = props;
   return (
     <View style={[styles.container, styleView]}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -16,11 +23,13 @@ const CustomPersonInfor = props => {
             onPress={onPressCheck}
           />
         )}
-        <Image
-          resizeMode="contain"
-          style={styles.avatar}
-          source={avatar ? {uri: avatar} : icons.ic_user}
-        />
+        <TouchableOpacity onPress={pressAvatar}>
+          <Image
+            resizeMode="contain"
+            style={styles.avatar}
+            source={avatar ? {uri: avatar} : icons.ic_user}
+          />
+        </TouchableOpacity>
         <View
           style={{
             marginLeft: 10,

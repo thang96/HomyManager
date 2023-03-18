@@ -21,8 +21,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
 import {uuid} from '../../../utils/uuid';
 import CustomInput from '../../../Components/CommonComponent/CustomInput';
-import CustomTimeButtons from '../../../Components/CustomTimeButton';
-import CustomAppBarStep from '../../../Components/CustomAppBarStep';
+import CustomTimeButtons from '../../../Components/CommonComponent/CustomTimeButton';
+import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppBar';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomModalPicker from '../../../Components/CommonComponent/CustomModalPicker';
@@ -301,7 +301,7 @@ const AddBuildings = props => {
           />
         )}
 
-        <CustomAppBarStep
+        <CustomStepAppBar
           iconLeft={icons.ic_back}
           label={'Thiết lập thông tin'}
           iconRight={icons.ic_bell}

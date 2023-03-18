@@ -14,10 +14,10 @@ import {
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomViewInfor from '../../../Components/CustomViewInfor';
+import CustomViewInfor from '../../../Components/ComponentHome/CustomViewInfor';
 import CustomManagerInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import {FlatList} from 'react-native-gesture-handler';
-import CustomAppBarBuildingInfor from '../../../Components/CustomAppBarBuildingInfor';
+import CustomAppBarBuildingInfor from '../../../Components/CommonComponent/CustomAppBarBuildingInfor';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {HauseDetailApi} from '../../../Api/Home/BuildingApis/BuildingApis';

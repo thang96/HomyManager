@@ -39,7 +39,7 @@ export const GetContractDetailAPi = (token, serviceId) => {
   });
 };
 
-export const CreateNewContract = (token, data) => {
+export const CreateNewContractApi = (token, data) => {
   return new Promise((resolve, reject) => {
     axios
       .post(`${BASEURL}/contracts`, data, {

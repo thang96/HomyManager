@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import CustomButtonValue from '../CustomButtonValue';
+import CustomButtonValue from '../CommonComponent/CustomButtonValue';
 import CustomTextTitle from '../CommonComponent/CustomTextTitle';
 import {icons} from '../../Constants';
 

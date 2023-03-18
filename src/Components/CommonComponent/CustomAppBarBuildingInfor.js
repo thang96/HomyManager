@@ -6,9 +6,9 @@ import {
   Text,
   View,
 } from 'react-native';
-import {colors, icons, images} from '../Constants';
-import CustomButton from './CommonComponent/CustomButton';
-import Location from '../Assets/Svgs/Location.svg';
+import {colors, icons, images} from '../../Constants';
+import CustomButton from './CustomButton';
+import Location from '../../Assets/Svgs/Location.svg';
 const widthLine = Dimensions.get('window').width - 20;
 
 const CustomAppBarBuildingInfor = props => {

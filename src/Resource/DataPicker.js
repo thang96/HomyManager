@@ -8,7 +8,6 @@ export const BILLINGDATE = [
     value: -1,
   },
 ];
-
 export const PAYMENTDATEFROM = [
   {
     key: 'Ngày 1',
@@ -252,4 +251,18 @@ export const PAYMENTDATETO = [
     key: 'Ngày 30',
     value: 30,
   },
+];
+export const PAYMENTDURATION = [
+  {key: '1 tháng', value: 1},
+  {key: '2 tháng', value: 2},
+  {key: '3 tháng', value: 3},
+  {key: '4 tháng', value: 4},
+  {key: '5 tháng', value: 5},
+  {key: '6 tháng', value: 6},
+  {key: '7 tháng', value: 7},
+  {key: '8 tháng', value: 8},
+  {key: '9 tháng', value: 9},
+  {key: '10 tháng', value: 10},
+  {key: '11 tháng', value: 11},
+  {key: '12 tháng', value: 12},
 ];

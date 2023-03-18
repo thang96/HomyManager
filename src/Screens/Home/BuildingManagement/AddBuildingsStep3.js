@@ -16,7 +16,6 @@ import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
-import CustomAppBarStep from '../../../Components/CustomAppBarStep';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -32,6 +31,7 @@ import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {CreateNewBuildingApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
 import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
+import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppBar';
 
 const AddBuildingsStep3 = props => {
   const navigation = useNavigation();
@@ -160,7 +160,7 @@ const AddBuildingsStep3 = props => {
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       {loading && <CustomLoading />}
-      <CustomAppBarStep
+      <CustomStepAppBar
         iconLeft={icons.ic_back}
         label={'Thiết lập dịch vụ'}
         iconRight={icons.ic_bell}

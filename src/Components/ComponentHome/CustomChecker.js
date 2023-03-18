@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {colors, icons} from '../Constants';
-import CustomButton from './CommonComponent/CustomButton';
+import {colors, icons} from '../../Constants';
+import CustomButton from '../CommonComponent/CustomButton';
 
 const CustomChecker = props => {
   const widthImage = Dimensions.get('window').width / 2 - 15;

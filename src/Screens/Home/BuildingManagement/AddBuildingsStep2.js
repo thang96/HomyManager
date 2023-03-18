@@ -14,10 +14,9 @@ import {
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
-import CustomTimeButtons from '../../../Components/CustomTimeButton';
-import CustomAppBarStep from '../../../Components/CustomAppBarStep';
+import CustomTimeButtons from '../../../Components/CommonComponent/CustomTimeButton';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomButtonValue from '../../../Components/CustomButtonValue';
+import CustomButtonValue from '../../../Components/CommonComponent/CustomButtonValue';
 import {useDispatch, useSelector} from 'react-redux';
 import {commonState, updateCommon} from '../../../Store/slices/commonSlice';
 import CustomPickerDay from '../../../Components/CommonComponent/CustomPickerDay';
@@ -26,6 +25,7 @@ import {
   PAYMENTDATEFROM,
   PAYMENTDATETO,
 } from '../../../Resource/DataPicker';
+import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppBar';
 
 const AddBuildingsStep2 = props => {
   const navigation = useNavigation();
@@ -87,7 +87,7 @@ const AddBuildingsStep2 = props => {
       )}
 
       <KeyboardAvoidingView style={{flex: 1}}>
-        <CustomAppBarStep
+        <CustomStepAppBar
           iconLeft={icons.ic_back}
           label={'Thiết lập tiền nhà'}
           iconRight={icons.ic_bell}
