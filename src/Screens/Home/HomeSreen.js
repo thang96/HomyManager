@@ -31,7 +31,7 @@ const HomeScreen = () => {
   const widthImage = Dimensions.get('window').width / 2 - 20;
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
-  // console.log(tokenStore);
+  console.log(tokenStore);
   // const userStore = useSelector(userInfor);
   const [keyboard, setKeyboard] = useState(false);
   useEffect(() => {
@@ -147,7 +147,7 @@ const HomeScreen = () => {
               content={'20'}
               svgIcon={svgs.DocumentGreen}
               styleBGIcon={{backgroundColor: '#e6f6e2'}}
-              onPress={() => navigation.navigate('BillManagement')}
+              UserManager
             />
           </View>
           <View style={[styles.viewRow, {marginTop: 15}]}>
@@ -179,6 +179,7 @@ const HomeScreen = () => {
               title={'Sổ nợ'}
               svgIcon={svgs.Document}
               styleBGIcon={{backgroundColor: '#edfcfb'}}
+              onPress={() => navigation.navigate('UserManager')}
             />
           </View>
         </View>

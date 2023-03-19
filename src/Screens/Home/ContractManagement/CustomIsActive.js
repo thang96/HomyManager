@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -19,9 +19,11 @@ import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetListContractsApi} from '../../../Api/Home/ContractApis/ContractApis';
+import {dateToDMY} from '../../../utils/common';
 
 const CustomIsActive = props => {
   const tokenStore = useSelector(token);
+  const isFocus = useIsFocused();
   useEffect(() => {
     const getListData = async () => {
       await GetListContractsApi(tokenStore)
@@ -33,37 +35,41 @@ const CustomIsActive = props => {
         .catch(error => console.log(error));
     };
     getListData();
-  }, []);
+  }, [isFocus]);
   const [listContract, setListContract] = useState([]);
+  console.log(listContract);
   const renderContract = (item, index) => {
+    let eachStartDate = new Date(item?.startDate);
+    let eachEndDate = new Date(item?.endDate);
+    let startDate = dateToDMY(eachStartDate);
+    let endDate = dateToDMY(eachEndDate);
     return (
       <View style={styles.viewContract}>
-        <View style={[styles.viewRow, {justifyContent: 'space-between'}]}>
-          <Text style={{fontWeight: '600', color: '#5F6E78'}}>
-            {item?.contractCode}
-          </Text>
-          <CustomButton
-            disabled={true}
-            styleButton={styles.buttonActive}
-            label={'Hoạt động'}
-            styleLabel={{fontSize: 12, color: 'white'}}
-          />
-        </View>
-        <View style={[styles.viewRow]}>
-          <Image source={icons.ic_calendar} style={styles.icon} />
-          <Text
-            style={
-              styles.content
-            }>{`${item?.dateOfHire} đến ${item?.expirationDate}`}</Text>
-        </View>
-        <View style={[styles.viewRow]}>
-          <Image source={icons.ic_homeTabBar} style={styles.icon} />
-          <Text style={styles.content}>{`${item?.place}`}</Text>
-        </View>
-        <View style={[styles.viewRow]}>
-          <Text style={styles.content}>{'Người tạo: '}</Text>
-          <Text style={styles.label}>{`${item?.creator}`}</Text>
-        </View>
+        <TouchableOpacity>
+          <View style={[styles.viewRow, {justifyContent: 'space-between'}]}>
+            <Text style={{fontWeight: '600', color: '#5F6E78'}}>
+              {item?.description}
+            </Text>
+            <CustomButton
+              disabled={true}
+              styleButton={styles.buttonActive}
+              label={'Hoạt động'}
+              styleLabel={{fontSize: 12, color: 'white'}}
+            />
+          </View>
+          <View style={[styles.viewRow]}>
+            <Image source={icons.ic_calendar} style={styles.icon} />
+            <Text style={styles.content}>{`${startDate} đến ${endDate}`}</Text>
+          </View>
+          <View style={[styles.viewRow]}>
+            <Image source={icons.ic_homeTabBar} style={styles.icon} />
+            <Text style={styles.content}>{`${item?.unit?.name}`}</Text>
+          </View>
+          <View style={[styles.viewRow]}>
+            <Text style={styles.content}>{'Người tạo: '}</Text>
+            <Text style={styles.label}>{`${item?.creator}`}</Text>
+          </View>
+        </TouchableOpacity>
         <View
           style={[
             styles.viewRow,
@@ -96,7 +102,7 @@ const CustomIsActive = props => {
       <CustomTextTitle label={'Hợp đồng đang hoạt động'} />
       <FlatList
         data={listContract}
-        keyExtractor={key => key.contractCode}
+        keyExtractor={key => key.id}
         renderItem={({item, index}) => renderContract(item, index)}
       />
     </View>

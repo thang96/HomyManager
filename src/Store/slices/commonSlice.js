@@ -4,6 +4,7 @@ const initialState = {
   services: [],
   amenity: [],
   tenants: [],
+  managers: [],
 };
 export const commonSlice = createSlice({
   name: 'commonStore',
@@ -21,6 +22,9 @@ export const commonSlice = createSlice({
     updateTenants: (state, actions) => {
       state.tenants = actions.payload;
     },
+    updateManagers: (state, actions) => {
+      state.managers = actions.payload;
+    },
   },
 });
 
@@ -28,6 +32,12 @@ export const commonState = state => state?.common?.commonStore;
 export const serviceState = state => state?.common?.services;
 export const amenityState = state => state?.common?.amenity;
 export const tenantState = state => state?.common?.tenants;
-export const {updateCommon, updateServices, updateAmenity, updateTenants} =
-  commonSlice.actions;
+export const managerState = state => state?.common?.managers;
+export const {
+  updateCommon,
+  updateServices,
+  updateAmenity,
+  updateTenants,
+  updateManagers,
+} = commonSlice.actions;
 export default commonSlice.reducer;

@@ -2,13 +2,13 @@ export const dateToYMD = value => {
   var d = value.getDate();
   var m = value.getMonth() + 1; //Month from 0 to 11
   var y = value.getFullYear();
-  return y + '-' + (m <= 9 ? '0' + m : m) + '-' + '' + (d <= 9 ? '0' + d : d);
+  return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
 };
 export const dateToDMY = value => {
   var d = value.getDate();
   var m = value.getMonth() + 1; //Month from 0 to 11
   var y = value.getFullYear();
-  return (d <= 9 ? '0' + d : d) + '-' + (m <= 9 ? '0' + m : m) + '-' + '' + y;
+  return '' + (d <= 9 ? '0' + d : d) + '-' + (m <= 9 ? '0' + m : m) + '-' + y;
 };
 
 export const getFileName = file => {

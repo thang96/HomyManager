@@ -288,7 +288,7 @@ const CreateContract = () => {
           setLoading(false);
         }
       })
-      .catch(error => console.log(error));
+      .catch(error => console.log(error.response.data));
   };
   const renderSelectTenant = (item, index) => {
     return (
@@ -299,6 +299,7 @@ const CreateContract = () => {
       />
     );
   };
+
   const createNewContract = async () => {
     let data = {
       startDate: startDate,
@@ -323,7 +324,7 @@ const CreateContract = () => {
       })
       .catch(error => console.log(error));
   };
-
+  console.log('render');
   return (
     <View style={styles.container}>
       {loading && <CustomLoading />}

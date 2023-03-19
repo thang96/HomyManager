@@ -15,12 +15,12 @@ import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCa
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
-import {dateToDMY, dateToYMD} from '../../../utils/common';
-import {CreateNewTenantApi} from '../../../Api/Home/TenantApis/TenantApis';
+import {dateToYMD} from '../../../utils/common';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
+import {CreateNewManagerApi} from '../../../Api/Home/ManagerApis/ManagerApis';
 
-const AddNewTenant = () => {
+const AddNewManager = () => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
   const [timeNow, setTimeNow] = useState(new Date());
@@ -111,6 +111,12 @@ const AddNewTenant = () => {
     setAlbumImage(newResult);
   };
 
+  const formatDate = value => {
+    var d = value.getDate();
+    var m = value.getMonth() + 1; //Month from 0 to 11
+    var y = value.getFullYear();
+    return y + '-' + (m <= 9 ? '0' + m : m) + '-' + '' + (d <= 9 ? '0' + d : d);
+  };
   const createNewTenant = async () => {
     let data = {
       userName: phoneNumber,
@@ -124,10 +130,10 @@ const AddNewTenant = () => {
       address: address,
       password: '',
     };
-    await CreateNewTenantApi(tokenStore, data)
+    await CreateNewManagerApi(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
-          Alert.alert('Thành công', 'Tạo người thuê thành công', [
+          Alert.alert('Thành công', 'Tạo người quản lý thành công', [
             {
               text: 'OK',
               onPress: () => navigation.goBack(),
@@ -156,8 +162,8 @@ const AddNewTenant = () => {
           mode={'date'}
           onDateChange={value => {
             setTimeNow(value);
-            let eachBirthDay = dateToYMD(value);
-            let newTime = dateToDMY(value);
+            let eachBirthDay = formatDate(value);
+            let newTime = dateToYMD(value);
             setBirthDay(eachBirthDay);
             setBirthDayValue(newTime);
           }}
@@ -171,8 +177,8 @@ const AddNewTenant = () => {
           mode={'date'}
           onDateChange={value => {
             setTimeNowIssueDate(value);
-            let eachIssueDate = dateToYMD(value);
-            let newTime = dateToDMY(value);
+            let eachIssueDate = formatDate(value);
+            let newTime = dateToYMD(value);
             setIdentityIssueDate(eachIssueDate);
             setIdentityIssueDateValue(newTime);
           }}
@@ -181,7 +187,7 @@ const AddNewTenant = () => {
       )}
       <CustomAppBar
         iconLeft={icons.ic_back}
-        label={'Thêm người thuê'}
+        label={'Thêm người quản lý'}
         iconRight={icons.ic_bell}
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
@@ -190,7 +196,7 @@ const AddNewTenant = () => {
         <CustomSuggest
           label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
         />
-        <CustomTextTitle label={'Thông tin người thuê'} />
+        <CustomTextTitle label={'Thông tin người quản lý'} />
 
         <CustomInput
           type={'input'}
@@ -351,4 +357,4 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 });
-export default AddNewTenant;
+export default AddNewManager;

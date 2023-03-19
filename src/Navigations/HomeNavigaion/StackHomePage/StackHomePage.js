@@ -26,6 +26,9 @@ import {
   WaterAndElectricityInfor,
   RequestResend,
   ServiceDetail,
+  UserManager,
+  ManagerList,
+  AddNewManager,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -181,6 +184,27 @@ const StackHomepage = () => {
       <Stack.Screen
         component={CreateContract}
         name={'CreateContract'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={UserManager}
+        name={'UserManager'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={ManagerList}
+        name={'ManagerList'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={AddNewManager}
+        name={'AddNewManager'}
         options={{
           headerShown: false,
         }}

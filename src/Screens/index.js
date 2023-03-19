@@ -37,6 +37,10 @@ import ContractManagement from './Home/ContractManagement/ContractManagement';
 import CreateContract from './Home/ContractManagement/CreateContract';
 //----------- BillManagement
 import BillManagement from './Home/BillManagement/BillManagement';
+//----------- UserManager
+import UserManager from './Home/UserManagement/UserManager';
+import ManagerList from './Home/UserManagement/ManagerList';
+import AddNewManager from './Home/UserManagement/AddNewManager';
 //----------- TenantManager
 import TenantManager from './Home/TenantManagement/TenantManager';
 import TenantList from './Home/TenantManagement/TenantList';
@@ -96,6 +100,10 @@ export {
   WaterAndElectricityManagement,
   WaterAndElectricityInfor,
   RequestResend,
+  //-- UserManager
+  UserManager,
+  ManagerList,
+  AddNewManager,
   //-- TenantManager
   TenantManager,
   TenantList,
