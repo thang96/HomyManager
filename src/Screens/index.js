@@ -41,8 +41,10 @@ import BillManagement from './Home/BillManagement/BillManagement';
 import UserManager from './Home/UserManagement/UserManager';
 import ManagerList from './Home/UserManagement/ManagerList';
 import AddNewManager from './Home/UserManagement/AddNewManager';
+import ManagerDetail from './Home/UserManagement/ManagerDetail';
 //----------- TenantManager
 import TenantManager from './Home/TenantManagement/TenantManager';
+import TenantDetail from './Home/TenantManagement/TenantDetail';
 import TenantList from './Home/TenantManagement/TenantList';
 import AddNewTenant from './Home/TenantManagement/AddNewTenant';
 // WorkScreen -----------------------------------------------------------------
@@ -104,10 +106,12 @@ export {
   UserManager,
   ManagerList,
   AddNewManager,
+  ManagerDetail,
   //-- TenantManager
   TenantManager,
   TenantList,
   AddNewTenant,
+  TenantDetail,
   // Work ------------------------------------------
   WorkScreen,
   IssueInformation,

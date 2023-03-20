@@ -1,17 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Keyboard,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  SectionList,
-  Alert,
-} from 'react-native';
+import {StyleSheet, View, Text, Image, Alert} from 'react-native';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
@@ -41,6 +30,7 @@ import {
 } from '../../../Store/slices/commonSlice';
 import {CreateNewUnitApi} from '../../../Api/Home/UnitApis/UnitApis';
 import {updateStatus} from '../../../Store/slices/statusSlice';
+import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 
 const AddRoom = () => {
   const navigation = useNavigation();
@@ -68,7 +58,8 @@ const AddRoom = () => {
   const [listService, setListService] = useState([]);
   const [listAmenity, setListAmenity] = useState([]);
 
-  const [loading, setLoading] = useState(false);
+  const [loadingRoom, setLoadingRoom] = useState(false);
+  const [modalAddRoom, setModalAddRoom] = useState(false);
   const [modalCamera, setModalCamera] = useState(false);
   const [modalHauses, setModalHauses] = useState(false);
 
@@ -78,7 +69,7 @@ const AddRoom = () => {
         .then(res => {
           if (res?.status == 200) {
             setListHauses(res?.data);
-            setLoading(false);
+            setLoadingRoom(false);
           }
         })
         .catch(error => console.log(error, 'listHauses'));
@@ -226,7 +217,7 @@ const AddRoom = () => {
     setAlbumImage(newResult);
   };
   const createNewUnit = async () => {
-    setLoading(true);
+    setLoadingRoom(true);
     let hauseIdSelect = hause?.id;
     let data = {
       name: name,
@@ -245,7 +236,7 @@ const AddRoom = () => {
     await CreateNewUnitApi(tokenStore, hauseIdSelect, data)
       .then(res => {
         if (res?.status == 200) {
-          setLoading(false);
+          setLoadingRoom(false);
           Alert.alert('Thành công', 'Tạo phòng thành công', [
             {
               text: 'OK',
@@ -258,14 +249,23 @@ const AddRoom = () => {
         }
       })
       .catch(error => {
-        setLoading(false);
+        setLoadingRoom(false);
         alert(`${error}`);
       });
   };
 
   return (
     <View style={styles.container}>
-      {loading && <CustomLoading />}
+      {loadingRoom && <CustomLoading />}
+      {modalAddRoom && (
+        <CustomModalNotify
+          title={'Tạo phòng mới'}
+          label={'Bạn có muốn thêm phòng mới ?'}
+          modalVisible={modalAddRoom}
+          onRequestClose={() => setModalAddRoom(false)}
+          pressConfirm={() => createNewUnit()}
+        />
+      )}
       {modalHauses && (
         <CustomModalPicker
           pressClose={() => setModalHauses(false)}
@@ -495,7 +495,7 @@ const AddRoom = () => {
           leftLabel={'Trở lại'}
           rightLabel={'Tiếp tục'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => createNewUnit()}
+          onPressRight={() => setModalAddRoom(true)}
         />
       </ScrollView>
     </View>

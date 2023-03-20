@@ -21,11 +21,13 @@ import CustomSearchAppBar from '../../Components/CommonComponent/CustomSearchApp
 import {colors, icons, images, svgs} from '../../Constants';
 import {token} from '../../Store/slices/tokenSlice';
 import {updateUserInfor, userInfor} from '../../Store/slices/userInfoSlice';
+import CustomModalNotify from '../../Components/CommonComponent/CustomModalNotify';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
 
   const [loading, setLoading] = useState(true);
+  const [modalNotify, setModalNotify] = useState(false);
   const [textSearch, setTextSearch] = useState('');
   const [listHauses, setlistHausess] = useState([]);
   const [listTenants, setlistTenants] = useState([]);
@@ -87,6 +89,17 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       {loading && <CustomLoading modalVisible={loading} />}
+      {modalNotify && (
+        <CustomModalNotify
+          title={'Thông báo'}
+          label={'Bạn có một thông báo mới,vui lòng xác nhận'}
+          modalVisible={modalNotify}
+          onRequestClose={() => setModalNotify(false)}
+          pressConfirm={() => {
+            console.log('123');
+          }}
+        />
+      )}
       <CustomSearchAppBar
         svgLeft={svgs.LogoApp}
         label={'Trang chủ'}
@@ -188,6 +201,7 @@ const HomeScreen = () => {
               title={'Điện-nước'}
               svgIcon={svgs.Water}
               styleBGIcon={{backgroundColor: '#edfcfb'}}
+              onPress={() => setModalNotify(true)}
             />
           </View>
           <View style={[styles.viewRow, {marginTop: 15}]}>

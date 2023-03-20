@@ -10,11 +10,13 @@ import {FlatList, TextInput} from 'react-native-gesture-handler';
 import {uuid} from '../../../utils/uuid';
 import CustomInput from '../../../Components/CommonComponent/CustomInput';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
+import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import ImagePicker from 'react-native-image-crop-picker';
 import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {dateToDMY, dateToYMD} from '../../../utils/common';
 import {CreateNewTenantApi} from '../../../Api/Home/TenantApis/TenantApis';
 import {useDispatch, useSelector} from 'react-redux';
@@ -25,6 +27,8 @@ const AddNewTenant = () => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
   const dispatch = useDispatch();
+  const [loadingAddTenant, setLoadingAddTenant] = useState(false);
+  const [modalAddTenant, setModalAddTenant] = useState(false);
 
   const [timeNow, setTimeNow] = useState(new Date());
   const [timeNowIssueDate, setTimeNowIssueDate] = useState(new Date());
@@ -115,6 +119,7 @@ const AddNewTenant = () => {
   };
 
   const createNewTenant = async () => {
+    setLoadingAddTenant(true);
     let data = {
       userName: phoneNumber,
       fullName: fullName,
@@ -131,14 +136,8 @@ const AddNewTenant = () => {
       .then(res => {
         if (res?.status == 200) {
           dispatch(updateStatus(true));
-          Alert.alert('Thành công', 'Tạo người thuê thành công', [
-            {
-              text: 'OK',
-              onPress: () => {
-                navigation.goBack();
-              },
-            },
-          ]);
+          setLoadingAddTenant(false);
+          navigation.goBack();
         }
       })
       .catch(error => console.log(error));
@@ -146,6 +145,16 @@ const AddNewTenant = () => {
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {loadingAddTenant && <CustomLoading />}
+      {modalAddTenant && (
+        <CustomModalNotify
+          title={'Tạo mới người thuê'}
+          label={'Bạn có muốn thêm mới thông tin người thuê này ?'}
+          modalVisible={modalAddTenant}
+          onRequestClose={() => setModalAddTenant(false)}
+          pressConfirm={() => createNewTenant()}
+        />
+      )}
       {modalCamera && (
         <CustomModalCamera
           openCamera={() => openCamera()}
@@ -308,7 +317,7 @@ const AddNewTenant = () => {
           leftLabel={'Lưu'}
           rightLabel={'Thêm mới'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => createNewTenant()}
+          onPressRight={() => setModalAddTenant(true)}
         />
       </ScrollView>
     </View>

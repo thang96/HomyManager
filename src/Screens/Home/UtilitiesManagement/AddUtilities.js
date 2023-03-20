@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   Alert,
+  Keyboard,
 } from 'react-native';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
@@ -20,25 +21,34 @@ import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle
 import {CreateNewAmenityApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 
 const AddUtilities = props => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
+  const [loadingAddAmenity, setLoadingAddAmenity] = useState(false);
+  const [modalAddAmenity, setModalAddAmenity] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const noteRef = useRef();
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidHide', () => {
+      if (!loadingAddAmenity) {
+        noteRef.current.blur();
+      }
+    });
+  }, []);
 
   const createNewAmenity = async () => {
+    setModalAddAmenity(true);
     let data = {name: name, description: description};
     await CreateNewAmenityApi(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
           if (res?.status == 200) {
-            Alert.alert('Thành công', 'Tạo tiện ích thành công', [
-              {
-                text: 'OK',
-                onPress: () => navigation.goBack(),
-              },
-            ]);
+            setModalAddAmenity(false);
+            navigation.goBack();
           }
         }
       })
@@ -47,6 +57,16 @@ const AddUtilities = props => {
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {loadingAddAmenity && <CustomLoading />}
+      {modalAddAmenity && (
+        <CustomModalNotify
+          title={'Tạo mới tiện ích'}
+          label={'Bạn có muốn thêm mới tiện ích này ?'}
+          modalVisible={modalAddAmenity}
+          onRequestClose={() => setModalAddAmenity(false)}
+          pressConfirm={() => createNewAmenity()}
+        />
+      )}
       <KeyboardAvoidingView style={{flex: 1}}>
         <CustomAppBar
           iconLeft={icons.ic_back}
@@ -62,6 +82,7 @@ const AddUtilities = props => {
           <CustomTextTitle label={'Thông tin tiện ích'} />
 
           <CustomInput
+            important={true}
             type={'input'}
             title={'Tên tiện ích'}
             placeholder={'Nhập tên tiện ích'}
@@ -69,9 +90,14 @@ const AddUtilities = props => {
             defaultValue={name}
           />
 
-          <Text style={[styles.label, {marginTop: 20}]}>Ghi chú</Text>
+          <View
+            style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
+            <Text style={[styles.label]}>Ghi chú</Text>
+            <Text style={{color: 'red', fontSize: 14}}> *</Text>
+          </View>
           <View style={styles.viewTextInput}>
             <TextInput
+              ref={noteRef}
               multiline
               placeholder="Nhập ghi chú cho tiện ích"
               onEndEditing={evt => setDescription(evt.nativeEvent.text)}
@@ -85,7 +111,7 @@ const AddUtilities = props => {
           leftLabel={'Lưu'}
           rightLabel={'Thêm mới'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => createNewAmenity()}
+          onPressRight={() => setModalAddAmenity(true)}
         />
       </KeyboardAvoidingView>
     </View>

@@ -29,6 +29,8 @@ import {
   UserManager,
   ManagerList,
   AddNewManager,
+  TenantDetail,
+  ManagerDetail,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -210,6 +212,13 @@ const StackHomepage = () => {
         }}
       />
       <Stack.Screen
+        component={ManagerDetail}
+        name={'ManagerDetail'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         component={TenantList}
         name={'TenantList'}
         options={{
@@ -226,6 +235,13 @@ const StackHomepage = () => {
       <Stack.Screen
         component={TenantManager}
         name={'TenantManager'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={TenantDetail}
+        name={'TenantDetail'}
         options={{
           headerShown: false,
         }}

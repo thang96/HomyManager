@@ -20,16 +20,23 @@ import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {CreateNewService} from '../../../Api/Home/ServiceApis/ServiceApis';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 
 const AddService = props => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
+  const [loadingService, setLoadingService] = useState('');
+  const [modalService, setModalService] = useState('');
+
   const [name, setName] = useState('');
   const [calculateMethod, setCalculateMethod] = useState(0);
   const [calculateUnit, setCalculateUnit] = useState('');
   const [fee, setFee] = useState(0);
   const [description, setDescription] = useState('');
+
   const createNewService = async () => {
+    setLoadingService(true);
     let data = {
       name: name,
       calculateMethod: calculateMethod,
@@ -40,9 +47,8 @@ const AddService = props => {
     await CreateNewService(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
-          Alert.alert('Thành công', 'Tạo dịch vụ thành công', [
-            {text: 'OK', onPress: () => navigation.goBack()},
-          ]);
+          setLoadingService(false);
+          navigation.goBack();
         }
       })
       .catch(error => console.log(error));
@@ -50,6 +56,16 @@ const AddService = props => {
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {loadingService && <CustomLoading />}
+      {modalService && (
+        <CustomModalNotify
+          title={'Tạo mới dịch vụ'}
+          label={'Bạn có muốn thêm mới dịch vụ này ?'}
+          modalVisible={modalService}
+          onRequestClose={() => setModalService(false)}
+          pressConfirm={() => createNewService()}
+        />
+      )}
       <KeyboardAvoidingView style={{flex: 1}}>
         <CustomAppBar
           iconLeft={icons.ic_back}
@@ -64,11 +80,7 @@ const AddService = props => {
             Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ
           </Text>
           <CustomTextTitle label={'Thông tin dịch vụ'} />
-          {/* <CustomInput
-            type={'button'}
-            title={'Loại dịch vụ'}
-            placeholder={'Chọn loại dịch vụ'}
-          /> */}
+
           <CustomInput
             important={true}
             styleViewInput={{marginTop: 20}}
@@ -121,7 +133,7 @@ const AddService = props => {
           leftLabel={'Trở lại'}
           rightLabel={'Hoàn tất'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => createNewService()}
+          onPressRight={() => setModalService(true)}
         />
       </KeyboardAvoidingView>
     </View>

@@ -1,11 +1,22 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 const BoxShowInfor = props => {
-  const {label, content, styleBox} = props;
+  const {label, content, unit, styleBox} = props;
   return (
-    <View style={[styles.container, styleBox]}>
-      <Text style={styles.label}>{label}</Text>
-      <Text style={styles.content}>{content}</Text>
+    <View style={[styles.container, styles.shadowView, styleBox]}>
+      {label && <Text style={styles.label}>{label}</Text>}
+      <View style={styles.viewBetween}>
+        {content && (
+          <Text numberOfLines={1} style={styles.content}>
+            {content}
+          </Text>
+        )}
+        {unit && (
+          <Text numberOfLines={1} style={styles.label}>
+            {unit}
+          </Text>
+        )}
+      </View>
     </View>
   );
 };
@@ -31,5 +42,10 @@ const styles = StyleSheet.create({
   },
   label: {fontSize: 12, color: 'rgba(151, 161, 167, 1)'},
   content: {color: 'rgba(55, 64, 71, 1)', fontWeight: '600'},
+  viewBetween: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
 });
 export default BoxShowInfor;

@@ -23,12 +23,15 @@ import {
   GetListManagersApi,
 } from '../../../Api/Home/ManagerApis/ManagerApis';
 import {updateManagers} from '../../../Store/slices/commonSlice';
+import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 
 const AddNewManager = () => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+  const [loadingManager, setLoadingManager] = useState(false);
+  const [modalManager, setModalManager] = useState(false);
 
   const [timeNow, setTimeNow] = useState(new Date());
   const [timeNowIssueDate, setTimeNowIssueDate] = useState(new Date());
@@ -118,8 +121,8 @@ const AddNewManager = () => {
     setAlbumImage(newResult);
   };
 
-  const createNewTenant = async () => {
-    setLoading(true);
+  const createNewManager = async () => {
+    setLoadingManager(true);
     let data = {
       userName: phoneNumber,
       fullName: fullName,
@@ -144,13 +147,8 @@ const AddNewManager = () => {
                   newData.push({...item, isCheck: false});
                 });
                 dispatch(updateManagers(newData));
-                setLoading(false);
-                Alert.alert('Thành công', 'Tạo người quản lý thành công', [
-                  {
-                    text: 'OK',
-                    onPress: () => navigation.goBack(),
-                  },
-                ]);
+                setLoadingManager(false);
+                navigation.goBack();
               }
             })
             .catch(error => console.log(error));
@@ -161,6 +159,16 @@ const AddNewManager = () => {
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {loadingManager && <CustomLoading />}
+      {modalManager && (
+        <CustomModalNotify
+          title={'Tạo mới quản lý'}
+          label={'Bạn có muốn thêm mới người quản lý tòa nhà này ?'}
+          modalVisible={modalManager}
+          onRequestClose={() => setModalManager(false)}
+          pressConfirm={() => createNewManager()}
+        />
+      )}
       {modalCamera && (
         <CustomModalCamera
           openCamera={() => openCamera()}
@@ -323,7 +331,7 @@ const AddNewManager = () => {
           leftLabel={'Lưu'}
           rightLabel={'Thêm mới'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => createNewTenant()}
+          onPressRight={() => setModalManager(true)}
         />
       </ScrollView>
     </View>

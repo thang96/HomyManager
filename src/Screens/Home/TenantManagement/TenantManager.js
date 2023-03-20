@@ -62,7 +62,7 @@ const TenantManager = () => {
         avatar={item?.avatar}
         userName={item?.fullName}
         phoneNumber={item?.phoneNumber}
-        pressAvatar={() => navigation.navigate('TenantList', item?.id)}
+        pressAvatar={() => navigation.navigate('TenantDetail', item?.id)}
       />
     );
   };

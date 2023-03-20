@@ -59,9 +59,9 @@ const UserManager = () => {
       <CustomPersonInfor
         styleView={{marginTop: 10}}
         avatar={item?.avatar}
-        userName={item?.userName}
+        userName={item?.fullName}
         phoneNumber={item?.phoneNumber}
-        pressAvatar={() => navigation.navigate('ManagerList', item?.id)}
+        pressAvatar={() => navigation.navigate('ManagerDetail', item?.id)}
       />
     );
   };

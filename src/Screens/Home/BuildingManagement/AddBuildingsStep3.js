@@ -33,11 +33,15 @@ import {CreateNewBuildingApi} from '../../../Api/Home/BuildingApis/BuildingApis'
 import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
 import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppBar';
+import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 
 const AddBuildingsStep3 = props => {
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(true);
+  const [loadingStep3, setLoadingStep3] = useState(true);
   const dispatch = useDispatch();
+  const noticeRef = useRef();
+  const billNoticeRef = useRef();
+  const [modalNotify, setModalNotify] = useState(false);
   const createBuildingInfor = useSelector(commonState);
   const serviceSelect = useSelector(serviceState);
   const amenitySelect = useSelector(amenityState);
@@ -52,6 +56,15 @@ const AddBuildingsStep3 = props => {
   const [listAmenity, setListAmenity] = useState([]);
 
   useEffect(() => {
+    Keyboard.addListener('keyboardDidHide', () => {
+      if (!loadingStep3) {
+        noticeRef.current.blur();
+        billNoticeRef.current.blur();
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     const getListData = async () => {
       await GetListServicesApi(tokenStore)
         .then(res => {
@@ -63,7 +76,7 @@ const AddBuildingsStep3 = props => {
               eachArray.push(newData);
             });
             dispatch(updateServices(eachArray));
-            setLoading(false);
+            setLoadingStep3(false);
           }
         })
         .catch(error => console.log(error));
@@ -77,7 +90,7 @@ const AddBuildingsStep3 = props => {
               eachArray.push(newData);
             });
             dispatch(updateAmenity(eachArray));
-            setLoading(false);
+            setLoadingStep3(false);
           }
         })
         .catch(error => console.log(error));
@@ -141,6 +154,8 @@ const AddBuildingsStep3 = props => {
   };
 
   const createNewBuilding = async () => {
+    setModalNotify(false);
+    setLoadingStep3(true);
     let data = {
       ...createBuildingInfor,
       serviceIds: serviceIds,
@@ -152,12 +167,8 @@ const AddBuildingsStep3 = props => {
     await CreateNewBuildingApi(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
-          Alert.alert('Thành công', 'Tạo người quản lý thành công', [
-            {
-              text: 'OK',
-              onPress: () => navigation.navigate('BuildingManager'),
-            },
-          ]);
+          setLoadingStep3(false);
+          navigation.navigate('BuildingManager');
         }
       })
       .catch(error => console.log(error));
@@ -165,7 +176,16 @@ const AddBuildingsStep3 = props => {
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
-      {loading && <CustomLoading />}
+      {loadingStep3 && <CustomLoading />}
+      {modalNotify && (
+        <CustomModalNotify
+          title={'Thông báo'}
+          label={'Bạn có một thông báo mới,vui lòng xác nhận'}
+          modalVisible={modalNotify}
+          onRequestClose={() => setModalNotify(false)}
+          pressConfirm={() => createNewBuilding()}
+        />
+      )}
       <CustomStepAppBar
         iconLeft={icons.ic_back}
         label={'Thiết lập dịch vụ'}
@@ -238,6 +258,7 @@ const AddBuildingsStep3 = props => {
         <Text style={[styles.label]}>Lưu ý của tòa nhà</Text>
         <View style={styles.viewTextInput}>
           <TextInput
+            ref={noticeRef}
             style={{color: 'black', width: '100%'}}
             multiline={true}
             placeholder="Nhập lưu ý của tòa nhà cho người thuê phòng"
@@ -249,6 +270,7 @@ const AddBuildingsStep3 = props => {
         <Text style={[styles.label, {marginTop: 20}]}>Ghi chú hóa đơn</Text>
         <View style={styles.viewTextInput}>
           <TextInput
+            ref={billNoticeRef}
             style={{color: 'black'}}
             multiline={true}
             placeholder="Nhập ghi chú hóa đơn"
@@ -258,14 +280,13 @@ const AddBuildingsStep3 = props => {
         </View>
 
         <View style={{marginBottom: 56}} />
+        <CustomTwoButtonBottom
+          leftLabel={'Trở lại'}
+          rightLabel={'Hoàn tất'}
+          onPressLeft={() => navigation.goBack()}
+          onPressRight={() => setModalNotify(true)}
+        />
       </ScrollView>
-
-      <CustomTwoButtonBottom
-        leftLabel={'Trở lại'}
-        rightLabel={'Hoàn tất'}
-        onPressLeft={() => navigation.goBack()}
-        onPressRight={() => createNewBuilding()}
-      />
     </View>
   );
 };
