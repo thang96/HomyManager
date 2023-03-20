@@ -15,14 +15,21 @@ import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCa
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
-import {dateToYMD} from '../../../utils/common';
-import {useSelector} from 'react-redux';
+import {dateToDMY, dateToYMD} from '../../../utils/common';
+import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
-import {CreateNewManagerApi} from '../../../Api/Home/ManagerApis/ManagerApis';
+import {
+  CreateNewManagerApi,
+  GetListManagersApi,
+} from '../../../Api/Home/ManagerApis/ManagerApis';
+import {updateManagers} from '../../../Store/slices/commonSlice';
 
 const AddNewManager = () => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+
   const [timeNow, setTimeNow] = useState(new Date());
   const [timeNowIssueDate, setTimeNowIssueDate] = useState(new Date());
   const [userName, setUserName] = useState('');
@@ -111,13 +118,8 @@ const AddNewManager = () => {
     setAlbumImage(newResult);
   };
 
-  const formatDate = value => {
-    var d = value.getDate();
-    var m = value.getMonth() + 1; //Month from 0 to 11
-    var y = value.getFullYear();
-    return y + '-' + (m <= 9 ? '0' + m : m) + '-' + '' + (d <= 9 ? '0' + d : d);
-  };
   const createNewTenant = async () => {
+    setLoading(true);
     let data = {
       userName: phoneNumber,
       fullName: fullName,
@@ -131,14 +133,27 @@ const AddNewManager = () => {
       password: '',
     };
     await CreateNewManagerApi(tokenStore, data)
-      .then(res => {
+      .then(async res => {
         if (res?.status == 200) {
-          Alert.alert('Thành công', 'Tạo người quản lý thành công', [
-            {
-              text: 'OK',
-              onPress: () => navigation.goBack(),
-            },
-          ]);
+          await GetListManagersApi(tokenStore)
+            .then(res => {
+              if (res?.status == 200) {
+                let eachManager = res?.data;
+                let newData = [];
+                eachManager.map((item, index) => {
+                  newData.push({...item, isCheck: false});
+                });
+                dispatch(updateManagers(newData));
+                setLoading(false);
+                Alert.alert('Thành công', 'Tạo người quản lý thành công', [
+                  {
+                    text: 'OK',
+                    onPress: () => navigation.goBack(),
+                  },
+                ]);
+              }
+            })
+            .catch(error => console.log(error));
         }
       })
       .catch(error => console.log(error));
@@ -162,8 +177,8 @@ const AddNewManager = () => {
           mode={'date'}
           onDateChange={value => {
             setTimeNow(value);
-            let eachBirthDay = formatDate(value);
-            let newTime = dateToYMD(value);
+            let eachBirthDay = dateToYMD(value);
+            let newTime = dateToDMY(value);
             setBirthDay(eachBirthDay);
             setBirthDayValue(newTime);
           }}
@@ -177,8 +192,8 @@ const AddNewManager = () => {
           mode={'date'}
           onDateChange={value => {
             setTimeNowIssueDate(value);
-            let eachIssueDate = formatDate(value);
-            let newTime = dateToYMD(value);
+            let eachIssueDate = dateToYMD(value);
+            let newTime = dateToDMY(value);
             setIdentityIssueDate(eachIssueDate);
             setIdentityIssueDateValue(newTime);
           }}

@@ -57,3 +57,41 @@ export const GetManagerDetailApi = (token, managerId) => {
       });
   });
 };
+
+export const PutManagerApi = (token, data, managerId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(`${BASEURL}/managers/${managerId}`, data, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
+export const DeleteManagerApi = (token, managerId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`${BASEURL}/managers/${managerId}`, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};

@@ -12,7 +12,7 @@ import Money from '../../Assets/Svgs/Money.svg';
 const widthLine = Dimensions.get('window').width - 20;
 
 const CustomAppBarRoomInfor = props => {
-  const {onPressLeft} = props;
+  const {onPressLeft, pressIconRight, nameRoom, rentMonthlyFee} = props;
   return (
     <ImageBackground source={images.im_appBar} style={{paddingHorizontal: 10}}>
       <View style={styles.viewAppBarTop}>
@@ -22,7 +22,11 @@ const CustomAppBarRoomInfor = props => {
           onPress={onPressLeft}
         />
         <Text style={styles.titleScreen}>Thông tin phòng</Text>
-        <CustomButton styleIcon={styles.iconTop} icon={icons.ic_bell} />
+        <CustomButton
+          styleIcon={styles.iconTop}
+          icon={icons.ic_bell}
+          onPress={pressIconRight}
+        />
         <CustomButton styleIcon={styles.iconTop} icon={icons.ic_moreOption} />
       </View>
       <View style={styles.line} />
@@ -36,7 +40,7 @@ const CustomAppBarRoomInfor = props => {
                 fontWeight: '600',
                 marginTop: 5,
               }}>
-              {`Tòa nhà D1   >   P101`}
+              {nameRoom}
             </Text>
           </View>
           <CustomButton
@@ -54,7 +58,11 @@ const CustomAppBarRoomInfor = props => {
             <Money width={32} height={32} />
           </View>
           <View style={{marginLeft: 10, flex: 1}}>
-            <Text style={{color: 'white', fontSize: 15}}>1500000 VNĐ</Text>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 15,
+              }}>{`${rentMonthlyFee} VNĐ`}</Text>
           </View>
         </View>
         <View

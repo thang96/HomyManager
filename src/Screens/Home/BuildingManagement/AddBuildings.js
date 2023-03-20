@@ -4,8 +4,6 @@ import {
   StyleSheet,
   View,
   Text,
-  ScrollView,
-  Keyboard,
   TextInput,
   Image,
   KeyboardAvoidingView,
@@ -27,6 +25,7 @@ import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomModalPicker from '../../../Components/CommonComponent/CustomModalPicker';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import {ScrollView} from 'react-native-virtualized-view';
 import {
   GetLocationCitysApi,
   GetDistrictByCityIdApi,
@@ -34,22 +33,20 @@ import {
 } from '../../../Api/Home/BuildingApis/BuildingApis';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
-import {updateCommon} from '../../../Store/slices/commonSlice';
+import {
+  managerState,
+  updateCommon,
+  updateManagers,
+} from '../../../Store/slices/commonSlice';
+import {GetListManagersApi} from '../../../Api/Home/ManagerApis/ManagerApis';
 
 const AddBuildings = props => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
+  const managerRedux = useSelector(managerState);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const [keyboard, setKeyboard] = useState(false);
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboard(true);
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboard(false);
-    });
-  }, []);
+  const [managerSelect, setManagerSelect] = useState([]);
 
   const [name, setName] = useState('');
   const [numberOfFloor, setNumberOfFloor] = useState('');
@@ -111,19 +108,42 @@ const AddBuildings = props => {
     setOpenTime(eachOpenTime);
     setCloseTimeValue(eachCloseTime.toLocaleTimeString('en-VN'));
     setCloseTime(eachCloseTime);
-    getCityData();
+    const getData = async () => {
+      await GetListManagersApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachManager = res?.data;
+            let newData = [];
+            eachManager.map((item, index) => {
+              newData.push({...item, isCheck: false});
+            });
+            dispatch(updateManagers(newData));
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+
+      await GetLocationCitysApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            setListCity(res?.data);
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getData();
   }, [tokenStore]);
 
-  const getCityData = async () => {
-    await GetLocationCitysApi(tokenStore)
-      .then(res => {
-        if (res?.status == 200) {
-          setListCity(res?.data);
-          setLoading(false);
-        }
-      })
-      .catch(error => console.log(error));
-  };
+  useEffect(() => {
+    let eachManager = [];
+    for (let index = 0; index < managerRedux.length; index++) {
+      const element = managerRedux[index];
+      if (element?.isCheck == true) {
+        eachManager.push(element);
+      }
+    }
+    setManagerSelect(eachManager);
+  }, [managerRedux]);
 
   const getDistrictData = async item => {
     setCityName(item?.name);
@@ -224,7 +244,7 @@ const AddBuildings = props => {
 
     setAlbumImage(newResult);
   };
-
+  console.log(name);
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       {loading && <CustomLoading />}
@@ -300,11 +320,11 @@ const AddBuildings = props => {
             }}
           />
         )}
-
         <CustomStepAppBar
           iconLeft={icons.ic_back}
           label={'Thiết lập thông tin'}
           iconRight={icons.ic_bell}
+          pressIconRight={() => navigation.navigate('NotificationScreen')}
           iconSecondRight={icons.ic_moreOption}
           pressIconLeft={() => navigation.goBack()}
           step={1}
@@ -320,8 +340,8 @@ const AddBuildings = props => {
             type={'input'}
             title={'Tên tòa nhà'}
             placeholder={'Nhập tên tòa nhà'}
-            value={name}
-            onChangeText={text => setName(text)}
+            defaultValue={name}
+            onEndEditing={evt => setName(evt.nativeEvent.text)}
           />
           <CustomInput
             important={true}
@@ -330,8 +350,8 @@ const AddBuildings = props => {
             styleViewInput={{marginTop: 10}}
             title={'Số tầng'}
             placeholder={'Nhập số tầng'}
-            value={numberOfFloor}
-            onChangeText={text => setNumberOfFloor(text)}
+            defaultValue={numberOfFloor}
+            onEndEditing={evt => setNumberOfFloor(evt.nativeEvent.text)}
           />
 
           <CustomTimeButtons
@@ -351,9 +371,9 @@ const AddBuildings = props => {
             <TextInput
               keyboardType="numeric"
               placeholder="Nhập chi phí thuê nhà (Nếu có)"
-              value={leasingFee}
-              onChangeText={text => setLeasingFee(text)}
               style={{flex: 1}}
+              defaultValue={leasingFee}
+              onEndEditing={evt => setLeasingFee(evt.nativeEvent.text)}
             />
             <View style={styles.viewTime}>
               <Text style={styles.time}>VNĐ</Text>
@@ -365,8 +385,8 @@ const AddBuildings = props => {
             <TextInput
               multiline
               placeholder="Nhập mô tả cho tòa nhà"
-              value={description}
-              onChangeText={text => setDescription(text)}
+              defaultValue={description}
+              onEndEditing={evt => setDescription(evt.nativeEvent.text)}
             />
           </View>
 
@@ -401,19 +421,34 @@ const AddBuildings = props => {
             <TextInput
               multiline
               placeholder="Nhập địa chỉ cụ thể"
-              value={address}
-              onChangeText={text => setAddress(text)}
+              defaultValue={address}
+              onEndEditing={evt => setAddress(evt.nativeEvent.text)}
             />
           </View>
           <View style={styles.line} />
-          <CustomTextTitle label={'Quản lý tòa nhà'} labelButton={'Thêm '} />
-          <CustomManagerInfor
-            styleView={{marginTop: 10}}
-            avatar={null}
-            userName={'Trường Vân'}
-            phoneNumber={`0123456789`}
-            onPress={() => {}}
+          <CustomTextTitle
+            label={'Quản lý tòa nhà'}
+            labelButton={'Thêm'}
+            icon={icons.ic_plus}
+            onPress={() => navigation.navigate('ManagerList')}
           />
+          {managerSelect.length > 0 && (
+            <FlatList
+              data={managerSelect}
+              keyExtractor={(key, index) => `${key?.id}${index.toString()}`}
+              renderItem={({item, index}) => {
+                return (
+                  <CustomManagerInfor
+                    styleView={{marginTop: 10}}
+                    avatar={item?.avatar}
+                    userName={`${item?.fullName}`}
+                    phoneNumber={`${item?.phoneNumber}`}
+                    onPress={() => {}}
+                  />
+                );
+              }}
+            />
+          )}
 
           <View style={styles.line} />
           <Text style={[styles.textTitle, {marginVertical: 5}]}>
@@ -453,15 +488,13 @@ const AddBuildings = props => {
             onPress={() => setModalCamera(true)}
           />
           <View style={{marginBottom: 56}} />
-        </ScrollView>
-        {!keyboard && (
           <CustomTwoButtonBottom
             leftLabel={'Hủy'}
             rightLabel={'Tiếp tục'}
             onPressLeft={() => navigation.goBack()}
             onPressRight={() => goToStepTwo()}
           />
-        )}
+        </ScrollView>
       </KeyboardAvoidingView>
     </View>
   );

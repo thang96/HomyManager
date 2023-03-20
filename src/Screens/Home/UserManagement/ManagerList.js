@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -18,12 +18,13 @@ import {FlatList, TextInput} from 'react-native-gesture-handler';
 import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {useDispatch, useSelector} from 'react-redux';
-import {managerState, updateManager} from '../../../Store/slices/commonSlice';
+import {managerState, updateManagers} from '../../../Store/slices/commonSlice';
 
 const ManagerList = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const dispatch = useDispatch();
+  const isFocus = useIsFocused();
   const ManagerSelect = useSelector(managerState);
   const [keyboard, setKeyboard] = useState(null);
   const [textSearch, setTextSearch] = useState('');
@@ -31,7 +32,7 @@ const ManagerList = () => {
 
   useEffect(() => {
     setListManager(ManagerSelect);
-  }, [ManagerSelect]);
+  }, [ManagerSelect, isFocus]);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -67,8 +68,8 @@ const ManagerList = () => {
     );
   };
 
-  const updateTenantList = () => {
-    dispatch(updateManager(listManager));
+  const updateManagerList = () => {
+    dispatch(updateManagers(listManager));
     navigation.goBack();
   };
 
@@ -102,8 +103,8 @@ const ManagerList = () => {
       <CustomTwoButtonBottom
         leftLabel={'Lưu'}
         rightLabel={'Thêm mới'}
-        onPressLeft={() => updateTenantList()}
-        onPressRight={() => navigation.navigate('AddNewTenant')}
+        onPressLeft={() => updateManagerList()}
+        onPressRight={() => navigation.navigate('AddNewManager')}
       />
     </View>
   );

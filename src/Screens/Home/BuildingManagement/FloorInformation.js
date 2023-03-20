@@ -4,11 +4,9 @@ import {
   StyleSheet,
   View,
   Text,
-  Keyboard,
   Image,
   TouchableOpacity,
   Dimensions,
-  SectionList,
 } from 'react-native';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
@@ -19,17 +17,21 @@ import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {uuid} from '../../../utils/uuid';
 import CustomAppBarFloorInfor from '../../../Components/CommonComponent/CustomAppBarFloorInfor';
 import {GetListUnitsApi} from '../../../Api/Home/UnitApis/UnitApis';
+import {HauseDetailApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import {token} from '../../../Store/slices/tokenSlice';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 
 const FloorInformation = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const dispatch = useDispatch();
   const tokenStore = useSelector(token);
   const [listFloors, setListFloors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hauseInfor, setHauseInfor] = useState();
   const hauseId = route.params;
-  const focusAdd = useIsFocused();
+  const statusLoading = useSelector(statusState);
 
   useEffect(() => {
     const getListUnit = async () => {
@@ -41,9 +43,16 @@ const FloorInformation = () => {
           }
         })
         .catch(error => console.log(error));
+      await HauseDetailApi(tokenStore, hauseId)
+        .then(res => {
+          if (res?.status == 200) {
+            setHauseInfor(res?.data);
+          }
+        })
+        .catch(error => console.log(error));
     };
     getListUnit();
-  }, [hauseId, focusAdd]);
+  }, [hauseId, statusLoading]);
 
   const renderListFloor = (item, index) => {
     return (
@@ -62,27 +71,6 @@ const FloorInformation = () => {
             navigation.navigate('RoomInformation', item?.id);
           }}
         />
-        {/* <FlatList
-          listKey={`${item?.id}${index}`}
-          horizontal={false}
-          scrollEnabled={false}
-          numColumns={2}
-          keyExtractor={key => key?.id}
-          data={listFloors}
-          renderItem={({item, index}) => {
-            return (
-              <CustomFloorInfor
-                numberRoom={`${item?.name}`}
-                status={`${item?.isActive}`}
-                username={`${item?.username}`}
-                price={`${item?.price}`}
-                onPress={() => {
-                  navigation.navigate('RoomInformation');
-                }}
-              />
-            );
-          }}
-        /> */}
       </View>
     );
   };
@@ -90,7 +78,12 @@ const FloorInformation = () => {
   return (
     <View style={styles.container}>
       {loading && <CustomLoading />}
-      <CustomAppBarFloorInfor onPressLeft={() => navigation.goBack()} />
+      <CustomAppBarFloorInfor
+        hauseName={`${hauseInfor?.name}`}
+        address={`${hauseInfor?.city?.name}, ${hauseInfor?.district?.name}, ${hauseInfor?.ward?.name}, ${hauseInfor?.address}`}
+        onPressLeft={() => navigation.goBack()}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
+      />
 
       <ScrollView style={{paddingHorizontal: 5, paddingTop: 10}}>
         {listFloors.length > 0
@@ -102,7 +95,10 @@ const FloorInformation = () => {
       <CustomButtonBottom
         styleButton={{backgroundColor: colors.mainColor}}
         label={'Thêm tầng mới'}
-        onPress={() => navigation.navigate('AddRoom', hauseId)}
+        onPress={() => {
+          dispatch(updateStatus(false));
+          navigation.navigate('AddRoom', route.params);
+        }}
       />
     </View>
   );

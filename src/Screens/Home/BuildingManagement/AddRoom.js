@@ -26,6 +26,7 @@ import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwo
 import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
 import ImagePicker from 'react-native-image-crop-picker';
 import CustomInputValue from '../../../Components/CommonComponent/CustomInputValue';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetListHausesApi} from '../../../Api/Home/BuildingApis/BuildingApis';
@@ -38,7 +39,8 @@ import {
   updateAmenity,
   updateServices,
 } from '../../../Store/slices/commonSlice';
-import {CreateNewUnit} from '../../../Api/Home/UnitApis/UnitApis';
+import {CreateNewUnitApi} from '../../../Api/Home/UnitApis/UnitApis';
+import {updateStatus} from '../../../Store/slices/statusSlice';
 
 const AddRoom = () => {
   const navigation = useNavigation();
@@ -48,7 +50,6 @@ const AddRoom = () => {
   const amenitySelect = useSelector(amenityState);
   const dispatch = useDispatch();
   const hauseId = route.params;
-
   const [hause, setHause] = useState('');
   const [name, setName] = useState('');
   const [floorNumber, setFloorNumber] = useState('');
@@ -151,19 +152,12 @@ const AddRoom = () => {
   }, [listService, listAmenity]);
 
   const renderPaidSevice = (item, index) => {
-    let value = item;
     return <RenderService label={item?.name} value={item?.fee} />;
   };
 
   const renderFreeSevice = (item, index) => {
-    let value = item;
     return <RenderAmenity label={item?.name} />;
   };
-  // const deleteFreeSevice = (item, index) => {
-  //   let result = [...listAmenity];
-  //   let newResult = result.filter(itemResult => itemResult !== item);
-  //   setListAmenity(newResult);
-  // };
 
   const openCamera = () => {
     ImagePicker.openCamera({width: 300, height: 400})
@@ -231,8 +225,9 @@ const AddRoom = () => {
 
     setAlbumImage(newResult);
   };
-
   const createNewUnit = async () => {
+    setLoading(true);
+    let hauseIdSelect = hause?.id;
     let data = {
       name: name,
       floorNumber: floorNumber,
@@ -247,22 +242,30 @@ const AddRoom = () => {
       serviceIds: serviceIds,
       amenityIds: amenityIds,
     };
-    await CreateNewUnit(tokenStore, hauseId, data)
+    await CreateNewUnitApi(tokenStore, hauseIdSelect, data)
       .then(res => {
         if (res?.status == 200) {
+          setLoading(false);
           Alert.alert('Thành công', 'Tạo phòng thành công', [
             {
               text: 'OK',
-              onPress: () => navigation.navigate('FloorInformation'),
+              onPress: () => {
+                dispatch(updateStatus(true));
+                navigation.navigate('FloorInformation', hauseId);
+              },
             },
           ]);
         }
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        setLoading(false);
+        alert(`${error}`);
+      });
   };
 
   return (
     <View style={styles.container}>
+      {loading && <CustomLoading />}
       {modalHauses && (
         <CustomModalPicker
           pressClose={() => setModalHauses(false)}
@@ -286,6 +289,7 @@ const AddRoom = () => {
         iconLeft={icons.ic_back}
         label={'Thêm phòng'}
         iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />

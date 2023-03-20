@@ -57,3 +57,41 @@ export const CreateNewAmenityApi = (token, data) => {
       });
   });
 };
+
+export const PutAmenityApi = (token, data, amenitieId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(`${BASEURL}/amenities${amenitieId}`, data, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
+export const DeleteAmenityApi = (token, data, amenitieId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`${BASEURL}/amenities${amenitieId}`, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};

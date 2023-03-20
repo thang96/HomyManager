@@ -6,11 +6,8 @@ import {
   View,
   Text,
   Keyboard,
-  ScrollView,
-  ImageBackground,
   Image,
   TouchableOpacity,
-  Dimensions,
   FlatList,
 } from 'react-native';
 import {useSelector} from 'react-redux';
@@ -42,19 +39,18 @@ const BuildingManager = () => {
   }, []);
 
   useEffect(() => {
+    const getData = async () => {
+      await GetListHausesApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            setLoading(false);
+            setListHauses(res?.data);
+          }
+        })
+        .catch(error => console.log(error));
+    };
     getData();
   }, [isFocused]);
-
-  const getData = async () => {
-    await GetListHausesApi(tokenStore)
-      .then(res => {
-        if (res?.status == 200) {
-          setLoading(false);
-          setListHauses(res?.data);
-        }
-      })
-      .catch(error => console.log(error));
-  };
 
   const renderlistHauses = (item, index) => {
     return (
@@ -76,6 +72,7 @@ const BuildingManager = () => {
         iconLeft={icons.ic_back}
         label={'Quản lý tòa nhà'}
         iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconSecondRight={icons.ic_circleFill}
         keyboard={keyboard}
         textSearch={textSearch}
@@ -120,14 +117,7 @@ const CustomRenderBuilding = props => {
   return (
     <TouchableOpacity onPress={onPress} style={styleRender.button}>
       <Image source={icons.ic_building} style={styleRender.image} />
-      <View
-        style={{
-          flex: 1,
-          width: '100%',
-          height: '100%',
-          paddingHorizontal: 10,
-          justifyContent: 'space-between',
-        }}>
+      <View style={styleRender.viewBetween}>
         <View style={styleRender.viewRow}>
           <Text style={styleRender.name}>{name}</Text>
           <Image source={icons.ic_plus} style={styleRender.icon} />
@@ -135,15 +125,7 @@ const CustomRenderBuilding = props => {
         <Text style={styleRender.address}>{address}</Text>
         <View style={[styleRender.viewRow]}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: 30,
-                backgroundColor: colors.backgroundInput,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+            <View style={styleRender.viewImage}>
               <Image
                 source={icons.ic_home}
                 style={{width: 20, height: 20, tintColor: colors.mainColor}}
@@ -199,6 +181,21 @@ const styleRender = StyleSheet.create({
     elevation: 4,
     borderRadius: 4,
     marginBottom: 20,
+  },
+  viewImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 30,
+    backgroundColor: colors.backgroundInput,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewBetween: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    paddingHorizontal: 10,
+    justifyContent: 'space-between',
   },
   image: {
     width: 76,

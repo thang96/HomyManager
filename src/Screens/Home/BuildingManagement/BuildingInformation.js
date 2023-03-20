@@ -1,16 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Keyboard,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  ImageBackground,
-} from 'react-native';
+import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
@@ -23,39 +14,46 @@ import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {HauseDetailApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
+import {useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
+import {GetListUnitsApi} from '../../../Api/Home/UnitApis/UnitApis';
 
 const BuildingInformation = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const isFocused = useIsFocused();
+  const tokenStore = useSelector(token);
   const [loading, setLoading] = useState(true);
   const [hauseInfor, setHauseInfor] = useState();
+  const [units, setListUnits] = useState([]);
   const [openTimeValue, setOpenTimeValue] = useState('');
   const [closeTimeValue, setCloseTimeValue] = useState('');
 
   useEffect(() => {
+    const getDataHause = async () => {
+      let hauseId = route.params;
+      await HauseDetailApi(tokenStore, hauseId)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachOpenTime = new Date(`${res?.data?.openTime}`);
+            let eachCloseTime = new Date(`${res?.data?.closeTime}`);
+            setOpenTimeValue(eachOpenTime.toLocaleTimeString('en-VN'));
+            setCloseTimeValue(eachCloseTime.toLocaleTimeString('en-VN'));
+            setHauseInfor(res?.data);
+            setLoading(false);
+          }
+        })
+        .catch(error => console.error(error));
+      await GetListUnitsApi(tokenStore, hauseId)
+        .then(res => {
+          if (res?.status == 200) {
+            setListUnits(res?.data);
+          }
+        })
+        .catch(error => console.error(error));
+    };
     getDataHause();
   }, [isFocused]);
-
-  const getDataHause = async () => {
-    let hauseId = route.params;
-    await AsyncStorage.getItem('token').then(async token => {
-      if (token != null && token != undefined && token != '') {
-        await HauseDetailApi(token, hauseId)
-          .then(res => {
-            if (res?.status == 200) {
-              let eachOpenTime = new Date(`${res?.data?.openTime}`);
-              let eachCloseTime = new Date(`${res?.data?.closeTime}`);
-              setOpenTimeValue(eachOpenTime.toLocaleTimeString('en-VN'));
-              setCloseTimeValue(eachCloseTime.toLocaleTimeString('en-VN'));
-              setHauseInfor(res?.data);
-              setLoading(false);
-            }
-          })
-          .catch(error => console.error(error));
-      }
-    });
-  };
 
   const renderSevices = (item, index) => {
     return (
@@ -76,6 +74,7 @@ const BuildingInformation = () => {
         />
       )}
       <CustomAppBarBuildingInfor
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         nameBuilding={`${hauseInfor?.name}`}
         addressBuilding={`${hauseInfor?.city?.name}, ${hauseInfor?.district?.name}, ${hauseInfor?.ward?.name}, ${hauseInfor?.address}`}
         onPressLeft={() => navigation.goBack()}
@@ -84,7 +83,7 @@ const BuildingInformation = () => {
         <View style={styles.viewUtils}>
           <CustomOptionBT
             title={'Phòng'}
-            content={hauseInfor?.units ? `${hauseInfor?.units}` : '0'}
+            content={units?.length ? `${units.length}` : '0'}
             icon={icons.ic_bed}
             styleImageBG={{tintColor: '#1297c0'}}
             styleBGIcon={{backgroundColor: '#ebf9fd'}}
@@ -222,22 +221,22 @@ const BuildingInformation = () => {
             }>{`${hauseInfor?.amenities.length}`}</Text>
         </View>
 
-        <View style={{marginBottom: 56}} />
+        <CustomTwoButtonBottom
+          styleView={{marginVertical: 20}}
+          leftLabel={'Hủy'}
+          styleButtonLeft={{
+            borderColor: colors.backgroundOrange,
+            backgroundColor: 'white',
+            marginRight: 5,
+          }}
+          styleLabelLeft={{
+            color: colors.backgroundOrange,
+            fontSize: 15,
+            fontWeight: '600',
+          }}
+          rightLabel={'Lưu'}
+        />
       </ScrollView>
-      <CustomTwoButtonBottom
-        leftLabel={'Hủy'}
-        styleButtonLeft={{
-          borderColor: colors.backgroundOrange,
-          backgroundColor: 'white',
-          marginRight: 5,
-        }}
-        styleLabelLeft={{
-          color: colors.backgroundOrange,
-          fontSize: 15,
-          fontWeight: '600',
-        }}
-        rightLabel={'Lưu'}
-      />
     </View>
   );
 };

@@ -39,10 +39,48 @@ export const GetUnitDetailAPi = (token, unitId) => {
   });
 };
 
-export const CreateNewUnit = (token, hauseId, data) => {
+export const CreateNewUnitApi = (token, hauseId, data) => {
   return new Promise((resolve, reject) => {
     axios
       .post(`${BASEURL}/houses/${hauseId}/units`, data, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
+export const PutUnitApi = (token, hauseId, data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${BASEURL}/units/${hauseId}`, data, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
+export const DeleteUnitApi = (token, hauseId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${BASEURL}/units/${hauseId}`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

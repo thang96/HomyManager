@@ -57,3 +57,41 @@ export const CreateNewService = (token, data) => {
       });
   });
 };
+
+export const PutServiceApi = (token, data, serviceId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(`${BASEURL}/services/${serviceId}`, data, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
+export const DeleteServiceApi = (token, serviceId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`${BASEURL}/services/${serviceId}`, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};

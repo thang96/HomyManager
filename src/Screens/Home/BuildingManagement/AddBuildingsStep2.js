@@ -91,6 +91,7 @@ const AddBuildingsStep2 = props => {
           iconLeft={icons.ic_back}
           label={'Thiết lập tiền nhà'}
           iconRight={icons.ic_bell}
+          pressIconRight={() => navigation.navigate('NotificationScreen')}
           iconSecondRight={icons.ic_moreOption}
           pressIconLeft={() => navigation.goBack()}
           step={2}

@@ -151,7 +151,12 @@ const AddBuildingsStep3 = props => {
     await CreateNewBuildingApi(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
-          alert('Thành công');
+          Alert.alert('Thành công', 'Tạo người quản lý thành công', [
+            {
+              text: 'OK',
+              onPress: () => navigation.navigate('BuildingManager'),
+            },
+          ]);
         }
       })
       .catch(error => console.log(error));
@@ -164,6 +169,7 @@ const AddBuildingsStep3 = props => {
         iconLeft={icons.ic_back}
         label={'Thiết lập dịch vụ'}
         iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
         step={3}

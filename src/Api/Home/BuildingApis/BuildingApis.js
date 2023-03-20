@@ -97,29 +97,47 @@ export const GetWardByDistrictIdApi = (token, districtId) => {
 };
 
 export const CreateNewBuildingApi = (token, data) => {
-  let eachData = {
-    name: data?.name,
-    numberOfFloor: data?.numberOfFloor,
-    openTime: data?.openTime,
-    closeTime: data?.closeTime,
-    leasingFee: parseInt(data?.leasingFee),
-    description: data?.description,
-    billingDate: parseInt(data?.billingDate),
-    paymentDateFrom: parseInt(data?.paymentDateFrom),
-    paymentDateTo: parseInt(data?.paymentDateTo),
-    notice: data?.notice,
-    billNotice: data?.billNotice,
-    address: data?.address,
-    organizationId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    cityId: data?.cityId,
-    districtId: data?.districtId,
-    wardId: data?.wardId,
-    serviceIds: data?.serviceIds,
-    amenityIds: data?.amenityIds,
-  };
   return new Promise((resolve, reject) => {
     axios
       .post(`${BASEURL}/houses`, data, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
+export const PutBuildingApi = (token, data, houseId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(`${BASEURL}/houses${houseId}`, data, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
+export const DeleteBuildingApi = (token, houseId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`${BASEURL}/houses${houseId}`, data, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

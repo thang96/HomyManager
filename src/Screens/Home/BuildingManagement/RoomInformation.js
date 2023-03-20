@@ -88,7 +88,12 @@ const RoomInformation = props => {
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       {loading && <CustomLoading />}
-      <CustomAppBarRoomInfor onPressLeft={() => navigation.goBack()} />
+      <CustomAppBarRoomInfor
+        rentMonthlyFee={`${unit?.rentMonthlyFee}`}
+        nameRoom={`${unit?.name}`}
+        onPressLeft={() => navigation.goBack()}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
+      />
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
         <CustomTextTitle label={'Thông tin phòng'} />
 
@@ -181,11 +186,11 @@ const RoomInformation = props => {
         <View style={styles.line} />
 
         <View style={{height: 56}} />
+        <CustomButtonBottom
+          label={'Thêm phòng mới'}
+          onPress={() => navigation.navigate('AddRoom')}
+        />
       </ScrollView>
-      <CustomButtonBottom
-        label={'Thêm phòng mới'}
-        onPress={() => navigation.navigate('AddRoom')}
-      />
     </View>
   );
 };

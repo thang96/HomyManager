@@ -12,7 +12,7 @@ import Location from '../../Assets/Svgs/Location.svg';
 const widthLine = Dimensions.get('window').width - 20;
 
 const CustomAppBarFloorInfor = props => {
-  const {onPressLeft} = props;
+  const {onPressLeft, pressIconRight, hauseName, address} = props;
   return (
     <ImageBackground source={images.im_appBar} style={{paddingHorizontal: 10}}>
       <View style={styles.viewAppBarTop}>
@@ -22,14 +22,18 @@ const CustomAppBarFloorInfor = props => {
           onPress={onPressLeft}
         />
         <Text style={styles.titleScreen}>Thông tin tầng</Text>
-        <CustomButton styleIcon={styles.iconTop} icon={icons.ic_bell} />
+        <CustomButton
+          styleIcon={styles.iconTop}
+          icon={icons.ic_bell}
+          onPress={pressIconRight}
+        />
         <CustomButton styleIcon={styles.iconTop} icon={icons.ic_moreOption} />
       </View>
       <View style={styles.line} />
       <View style={{height: 130}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={{fontSize: 26, color: 'white', flex: 1}}>
-            Tòa nhà D1
+            {hauseName}
           </Text>
           <CustomButton
             styleButton={[
@@ -47,9 +51,7 @@ const CustomAppBarFloorInfor = props => {
             <Location width={32} height={32} />
           </View>
           <View style={{marginLeft: 10, flex: 1}}>
-            <Text style={{color: 'white', fontSize: 11}}>
-              448 Lê Văn Việt, Tăng Nhơn Phú A, TP.Thủ Đức
-            </Text>
+            <Text style={{color: 'white', fontSize: 11}}>{address}</Text>
           </View>
         </View>
         <View

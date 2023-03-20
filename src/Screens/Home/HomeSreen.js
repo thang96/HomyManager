@@ -1,19 +1,19 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
-import React, {Children, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
   Text,
   Keyboard,
   ScrollView,
-  ImageBackground,
   Image,
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetListHausesApi} from '../../Api/Home/BuildingApis/BuildingApis';
+import {GetListTenantsApi} from '../../Api/Home/TenantApis/TenantApis';
+import {GetListContractsApi} from '../../Api/Home/ContractApis/ContractApis';
 import {GetUserAPi} from '../../Api/User/UserApis';
 import CustomButton from '../../Components/CommonComponent/CustomButton';
 import CustomLoading from '../../Components/CommonComponent/CustomLoading';
@@ -28,11 +28,12 @@ const HomeScreen = () => {
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
   const [listHauses, setlistHausess] = useState([]);
+  const [listTenants, setlistTenants] = useState([]);
+  const [listContracts, setlistContracts] = useState([]);
   const widthImage = Dimensions.get('window').width / 2 - 20;
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
-  console.log(tokenStore);
-  // const userStore = useSelector(userInfor);
+  // console.log(tokenStore);
   const [keyboard, setKeyboard] = useState(false);
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -44,29 +45,44 @@ const HomeScreen = () => {
   }, []);
 
   useEffect(() => {
+    const getData = async () => {
+      if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
+        await GetUserAPi(tokenStore)
+          .then(res => {
+            if (res?.status == 200) {
+              setLoading(false);
+              dispatch(updateUserInfor(res?.data));
+            }
+          })
+          .catch(error => console.log(error));
+
+        await GetListHausesApi(tokenStore)
+          .then(res => {
+            if (res?.status == 200) {
+              setlistHausess(res?.data);
+            }
+          })
+          .catch(error => console.log(error));
+
+        await GetListTenantsApi(tokenStore)
+          .then(res => {
+            if (res?.status == 200) {
+              setlistTenants(res?.data);
+            }
+          })
+          .catch(error => console.log(error));
+
+        await GetListContractsApi(tokenStore)
+          .then(res => {
+            if (res?.status == 200) {
+              setlistContracts(res?.data);
+            }
+          })
+          .catch(error => console.log(error));
+      }
+    };
     getData();
   }, []);
-
-  const getData = async () => {
-    if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
-      await GetUserAPi(tokenStore)
-        .then(res => {
-          if (res?.status == 200) {
-            setLoading(false);
-            dispatch(updateUserInfor(res?.data));
-          }
-        })
-        .catch(error => console.log(error));
-
-      await GetListHausesApi(tokenStore)
-        .then(res => {
-          if (res?.status == 200) {
-            setlistHausess(res?.data);
-          }
-        })
-        .catch(error => console.log(error));
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -114,7 +130,7 @@ const HomeScreen = () => {
             imageBG={images.im_frame3}
             icon={icons.ic_peoples}
             label={'Tổng số người'}
-            labelNumber={'41'}
+            labelNumber={`${listTenants.length}`}
             onPress={() => navigation.navigate('TenantManager')}
           />
           <CustomViewButton
@@ -131,7 +147,7 @@ const HomeScreen = () => {
           <View style={[styles.viewRow, {marginTop: 15}]}>
             <CustomOptionBT
               title={'Hợp đồng'}
-              content={'8'}
+              content={`${listContracts.length}`}
               svgIcon={svgs.Contract}
               styleBGIcon={{backgroundColor: '#ebf9fd'}}
               onPress={() => navigation.navigate('ContractManagement')}
