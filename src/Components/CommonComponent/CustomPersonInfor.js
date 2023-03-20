@@ -30,16 +30,23 @@ const CustomPersonInfor = props => {
             source={avatar ? {uri: avatar} : icons.ic_user}
           />
         </TouchableOpacity>
-        <View
-          style={{
-            marginLeft: 10,
-            justifyContent: 'center',
-          }}>
-          <Text style={styles.userName}>{userName}</Text>
-          <Text style={styles.phoneNumber}>{phoneNumber}</Text>
-        </View>
       </View>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View
+        style={{
+          marginLeft: 10,
+          justifyContent: 'center',
+          flex: 1,
+        }}>
+        <Text numberOfLines={1} style={styles.userName}>
+          {userName}
+        </Text>
+        <Text style={styles.phoneNumber}>{phoneNumber}</Text>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
         <CustomButton
           icon={icons.ic_phone}
           styleIcon={styles.styleButtonRight}
@@ -89,8 +96,8 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
-  userName: {fontSize: 15, fontWeight: 'bold', color: 'rgba(55, 64, 71, 1)'},
-  phoneNumber: {fontSize: 13, color: 'rgba(85, 204, 239, 1)'},
+  userName: {fontSize: 14, fontWeight: 'bold', color: 'rgba(55, 64, 71, 1)'},
+  phoneNumber: {fontSize: 12, color: 'rgba(85, 204, 239, 1)'},
   iconCheck: {
     width: 25,
     height: 25,

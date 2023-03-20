@@ -20,15 +20,16 @@ import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearch
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
+import {statusState} from '../../../Store/slices/statusSlice';
 import {GetListManagersApi} from '../../../Api/Home/ManagerApis/ManagerApis';
 const UserManager = () => {
   const navigation = useNavigation();
+  const statusLoading = useSelector(statusState);
   const [keyboard, setKeyboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
   const [listManager, setListManager] = useState([]);
   const tokenStore = useSelector(token);
-  const isFocused = useIsFocused();
 
   useEffect(() => {
     const getListManager = async () => {
@@ -42,7 +43,7 @@ const UserManager = () => {
         .catch(error => console.log(error));
     };
     getListManager();
-  }, [isFocused]);
+  }, [statusLoading]);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -71,6 +72,7 @@ const UserManager = () => {
         iconLeft={icons.ic_back}
         label={'Người quản lý tòa nhà'}
         iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconSecondRight={icons.ic_moreOption}
         keyboard={keyboard}
         textSearch={textSearch}

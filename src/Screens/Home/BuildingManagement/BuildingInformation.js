@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
@@ -6,7 +5,7 @@ import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwo
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import CustomViewInfor from '../../../Components/ComponentHome/CustomViewInfor';
-import CustomManagerInfor from '../../../Components/CommonComponent/CustomPersonInfor';
+import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import {FlatList} from 'react-native-gesture-handler';
 import CustomAppBarBuildingInfor from '../../../Components/CommonComponent/CustomAppBarBuildingInfor';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
@@ -146,7 +145,7 @@ const BuildingInformation = () => {
           icon={icons.ic_plus}
         />
 
-        <CustomManagerInfor
+        <CustomPersonInfor
           styleView={{marginTop: 10}}
           userName={'Trường Vân'}
           phoneNumber={`0123456789`}

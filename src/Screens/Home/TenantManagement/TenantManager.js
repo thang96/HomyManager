@@ -18,17 +18,19 @@ import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonI
 import {FlatList, TextInput} from 'react-native-gesture-handler';
 import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetListTenantsApi} from '../../../Api/Home/TenantApis/TenantApis';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 const TenantManager = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [keyboard, setKeyboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
   const [listTenants, setListTenants] = useState([]);
   const tokenStore = useSelector(token);
-  const isFocused = useIsFocused();
+  const focusLoading = useSelector(statusState);
 
   useEffect(() => {
     const getListTenants = async () => {
@@ -42,7 +44,7 @@ const TenantManager = () => {
         .catch(error => console.log(error));
     };
     getListTenants();
-  }, [isFocused]);
+  }, [focusLoading]);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -54,12 +56,11 @@ const TenantManager = () => {
   }, []);
 
   const renderListTenants = (item, index) => {
-    let value = item;
     return (
       <CustomPersonInfor
         styleView={{marginTop: 10}}
         avatar={item?.avatar}
-        userName={item?.userName}
+        userName={item?.fullName}
         phoneNumber={item?.phoneNumber}
         pressAvatar={() => navigation.navigate('TenantList', item?.id)}
       />
@@ -72,6 +73,7 @@ const TenantManager = () => {
         iconLeft={icons.ic_back}
         label={'Quản lý người thuê'}
         iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconSecondRight={icons.ic_moreOption}
         keyboard={keyboard}
         textSearch={textSearch}
@@ -96,7 +98,10 @@ const TenantManager = () => {
 
       <CustomButtonBottom
         label={'Thêm mới người thuê'}
-        onPress={() => navigation.navigate('AddNewTenant')}
+        onPress={() => {
+          dispatch(updateStatus(false));
+          navigation.navigate('AddNewTenant');
+        }}
       />
     </View>
   );

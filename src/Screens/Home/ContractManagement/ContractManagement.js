@@ -1,16 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  KeyboardAvoidingView,
-  FlatList,
-  Keyboard,
-  Text,
-} from 'react-native';
+import {StyleSheet, View, KeyboardAvoidingView, Keyboard} from 'react-native';
 import {icons, colors} from '../../../Constants';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
@@ -18,17 +8,15 @@ import CustomIsActive from './CustomIsActive';
 import CustomOutOfDate from './CustomOutOfDate';
 import CustomLiquidated from './CustomLiquidated';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
-import {GetListContractsApi} from '../../../Api/Home/ContractApis/ContractApis';
-import {useSelector} from 'react-redux';
-import {token} from '../../../Store/slices/tokenSlice';
+import {useDispatch} from 'react-redux';
+import {updateStatus} from '../../../Store/slices/statusSlice';
 
 const ContractManagement = props => {
   const navigation = useNavigation();
   const [keyboard, setKeyboard] = useState(false);
   const [textSearch, setTextSearch] = useState('');
   const [isActive, setIsActive] = useState(1);
-  const [listContracts, setListContracts] = useState([]);
-  const tokenStore = useSelector(token);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -37,19 +25,6 @@ const ContractManagement = props => {
     Keyboard.addListener('keyboardDidHide', () => {
       setKeyboard(false);
     });
-  }, []);
-
-  useEffect(() => {
-    const getListContracts = async () => {
-      await GetListContractsApi(tokenStore)
-        .then(res => {
-          if (res?.status == 200) {
-            setListContracts(res?.data);
-          }
-        })
-        .catch(error => console.log(error));
-    };
-    getListContracts();
   }, []);
 
   return (
@@ -115,7 +90,10 @@ const ContractManagement = props => {
           ) : null}
           <CustomButtonBottom
             label={'Thêm hợp đồng'}
-            onPress={() => navigation.navigate('CreateContract')}
+            onPress={() => {
+              dispatch(updateStatus(false));
+              navigation.navigate('CreateContract');
+            }}
           />
         </View>
       </KeyboardAvoidingView>

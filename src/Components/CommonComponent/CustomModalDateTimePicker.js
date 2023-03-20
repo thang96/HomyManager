@@ -44,7 +44,7 @@ const CustomModalDateTimePicker = props => {
               <TouchableOpacity
                 onPress={onPress}
                 style={{marginHorizontal: 20}}>
-                <Text style={styles.text}>Xác nhận</Text>
+                <Text style={styles.text}>Đóng</Text>
               </TouchableOpacity>
             </View>
           </View>

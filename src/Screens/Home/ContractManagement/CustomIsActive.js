@@ -20,10 +20,13 @@ import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetListContractsApi} from '../../../Api/Home/ContractApis/ContractApis';
 import {dateToDMY} from '../../../utils/common';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 
 const CustomIsActive = props => {
   const tokenStore = useSelector(token);
-  const isFocus = useIsFocused();
+  const statusLoading = useSelector(statusState);
+  const [listContract, setListContract] = useState([]);
+
   useEffect(() => {
     const getListData = async () => {
       await GetListContractsApi(tokenStore)
@@ -35,9 +38,8 @@ const CustomIsActive = props => {
         .catch(error => console.log(error));
     };
     getListData();
-  }, [isFocus]);
-  const [listContract, setListContract] = useState([]);
-  console.log(listContract);
+  }, [statusLoading]);
+
   const renderContract = (item, index) => {
     let eachStartDate = new Date(item?.startDate);
     let eachEndDate = new Date(item?.endDate);

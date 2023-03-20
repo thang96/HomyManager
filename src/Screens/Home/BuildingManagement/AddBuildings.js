@@ -11,7 +11,6 @@ import {
   Alert,
 } from 'react-native';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
-import CustomManagerInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
@@ -39,6 +38,7 @@ import {
   updateManagers,
 } from '../../../Store/slices/commonSlice';
 import {GetListManagersApi} from '../../../Api/Home/ManagerApis/ManagerApis';
+import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 
 const AddBuildings = props => {
   const navigation = useNavigation();
@@ -438,7 +438,7 @@ const AddBuildings = props => {
               keyExtractor={(key, index) => `${key?.id}${index.toString()}`}
               renderItem={({item, index}) => {
                 return (
-                  <CustomManagerInfor
+                  <CustomPersonInfor
                     styleView={{marginTop: 10}}
                     avatar={item?.avatar}
                     userName={`${item?.fullName}`}

@@ -16,9 +16,11 @@ const RenderService = props => {
       onPress={onPress}
       style={[styles.viewContainer, viewStyle, {width: widthWindow}]}>
       {icon && <Image source={icon} style={styles.icon} />}
-      <View>
+      <View style={{flex: 1}}>
         {label && (
-          <Text style={{fontSize: 13, fontWeight: '600', color: '#374047'}}>
+          <Text
+            numberOfLines={1}
+            style={{fontSize: 13, fontWeight: '600', color: '#374047'}}>
             {label}
           </Text>
         )}

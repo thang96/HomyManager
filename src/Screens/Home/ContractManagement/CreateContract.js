@@ -51,6 +51,7 @@ import {
 } from '../../../Store/slices/commonSlice';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import {CreateNewContractApi} from '../../../Api/Home/ContractApis/ContractApis';
+import {updateStatus} from '../../../Store/slices/statusSlice';
 
 const CreateContract = () => {
   const navigation = useNavigation();
@@ -59,11 +60,13 @@ const CreateContract = () => {
   const serviceSelect = useSelector(serviceState);
   const amenitySelect = useSelector(amenityState);
   const tenantSelect = useSelector(tenantState);
-  const timeNow = new Date();
+  const [timeStart, setTimeStart] = useState(new Date());
+  const [timeEnd, setTimeEnd] = useState(new Date());
+  const [timeChargeDate, setTimeChargeDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
 
-  const [startDate, setStartDate] = useState('Chọn ngày');
-  const [endDate, setEndDate] = useState('Chọn ngày');
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const [startChargeDate, setStartChargeDate] = useState();
   const [paymentDuration, setpaymentDuration] = useState();
   const [leasingFee, setLeasingFee] = useState();
@@ -86,7 +89,6 @@ const CreateContract = () => {
   const [modalCamera, setModalCamera] = useState(false);
 
   const [hause, setHause] = useState('');
-  const [unit, setUnit] = useState('');
   const [listHauses, setListHauses] = useState([]);
   const [listUnits, setListUnits] = useState([]);
   const [listService, setListService] = useState([]);
@@ -317,6 +319,7 @@ const CreateContract = () => {
     await CreateNewContractApi(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
+          dispatch(updateStatus(true));
           Alert.alert('Thành công', 'Tạo hợp đồng thành công', [
             {text: 'OK', onPress: () => navigation.goBack()},
           ]);
@@ -324,7 +327,7 @@ const CreateContract = () => {
       })
       .catch(error => console.log(error));
   };
-  console.log('render');
+
   return (
     <View style={styles.container}>
       {loading && <CustomLoading />}
@@ -348,7 +351,7 @@ const CreateContract = () => {
       {modalStartDate && (
         <CustomModalDateTimePicker
           onCancel={() => setModalStartDate(false)}
-          value={timeNow}
+          value={timeStart}
           mode={'date'}
           openPicker={modalStartDate}
           onDateChange={value => {
@@ -361,7 +364,7 @@ const CreateContract = () => {
       {modalEndDate && (
         <CustomModalDateTimePicker
           onCancel={() => setModalEndDate(false)}
-          value={timeNow}
+          value={timeEnd}
           mode={'date'}
           openPicker={modalEndDate}
           onDateChange={value => {
@@ -374,7 +377,7 @@ const CreateContract = () => {
       {modalStartChargeDate && (
         <CustomModalDateTimePicker
           onCancel={() => setModalStartChargeDate(false)}
-          value={timeNow}
+          value={timeChargeDate}
           mode={'date'}
           openPicker={modalStartChargeDate}
           onDateChange={value => {
@@ -445,8 +448,16 @@ const CreateContract = () => {
           styleButtonRight={{marginLeft: 5}}
           valueLeft={startDateValue}
           valueRight={endDateValue}
-          onPressLeft={() => setModalStartDate(true)}
-          onPressRightt={() => setModalEndDate(true)}
+          onPressLeft={() => {
+            setStartDate(dateToYMD(timeStart));
+            setStartDateValue(dateToDMY(timeStart));
+            setModalStartDate(true);
+          }}
+          onPressRightt={() => {
+            setEndDate(dateToYMD(timeEnd));
+            setEndDateValue(dateToDMY(timeEnd));
+            setModalEndDate(true);
+          }}
         />
 
         <CustomInput
@@ -456,7 +467,11 @@ const CreateContract = () => {
           title={'Ngày bắt đầu tính tiền'}
           placeholder={'Chọn ngày'}
           value={startChargeDateValue}
-          onPress={() => setModalStartChargeDate(true)}
+          onPress={() => {
+            setStartChargeDate(dateToYMD(timeChargeDate));
+            setStartChargeDateValue(dateToDMY(timeChargeDate));
+            setModalStartChargeDate(true);
+          }}
         />
 
         <CustomInput
@@ -497,7 +512,6 @@ const CreateContract = () => {
         <CustomTextTitle
           label={'Đại diện người cho thuê'}
           labelButton={'Thêm mới'}
-          // onPress={() => navigation.navigate('TenantList')}
         />
 
         <View style={styles.line} />
@@ -519,7 +533,7 @@ const CreateContract = () => {
             horizontal={false}
             scrollEnabled={false}
             numColumns={2}
-            keyExtractor={key => key.label}
+            keyExtractor={key => key.id}
             data={listService}
             renderItem={({item, index}) => renderSelectSevice(item, index)}
           />
@@ -547,7 +561,7 @@ const CreateContract = () => {
             horizontal={false}
             scrollEnabled={false}
             numColumns={3}
-            keyExtractor={key => key.value}
+            keyExtractor={key => key.id}
             data={listAmenity}
             renderItem={({item, index}) => renderSelectAmenity(item, index)}
           />

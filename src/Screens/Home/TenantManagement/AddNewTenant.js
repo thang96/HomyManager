@@ -17,12 +17,15 @@ import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
 import {dateToDMY, dateToYMD} from '../../../utils/common';
 import {CreateNewTenantApi} from '../../../Api/Home/TenantApis/TenantApis';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 
 const AddNewTenant = () => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
+  const dispatch = useDispatch();
+
   const [timeNow, setTimeNow] = useState(new Date());
   const [timeNowIssueDate, setTimeNowIssueDate] = useState(new Date());
   const [userName, setUserName] = useState('');
@@ -127,10 +130,13 @@ const AddNewTenant = () => {
     await CreateNewTenantApi(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
+          dispatch(updateStatus(true));
           Alert.alert('Thành công', 'Tạo người thuê thành công', [
             {
               text: 'OK',
-              onPress: () => navigation.goBack(),
+              onPress: () => {
+                navigation.goBack();
+              },
             },
           ]);
         }

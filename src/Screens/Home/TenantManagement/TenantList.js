@@ -13,12 +13,12 @@ import {
 } from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomManagerInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
 import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {useDispatch, useSelector} from 'react-redux';
 import {tenantState, updateTenants} from '../../../Store/slices/commonSlice';
+import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 
 const TenantList = () => {
   const navigation = useNavigation();
@@ -56,7 +56,7 @@ const TenantList = () => {
       setListTenants(newList);
     };
     return (
-      <CustomManagerInfor
+      <CustomPersonInfor
         styleView={{marginTop: 10}}
         avatar={item?.avatar}
         userName={item?.fullName}
