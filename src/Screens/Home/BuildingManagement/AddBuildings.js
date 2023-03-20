@@ -244,7 +244,7 @@ const AddBuildings = props => {
 
     setAlbumImage(newResult);
   };
-  console.log(name);
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       {loading && <CustomLoading />}

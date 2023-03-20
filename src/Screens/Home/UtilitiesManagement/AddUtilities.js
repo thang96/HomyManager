@@ -59,7 +59,7 @@ const AddUtilities = props => {
           <Text style={styles.content}>
             Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ
           </Text>
-          <CustomTextTitle label={'Thông tin dịch vụ'} />
+          <CustomTextTitle label={'Thông tin tiện ích'} />
 
           <CustomInput
             type={'input'}
