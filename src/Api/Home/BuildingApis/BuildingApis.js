@@ -152,3 +152,46 @@ export const DeleteBuildingApi = (token, houseId) => {
       });
   });
 };
+
+export const PostImageBuildingApi = (token, hauseId, hauseImages) => {
+  let formHause = new FormData();
+  for (let i = 0; i < hauseImages.length; i++) {
+    let image = hauseImages[i];
+    formHause.append('files', {
+      uri: image?.uri,
+      name: getFileName(image),
+      type: 'image/jpeg',
+    });
+  }
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${BASEURL}/houses/${hauseId}/files/upload`, formHause, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
+const getFileName = file => {
+  if (file.name !== undefined) {
+    return file.name;
+  } else if (file.filename !== undefined && file.filename !== null) {
+    return file.filename;
+  } else {
+    const type = file?.mime || file?.type;
+    return (
+      Math.floor(Math.random() * Math.floor(999999999)) +
+      '.' +
+      type.split('/')[1]
+    );
+  }
+};

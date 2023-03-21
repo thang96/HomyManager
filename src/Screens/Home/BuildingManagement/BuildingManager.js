@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {GetListHausesApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
@@ -19,15 +19,17 @@ import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearch
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {colors, icons, images} from '../../../Constants';
 import {token} from '../../../Store/slices/tokenSlice';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 
 const BuildingManager = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const loadingHause = useSelector(statusState);
   const [keyboard, setKeyboard] = useState(false);
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
   const [listHauses, setListHauses] = useState([]);
   const tokenStore = useSelector(token);
-  const isFocused = useIsFocused();
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -50,13 +52,14 @@ const BuildingManager = () => {
         .catch(error => console.log(error));
     };
     getData();
-  }, [isFocused]);
+  }, [loadingHause]);
 
   const renderlistHauses = (item, index) => {
     return (
       <CustomRenderBuilding
+        imageBuilding={item?.image?.fileUrl}
         name={`${item?.name}`}
-        address={`${item?.city?.name} - ${item?.district?.name} - ${item?.ward?.name} - ${item?.address}`}
+        address={`${item?.address}`}
         numberRooms={`${item?.rooms ?? 0}`}
         onPress={() => {
           let hauseId = item?.id;
@@ -99,7 +102,10 @@ const BuildingManager = () => {
         </View>
         <CustomButtonBottom
           label={'Thêm tòa nhà mới'}
-          onPress={() => navigation.navigate('AddBuildings')}
+          onPress={() => {
+            dispatch(updateStatus(true));
+            navigation.navigate('AddBuildings');
+          }}
         />
       </View>
     </View>
@@ -113,16 +119,27 @@ const styles = StyleSheet.create({
 });
 
 const CustomRenderBuilding = props => {
-  const {name, address, onPress, numberRooms} = props;
+  const {name, address, onPress, numberRooms, imageBuilding} = props;
   return (
     <TouchableOpacity onPress={onPress} style={styleRender.button}>
-      <Image source={icons.ic_building} style={styleRender.image} />
+      <Image
+        source={
+          typeof imageBuilding == 'string'
+            ? {uri: `${imageBuilding}`}
+            : icons.ic_building
+        }
+        style={styleRender.image}
+      />
       <View style={styleRender.viewBetween}>
         <View style={styleRender.viewRow}>
           <Text style={styleRender.name}>{name}</Text>
           <Image source={icons.ic_plus} style={styleRender.icon} />
         </View>
-        <Text style={styleRender.address}>{address}</Text>
+        <View style={{flex: 1}}>
+          <Text numberOfLines={2} style={styleRender.address}>
+            {address}
+          </Text>
+        </View>
         <View style={[styleRender.viewRow]}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <View style={styleRender.viewImage}>
@@ -131,7 +148,7 @@ const CustomRenderBuilding = props => {
                 style={{width: 20, height: 20, tintColor: colors.mainColor}}
               />
             </View>
-            <View style={{alignItems: 'center', height: 40}}>
+            <View style={{alignItems: 'center'}}>
               <Text
                 style={{
                   fontSize: 11,
@@ -186,7 +203,7 @@ const styleRender = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 30,
-    backgroundColor: colors.backgroundInput,
+    backgroundColor: 'rgba(116,116,116,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
   },

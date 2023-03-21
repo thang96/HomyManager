@@ -52,7 +52,12 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {fontSize: 17, color: colors.mainColor, fontWeight: 'bold'},
-  label: {fontSize: 15, color: 'black', fontWeight: 'bold', marginTop: 10},
+  label: {
+    fontSize: 15,
+    color: colors.backgroundButton,
+    fontWeight: '600',
+    marginTop: 10,
+  },
   viewBetween: {
     flexDirection: 'row',
     alignItems: 'center',

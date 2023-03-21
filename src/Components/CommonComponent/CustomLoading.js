@@ -21,7 +21,7 @@ const CustomLoading = props => {
               styleButton={styles.button}
             />
           )}
-          <Text style={styles.textLoading}>Loading</Text>
+          <Text style={styles.textLoading}>Xin chờ...</Text>
           <ActivityIndicator color={'white'} size={60} />
         </View>
       </Modal>

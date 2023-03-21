@@ -35,6 +35,7 @@ import RequestResend from './Home/WaterAndElectricityManagement/RequestResend';
 //----------- ContractManagement
 import ContractManagement from './Home/ContractManagement/ContractManagement';
 import CreateContract from './Home/ContractManagement/CreateContract';
+import ContractDetail from './Home/ContractManagement/ContractDetail';
 //----------- BillManagement
 import BillManagement from './Home/BillManagement/BillManagement';
 //----------- UserManager
@@ -87,6 +88,7 @@ export {
   //-- ContractManagement
   ContractManagement,
   CreateContract,
+  ContractDetail,
   //-- BillManagement
   BillManagement,
   //-- ServiceManager

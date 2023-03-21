@@ -20,10 +20,10 @@ export const GetListContractsApi = token => {
   });
 };
 
-export const GetContractDetailAPi = (token, serviceId) => {
+export const GetContractDetailAPi = (token, contractId) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/contracts/${serviceId}`, {
+      .get(`${BASEURL}/contracts/${contractId}`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

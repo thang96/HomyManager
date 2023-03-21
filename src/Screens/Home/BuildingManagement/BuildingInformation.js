@@ -1,11 +1,9 @@
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
-import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomViewInfor from '../../../Components/ComponentHome/CustomViewInfor';
-import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
+import BoxShowInfor from '../../../Components/CommonComponent/BoxShowInfor';
 import {FlatList} from 'react-native-gesture-handler';
 import CustomAppBarBuildingInfor from '../../../Components/CommonComponent/CustomAppBarBuildingInfor';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
@@ -13,9 +11,11 @@ import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {HauseDetailApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
+import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetListUnitsApi} from '../../../Api/Home/UnitApis/UnitApis';
+import PaymentMethods from '../../../Components/ComponentHome/PaymentMethods';
 
 const BuildingInformation = () => {
   const navigation = useNavigation();
@@ -64,6 +64,10 @@ const BuildingInformation = () => {
     return <RenderAmenity label={item?.name} />;
   };
 
+  const renderImageHauses = (item, index) => {
+    return <RenderImage data={item} deleteItem={async () => {}} />;
+  };
+
   return (
     <View style={styles.container}>
       {loading && (
@@ -75,7 +79,7 @@ const BuildingInformation = () => {
       <CustomAppBarBuildingInfor
         pressIconRight={() => navigation.navigate('NotificationScreen')}
         nameBuilding={`${hauseInfor?.name}`}
-        addressBuilding={`${hauseInfor?.city?.name}, ${hauseInfor?.district?.name}, ${hauseInfor?.ward?.name}, ${hauseInfor?.address}`}
+        addressBuilding={`${hauseInfor?.address}`}
         onPressLeft={() => navigation.goBack()}
       />
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 20}}>
@@ -120,65 +124,46 @@ const BuildingInformation = () => {
           labelButton={'Chỉnh sửa'}
         />
         <View style={[styles.viewRow, {marginBottom: 10}]}>
-          <CustomViewInfor
-            title={'Giờ mở cửa'}
-            label={openTimeValue}
-            content={'AM'}
+          <BoxShowInfor
+            label={'Giờ mở cửa'}
+            content={openTimeValue}
+            unit={'AM'}
           />
-          <CustomViewInfor
-            title={'Giờ đóng cửa'}
-            label={closeTimeValue}
-            content={'PM'}
+          <View style={{width: 10}} />
+          <BoxShowInfor
+            label={'Giờ đóng cửa'}
+            content={closeTimeValue}
+            unit={'PM'}
           />
         </View>
-        <CustomViewInfor
-          title={'Chi phí thuê'}
-          label={`${hauseInfor?.leasingFee}`}
-          content={'VNĐ'}
+        <BoxShowInfor
+          label={'Chi phí thuê'}
+          content={`${hauseInfor?.leasingFee}`}
+          unit={'VNĐ'}
         />
-
         <View style={styles.line} />
 
-        <CustomTextTitle
-          label={'Quản lý tòa nhà'}
-          labelButton={'Thêm'}
-          icon={icons.ic_plus}
-        />
-
-        <CustomPersonInfor
-          styleView={{marginTop: 10}}
-          userName={'Trường Vân'}
-          phoneNumber={`0123456789`}
-          onPress={() => {}}
-        />
+        <CustomTextTitle label={'Hình ảnh tòa nhà'} />
+        {hauseInfor?.images?.length > 0 && (
+          <FlatList
+            listKey="imagesHause"
+            horizontal
+            data={hauseInfor?.images}
+            keyExtractor={key => key?.id}
+            renderItem={({item, index}) => renderImageHauses(item, index)}
+          />
+        )}
         <View style={styles.line} />
 
         <CustomTextTitle label={'Thông tin thanh toán'} />
-
-        <View style={[styles.viewRow, {marginBottom: 10}]}>
-          <CustomViewInfor
-            title={'Thời gian đóng tiền'}
-            label={`Ngày ${hauseInfor?.paymentDateFrom}`}
-          />
-          <CustomViewInfor
-            title={'Hạn'}
-            label={`Ngày ${hauseInfor?.paymentDateTo}`}
-          />
-        </View>
-        <CustomViewInfor
-          title={'Ngày chốt tiền'}
-          label={
-            hauseInfor?.billingDate == 0 ? 'Cuối tháng' : 'Ngày 1 tháng sau'
-          }
+        <PaymentMethods
+          icon={icons?.ic_cashPayment}
+          title={'Thanh toán bằng tiền mặt'}
+          describe={'Thanh toán bằng tiền mặt'}
         />
-
         <View style={styles.line} />
 
-        <CustomTextTitle
-          label={'Dịch vụ có phí'}
-          labelButton={'Thêm'}
-          icon={icons.ic_plus}
-        />
+        <CustomTextTitle label={'Dịch vụ có phí'} />
         {hauseInfor?.chargeServices?.length > 0 ? (
           <FlatList
             listKey="chargeServices"
@@ -219,8 +204,9 @@ const BuildingInformation = () => {
               styles.pickerTotal
             }>{`${hauseInfor?.amenities.length}`}</Text>
         </View>
+        <View style={{height: 56}} />
 
-        <CustomTwoButtonBottom
+        {/* <CustomTwoButtonBottom
           styleView={{marginVertical: 20}}
           leftLabel={'Hủy'}
           styleButtonLeft={{
@@ -234,7 +220,7 @@ const BuildingInformation = () => {
             fontWeight: '600',
           }}
           rightLabel={'Lưu'}
-        />
+        /> */}
       </ScrollView>
     </View>
   );
@@ -243,10 +229,10 @@ const BuildingInformation = () => {
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: colors.backgroundGrey},
   line: {
-    height: 1,
+    height: 0.5,
     width: '100%',
     alignSelf: 'center',
-    backgroundColor: 'black',
+    backgroundColor: '#97A1A7',
     marginTop: 20,
     marginBottom: 10,
   },

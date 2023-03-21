@@ -43,15 +43,6 @@ const CustomAppBarRoomInfor = props => {
               {nameRoom}
             </Text>
           </View>
-          <CustomButton
-            disabled={true}
-            styleButton={[
-              {backgroundColor: colors.backgroundButton},
-              styles.styleButton,
-            ]}
-            label={'Đã thuê'}
-            styleLabel={{color: 'white', fontSize: 12}}
-          />
         </View>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View style={{marginTop: 5}}>

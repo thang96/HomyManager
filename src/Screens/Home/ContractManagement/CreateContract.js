@@ -199,7 +199,7 @@ const CreateContract = () => {
       });
       setServiceIds(eachServiceIds);
       setAmenityIds(eachAmenityIds);
-      setTenantIds(eachAmenityIds);
+      setTenantIds(eachTenantIds);
     };
     setListData();
   }, [listService, listAmenity, listTenant]);
@@ -316,6 +316,7 @@ const CreateContract = () => {
       tenantIds: tenantIds,
       description: '',
     };
+
     await CreateNewContractApi(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
@@ -507,12 +508,12 @@ const CreateContract = () => {
           onEndEditing={event => setDepositMoney(event.nativeEvent.text)}
         />
 
-        <View style={styles.line} />
+        {/* <View style={styles.line} />
 
         <CustomTextTitle
           label={'Đại diện người cho thuê'}
           labelButton={'Thêm mới'}
-        />
+        /> */}
 
         <View style={styles.line} />
 
@@ -574,7 +575,7 @@ const CreateContract = () => {
         <View style={styles.line} />
 
         <CustomTextTitle
-          label={'Danh sách người ở'}
+          label={'Danh sách người thuê'}
           labelButton={'Thêm'}
           icon={icons.ic_plus}
           onPress={() => navigation.navigate('TenantList')}

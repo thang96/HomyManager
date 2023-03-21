@@ -23,6 +23,7 @@ import {dateToDMY} from '../../../utils/common';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 
 const CustomIsActive = props => {
+  const navigation = useNavigation();
   const tokenStore = useSelector(token);
   const statusLoading = useSelector(statusState);
   const [listContract, setListContract] = useState([]);
@@ -47,7 +48,8 @@ const CustomIsActive = props => {
     let endDate = dateToDMY(eachEndDate);
     return (
       <View style={styles.viewContract}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('ContractDetail', item?.id)}>
           <View style={[styles.viewRow, {justifyContent: 'space-between'}]}>
             <Text style={{fontWeight: '600', color: '#5F6E78'}}>
               {item?.description}

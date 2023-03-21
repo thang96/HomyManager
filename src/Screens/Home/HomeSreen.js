@@ -22,16 +22,16 @@ import {colors, icons, images, svgs} from '../../Constants';
 import {token} from '../../Store/slices/tokenSlice';
 import {updateUserInfor, userInfor} from '../../Store/slices/userInfoSlice';
 import CustomModalNotify from '../../Components/CommonComponent/CustomModalNotify';
+import {GetHomeScreenInforApi} from '../../Api/Home/HomeApis';
+import {statusState} from '../../Store/slices/statusSlice';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-
+  const statusLoadingHome = useSelector(statusState);
   const [loading, setLoading] = useState(true);
   const [modalNotify, setModalNotify] = useState(false);
   const [textSearch, setTextSearch] = useState('');
-  const [listHauses, setlistHausess] = useState([]);
-  const [listTenants, setlistTenants] = useState([]);
-  const [listContracts, setlistContracts] = useState([]);
+  const [homeInfor, setHomeInfor] = useState('');
   const widthImage = Dimensions.get('window').width / 2 - 20;
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
@@ -49,6 +49,13 @@ const HomeScreen = () => {
   useEffect(() => {
     const getData = async () => {
       if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
+        await GetHomeScreenInforApi(tokenStore)
+          .then(res => {
+            if (res?.status == 200) {
+              setHomeInfor(res?.data);
+            }
+          })
+          .catch(error => console.log(error));
         await GetUserAPi(tokenStore)
           .then(res => {
             if (res?.status == 200) {
@@ -57,34 +64,10 @@ const HomeScreen = () => {
             }
           })
           .catch(error => console.log(error));
-
-        await GetListHausesApi(tokenStore)
-          .then(res => {
-            if (res?.status == 200) {
-              setlistHausess(res?.data);
-            }
-          })
-          .catch(error => console.log(error));
-
-        await GetListTenantsApi(tokenStore)
-          .then(res => {
-            if (res?.status == 200) {
-              setlistTenants(res?.data);
-            }
-          })
-          .catch(error => console.log(error));
-
-        await GetListContractsApi(tokenStore)
-          .then(res => {
-            if (res?.status == 200) {
-              setlistContracts(res?.data);
-            }
-          })
-          .catch(error => console.log(error));
       }
     };
     getData();
-  }, []);
+  }, [statusLoadingHome]);
 
   return (
     <View style={styles.container}>
@@ -122,7 +105,7 @@ const HomeScreen = () => {
             imageBG={images.im_frame1}
             icon={icons.ic_building}
             label={'Số tòa nhà'}
-            labelNumber={`${listHauses.length}`}
+            labelNumber={`${homeInfor?.houseTotal}`}
             onPress={() => navigation.navigate('BuildingManager')}
           />
 
@@ -132,7 +115,7 @@ const HomeScreen = () => {
             imageBG={images.im_frame2}
             icon={icons.ic_appartment}
             label={'Tổng số phòng'}
-            labelNumber={'34'}
+            labelNumber={`${homeInfor?.unitTotal}`}
             onPress={async () => {}}
           />
         </View>
@@ -143,7 +126,7 @@ const HomeScreen = () => {
             imageBG={images.im_frame3}
             icon={icons.ic_peoples}
             label={'Tổng số người'}
-            labelNumber={`${listTenants.length}`}
+            labelNumber={`${homeInfor?.tenantTotal}`}
             onPress={() => navigation.navigate('TenantManager')}
           />
           <CustomViewButton
@@ -152,7 +135,7 @@ const HomeScreen = () => {
             imageBG={images.im_frame4}
             icon={icons.ic_hause}
             label={'Phòng trống'}
-            labelNumber={'3'}
+            labelNumber={`${homeInfor?.emptyUnitTotal}`}
           />
         </View>
         <View style={styles.viewOption}>
@@ -160,20 +143,20 @@ const HomeScreen = () => {
           <View style={[styles.viewRow, {marginTop: 15}]}>
             <CustomOptionBT
               title={'Hợp đồng'}
-              content={`${listContracts.length}`}
+              content={`${homeInfor?.contractTotal}`}
               svgIcon={svgs.Contract}
               styleBGIcon={{backgroundColor: '#ebf9fd'}}
               onPress={() => navigation.navigate('ContractManagement')}
             />
             <CustomOptionBT
               title={'Công việc'}
-              content={'12'}
+              content={`${homeInfor?.taskTotal}`}
               svgIcon={svgs.Gear}
               styleBGIcon={{backgroundColor: '#fff3e9'}}
             />
             <CustomOptionBT
               title={'Hóa đơn'}
-              content={'20'}
+              content={`${homeInfor?.invoiceTotal}`}
               svgIcon={svgs.DocumentGreen}
               styleBGIcon={{backgroundColor: '#e6f6e2'}}
               UserManager

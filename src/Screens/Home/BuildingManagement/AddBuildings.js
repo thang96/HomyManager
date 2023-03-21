@@ -39,6 +39,7 @@ import {
 } from '../../../Store/slices/commonSlice';
 import {GetListManagersApi} from '../../../Api/Home/ManagerApis/ManagerApis';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
+import RenderImage from '../../../Components/ComponentHome/RenderImage';
 
 const AddBuildings = props => {
   const navigation = useNavigation();
@@ -58,32 +59,7 @@ const AddBuildings = props => {
   const [districtId, setDistrictId] = useState('');
   const [wardId, setWardId] = useState('');
   const [address, setAddress] = useState('');
-
-  const goToStepTwo = () => {
-    let data = {
-      name: name,
-      numberOfFloor: numberOfFloor,
-      openTime: `${openTime}`,
-      closeTime: `${closeTime}`,
-      leasingFee: parseInt(leasingFee),
-      description: description,
-      cityId: cityId,
-      districtId: districtId,
-      wardId: wardId,
-      address: address,
-    };
-    if (name == '' && numberOfFloor == '') {
-      Alert.alert(
-        'Thiếu trường thông tin',
-        'Vui lòng điền đầy đủ mục thông tin có dấu *',
-      );
-    } else {
-      dispatch(updateCommon(data));
-      navigation.navigate('AddBuildingsStep2');
-    }
-  };
-
-  const [albumImage, setAlbumImage] = useState([]);
+  const [hauseImages, setHauseImages] = useState([]);
 
   const [listCity, setListCity] = useState([]);
   const [listDistrict, setListDistrict] = useState([]);
@@ -180,11 +156,12 @@ const AddBuildings = props => {
   };
 
   const openCamera = () => {
+    setModalCamera(false);
     ImagePicker.openCamera({width: 300, height: 400})
       .then(image => {
         let eachImg = {...image, uri: image?.path};
-        addResult(eachImg);
-        setModalCamera(false);
+        const eachResult = [...hauseImages, eachImg];
+        setHauseImages(eachResult);
       })
       .catch(e => {
         ImagePicker.clean();
@@ -193,6 +170,7 @@ const AddBuildings = props => {
   };
 
   const openGallery = () => {
+    setModalCamera(false);
     ImagePicker.openPicker({multiple: true})
       .then(async image => {
         let albumImg = [];
@@ -201,8 +179,9 @@ const AddBuildings = props => {
           let eachElement = {...element, uri: element?.path};
           albumImg.push(eachElement);
         }
-        addResultGallery(albumImg);
-        setModalCamera(false);
+        const eachResult = [...hauseImages];
+        const newResult = eachResult.concat(albumImg);
+        setHauseImages(newResult);
       })
       .catch(e => {
         ImagePicker.clean();
@@ -210,41 +189,44 @@ const AddBuildings = props => {
       });
   };
 
-  const addResultGallery = album => {
-    const eachResult = [...albumImage];
-    const newResult = eachResult.concat(album);
-    setAlbumImage(newResult);
-  };
-  const addResult = image => {
-    const eachResult = [...albumImage, image];
-    setAlbumImage(eachResult);
-  };
   const renderImage = (item, index) => {
     return (
-      <View>
-        <View style={styles.viewRender}>
-          <CustomButton
-            onPress={() => deleteItem(item, index)}
-            styleButton={styles.customButtonIcon}
-            styleIcon={styles.imageStyle}
-            icon={icons.ic_circle}
-          />
-          <Image
-            source={{uri: item?.uri}}
-            style={{width: 180, height: 180, marginHorizontal: 5}}
-            resizeMode={'contain'}
-          />
-        </View>
-      </View>
+      <RenderImage
+        deleteButton={true}
+        data={item}
+        deleteItem={() => {
+          let result = [...hauseImages];
+          let newResult = result.filter(itemResult => itemResult !== item);
+          setHauseImages(newResult);
+        }}
+      />
     );
   };
-  const deleteItem = (item, index) => {
-    let result = [...albumImage];
-    let newResult = result.filter(itemResult => itemResult !== item);
 
-    setAlbumImage(newResult);
+  const goToStepTwo = () => {
+    let data = {
+      name: name,
+      numberOfFloor: numberOfFloor,
+      openTime: `${openTime}`,
+      closeTime: `${closeTime}`,
+      leasingFee: parseInt(leasingFee),
+      description: description,
+      cityId: cityId,
+      districtId: districtId,
+      wardId: wardId,
+      address: address,
+      hauseImages: hauseImages,
+    };
+    if (name == '' && numberOfFloor == '') {
+      Alert.alert(
+        'Thiếu trường thông tin',
+        'Vui lòng điền đầy đủ mục thông tin có dấu *',
+      );
+    } else {
+      dispatch(updateCommon(data));
+      navigation.navigate('AddBuildingsStep2');
+    }
   };
-
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       {loading && <CustomLoading />}
@@ -425,13 +407,13 @@ const AddBuildings = props => {
               onEndEditing={evt => setAddress(evt.nativeEvent.text)}
             />
           </View>
-          <View style={styles.line} />
+          {/* <View style={styles.line} />
           <CustomTextTitle
             label={'Quản lý tòa nhà'}
             labelButton={'Thêm'}
             icon={icons.ic_plus}
             onPress={() => navigation.navigate('ManagerList')}
-          />
+          /> */}
           {managerSelect.length > 0 && (
             <FlatList
               data={managerSelect}
@@ -456,17 +438,15 @@ const AddBuildings = props => {
           </Text>
           <View
             style={{
-              height: 200,
-              borderWidth: 0.5,
-              borderColor: colors.borderInput,
+              height: 220,
               marginVertical: 5,
               borderRadius: 10,
               backgroundColor: 'white',
             }}>
-            {albumImage.length > 0 ? (
+            {hauseImages.length > 0 ? (
               <FlatList
                 horizontal
-                data={albumImage}
+                data={hauseImages}
                 keyExtractor={uuid}
                 renderItem={({item}) => renderImage(item)}
               />
@@ -560,18 +540,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   labelUploadIM: {color: 'white', fontWeight: '500', fontSize: 15},
-  viewRender: {
-    height: 210,
-    width: 210,
-    borderWidth: 0.5,
-    borderColor: colors.mainColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginRight: 10,
-  },
-  customButtonIcon: {position: 'absolute', right: 3, top: 3, zIndex: 1},
-  imageStyle: {width: 20, height: 20, tintColor: 'red'},
 });
 
 export default AddBuildings;

@@ -31,6 +31,7 @@ import {
   AddNewManager,
   TenantDetail,
   ManagerDetail,
+  ContractDetail,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -186,6 +187,13 @@ const StackHomepage = () => {
       <Stack.Screen
         component={CreateContract}
         name={'CreateContract'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={ContractDetail}
+        name={'ContractDetail'}
         options={{
           headerShown: false,
         }}

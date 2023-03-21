@@ -28,9 +28,13 @@ import {
   updateAmenity,
   updateServices,
 } from '../../../Store/slices/commonSlice';
-import {CreateNewUnitApi} from '../../../Api/Home/UnitApis/UnitApis';
+import {
+  CreateNewUnitApi,
+  PostImageUnitApi,
+} from '../../../Api/Home/UnitApis/UnitApis';
 import {updateStatus} from '../../../Store/slices/statusSlice';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
+import RenderImage from '../../../Components/ComponentHome/RenderImage';
 
 const AddRoom = () => {
   const navigation = useNavigation();
@@ -52,7 +56,7 @@ const AddRoom = () => {
   const [notice, setNotice] = useState('');
   const [serviceIds, setServiceIds] = useState([]);
   const [amenityIds, setAmenityIds] = useState([]);
-  const [albumImage, setAlbumImage] = useState([]);
+  const [unitImages, setUnitImages] = useState([]);
 
   const [listHauses, setListHauses] = useState([]);
   const [listService, setListService] = useState([]);
@@ -151,11 +155,12 @@ const AddRoom = () => {
   };
 
   const openCamera = () => {
+    setModalCamera(false);
     ImagePicker.openCamera({width: 300, height: 400})
       .then(image => {
         let eachImg = {...image, uri: image?.path};
-        addResult(eachImg);
-        setModalCamera(false);
+        const eachResult = [...unitImages, eachImg];
+        setUnitImages(eachResult);
       })
       .catch(e => {
         ImagePicker.clean();
@@ -164,6 +169,7 @@ const AddRoom = () => {
   };
 
   const openGallery = () => {
+    setModalCamera(false);
     ImagePicker.openPicker({multiple: true})
       .then(async image => {
         let albumImg = [];
@@ -172,8 +178,9 @@ const AddRoom = () => {
           let eachElement = {...element, uri: element?.path};
           albumImg.push(eachElement);
         }
-        addResultGallery(albumImg);
-        setModalCamera(false);
+        const eachResult = [...unitImages];
+        const newResult = eachResult.concat(albumImg);
+        setUnitImages(newResult);
       })
       .catch(e => {
         ImagePicker.clean();
@@ -181,47 +188,26 @@ const AddRoom = () => {
       });
   };
 
-  const addResultGallery = album => {
-    const eachResult = [...albumImage];
-    const newResult = eachResult.concat(album);
-    setAlbumImage(newResult);
-  };
-  const addResult = image => {
-    const eachResult = [...albumImage, image];
-    setAlbumImage(eachResult);
-  };
-
   const renderImage = (item, index) => {
     return (
-      <View>
-        <View style={styles.viewRender}>
-          <CustomButton
-            onPress={() => deleteItem(item, index)}
-            styleButton={styles.customButtonIcon}
-            styleIcon={styles.imageStyle}
-            icon={icons.ic_circle}
-          />
-          <Image
-            source={{uri: item?.uri}}
-            style={{width: 180, height: 180, marginHorizontal: 5}}
-            resizeMode={'contain'}
-          />
-        </View>
-      </View>
+      <RenderImage
+        deleteButton={true}
+        data={item}
+        deleteItem={() => {
+          let result = [...unitImages];
+          let newResult = result.filter(itemResult => itemResult !== item);
+          setUnitImages(newResult);
+        }}
+      />
     );
   };
-  const deleteItem = (item, index) => {
-    let result = [...albumImage];
-    let newResult = result.filter(itemResult => itemResult !== item);
 
-    setAlbumImage(newResult);
-  };
   const createNewUnit = async () => {
     setLoadingRoom(true);
     let hauseIdSelect = hause?.id;
     let data = {
       name: name,
-      floorNumber: floorNumber,
+      floorNumber: parseInt(floorNumber),
       openTime: '',
       rentMonthlyFee: parseInt(rentMonthlyFee),
       roomType: roomType,
@@ -234,23 +220,32 @@ const AddRoom = () => {
       amenityIds: amenityIds,
     };
     await CreateNewUnitApi(tokenStore, hauseIdSelect, data)
-      .then(res => {
+      .then(async res => {
         if (res?.status == 200) {
-          setLoadingRoom(false);
-          Alert.alert('Thành công', 'Tạo phòng thành công', [
-            {
-              text: 'OK',
-              onPress: () => {
+          let unitId = res?.data?.id;
+          await PostImageUnitApi(tokenStore, unitId, unitImages)
+            .then(res => {
+              if (res?.status == 200) {
                 dispatch(updateStatus(true));
                 navigation.navigate('FloorInformation', hauseId);
-              },
-            },
-          ]);
+                setLoadingRoom(false);
+              }
+            })
+            .catch(error => {
+              setLoadingRoom(false);
+              Alert.alert(
+                'Thông báo',
+                `Đã có lỗi sảy ra,vui lòng liên hệ với admin...`,
+              );
+            });
         }
       })
       .catch(error => {
         setLoadingRoom(false);
-        alert(`${error}`);
+        Alert.alert(
+          'Thông báo',
+          `Đã có lỗi sảy ra,vui lòng liên hệ với admin...`,
+        );
       });
   };
 
@@ -307,7 +302,6 @@ const AddRoom = () => {
           onPress={() => setModalHauses(true)}
         />
         <CustomInput
-          important={true}
           keyboardType={'numeric'}
           type={'input'}
           styleViewInput={{marginTop: 10}}
@@ -458,16 +452,15 @@ const AddRoom = () => {
         <CustomTextTitle label={'Thêm hình ảnh'} />
         <View
           style={{
-            height: 200,
-            borderWidth: 0.5,
-            borderColor: colors.mainColor,
+            height: 220,
             marginVertical: 5,
             borderRadius: 10,
+            backgroundColor: 'white',
           }}>
-          {albumImage.length > 0 ? (
+          {unitImages.length > 0 ? (
             <FlatList
               horizontal
-              data={albumImage}
+              data={unitImages}
               keyExtractor={uuid}
               renderItem={({item}) => renderImage(item)}
             />

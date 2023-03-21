@@ -29,18 +29,20 @@ import {
 import {token} from '../../../Store/slices/tokenSlice';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
-import {CreateNewBuildingApi} from '../../../Api/Home/BuildingApis/BuildingApis';
+import {
+  CreateNewBuildingApi,
+  PostImageBuildingApi,
+} from '../../../Api/Home/BuildingApis/BuildingApis';
 import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
 import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppBar';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
+import {updateStatus} from '../../../Store/slices/statusSlice';
 
 const AddBuildingsStep3 = props => {
   const navigation = useNavigation();
   const [loadingStep3, setLoadingStep3] = useState(true);
   const dispatch = useDispatch();
-  const noticeRef = useRef();
-  const billNoticeRef = useRef();
   const [modalNotify, setModalNotify] = useState(false);
   const createBuildingInfor = useSelector(commonState);
   const serviceSelect = useSelector(serviceState);
@@ -54,15 +56,6 @@ const AddBuildingsStep3 = props => {
 
   const [listService, setListService] = useState([]);
   const [listAmenity, setListAmenity] = useState([]);
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidHide', () => {
-      if (!loadingStep3) {
-        noticeRef.current.blur();
-        billNoticeRef.current.blur();
-      }
-    });
-  }, []);
 
   useEffect(() => {
     const getListData = async () => {
@@ -165,10 +158,21 @@ const AddBuildingsStep3 = props => {
       organizationId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
     };
     await CreateNewBuildingApi(tokenStore, data)
-      .then(res => {
+      .then(async res => {
         if (res?.status == 200) {
-          setLoadingStep3(false);
-          navigation.navigate('BuildingManager');
+          let hauseId = res?.data?.id;
+          let hauseImages = createBuildingInfor?.hauseImages;
+          await PostImageBuildingApi(tokenStore, hauseId, hauseImages)
+            .then(res => {
+              if (res?.status == 200) {
+                dispatch(updateStatus(false));
+                setLoadingStep3(false);
+                navigation.navigate('BuildingManager');
+              }
+            })
+            .catch(error => {
+              alert(error);
+            });
         }
       })
       .catch(error => console.log(error));
@@ -192,6 +196,7 @@ const AddBuildingsStep3 = props => {
         iconRight={icons.ic_bell}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconSecondRight={icons.ic_moreOption}
+        pressSeccodIconRight={async () => {}}
         pressIconLeft={() => navigation.goBack()}
         step={3}
       />
@@ -258,10 +263,9 @@ const AddBuildingsStep3 = props => {
         <Text style={[styles.label]}>Lưu ý của tòa nhà</Text>
         <View style={styles.viewTextInput}>
           <TextInput
-            ref={noticeRef}
             style={{color: 'black', width: '100%'}}
             multiline={true}
-            placeholder="Nhập lưu ý của tòa nhà cho người thuê phòng"
+            placeholder="Nhập lưu ý của tòa nhà"
             defaultValue={notice}
             onEndEditing={evt => setNotice(evt.nativeEvent.text)}
           />
@@ -270,7 +274,6 @@ const AddBuildingsStep3 = props => {
         <Text style={[styles.label, {marginTop: 20}]}>Ghi chú hóa đơn</Text>
         <View style={styles.viewTextInput}>
           <TextInput
-            ref={billNoticeRef}
             style={{color: 'black'}}
             multiline={true}
             placeholder="Nhập ghi chú hóa đơn"

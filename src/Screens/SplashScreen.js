@@ -1,7 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, Image, ImageBackground} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  ImageBackground,
+  Alert,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {AuthenticationAPi} from '../Api/Login/LoginApis';
 import CustomLoading from '../Components/CommonComponent/CustomLoading';
@@ -31,7 +38,10 @@ const SplashScreen = () => {
         }
       });
     } catch (error) {
-      console.log(error);
+      Alert.alert(
+        'Cảnh báo !',
+        'Đã có lỗi hệ thống,xin hãy liên lạc với admin...',
+      );
     }
   };
   const callApiToken = async userStore => {

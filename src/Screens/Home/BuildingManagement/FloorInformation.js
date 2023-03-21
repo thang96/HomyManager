@@ -64,7 +64,7 @@ const FloorInformation = () => {
         />
         <CustomFloorInfor
           numberRoom={`${item?.name}`}
-          status={`${item?.isActive}`}
+          status={`${item?.status}`}
           username={`${item?.username}`}
           price={`${item?.rentMonthlyFee}`}
           onPress={() => {
@@ -80,7 +80,7 @@ const FloorInformation = () => {
       {loading && <CustomLoading />}
       <CustomAppBarFloorInfor
         hauseName={`${hauseInfor?.name}`}
-        address={`${hauseInfor?.city?.name}, ${hauseInfor?.district?.name}, ${hauseInfor?.ward?.name}, ${hauseInfor?.address}`}
+        address={`${hauseInfor?.address}`}
         onPressLeft={() => navigation.goBack()}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
       />
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   buttonEdit: {
-    height: 20,
+    height: 22,
     flexDirection: 'row',
     borderRadius: 5,
   },
@@ -162,12 +162,13 @@ const CustomFloorInfor = props => {
         </View>
         <CustomButton
           disabled={true}
-          label={status ? 'Đã thuê' : 'Trống'}
+          label={status == 'Trống' ? 'Trống' : 'Đã thuê'}
           styleLabel={styles.labelEdit}
           styleButton={[
             styles.buttonEdit,
             {
-              backgroundColor: status ? colors.backgroundButton : 'orange',
+              backgroundColor:
+                status == 'Trống' ? 'orange' : colors.backgroundButton,
             },
           ]}
         />

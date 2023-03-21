@@ -32,47 +32,21 @@ const CustomAppBarFloorInfor = props => {
       <View style={styles.line} />
       <View style={{height: 130}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Text style={{fontSize: 26, color: 'white', flex: 1}}>
+          <Text
+            numberOfLines={1}
+            style={{fontSize: 26, color: 'white', flex: 1}}>
             {hauseName}
           </Text>
-          <CustomButton
-            styleButton={[
-              {backgroundColor: colors.backgroundOrange},
-              styles.styleButton,
-            ]}
-            icon={icons.ic_edit}
-            styleIcon={styles.icon}
-            label={'Chỉnh sửa'}
-            styleLabel={{color: 'white', fontSize: 12}}
-          />
         </View>
         <View style={{flexDirection: 'row'}}>
           <View style={{marginTop: 5}}>
             <Location width={32} height={32} />
           </View>
           <View style={{marginLeft: 10, flex: 1}}>
-            <Text style={{color: 'white', fontSize: 11}}>{address}</Text>
+            <Text numberOfLines={2} style={{color: 'white', fontSize: 11}}>
+              {address}
+            </Text>
           </View>
-        </View>
-        <View
-          style={{flexDirection: 'row', alignItems: 'center', marginTop: 5}}>
-          <CustomButton
-            label={'Thêm phòng nhanh'}
-            icon={icons.ic_plus}
-            styleButton={[
-              {backgroundColor: colors.backgroundOrange, marginRight: 10},
-              styles.styleButton,
-            ]}
-            styleIcon={styles.icon}
-            styleLabel={{color: 'white', fontSize: 12}}
-          />
-          <CustomButton
-            label={'Sửa'}
-            icon={icons.ic_plus}
-            styleButton={[{backgroundColor: colors.green}, styles.styleButton]}
-            styleIcon={styles.icon}
-            styleLabel={{color: 'white', fontSize: 12}}
-          />
         </View>
       </View>
     </ImageBackground>

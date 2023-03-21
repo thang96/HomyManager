@@ -15,7 +15,7 @@ import CustomButtonBottom from '../../../Components/CommonComponent/CustomButton
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomViewInfor from '../../../Components/ComponentHome/CustomViewInfor';
+import BoxShowInfor from '../../../Components/CommonComponent/BoxShowInfor';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {FlatList} from 'react-native-gesture-handler';
 import File from '../../../Assets/Svgs/File.svg';
@@ -26,6 +26,7 @@ import {GetUnitDetailAPi} from '../../../Api/Home/UnitApis/UnitApis';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import RenderImage from '../../../Components/ComponentHome/RenderImage';
 
 const RoomInformation = props => {
   const route = useRoute();
@@ -98,98 +99,131 @@ const RoomInformation = props => {
         <CustomTextTitle label={'Thông tin phòng'} />
 
         <View style={styles.viewRow}>
-          <CustomViewInfor title={'Tầng'} label={'1'} />
-          <CustomViewInfor title={'Diện tích'} label={'10'} content={'m2'} />
+          <BoxShowInfor label={'Tầng'} content={`${unit?.floorNumber}`} />
+          <View style={{width: 10}} />
+          <BoxShowInfor
+            label={'Diện tích'}
+            content={`${unit?.area}`}
+            unit={'m2'}
+          />
         </View>
         <View style={[styles.viewRow, {marginTop: 10}]}>
-          <CustomViewInfor
-            title={'Số người tối đa'}
-            label={'4'}
-            content={'Người'}
+          <BoxShowInfor
+            label={'Số người tối đa'}
+            content={`${unit?.limitTenantNumber}`}
+            unit={'Người'}
           />
-          <CustomViewInfor title={'Đặt cọc'} label={'500000'} content={'VNĐ'} />
+          <View style={{width: 10}} />
+          <BoxShowInfor
+            styleView={{marginTop: 10}}
+            label={'Loại phòng'}
+            content={'Studio'}
+          />
         </View>
-        <CustomViewInfor
-          styleView={{marginTop: 10}}
-          title={'Loại phòng'}
-          label={'Studio'}
-        />
+        <View style={[styles.viewRow, {marginTop: 10}]}>
+          <BoxShowInfor
+            label={'Đặt cọc'}
+            content={`${unit?.depositMoney}`}
+            unit={'VNĐ'}
+          />
+          <View style={{width: 10}} />
+          <BoxShowInfor
+            label={'Giá'}
+            content={`${unit?.rentMonthlyFee}`}
+            unit={'VNĐ'}
+          />
+        </View>
 
+        <View style={styles.line} />
+
+        <CustomTextTitle label={'Hình ảnh của phòng'} />
+        {unit?.images?.length > 0 && (
+          <FlatList
+            listKey="imagesUnit"
+            horizontal
+            data={unit?.images}
+            keyExtractor={key => key?.id}
+            renderItem={({item, index}) => {
+              return <RenderImage data={item} deleteItem={async () => {}} />;
+            }}
+          />
+        )}
         <View style={styles.line} />
 
         <CustomTextTitle label={'Hợp đồng cho thuê'} />
 
-        <CustomContract />
+        {/* <CustomContract /> */}
 
         <View style={styles.line} />
 
-        <CustomTextTitle
-          label={'Thông tin người ở'}
-          labelButton={'Thêm người'}
-        />
+        <CustomTextTitle label={'Thông tin người ở'} />
 
-        <CustomTenantInformation styleView={{marginBottom: 10}} />
-        <CustomTenantInformation />
+        {/* <CustomTenantInformation styleView={{marginBottom: 10}} /> */}
 
         <View style={styles.line} />
 
         <CustomTextTitle label={'Dịch vụ có phí'} />
 
-        {listPaidSevice.length > 0 ? (
+        {unit?.chargeServices?.length > 0 ? (
           <FlatList
-            listKey="listPaidSevice"
+            listKey="chargeServices"
             horizontal={false}
             scrollEnabled={false}
             numColumns={2}
-            keyExtractor={key => key.label}
-            data={listPaidSevice}
-            renderItem={({item, index}) => renderPaidSevice(item, index)}
+            keyExtractor={(key, index) => `${key?.id}${index.toString()}`}
+            data={unit?.chargeServices}
+            renderItem={({item, index}) => {
+              return (
+                <RenderService
+                  label={item?.name}
+                  value={item?.fee}
+                  icon={item?.icon}
+                />
+              );
+            }}
           />
         ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
-          <Text style={styles.pickerTotal}>{`${listPaidSevice.length}`}</Text>
+          <Text
+            style={
+              styles.pickerTotal
+            }>{`${unit?.chargeServices?.length}`}</Text>
         </View>
 
         <View style={styles.line} />
         <CustomTextTitle label={'Tiện ích miễn phí'} />
 
-        {listFreeSevice.length > 0 ? (
+        {unit?.amenities?.length > 0 ? (
           <FlatList
-            listKey="listFreeSevice"
+            listKey="amenities"
             horizontal={false}
             scrollEnabled={false}
             numColumns={3}
-            keyExtractor={key => key.value}
-            data={listFreeSevice}
-            renderItem={({item, index}) => renderFreeSevice(item, index)}
+            keyExtractor={(key, index) => `${key?.id}${index.toString()}`}
+            data={unit?.amenities}
+            renderItem={({item, index}) => {
+              return <RenderAmenity label={item?.name} />;
+            }}
           />
         ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
-          <Text style={styles.pickerTotal}>{`${listFreeSevice.length}`}</Text>
+          <Text style={styles.pickerTotal}>{`${unit?.amenities?.length}`}</Text>
         </View>
 
         <View style={styles.line} />
 
         <CustomTextTitle label={'Mô tả phòng'} />
-        <Text style={{color: 'black', fontSize: 14}}>
-          Phòng đầy đủ tiện nghi
-        </Text>
+        <Text style={{color: 'black', fontSize: 14}}>{unit?.description}</Text>
         <View style={styles.line} />
 
         <CustomTextTitle label={'Lưu ý cho người thuê'} />
-        <Text style={{color: 'black', fontSize: 14}}>
-          Lưu ý đi nghủ sớm tránh ảnh hưởng người khác
-        </Text>
+        <Text style={{color: 'black', fontSize: 14}}>{unit?.notice}</Text>
 
         <View style={styles.line} />
 
         <View style={{height: 56}} />
-        <CustomButtonBottom
-          label={'Thêm phòng mới'}
-          onPress={() => navigation.navigate('AddRoom')}
-        />
       </ScrollView>
     </View>
   );
@@ -197,10 +231,10 @@ const RoomInformation = props => {
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: colors.backgroundGrey},
   line: {
-    height: 1,
+    height: 0.5,
     width: '100%',
     alignSelf: 'center',
-    backgroundColor: 'black',
+    backgroundColor: '#97A1A7',
     marginVertical: 20,
   },
   viewRow: {

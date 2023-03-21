@@ -61,4 +61,6 @@ export default {
   ic_book: require('../Assets/Icons/ic_book.png'),
   ic_questionMark: require('../Assets/Icons/ic_questionMark.png'),
   ic_exclamationMark: require('../Assets/Icons/ic_exclamationMark.png'),
+  ic_cancel: require('../Assets/Icons/ic_cancel.png'),
+  ic_cashPayment: require('../Assets/Icons/ic_cashPayment.png'),
 };
