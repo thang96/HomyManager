@@ -51,7 +51,11 @@ const TenantDetail = props => {
             resizeMode={'cover'}
           />
           <Image
-            source={icons.ic_user}
+            source={
+              tenant?.avatarImage
+                ? {uri: tenant?.avatarImage?.fileUrl}
+                : icons.ic_user
+            }
             style={styles.imageAvatar}
             resizeMode={'cover'}
           />

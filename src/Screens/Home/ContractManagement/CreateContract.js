@@ -50,8 +50,12 @@ import {
   updateTenants,
 } from '../../../Store/slices/commonSlice';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
-import {CreateNewContractApi} from '../../../Api/Home/ContractApis/ContractApis';
+import {
+  CreateNewContractApi,
+  PostImageContractApi,
+} from '../../../Api/Home/ContractApis/ContractApis';
 import {updateStatus} from '../../../Store/slices/statusSlice';
+import CustomNote from '../../../Components/CommonComponent/CustomNote';
 
 const CreateContract = () => {
   const navigation = useNavigation();
@@ -63,7 +67,7 @@ const CreateContract = () => {
   const [timeStart, setTimeStart] = useState(new Date());
   const [timeEnd, setTimeEnd] = useState(new Date());
   const [timeChargeDate, setTimeChargeDate] = useState(new Date());
-  const [loading, setLoading] = useState(true);
+  const [loadingAddContract, setLoadingAddContract] = useState(true);
 
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
@@ -71,6 +75,7 @@ const CreateContract = () => {
   const [paymentDuration, setpaymentDuration] = useState();
   const [leasingFee, setLeasingFee] = useState();
   const [depositMoney, setDepositMoney] = useState();
+  const [termAndCondition, setTermAndCondition] = useState();
   const [description, setDescription] = useState();
   const [unitId, setUnitId] = useState();
   const [serviceIds, setServiceIds] = useState([]);
@@ -103,7 +108,7 @@ const CreateContract = () => {
         .then(res => {
           if (res?.status == 200) {
             setListHauses(res?.data);
-            setLoading(false);
+            setLoadingAddContract(false);
           }
         })
         .catch(error => console.log(error));
@@ -213,11 +218,12 @@ const CreateContract = () => {
   };
 
   const openCamera = () => {
+    setModalCamera(false);
     ImagePicker.openCamera({width: 300, height: 400})
       .then(image => {
         let eachImg = {...image, uri: image?.path};
-        addResult(eachImg);
-        setModalCamera(false);
+        const eachResult = [...albumImage, eachImg];
+        setAlbumImage(eachResult);
       })
       .catch(e => {
         ImagePicker.clean();
@@ -226,6 +232,7 @@ const CreateContract = () => {
   };
 
   const openGallery = () => {
+    setModalCamera(false);
     ImagePicker.openPicker({multiple: true})
       .then(async image => {
         let albumImg = [];
@@ -234,8 +241,9 @@ const CreateContract = () => {
           let eachElement = {...element, uri: element?.path};
           albumImg.push(eachElement);
         }
-        addResultGallery(albumImg);
-        setModalCamera(false);
+        const eachResult = [...albumImage];
+        const newResult = eachResult.concat(albumImg);
+        setAlbumImage(newResult);
       })
       .catch(e => {
         ImagePicker.clean();
@@ -243,25 +251,19 @@ const CreateContract = () => {
       });
   };
 
-  const addResultGallery = album => {
-    const eachResult = [...albumImage];
-    const newResult = eachResult.concat(album);
-    setAlbumImage(newResult);
-  };
-  const addResult = image => {
-    const eachResult = [...albumImage, image];
-    setAlbumImage(eachResult);
-  };
-
   const renderImage = (item, index) => {
     return (
       <View>
         <View style={styles.viewRender}>
           <CustomButton
-            onPress={() => deleteItem(item, index)}
+            onPress={() => {
+              let result = [...albumImage];
+              let newResult = result.filter(itemResult => itemResult !== item);
+              setAlbumImage(newResult);
+            }}
             styleButton={styles.customButtonIcon}
             styleIcon={styles.imageStyle}
-            icon={icons.ic_circle}
+            icon={icons.ic_cancel}
           />
           <Image
             source={{uri: item?.uri}}
@@ -272,14 +274,7 @@ const CreateContract = () => {
       </View>
     );
   };
-  const deleteItem = (item, index) => {
-    let result = [...albumImage];
-    let newResult = result.filter(itemResult => itemResult !== item);
-
-    setAlbumImage(newResult);
-  };
   const getListUnit = async item => {
-    setLoading(true);
     setHause(item);
     setModalHause(false);
     let hauseId = item?.id;
@@ -287,7 +282,7 @@ const CreateContract = () => {
       .then(res => {
         if (res?.status == 200) {
           setListUnits(res?.data);
-          setLoading(false);
+          setLoadingAddContract(false);
         }
       })
       .catch(error => console.log(error.response.data));
@@ -303,6 +298,7 @@ const CreateContract = () => {
   };
 
   const createNewContract = async () => {
+    setLoadingAddContract(true);
     let data = {
       startDate: startDate,
       endDate: endDate,
@@ -316,14 +312,26 @@ const CreateContract = () => {
       tenantIds: tenantIds,
       description: '',
     };
-
+    console.log(data, 'data');
     await CreateNewContractApi(tokenStore, data)
-      .then(res => {
+      .then(async res => {
         if (res?.status == 200) {
-          dispatch(updateStatus(true));
-          Alert.alert('Thành công', 'Tạo hợp đồng thành công', [
-            {text: 'OK', onPress: () => navigation.goBack()},
-          ]);
+          console.log(res?.data);
+          contractId = res?.data?.id;
+          await PostImageContractApi(tokenStore, contractId, albumImage)
+            .then(res => {
+              if (res?.status == 200) {
+                dispatch(updateStatus(true));
+                setLoadingAddContract(false);
+                navigation.goBack();
+              }
+            })
+            .catch(error => {
+              Alert.alert(
+                'Cảnh báo!!!',
+                'Có lỗi sảy ra,vui lòng liên hệ admin...',
+              );
+            });
         }
       })
       .catch(error => console.log(error));
@@ -331,7 +339,7 @@ const CreateContract = () => {
 
   return (
     <View style={styles.container}>
-      {loading && <CustomLoading />}
+      {loadingAddContract && <CustomLoading />}
       {modalHause && (
         <CustomModalPicker
           data={listHauses}
@@ -442,7 +450,7 @@ const CreateContract = () => {
 
         <CustomTimeButtons
           styleContainer={{marginTop: 20}}
-          title={'Thời gian nộp tiền phòng'}
+          title={'Thời gian hợp đồng'}
           leftLabel={'Từ'}
           rightLabel={'Đến'}
           styleButtonLeft={{marginRight: 5}}
@@ -629,6 +637,16 @@ const CreateContract = () => {
           onPressLeft={() => navigation.goBack()}
           onPressRight={() => createNewContract()}
         />
+        <CustomNote
+          title={'Điều khoản hợp đồng'}
+          placeholder={'Nhập điều khoản hợp đồng'}
+        />
+
+        <CustomNote
+          title={'Mô tả hợp đồng'}
+          placeholder={'Nhập mô tả hợp đồng'}
+        />
+        <View style={{height: 56}} />
       </ScrollView>
     </View>
   );
@@ -655,7 +673,7 @@ const styles = StyleSheet.create({
   },
   labelUploadIM: {color: 'white', fontWeight: '500', fontSize: 15},
   customButtonIcon: {position: 'absolute', right: 3, top: 3, zIndex: 1},
-  imageStyle: {width: 20, height: 20, tintColor: 'red'},
+  imageStyle: {width: 20, height: 20},
   viewRender: {
     height: 210,
     width: 210,
@@ -667,11 +685,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   viewShowImage: {
-    height: 200,
-    borderWidth: 0.5,
-    borderColor: colors.mainColor,
+    height: 220,
     marginVertical: 5,
     borderRadius: 10,
+    backgroundColor: 'white',
   },
 });
 export default CreateContract;

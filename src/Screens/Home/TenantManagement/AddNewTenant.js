@@ -18,7 +18,10 @@ import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {dateToDMY, dateToYMD} from '../../../utils/common';
-import {CreateNewTenantApi} from '../../../Api/Home/TenantApis/TenantApis';
+import {
+  CreateNewTenantApi,
+  PostImageUserApi,
+} from '../../../Api/Home/TenantApis/TenantApis';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
@@ -52,11 +55,12 @@ const AddNewTenant = () => {
   const [modalIdentityIssueDate, setModalIdentityIssueDate] = useState(false);
 
   const openCamera = () => {
+    setModalCamera(false);
     ImagePicker.openCamera({width: 300, height: 400})
       .then(image => {
         let eachImg = {...image, uri: image?.path};
-        addResult(eachImg);
-        setModalCamera(false);
+        const eachResult = [...albumImage, eachImg];
+        setAlbumImage(eachResult);
       })
       .catch(e => {
         ImagePicker.clean();
@@ -65,6 +69,7 @@ const AddNewTenant = () => {
   };
 
   const openGallery = () => {
+    setModalCamera(false);
     ImagePicker.openPicker({multiple: true})
       .then(async image => {
         let albumImg = [];
@@ -73,8 +78,9 @@ const AddNewTenant = () => {
           let eachElement = {...element, uri: element?.path};
           albumImg.push(eachElement);
         }
-        addResultGallery(albumImg);
-        setModalCamera(false);
+        const eachResult = [...albumImage];
+        const newResult = eachResult.concat(albumImg);
+        setAlbumImage(newResult);
       })
       .catch(e => {
         ImagePicker.clean();
@@ -82,25 +88,19 @@ const AddNewTenant = () => {
       });
   };
 
-  const addResultGallery = album => {
-    const eachResult = [...albumImage];
-    const newResult = eachResult.concat(album);
-    setAlbumImage(newResult);
-  };
-  const addResult = image => {
-    const eachResult = [...albumImage, image];
-    setAlbumImage(eachResult);
-  };
-
   const renderImage = (item, index) => {
     return (
       <View>
         <View style={styles.viewRender}>
           <CustomButton
-            onPress={() => deleteItem(item, index)}
+            onPress={() => {
+              let result = [...albumImage];
+              let newResult = result.filter(itemResult => itemResult !== item);
+              setAlbumImage(newResult);
+            }}
             styleButton={styles.customButtonIcon}
             styleIcon={styles.imageStyle}
-            icon={icons.ic_circle}
+            icon={icons.ic_cancel}
           />
           <Image
             source={{uri: item?.uri}}
@@ -110,12 +110,6 @@ const AddNewTenant = () => {
         </View>
       </View>
     );
-  };
-  const deleteItem = (item, index) => {
-    let result = [...albumImage];
-    let newResult = result.filter(itemResult => itemResult !== item);
-
-    setAlbumImage(newResult);
   };
 
   const createNewTenant = async () => {
@@ -133,11 +127,23 @@ const AddNewTenant = () => {
       password: '',
     };
     await CreateNewTenantApi(tokenStore, data)
-      .then(res => {
+      .then(async res => {
         if (res?.status == 200) {
-          dispatch(updateStatus(true));
-          setLoadingAddTenant(false);
-          navigation.goBack();
+          tenantId = res?.data?.id;
+          await PostImageUserApi(tokenStore, tenantId, albumImage)
+            .then(res => {
+              if (res?.status == 200) {
+                dispatch(updateStatus(true));
+                setLoadingAddTenant(false);
+                navigation.goBack();
+              }
+            })
+            .catch(error => {
+              Alert.alert(
+                'Cảnh báo',
+                'Có lỗi sảy ra,vui lòng liên hệ admin...',
+              );
+            });
         }
       })
       .catch(error => console.log(error));
@@ -283,7 +289,7 @@ const AddNewTenant = () => {
 
         <View style={styles.line} />
 
-        <CustomTextTitle label={'Thêm ảnh CMND/ CCCD'} />
+        <CustomTextTitle label={'Thêm ảnh người dùng'} />
 
         <View style={styles.viewShowImage}>
           {albumImage.length > 0 ? (
@@ -347,7 +353,7 @@ const styles = StyleSheet.create({
   },
   labelUploadIM: {color: 'white', fontWeight: '500', fontSize: 15},
   customButtonIcon: {position: 'absolute', right: 3, top: 3, zIndex: 1},
-  imageStyle: {width: 20, height: 20, tintColor: 'red'},
+  imageStyle: {width: 20, height: 20},
   viewRender: {
     height: 210,
     width: 210,
@@ -359,11 +365,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   viewShowImage: {
-    height: 200,
-    borderWidth: 0.5,
-    borderColor: colors.mainColor,
+    height: 220,
     marginVertical: 5,
     borderRadius: 10,
+    backgroundColor: 'white',
   },
 });
 export default AddNewTenant;

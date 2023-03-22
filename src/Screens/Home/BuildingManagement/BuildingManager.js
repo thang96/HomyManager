@@ -76,7 +76,7 @@ const BuildingManager = () => {
         label={'Quản lý tòa nhà'}
         iconRight={icons.ic_bell}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
-        iconSecondRight={icons.ic_circleFill}
+        iconSecondRight={icons.ic_circle}
         keyboard={keyboard}
         textSearch={textSearch}
         value={textSearch}

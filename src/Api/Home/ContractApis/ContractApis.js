@@ -95,3 +95,46 @@ export const DeleteContractAPi = (token, serviceId) => {
       });
   });
 };
+
+export const PostImageContractApi = (token, contractId, ContractImages) => {
+  let formContract = new FormData();
+  for (let i = 0; i < ContractImages.length; i++) {
+    let image = ContractImages[i];
+    formContract.append('files', {
+      uri: image?.uri,
+      name: getFileName(image),
+      type: 'image/jpeg',
+    });
+  }
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${BASEURL}/contract/${contractId}/files/upload`, formContract, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
+const getFileName = file => {
+  if (file.name !== undefined) {
+    return file.name;
+  } else if (file.filename !== undefined && file.filename !== null) {
+    return file.filename;
+  } else {
+    const type = file?.mime || file?.type;
+    return (
+      Math.floor(Math.random() * Math.floor(999999999)) +
+      '.' +
+      type.split('/')[1]
+    );
+  }
+};

@@ -13,8 +13,6 @@ import LogoApp from '../../Assets/Svgs/LogoApp.svg';
 import {useNavigation} from '@react-navigation/native';
 import CustomSearchAppBar from '../../Components/CommonComponent/CustomSearchAppBar';
 import {ScrollView} from 'react-native-virtualized-view';
-const avatar =
-  'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg';
 
 const MessageScreen = () => {
   const navigation = useNavigation();
@@ -71,7 +69,7 @@ const MessageScreen = () => {
         iconRight={icons.ic_bell}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
         pressSeccodIconRight={() => navigation.navigate('StackAccountPage')}
-        iconSecondRight={avatar}
+        iconSecondRight={icons.ic_user}
         keyboard={keyboard}
         textSearch={textSearch}
         value={textSearch}
@@ -129,7 +127,7 @@ const styles = StyleSheet.create({
 export default MessageScreen;
 const FAKE_DATA = [
   {
-    url: avatar,
+    url: icons.ic_user,
     name: 'Bùi Đức Thắng',
     time: '9h30',
     message: 'Có nghe ko thế,đi đâu rồi?',
