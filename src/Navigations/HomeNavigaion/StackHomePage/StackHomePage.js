@@ -20,7 +20,7 @@ import {
   ServiceManager,
   UtilitiesManager,
   ContractManagement,
-  BillManagement,
+  InvoiceManagement,
   TenantManager,
   WaterAndElectricityManagement,
   WaterAndElectricityInfor,
@@ -32,6 +32,9 @@ import {
   TenantDetail,
   ManagerDetail,
   ContractDetail,
+  CreateInvoice,
+  PaymentManagement,
+  AddPayment,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -59,8 +62,29 @@ const StackHomepage = () => {
         }}
       />
       <Stack.Screen
-        component={BillManagement}
-        name={'BillManagement'}
+        component={InvoiceManagement}
+        name={'InvoiceManagement'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={CreateInvoice}
+        name={'CreateInvoice'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={PaymentManagement}
+        name={'PaymentManagement'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={AddPayment}
+        name={'AddPayment'}
         options={{
           headerShown: false,
         }}

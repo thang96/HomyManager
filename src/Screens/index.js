@@ -36,8 +36,12 @@ import RequestResend from './Home/WaterAndElectricityManagement/RequestResend';
 import ContractManagement from './Home/ContractManagement/ContractManagement';
 import CreateContract from './Home/ContractManagement/CreateContract';
 import ContractDetail from './Home/ContractManagement/ContractDetail';
-//----------- BillManagement
-import BillManagement from './Home/BillManagement/BillManagement';
+//----------- PaymentManagement
+import PaymentManagement from './Home/PaymentManagement/PaymentManagement';
+import AddPayment from './Home/PaymentManagement/AddPayment';
+//----------- InvoiceManagement
+import InvoiceManagement from './Home/BillManagement/InvoiceManagement';
+import CreateInvoice from './Home/BillManagement/CreateInvoice';
 //----------- UserManager
 import UserManager from './Home/UserManagement/UserManager';
 import ManagerList from './Home/UserManagement/ManagerList';
@@ -52,7 +56,6 @@ import AddNewTenant from './Home/TenantManagement/AddNewTenant';
 import WorkScreen from './Work/WorkScreen';
 import IssueInformation from './Work/IssueInformation';
 import MarkTheIssue from './Work/MarkTheIssue';
-import BillOfIssue from './Work/BillOfIssue';
 import AddExtraFee from './Work/AddExtraFee';
 // StatisticScreen -----------------------------------------------------------------
 import StatisticScreen from './Statistic/StatisticScreen';
@@ -89,8 +92,12 @@ export {
   ContractManagement,
   CreateContract,
   ContractDetail,
-  //-- BillManagement
-  BillManagement,
+  //-- InvoiceManagement
+  InvoiceManagement,
+  CreateInvoice,
+  //-- PaymentManagement
+  PaymentManagement,
+  AddPayment,
   //-- ServiceManager
   ServiceManager,
   Service,
@@ -118,7 +125,6 @@ export {
   WorkScreen,
   IssueInformation,
   MarkTheIssue,
-  BillOfIssue,
   AddExtraFee,
   // StatisticScreen ------------------------------------------
   StatisticScreen,

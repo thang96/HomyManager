@@ -22,7 +22,7 @@ import CustomButtonCarendar from '../../../Components/ComponentHome/CustomButton
 const breakLine = Array(19).fill('');
 
 const BillNotCreatedYet = props => {
-  const [listBill, setListBill] = useState(FAKE_DATA);
+  const [listBill, setListBill] = useState([]);
   const [date, setDate] = useState(new Date());
   const [valueDate, setValueDate] = useState('03-03-2023');
 
@@ -79,7 +79,7 @@ const BillNotCreatedYet = props => {
       <CustomTextTitle label={'Hóa đơn chưa tạo'} />
       <FlatList
         data={listBill}
-        keyExtractor={key => key.id.toString()}
+        keyExtractor={(key, index) => index.toString()}
         renderItem={({item, index}) => renderBillNotCreatedYet(item, index)}
       />
     </View>
@@ -134,41 +134,3 @@ const styles = StyleSheet.create({
   },
 });
 export default BillNotCreatedYet;
-
-const FAKE_DATA = [
-  {
-    price: 2000000,
-    note: 'Hóa đơn tháng 3',
-    place: 'Tòa nhà D2 - P101',
-    status: 'Chưa tạo',
-    id: 1,
-  },
-  {
-    price: 2000000,
-    note: 'Hóa đơn tháng 3',
-    place: 'Tòa nhà D2 - P101',
-    status: 'Chưa tạo',
-    id: 2,
-  },
-  {
-    price: 2000000,
-    note: 'Hóa đơn tháng 3',
-    place: 'Tòa nhà D2 - P101',
-    status: 'Chưa tạo',
-    id: 3,
-  },
-  {
-    price: 2000000,
-    note: 'Hóa đơn tháng 3',
-    place: 'Tòa nhà D2 - P101',
-    status: 'Chưa tạo',
-    id: 4,
-  },
-  {
-    price: 2000000,
-    note: 'Hóa đơn tháng 3',
-    place: 'Tòa nhà D2 - P101',
-    status: 'Chưa tạo',
-    id: 5,
-  },
-];

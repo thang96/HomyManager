@@ -1,22 +1,16 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, Image, Text, View} from 'react-native';
-import {colors, icons} from '../../Constants';
-import CustomInputText from './CustomTextInput';
-
-const CustomInput = props => {
+import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {icons} from '../../../Constants';
+const CustomViewBank = props => {
   const {
-    important,
-    type,
     styleViewInput,
     title,
-    placeholder,
-    keyboardType,
-    value,
-    onChangeText,
+    important,
     onPress,
     styleButton,
-    defaultValue,
-    onEndEditing,
+    value,
+    placeholder,
+    bank,
   } = props;
   return (
     <View style={styleViewInput}>
@@ -25,18 +19,20 @@ const CustomInput = props => {
         <Text style={styles.label}>{title}</Text>
         {important && <Text style={{color: 'red', fontSize: 14}}> *</Text>}
       </View>
-      {type == 'input' && (
-        <CustomInputText
-          keyboardType={keyboardType}
-          styleViewTextInput={styles.viewInput}
-          placeholder={placeholder}
-          onChangeText={onChangeText}
-          value={value}
-          onEndEditing={onEndEditing}
-          defaultValue={defaultValue}
-        />
-      )}
-      {type == 'button' && (
+
+      {bank ? (
+        <TouchableOpacity
+          onPress={onPress}
+          style={[styles.viewBank, styleButton]}>
+          <Image
+            source={typeof bank?.logo == 'string' ? {uri: bank?.logo} : null}
+            style={{width: 80, height: 32}}
+          />
+          <View style={{flex: 1}}>
+            <Text numberOfLines={1}>{bank?.name}</Text>
+          </View>
+        </TouchableOpacity>
+      ) : (
         <TouchableOpacity
           onPress={onPress}
           style={[styles.viewButton, {paddingHorizontal: 10}, styleButton]}>
@@ -67,15 +63,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     backgroundColor: 'white',
     borderColor: '#dadee0',
-  },
-  viewInput: {
-    borderWidth: 1,
-    borderColor: '#ACB4B9',
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    backgroundColor: 'white',
-    height: 50,
+    width: '100%',
   },
   icon: {width: 20, height: 20},
+  viewBank: {
+    height: 50,
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 4,
+    alignItems: 'center',
+    borderColor: '#ACB4B9',
+    paddingHorizontal: 5,
+    backgroundColor: 'white',
+    borderColor: '#dadee0',
+    flexDirection: 'row',
+    width: '100%',
+  },
 });
-export default CustomInput;
+export default CustomViewBank;

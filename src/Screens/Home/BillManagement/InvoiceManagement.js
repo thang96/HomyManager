@@ -17,16 +17,26 @@ import {icons, colors} from '../../../Constants';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
-import BillNotCreatedYet from './BillNotCreatedYet';
-import BillUnpaid from './BillUnpaid';
-import BillIsOverdue from './BillIsOverdue';
-import BillPaid from './BillPaid';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import BillNotCreatedYet from './InvoiceNotCreatedYet';
+import BillUnpaid from './InvoiceUnpaid';
+import BillIsOverdue from './InvoiceIsOverdue';
+import BillPaid from './InvoicePaid';
+import {GetListInvoicesApi} from '../../../Api/Home/InvoiceApis/InvoiceApis';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
+import {token} from '../../../Store/slices/tokenSlice';
+import {useDispatch, useSelector} from 'react-redux';
 
-const BillManagement = props => {
+const InvoiceManagement = props => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const loadingInvoice = useSelector(statusState);
+  const [loading, setLoading] = useState(true);
+  const tokenStore = useSelector(token);
   const [keyboard, setKeyboard] = useState(false);
   const [textSearch, setTextSearch] = useState('');
   const [isActive, setIsActive] = useState(1);
+  const [listInvoice, setListInvoice] = useState(1);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -37,8 +47,23 @@ const BillManagement = props => {
     });
   }, []);
 
+  useEffect(() => {
+    const getListData = async () => {
+      await GetListInvoicesApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            setListInvoice(res?.data);
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getListData();
+  }, [loadingInvoice]);
+
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {loading && <CustomLoading />}
       <KeyboardAvoidingView style={{flex: 1}}>
         <CustomSearchAppBar
           iconLeft={icons.ic_back}
@@ -115,8 +140,11 @@ const BillManagement = props => {
             <BillPaid />
           ) : null}
           <CustomButtonBottom
-            label={'Thêm dịch vụ mới'}
-            onPress={() => navigation.navigate('AddService')}
+            label={'Thêm hóa đơn'}
+            onPress={() => {
+              dispatch(updateStatus(false));
+              navigation.navigate('CreateInvoice');
+            }}
           />
         </View>
       </KeyboardAvoidingView>
@@ -154,4 +182,4 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
 });
-export default BillManagement;
+export default InvoiceManagement;

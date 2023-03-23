@@ -18,7 +18,7 @@ import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle
 import CustomButtonCarendar from '../../../Components/ComponentHome/CustomButtonCarendar';
 
 const BillUnpaid = props => {
-  const [listContract, setListContract] = useState(FAKE_DATA);
+  const [listContract, setListContract] = useState([]);
   const [date, setDate] = useState(new Date());
   const [valueDate, setValueDate] = useState('03-03-2023');
 

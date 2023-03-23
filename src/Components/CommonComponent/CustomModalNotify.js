@@ -51,10 +51,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
-  title: {fontSize: 17, color: colors.mainColor, fontWeight: 'bold'},
+  title: {fontSize: 17, color: colors.backgroundButton, fontWeight: 'bold'},
   label: {
     fontSize: 15,
-    color: colors.backgroundButton,
+    color: 'black',
     fontWeight: '600',
     marginTop: 10,
   },

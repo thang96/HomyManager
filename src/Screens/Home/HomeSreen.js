@@ -149,17 +149,17 @@ const HomeScreen = () => {
               onPress={() => navigation.navigate('ContractManagement')}
             />
             <CustomOptionBT
-              title={'Công việc'}
-              content={`${homeInfor?.taskTotal}`}
-              svgIcon={svgs.Gear}
-              styleBGIcon={{backgroundColor: '#fff3e9'}}
-            />
-            <CustomOptionBT
               title={'Hóa đơn'}
               content={`${homeInfor?.invoiceTotal}`}
               svgIcon={svgs.DocumentGreen}
               styleBGIcon={{backgroundColor: '#e6f6e2'}}
-              UserManager
+              onPress={() => navigation.navigate('InvoiceManagement')}
+            />
+            <CustomOptionBT
+              title={'Công việc'}
+              content={`${homeInfor?.taskTotal}`}
+              svgIcon={svgs.Gear}
+              styleBGIcon={{backgroundColor: '#fff3e9'}}
             />
           </View>
           <View style={[styles.viewRow, {marginTop: 15}]}>
@@ -179,6 +179,7 @@ const HomeScreen = () => {
               title={'Thanh toán'}
               svgIcon={svgs.Wallet}
               styleBGIcon={{backgroundColor: '#edfcfb'}}
+              onPress={() => navigation.navigate('PaymentManagement')}
             />
             <CustomOptionBT
               title={'Điện-nước'}

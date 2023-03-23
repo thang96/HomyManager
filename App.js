@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  KeyboardAvoidingView,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -18,17 +19,19 @@ const App = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <GestureHandlerRootView style={styles.container}>
-        <Provider store={store}>
-          <NavigationContainer>
-            <MainNavigation />
-          </NavigationContainer>
-        </Provider>
-      </GestureHandlerRootView>
+      <KeyboardAvoidingView style={styles.container}>
+        <GestureHandlerRootView style={styles.container}>
+          <StatusBar
+            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+            backgroundColor={backgroundStyle.backgroundColor}
+          />
+          <Provider store={store}>
+            <NavigationContainer>
+              <MainNavigation />
+            </NavigationContainer>
+          </Provider>
+        </GestureHandlerRootView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

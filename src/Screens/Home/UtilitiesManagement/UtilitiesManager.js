@@ -78,42 +78,41 @@ const UtilitiesManager = props => {
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <CustomSearchAppBar
-          iconLeft={icons.ic_back}
-          label={'Quản lý tiện ích'}
-          iconRight={icons.ic_bell}
-          iconSecondRight={icons.ic_moreOption}
-          pressIconLeft={() => navigation.goBack()}
-          keyboard={keyboard}
-          textSearch={textSearch}
-          value={textSearch}
-          onChangeText={text => setTextSearch(text)}
-          placeholder={'Tìm kiếm...'}
-        />
-        <View style={{flex: 1, paddingHorizontal: 10}}>
-          {loading && <CustomLoading />}
-          <ScrollView style={[styles.eachContainer]}>
-            {listSevice.length > 0 ? (
-              <FlatList
-                listKey="listPaidSevice"
-                style={{justifyContent: 'space-between'}}
-                horizontal={false}
-                scrollEnabled={false}
-                numColumns={3}
-                data={listSevice}
-                keyExtractor={key => key.id}
-                renderItem={({item, index}) => renderListService(item, index)}
-              />
-            ) : null}
-          </ScrollView>
+      <CustomSearchAppBar
+        iconLeft={icons.ic_back}
+        label={'Quản lý tiện ích'}
+        iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        iconSecondRight={icons.ic_moreOption}
+        pressIconLeft={() => navigation.goBack()}
+        keyboard={keyboard}
+        textSearch={textSearch}
+        value={textSearch}
+        onChangeText={text => setTextSearch(text)}
+        placeholder={'Tìm kiếm...'}
+      />
+      <View style={{flex: 1, paddingHorizontal: 10}}>
+        {loading && <CustomLoading />}
+        <ScrollView style={[styles.eachContainer]}>
+          {listSevice.length > 0 ? (
+            <FlatList
+              listKey="listPaidSevice"
+              style={{justifyContent: 'space-between'}}
+              horizontal={false}
+              scrollEnabled={false}
+              numColumns={3}
+              data={listSevice}
+              keyExtractor={key => key.id}
+              renderItem={({item, index}) => renderListService(item, index)}
+            />
+          ) : null}
+        </ScrollView>
 
-          <CustomButtonBottom
-            label={'Thêm tiện ích mới'}
-            onPress={() => navigation.navigate('AddUtilities')}
-          />
-        </View>
-      </KeyboardAvoidingView>
+        <CustomButtonBottom
+          label={'Thêm tiện ích mới'}
+          onPress={() => navigation.navigate('AddUtilities')}
+        />
+      </View>
     </View>
   );
 };

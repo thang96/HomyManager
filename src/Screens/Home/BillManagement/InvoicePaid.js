@@ -17,8 +17,8 @@ import {icons, colors} from '../../../Constants';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomButtonCarendar from '../../../Components/ComponentHome/CustomButtonCarendar';
 
-const BillIsOverdue = props => {
-  const [listContract, setListContract] = useState(FAKE_DATA);
+const BillPaid = props => {
+  const [listContract, setListContract] = useState([]);
   const [date, setDate] = useState(new Date());
   const [valueDate, setValueDate] = useState('03-03-2023');
 
@@ -33,7 +33,7 @@ const BillIsOverdue = props => {
         icon={icons.ic_calendar}
         onPress={() => {}}
       />
-      <CustomTextTitle label={'Hóa đơn quá hạn'} />
+      <CustomTextTitle label={'Hóa đơn đã thanh toán'} />
       {/* <FlatList
         data={listContract}
         keyExtractor={key => key.contractCode}
@@ -43,7 +43,7 @@ const BillIsOverdue = props => {
   );
 };
 const styles = StyleSheet.create({});
-export default BillIsOverdue;
+export default BillPaid;
 
 const FAKE_DATA = [
   {

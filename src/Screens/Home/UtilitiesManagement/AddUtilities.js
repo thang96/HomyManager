@@ -67,53 +67,52 @@ const AddUtilities = props => {
           pressConfirm={() => createNewAmenity()}
         />
       )}
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <CustomAppBar
-          iconLeft={icons.ic_back}
-          label={'Thêm tiện ích'}
-          iconRight={icons.ic_bell}
-          iconSecondRight={icons.ic_moreOption}
-          pressIconLeft={() => navigation.goBack()}
-        />
-        <ScrollView style={[styles.eachContainer]}>
-          <Text style={styles.content}>
-            Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ
-          </Text>
-          <CustomTextTitle label={'Thông tin tiện ích'} />
+      <CustomAppBar
+        iconLeft={icons.ic_back}
+        label={'Thêm tiện ích'}
+        iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        iconSecondRight={icons.ic_moreOption}
+        pressIconLeft={() => navigation.goBack()}
+      />
+      <ScrollView style={[styles.eachContainer]}>
+        <Text style={styles.content}>
+          Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ
+        </Text>
+        <CustomTextTitle label={'Thông tin tiện ích'} />
 
-          <CustomInput
-            important={true}
-            type={'input'}
-            title={'Tên tiện ích'}
-            placeholder={'Nhập tên tiện ích'}
-            onEndEditing={evt => setName(evt.nativeEvent.text)}
-            defaultValue={name}
+        <CustomInput
+          important={true}
+          type={'input'}
+          title={'Tên tiện ích'}
+          placeholder={'Nhập tên tiện ích'}
+          onEndEditing={evt => setName(evt.nativeEvent.text)}
+          defaultValue={name}
+        />
+
+        <View
+          style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
+          <Text style={[styles.label]}>Ghi chú</Text>
+          <Text style={{color: 'red', fontSize: 14}}> *</Text>
+        </View>
+        <View style={styles.viewTextInput}>
+          <TextInput
+            ref={noteRef}
+            multiline
+            placeholder="Nhập ghi chú cho tiện ích"
+            onEndEditing={evt => setDescription(evt.nativeEvent.text)}
+            defaultValue={description}
           />
+        </View>
+        <View style={{marginBottom: 56}} />
+      </ScrollView>
 
-          <View
-            style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
-            <Text style={[styles.label]}>Ghi chú</Text>
-            <Text style={{color: 'red', fontSize: 14}}> *</Text>
-          </View>
-          <View style={styles.viewTextInput}>
-            <TextInput
-              ref={noteRef}
-              multiline
-              placeholder="Nhập ghi chú cho tiện ích"
-              onEndEditing={evt => setDescription(evt.nativeEvent.text)}
-              defaultValue={description}
-            />
-          </View>
-          <View style={{marginBottom: 56}} />
-        </ScrollView>
-
-        <CustomTwoButtonBottom
-          leftLabel={'Lưu'}
-          rightLabel={'Thêm mới'}
-          onPressLeft={() => navigation.goBack()}
-          onPressRight={() => setModalAddAmenity(true)}
-        />
-      </KeyboardAvoidingView>
+      <CustomTwoButtonBottom
+        leftLabel={'Lưu'}
+        rightLabel={'Thêm mới'}
+        onPressLeft={() => navigation.goBack()}
+        onPressRight={() => setModalAddAmenity(true)}
+      />
     </View>
   );
 };

@@ -60,41 +60,40 @@ const Service = props => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <CustomAppBar
-          iconLeft={icons.ic_back}
-          label={'Dịch vụ'}
-          iconRight={icons.ic_bell}
-          iconSecondRight={icons.ic_moreOption}
-          pressIconLeft={() => navigation.goBack()}
-        />
-        <ScrollView style={[styles.eachContainer]}>
-          <Text style={styles.content}>
-            Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ
-          </Text>
-          <CustomTextTitle label={'Dịch vụ đã thêm'} />
+      <CustomAppBar
+        iconLeft={icons.ic_back}
+        label={'Dịch vụ'}
+        iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        iconSecondRight={icons.ic_moreOption}
+        pressIconLeft={() => navigation.goBack()}
+      />
+      <ScrollView style={[styles.eachContainer]}>
+        <Text style={styles.content}>
+          Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ
+        </Text>
+        <CustomTextTitle label={'Dịch vụ đã thêm'} />
 
-          {services.length > 0 ? (
-            <FlatList
-              listKey="listPaidSevice"
-              style={{justifyContent: 'space-between'}}
-              horizontal={false}
-              scrollEnabled={false}
-              numColumns={2}
-              data={services}
-              keyExtractor={(key, index) => `${key.id}${index}`}
-              renderItem={({item, index}) => renderListService(item, index)}
-            />
-          ) : null}
-        </ScrollView>
+        {services.length > 0 ? (
+          <FlatList
+            listKey="listPaidSevice"
+            style={{justifyContent: 'space-between'}}
+            horizontal={false}
+            scrollEnabled={false}
+            numColumns={2}
+            data={services}
+            keyExtractor={(key, index) => `${key.id}${index}`}
+            renderItem={({item, index}) => renderListService(item, index)}
+          />
+        ) : null}
+      </ScrollView>
 
-        <CustomTwoButtonBottom
-          leftLabel={'Lưu'}
-          rightLabel={'Thêm mới'}
-          onPressLeft={() => updateservices()}
-          onPressRight={() => navigation.navigate('AddService')}
-        />
-      </KeyboardAvoidingView>
+      <CustomTwoButtonBottom
+        leftLabel={'Lưu'}
+        rightLabel={'Thêm mới'}
+        onPressLeft={() => updateservices()}
+        onPressRight={() => navigation.navigate('AddService')}
+      />
     </View>
   );
 };

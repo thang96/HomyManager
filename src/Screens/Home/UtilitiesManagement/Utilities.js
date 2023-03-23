@@ -59,40 +59,38 @@ const Utilities = props => {
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <CustomAppBar
-          iconLeft={icons.ic_back}
-          label={'Tiện ích'}
-          iconRight={icons.ic_bell}
-          iconSecondRight={icons.ic_moreOption}
-          pressIconLeft={() => navigation.goBack()}
+      <CustomAppBar
+        iconLeft={icons.ic_back}
+        label={'Tiện ích'}
+        iconRight={icons.ic_bell}
+        iconSecondRight={icons.ic_moreOption}
+        pressIconLeft={() => navigation.goBack()}
+      />
+      <ScrollView style={[styles.eachContainer]}>
+        <CustomSuggest
+          label={'Chọn tiện ích miễn phí đã có hoặc thêm mới tiện ích'}
         />
-        <ScrollView style={[styles.eachContainer]}>
-          <CustomSuggest
-            label={'Chọn tiện ích miễn phí đã có hoặc thêm mới tiện ích'}
-          />
-          <CustomTextTitle label={'Tiện ích hiện có'} />
+        <CustomTextTitle label={'Tiện ích hiện có'} />
 
-          {amenitys.length > 0 ? (
-            <FlatList
-              listKey="listPaidSevice"
-              style={{justifyContent: 'space-between'}}
-              horizontal={false}
-              scrollEnabled={false}
-              numColumns={2}
-              data={amenitys}
-              keyExtractor={key => `${key.id}`}
-              renderItem={({item, index}) => renderListService(item, index)}
-            />
-          ) : null}
-        </ScrollView>
-        <CustomTwoButtonBottom
-          leftLabel={'Lưu'}
-          rightLabel={'Thêm mới'}
-          onPressLeft={() => updateAmenitys()}
-          onPressRight={() => navigation.navigate('AddUtilities')}
-        />
-      </KeyboardAvoidingView>
+        {amenitys.length > 0 ? (
+          <FlatList
+            listKey="listPaidSevice"
+            style={{justifyContent: 'space-between'}}
+            horizontal={false}
+            scrollEnabled={false}
+            numColumns={2}
+            data={amenitys}
+            keyExtractor={key => `${key.id}`}
+            renderItem={({item, index}) => renderListService(item, index)}
+          />
+        ) : null}
+      </ScrollView>
+      <CustomTwoButtonBottom
+        leftLabel={'Lưu'}
+        rightLabel={'Thêm mới'}
+        onPressLeft={() => updateAmenitys()}
+        onPressRight={() => navigation.navigate('AddUtilities')}
+      />
     </View>
   );
 };

@@ -127,6 +127,13 @@ const AddBuildingsStep2 = props => {
             onPressLeft={() => setModalpaymentDateFrom(true)}
             onPressRightt={() => setModalpaymentDateTo(true)}
           />
+
+          <CustomTextTitle
+            label={'Thông tin thanh toán'}
+            labelButton={'Thêm'}
+            icon={icons.ic_plus}
+            onPress={() => {}}
+          />
         </ScrollView>
         <CustomTwoButtonBottom
           leftLabel={'Trở lại'}
