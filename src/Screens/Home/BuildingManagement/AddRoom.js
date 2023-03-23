@@ -35,6 +35,8 @@ import {
 import {updateStatus} from '../../../Store/slices/statusSlice';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
+import CustomPickerDay from '../../../Components/CommonComponent/CustomPickerDay';
+import {UNITTYPE} from '../../../Resource/DataPicker';
 
 const AddRoom = () => {
   const navigation = useNavigation();
@@ -66,6 +68,7 @@ const AddRoom = () => {
   const [modalAddRoom, setModalAddRoom] = useState(false);
   const [modalCamera, setModalCamera] = useState(false);
   const [modalHauses, setModalHauses] = useState(false);
+  const [modalUnitType, setModalUnitType] = useState(false);
 
   useEffect(() => {
     const getListData = async () => {
@@ -261,6 +264,17 @@ const AddRoom = () => {
           pressConfirm={() => createNewUnit()}
         />
       )}
+      {modalUnitType && (
+        <CustomPickerDay
+          data={UNITTYPE}
+          modalVisible={modalUnitType}
+          onRequestClose={() => setModalUnitType(false)}
+          onPress={item => {
+            setRoomType(item?.key);
+            setModalUnitType(false);
+          }}
+        />
+      )}
       {modalHauses && (
         <CustomModalPicker
           pressClose={() => setModalHauses(false)}
@@ -331,12 +345,12 @@ const AddRoom = () => {
         />
         <CustomInput
           important={true}
-          type={'input'}
+          type={'button'}
           styleViewInput={{marginTop: 10}}
           title={'Loại phòng'}
-          placeholder={'Nhập loại phòng'}
-          defaultValue={roomType}
-          onEndEditing={event => setRoomType(event.nativeEvent.text)}
+          placeholder={'Chọn loại phòng'}
+          value={roomType}
+          onPress={() => setModalUnitType(true)}
         />
 
         <CustomInputValue

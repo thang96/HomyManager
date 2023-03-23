@@ -2,16 +2,27 @@ import React from 'react';
 import {StyleSheet, Text, View, TextInput} from 'react-native';
 import {colors} from '../../Constants';
 const CustomNote = props => {
-  const {placeholder, value, onChangeText, title} = props;
+  const {
+    placeholder,
+    defaultValue,
+    onEndEditing,
+    title,
+    important,
+    viewCustom,
+  } = props;
   return (
-    <View style={styles.container}>
-      {title && <Text style={styles.title}>{title}</Text>}
+    <View style={[styles.container, viewCustom]}>
+      <View
+        style={{flexDirection: 'row', alignItems: 'center', marginBottom: 3}}>
+        <Text style={styles.title}>{title}</Text>
+        {important && <Text style={{color: 'red', fontSize: 14}}> *</Text>}
+      </View>
       <View style={styles.viewInput}>
         <TextInput
           multiline
           placeholder={placeholder}
-          value={value}
-          onChangeText={onChangeText}
+          defaultValue={defaultValue}
+          onEndEditing={onEndEditing}
         />
       </View>
     </View>
@@ -19,7 +30,7 @@ const CustomNote = props => {
 };
 const styles = StyleSheet.create({
   container: {flex: 1},
-  title: {color: 'rgba(55, 64, 71, 1)', fontSize: 15, marginBottom: 5},
+  title: {fontSize: 15, color: '#374047'},
   viewInput: {
     backgroundColor: 'white',
     height: 120,

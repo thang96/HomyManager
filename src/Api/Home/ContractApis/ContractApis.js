@@ -108,7 +108,7 @@ export const PostImageContractApi = (token, contractId, ContractImages) => {
   }
   return new Promise((resolve, reject) => {
     axios
-      .post(`${BASEURL}/contract/${contractId}/files/upload`, formContract, {
+      .post(`${BASEURL}/contracts/${contractId}/files/upload`, formContract, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'multipart/form-data',

@@ -56,6 +56,7 @@ import {
 } from '../../../Api/Home/ContractApis/ContractApis';
 import {updateStatus} from '../../../Store/slices/statusSlice';
 import CustomNote from '../../../Components/CommonComponent/CustomNote';
+import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 
 const CreateContract = () => {
   const navigation = useNavigation();
@@ -82,7 +83,7 @@ const CreateContract = () => {
   const [amenityIds, setAmenityIds] = useState([]);
   const [tenantIds, setTenantIds] = useState([]);
 
-  const [albumImage, setAlbumImage] = useState([]);
+  const [contractImages, setContractImages] = useState([]);
 
   const [startDateValue, setStartDateValue] = useState('Chọn ngày');
   const [endDateValue, setEndDateValue] = useState('Chọn ngày');
@@ -92,8 +93,9 @@ const CreateContract = () => {
   const [modalStartChargeDate, setModalStartChargeDate] = useState(false);
   const [modalPaymentDuration, setModalPaymentDuration] = useState(false);
   const [modalCamera, setModalCamera] = useState(false);
+  const [modalCreateContract, setModalCreateContract] = useState(false);
 
-  const [hause, setHause] = useState('');
+  const [hause, setHause] = useState(null);
   const [listHauses, setListHauses] = useState([]);
   const [listUnits, setListUnits] = useState([]);
   const [listService, setListService] = useState([]);
@@ -101,6 +103,17 @@ const CreateContract = () => {
   const [listTenant, setListTenant] = useState([]);
   const [modalHause, setModalHause] = useState(false);
   const [modalUnit, setModalUnit] = useState(false);
+
+  const valueIsReady = () =>
+    termAndCondition != '' &&
+    startDate != null &&
+    endDate != null &&
+    startChargeDate != null &&
+    paymentDuration != null &&
+    leasingFee != null &&
+    termAndCondition != null &&
+    contractImages.length > 0 &&
+    unitId != null;
 
   useEffect(() => {
     const getListData = async () => {
@@ -222,8 +235,8 @@ const CreateContract = () => {
     ImagePicker.openCamera({width: 300, height: 400})
       .then(image => {
         let eachImg = {...image, uri: image?.path};
-        const eachResult = [...albumImage, eachImg];
-        setAlbumImage(eachResult);
+        const eachResult = [...contractImages, eachImg];
+        setContractImages(eachResult);
       })
       .catch(e => {
         ImagePicker.clean();
@@ -241,9 +254,9 @@ const CreateContract = () => {
           let eachElement = {...element, uri: element?.path};
           albumImg.push(eachElement);
         }
-        const eachResult = [...albumImage];
+        const eachResult = [...contractImages];
         const newResult = eachResult.concat(albumImg);
-        setAlbumImage(newResult);
+        setContractImages(newResult);
       })
       .catch(e => {
         ImagePicker.clean();
@@ -257,9 +270,9 @@ const CreateContract = () => {
         <View style={styles.viewRender}>
           <CustomButton
             onPress={() => {
-              let result = [...albumImage];
+              let result = [...contractImages];
               let newResult = result.filter(itemResult => itemResult !== item);
-              setAlbumImage(newResult);
+              setContractImages(newResult);
             }}
             styleButton={styles.customButtonIcon}
             styleIcon={styles.imageStyle}
@@ -306,19 +319,18 @@ const CreateContract = () => {
       paymentDuration: parseInt(paymentDuration?.value),
       leasingFee: parseInt(leasingFee),
       depositMoney: parseInt(depositMoney),
+      description: description,
+      termAndCondition: termAndCondition,
       unitId: unitId?.id,
       serviceIds: serviceIds,
       amenityIds: amenityIds,
       tenantIds: tenantIds,
-      description: '',
     };
-    console.log(data, 'data');
     await CreateNewContractApi(tokenStore, data)
       .then(async res => {
         if (res?.status == 200) {
-          console.log(res?.data);
           contractId = res?.data?.id;
-          await PostImageContractApi(tokenStore, contractId, albumImage)
+          await PostImageContractApi(tokenStore, contractId, contractImages)
             .then(res => {
               if (res?.status == 200) {
                 dispatch(updateStatus(true));
@@ -340,6 +352,22 @@ const CreateContract = () => {
   return (
     <View style={styles.container}>
       {loadingAddContract && <CustomLoading />}
+      {modalCreateContract && (
+        <CustomModalNotify
+          title={'Tạo mới dịch vụ'}
+          label={'Bạn có muốn thêm mới dịch vụ này ?'}
+          modalVisible={modalCreateContract}
+          onRequestClose={() => setModalCreateContract(false)}
+          pressConfirm={() => {
+            valueIsReady() == true
+              ? createNewContract()
+              : Alert.alert(
+                  'Cảnh báo !!!',
+                  'Vui lòng điền đủ thông tin cần thiết',
+                );
+          }}
+        />
+      )}
       {modalHause && (
         <CustomModalPicker
           data={listHauses}
@@ -515,14 +543,22 @@ const CreateContract = () => {
           defaultValue={depositMoney}
           onEndEditing={event => setDepositMoney(event.nativeEvent.text)}
         />
+        <View style={styles.line} />
+        <CustomNote
+          important={true}
+          title={'Điều khoản hợp đồng'}
+          placeholder={'Nhập điều khoản hợp đồng'}
+          defaultValue={termAndCondition}
+          onEndEditing={evt => setTermAndCondition(evt.nativeEvent.text)}
+        />
 
-        {/* <View style={styles.line} />
-
-        <CustomTextTitle
-          label={'Đại diện người cho thuê'}
-          labelButton={'Thêm mới'}
-        /> */}
-
+        <CustomNote
+          viewCustom={{marginTop: 10}}
+          title={'Mô tả hợp đồng'}
+          placeholder={'Nhập mô tả hợp đồng'}
+          defaultValue={description}
+          onEndEditing={evt => setDescription(evt.nativeEvent.text)}
+        />
         <View style={styles.line} />
 
         <CustomTextTitle
@@ -604,10 +640,10 @@ const CreateContract = () => {
 
         <CustomTextTitle label={'Thêm ảnh hợp đồng'} />
         <View style={styles.viewShowImage}>
-          {albumImage.length > 0 ? (
+          {contractImages.length > 0 ? (
             <FlatList
               horizontal
-              data={albumImage}
+              data={contractImages}
               keyExtractor={uuid}
               renderItem={({item}) => renderImage(item)}
             />
@@ -635,17 +671,9 @@ const CreateContract = () => {
           leftLabel={'Trở lại'}
           rightLabel={'Tiếp tục'}
           onPressLeft={() => navigation.goBack()}
-          onPressRight={() => createNewContract()}
-        />
-        <CustomNote
-          title={'Điều khoản hợp đồng'}
-          placeholder={'Nhập điều khoản hợp đồng'}
+          onPressRight={() => setModalCreateContract(true)}
         />
 
-        <CustomNote
-          title={'Mô tả hợp đồng'}
-          placeholder={'Nhập mô tả hợp đồng'}
-        />
         <View style={{height: 56}} />
       </ScrollView>
     </View>

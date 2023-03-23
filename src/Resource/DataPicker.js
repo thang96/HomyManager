@@ -266,3 +266,10 @@ export const PAYMENTDURATION = [
   {key: '11 tháng', value: 11},
   {key: '12 tháng', value: 12},
 ];
+export const UNITTYPE = [
+  {key: 'Studio', value: 'Studio'},
+  {key: 'Duplex', value: 'Studio'},
+  {key: 'Một phòng ngủ', value: 'Một phòng ngủ'},
+  {key: 'Hai phòng ngủ', value: 'Hai phòng ngủ'},
+  {key: 'Ba phòng ngủ', value: 'Ba phòng ngủ'},
+];

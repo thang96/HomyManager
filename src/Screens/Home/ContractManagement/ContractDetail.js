@@ -10,7 +10,7 @@ import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import {ScrollView} from 'react-native-virtualized-view';
 import {dateToDMY} from '../../../utils/common';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
+import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 const ContractDetail = props => {
@@ -20,7 +20,6 @@ const ContractDetail = props => {
   const tokenStore = useSelector(token);
   const [contract, setContract] = useState();
   const [loadingContract, setLoadingContract] = useState(true);
-  console.log(contract);
   useEffect(() => {
     const getData = async () => {
       await GetContractDetailAPi(tokenStore, contractId)
@@ -138,7 +137,9 @@ const ContractDetail = props => {
         <CustomTextTitle label={'Danh sách người thuê'} />
         {contract?.tenants?.length > 0}
         <CustomTextTitle label={'Điều khoản'} />
+        <View style={{height: 56}} />
       </ScrollView>
+      <CustomButtonBottom label={'Thêm hóa đơn'} />
     </View>
   );
 };
