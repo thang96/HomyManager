@@ -3,7 +3,7 @@ import {Modal, StyleSheet, Text, View} from 'react-native';
 import {colors} from '../../Constants';
 import CustomButton from './CustomButton';
 const CustomModalNotify = props => {
-  const {onRequestClose, modalVisible, title, label, pressConfirm} = props;
+  const {modalVisible, title, label, onRequestClose, pressConfirm} = props;
   return (
     <View style={styles.container}>
       <Modal

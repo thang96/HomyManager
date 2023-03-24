@@ -40,7 +40,8 @@ const LoginScreen = () => {
         }
       })
       .catch(error => {
-        Alert.alert('Lỗi', `${error}`);
+        Alert.alert('Lỗi', `Lỗi đăng nhập`);
+        setLoading(false);
         console.log(error);
       });
   };
@@ -57,7 +58,7 @@ const LoginScreen = () => {
             <Text style={styles.content}>Tài khoản</Text>
             <CustomTextInput
               styleViewTextInput={styles.styleViewTextInput}
-              placeholder={'nhập tài khoản'}
+              placeholder={'Nhập tài khoản'}
               value={username}
               onChangeText={text => setUsername(text)}
             />
@@ -67,7 +68,7 @@ const LoginScreen = () => {
             <CustomTextInput
               secureTextEntry={isShow ? false : true}
               styleViewTextInput={styles.styleViewTextInput}
-              placeholder={'nhập mật khẩu'}
+              placeholder={'Nhập mật khẩu'}
               value={password}
               onChangeText={text => setPassword(text)}
               iconRight={isShow ? icons.ic_show : icons.ic_hide}
