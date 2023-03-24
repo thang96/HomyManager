@@ -193,7 +193,7 @@ const HomeScreen = () => {
               title={'Sổ nợ'}
               svgIcon={svgs.Document}
               styleBGIcon={{backgroundColor: '#edfcfb'}}
-              onPress={() => navigation.navigate('UserManager')}
+              onPress={() => navigation.navigate('CreateInvoice')}
             />
           </View>
         </View>

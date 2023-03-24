@@ -39,6 +39,7 @@ import ContractDetail from './Home/ContractManagement/ContractDetail';
 //----------- PaymentManagement
 import PaymentManagement from './Home/PaymentManagement/PaymentManagement';
 import AddPayment from './Home/PaymentManagement/AddPayment';
+import ListPaymentSelect from './Home/PaymentManagement/ListPaymentSelect';
 //----------- InvoiceManagement
 import InvoiceManagement from './Home/BillManagement/InvoiceManagement';
 import CreateInvoice from './Home/BillManagement/CreateInvoice';
@@ -98,6 +99,7 @@ export {
   //-- PaymentManagement
   PaymentManagement,
   AddPayment,
+  ListPaymentSelect,
   //-- ServiceManager
   ServiceManager,
   Service,

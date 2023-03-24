@@ -35,6 +35,7 @@ import {
   CreateInvoice,
   PaymentManagement,
   AddPayment,
+  ListPaymentSelect,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -85,6 +86,13 @@ const StackHomepage = () => {
       <Stack.Screen
         component={AddPayment}
         name={'AddPayment'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={ListPaymentSelect}
+        name={'ListPaymentSelect'}
         options={{
           headerShown: false,
         }}

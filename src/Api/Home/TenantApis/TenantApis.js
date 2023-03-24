@@ -124,6 +124,34 @@ export const PostImageUserApi = (token, userId, userImages) => {
   });
 };
 
+export const PostImageIdentityApi = (token, userId, identityImages) => {
+  let formUser = new FormData();
+  for (let i = 0; i < identityImages.length; i++) {
+    let image = identityImages[i];
+    formUser.append('files', {
+      uri: image?.uri,
+      name: getFileName(image),
+      type: 'image/jpeg',
+    });
+  }
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${BASEURL}/users/${userId}/identity/upload`, formUser, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
 const getFileName = file => {
   if (file.name !== undefined) {
     return file.name;

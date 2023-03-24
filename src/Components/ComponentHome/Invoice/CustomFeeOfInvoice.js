@@ -1,24 +1,18 @@
 import React from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 const CustomFeeOfInvoice = props => {
-  const {title, unit, defaultValue} = props;
+  const {} = props;
   return (
-    <View style={[styles.container, styles.viewBetween]}>
-      <Text style={{color: '#374047'}}>{title}</Text>
-      <View style={styles.viewRow}>
-        <TextInput defaultValue={defaultValue} />
-        <Text style={{color: '#374047'}}>{unit}</Text>
+    <View style={styles.container}>
+      <View style={styles.viewBetween}>
+        <Text>Điện</Text>
+        <Text>4000</Text>
       </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
-  container: {flex: 1},
-  viewBetween: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  viewRow: {flexDirection: 'row', alignItems: 'center'},
+  container: {height: 74, width: '100%'},
+  viewBetween: {flexDirection: 'row', alignItems: 'center'},
 });
 export default CustomFeeOfInvoice;

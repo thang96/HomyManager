@@ -206,6 +206,7 @@ const AddRoom = () => {
   };
 
   const createNewUnit = async () => {
+    setModalAddRoom(false);
     setLoadingRoom(true);
     let hauseIdSelect = hause?.id;
     let data = {

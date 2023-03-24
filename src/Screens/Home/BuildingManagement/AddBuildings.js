@@ -206,7 +206,7 @@ const AddBuildings = props => {
   const goToStepTwo = () => {
     let data = {
       name: name,
-      numberOfFloor: numberOfFloor,
+      numberOfFloor: parseInt(numberOfFloor),
       openTime: `${openTime}`,
       closeTime: `${closeTime}`,
       leasingFee: parseInt(leasingFee),
@@ -337,7 +337,7 @@ const AddBuildings = props => {
           />
 
           <CustomTimeButtons
-            styleContainer={{marginTop: 20}}
+            styleContainer={{marginTop: 10}}
             title={'Giờ mở - đóng cửa'}
             leftLabel={'Từ'}
             rightLabel={'Đến'}
@@ -348,19 +348,16 @@ const AddBuildings = props => {
             onPressLeft={() => setModalopenTime(true)}
             onPressRightt={() => setModalcloseTime(true)}
           />
-          <Text style={[styles.label, {marginTop: 10}]}>Chi phí thuê nhà</Text>
-          <View style={styles.viewSurrounded}>
-            <TextInput
-              keyboardType="numeric"
-              placeholder="Nhập chi phí thuê nhà (Nếu có)"
-              style={{flex: 1}}
-              defaultValue={leasingFee}
-              onEndEditing={evt => setLeasingFee(evt.nativeEvent.text)}
-            />
-            <View style={styles.viewTime}>
-              <Text style={styles.time}>VNĐ</Text>
-            </View>
-          </View>
+          <CustomInput
+            important={true}
+            styleViewInput={{marginTop: 10}}
+            type={'input'}
+            keyboardType="numeric"
+            title={'Chi phí thuê nhà'}
+            placeholder="Nhập chi phí thuê nhà"
+            defaultValue={leasingFee}
+            onEndEditing={evt => setLeasingFee(evt.nativeEvent.text)}
+          />
 
           <Text style={[styles.label, {marginTop: 10}]}>Mô tả</Text>
           <View style={styles.viewTextInput}>
@@ -407,13 +404,7 @@ const AddBuildings = props => {
               onEndEditing={evt => setAddress(evt.nativeEvent.text)}
             />
           </View>
-          {/* <View style={styles.line} />
-          <CustomTextTitle
-            label={'Quản lý tòa nhà'}
-            labelButton={'Thêm'}
-            icon={icons.ic_plus}
-            onPress={() => navigation.navigate('ManagerList')}
-          /> */}
+
           {managerSelect.length > 0 && (
             <FlatList
               data={managerSelect}
@@ -501,16 +492,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   title: {fontSize: 13, color: 'grey'},
-  viewSurrounded: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    marginTop: 5,
-    borderRadius: 10,
-    borderColor: '#ACB4B9',
-    backgroundColor: 'white',
-  },
   viewRow: {
     flexDirection: 'row',
     alignItems: 'center',

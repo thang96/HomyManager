@@ -1,8 +1,17 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {icons} from '../../../Constants';
+import CustomButton from '../../CommonComponent/CustomButton';
 const CustomBankAccountInfor = props => {
-  const {imageUrl, userName, accountNo, viewCustom} = props;
+  const {
+    imageUrl,
+    userName,
+    accountNo,
+    viewCustom,
+    isSelect,
+    isCheck,
+    onPress,
+  } = props;
   return (
     <View style={[styles.container, styles.shadowView, viewCustom]}>
       <Image
@@ -10,9 +19,34 @@ const CustomBankAccountInfor = props => {
         style={styles.image}
         resizeMode={'contain'}
       />
+      <View style={{flex: 1}}>
+        <Text numberOfLines={1} style={styles.userName}>
+          {userName}
+        </Text>
+        <Text numberOfLines={1} style={styles.accountNo}>
+          {accountNo}
+        </Text>
+      </View>
       <View>
-        <Text style={styles.userName}>{userName}</Text>
-        <Text style={styles.accountNo}>{accountNo}</Text>
+        {isSelect && (
+          <View style={styles.styleButton}>
+            {isCheck ? (
+              <CustomButton
+                icon={icons.ic_check}
+                styleIcon={styles.styleIcon}
+                onPress={onPress}
+                styleButton={styles.styleButton}
+              />
+            ) : (
+              <CustomButton
+                icon={icons.ic_unCheck}
+                styleIcon={styles.styleIcon}
+                onPress={onPress}
+                styleButton={styles.styleButton}
+              />
+            )}
+          </View>
+        )}
       </View>
     </View>
   );
@@ -45,5 +79,6 @@ const styles = StyleSheet.create({
   },
   userName: {color: '#374047', fontWeight: '600', fontSize: 15},
   accountNo: {color: '#5F6E78', fontSize: 13},
+  styleIcon: {width: 20, height: 20, tintColor: '#797979'},
 });
 export default CustomBankAccountInfor;

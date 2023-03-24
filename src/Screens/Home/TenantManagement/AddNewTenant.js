@@ -20,6 +20,7 @@ import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {dateToDMY, dateToYMD} from '../../../utils/common';
 import {
   CreateNewTenantApi,
+  PostImageIdentityApi,
   PostImageUserApi,
 } from '../../../Api/Home/TenantApis/TenantApis';
 import {useDispatch, useSelector} from 'react-redux';
@@ -47,8 +48,10 @@ const AddNewTenant = () => {
   const [password, setPassword] = useState('');
 
   const [albumImage, setAlbumImage] = useState([]);
+  const [albumImageUser, setAlbumImageUser] = useState([]);
 
   const [modalCamera, setModalCamera] = useState(false);
+  const [modalCameraUser, setModalCameraUser] = useState(false);
   const [birthDayValue, setBirthDayValue] = useState('');
   const [modalBirthDay, setModalBirthDay] = useState(false);
   const [identityIssueDateValue, setIdentityIssueDateValue] = useState('');
@@ -67,7 +70,6 @@ const AddNewTenant = () => {
         setModalCamera(false);
       });
   };
-
   const openGallery = () => {
     setModalCamera(false);
     ImagePicker.openPicker({multiple: true})
@@ -81,6 +83,39 @@ const AddNewTenant = () => {
         const eachResult = [...albumImage];
         const newResult = eachResult.concat(albumImg);
         setAlbumImage(newResult);
+      })
+      .catch(e => {
+        ImagePicker.clean();
+        setModalCamera(false);
+      });
+  };
+  const openCameraUser = () => {
+    setModalCameraUser(false);
+    ImagePicker.openCamera({width: 300, height: 400})
+      .then(image => {
+        let eachImg = {...image, uri: image?.path};
+        let eachResult = [...albumImageUser, eachImg];
+        setAlbumImageUser(eachResult);
+      })
+      .catch(e => {
+        ImagePicker.clean();
+        setModalCameraUser(false);
+      });
+  };
+
+  const openGalleryUser = () => {
+    setModalCameraUser(false);
+    ImagePicker.openPicker({multiple: true})
+      .then(async image => {
+        let albumImg = [];
+        for (let index = 0; index < image.length; index++) {
+          let element = image[index];
+          let eachElement = {...element, uri: element?.path};
+          albumImg.push(eachElement);
+        }
+        let eachResult = [...albumImageUser];
+        let newResult = eachResult.concat(albumImg);
+        setAlbumImageUser(newResult);
       })
       .catch(e => {
         ImagePicker.clean();
@@ -129,20 +164,25 @@ const AddNewTenant = () => {
     await CreateNewTenantApi(tokenStore, data)
       .then(async res => {
         if (res?.status == 200) {
-          tenantId = res?.data?.id;
-          await PostImageUserApi(tokenStore, tenantId, albumImage)
-            .then(res => {
+          const tenantId = res?.data?.id;
+          await PostImageUserApi(tokenStore, tenantId, albumImageUser)
+            .then(async res => {
               if (res?.status == 200) {
-                dispatch(updateStatus(true));
-                setLoadingAddTenant(false);
-                navigation.goBack();
+                await PostImageIdentityApi(tokenStore, tenantId, albumImage)
+                  .then(res => {
+                    if (res?.status == 200) {
+                      dispatch(updateStatus(true));
+                      setLoadingAddTenant(false);
+                      navigation.goBack();
+                    }
+                  })
+                  .catch(error => {
+                    Alert.alert('Cảnh báo', 'Không thể gửi ảnh CMND/CCCD');
+                  });
               }
             })
             .catch(error => {
-              Alert.alert(
-                'Cảnh báo',
-                'Có lỗi sảy ra,vui lòng liên hệ admin...',
-              );
+              Alert.alert('Cảnh báo', 'Không thể gửi ảnh người dùng.');
             });
         }
       })
@@ -168,6 +208,15 @@ const AddNewTenant = () => {
           modalVisible={modalCamera}
           onRequestClose={() => setModalCamera(false)}
           cancel={() => setModalCamera(false)}
+        />
+      )}
+      {modalCameraUser && (
+        <CustomModalCamera
+          openCamera={() => openCameraUser()}
+          openGallery={() => openGalleryUser()}
+          modalVisible={modalCameraUser}
+          onRequestClose={() => setModalCameraUser(false)}
+          cancel={() => setModalCameraUser(false)}
         />
       )}
       {modalBirthDay && (
@@ -287,10 +336,38 @@ const AddNewTenant = () => {
           defaultValue={address}
           onEndEditing={evt => setAddress(evt.nativeEvent.text)}
         />
+        <View style={styles.line} />
+        <CustomTextTitle label={'Thêm ảnh người dùng'} />
 
+        <View style={styles.viewShowImage}>
+          {albumImageUser.length > 0 ? (
+            <FlatList
+              horizontal
+              data={albumImageUser}
+              keyExtractor={uuid}
+              renderItem={({item}) => renderImage(item)}
+            />
+          ) : (
+            <CustomButton
+              styleButton={{flex: 1}}
+              label={'Tải lên ảnh người dùng'}
+              styleLabel={[{marginTop: 5, textAlign: 'center'}]}
+              disabled={true}
+              icon={icons.ic_upload}
+              styleIcon={{with: 100, height: 100, alignSelf: 'center'}}
+            />
+          )}
+        </View>
+
+        <CustomButton
+          styleButton={[styles.buttonUploadIM]}
+          label={'Thêm ảnh người dùng'}
+          styleLabel={styles.labelUploadIM}
+          onPress={() => setModalCameraUser(true)}
+        />
         <View style={styles.line} />
 
-        <CustomTextTitle label={'Thêm ảnh người dùng'} />
+        <CustomTextTitle label={'Thêm ảnh CMND/ CCCD'} />
 
         <View style={styles.viewShowImage}>
           {albumImage.length > 0 ? (
@@ -311,7 +388,6 @@ const AddNewTenant = () => {
             />
           )}
         </View>
-
         <CustomButton
           styleButton={[styles.buttonUploadIM]}
           label={'Thêm ảnh CMND/ CCCD'}

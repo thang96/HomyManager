@@ -18,7 +18,13 @@ import CustomTimeButtons from '../../../Components/CommonComponent/CustomTimeBut
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomButtonValue from '../../../Components/CommonComponent/CustomButtonValue';
 import {useDispatch, useSelector} from 'react-redux';
-import {commonState, updateCommon} from '../../../Store/slices/commonSlice';
+import {
+  bankAccountState,
+  commonState,
+  updateBankAccounts,
+  updateCommon,
+} from '../../../Store/slices/commonSlice';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 import CustomPickerDay from '../../../Components/CommonComponent/CustomPickerDay';
 import {
   BILLINGDATE,
@@ -26,19 +32,28 @@ import {
   PAYMENTDATETO,
 } from '../../../Resource/DataPicker';
 import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppBar';
+import CustomBankAccountInfor from '../../../Components/ComponentHome/BankAccount/CustomBankAccountInfor';
 
 const AddBuildingsStep2 = props => {
   const navigation = useNavigation();
+  const bankAccountsStore = useSelector(bankAccountState);
   const dispatch = useDispatch();
   const createBuildingInfor = useSelector(commonState);
+  const [bank, setBank] = useState(null);
 
   const [billingDate, setBillingDate] = useState(BILLINGDATE[0]);
   const [paymentDateFrom, setPaymentDateFrom] = useState(PAYMENTDATEFROM[0]);
   const [paymentDateTo, setPaymentDateTo] = useState(PAYMENTDATETO[4]);
+  const [bankAccountId, setBankAccountId] = useState([]);
 
   const [modalbillingDate, setModalbillingDate] = useState(false);
   const [modalpaymentDateFrom, setModalpaymentDateFrom] = useState(false);
   const [modalpaymentDateTo, setModalpaymentDateTo] = useState(false);
+
+  useEffect(() => {
+    setBank(bankAccountsStore);
+    setBankAccountId(bankAccountsStore?.id);
+  }, [bankAccountsStore]);
 
   const goToStepThree = () => {
     let eachData = {
@@ -46,6 +61,7 @@ const AddBuildingsStep2 = props => {
       billingDate: billingDate.value,
       paymentDateTo: paymentDateTo.value,
       paymentDateFrom: paymentDateFrom.value,
+      bankAccountId: bankAccountId,
     };
     dispatch(updateCommon(eachData));
     navigation.navigate('AddBuildingsStep3');
@@ -132,8 +148,19 @@ const AddBuildingsStep2 = props => {
             label={'Thông tin thanh toán'}
             labelButton={'Thêm'}
             icon={icons.ic_plus}
-            onPress={() => {}}
+            onPress={() => {
+              dispatch(updateStatus(true));
+              navigation.navigate('ListPaymentSelect');
+            }}
           />
+          {bank && (
+            <CustomBankAccountInfor
+              viewCustom={{marginBottom: 10}}
+              imageUrl={bank?.bank?.logo}
+              userName={bank?.name}
+              accountNo={bank?.accountNo}
+            />
+          )}
         </ScrollView>
         <CustomTwoButtonBottom
           leftLabel={'Trở lại'}

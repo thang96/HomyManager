@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import {Alert, FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import {colors, icons} from '../../../Constants';
+import {dateToDMY} from '../../../utils/common';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
@@ -16,18 +17,28 @@ import {
   GetUnitDetailAPi,
 } from '../../../Api/Home/UnitApis/UnitApis';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
-import CustomInputValue from '../../../Components/CommonComponent/CustomInputValue';
-import CustomFeeOfInvoice from '../../../Components/ComponentHome/Invoice/CustomFeeOfInvoice';
 import {GetActiveContractApi} from '../../../Api/Home/ContractApis/ContractApis';
+import CustomUnitFee from '../../../Components/ComponentHome/Invoice/CustomUnitFee';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
+import CustomModalAddOtherFee from '../../../Components/ComponentHome/Invoice/CustomModalAddOtherFee';
+import CustomFeeOfInvoice from '../../../Components/ComponentHome/Invoice/CustomFeeOfInvoice';
 const CreateInvoice = props => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
   const [loadingAddContract, setLoadingAddContract] = useState(true);
   const [hause, setHause] = useState(null);
-  const [unit, setUnit] = useState();
-  const [contract, setContract] = useState();
-  const [detailUnit, setDetailUnit] = useState();
-  console.log(contract);
+  const [unit, setUnit] = useState(null);
+  const [contract, setContract] = useState(null);
+  // console.log(contract);
+
+  const [otherBills, setOtherBills] = useState([]);
+  const [bill, setBill] = useState();
+  const [chargeServices, setChargeServices] = useState([]);
+  const [listHauses, setListHauses] = useState([]);
+  const [listUnits, setListUnits] = useState([]);
+  const [modalHause, setModalHause] = useState(false);
+  const [modalUnit, setModalUnit] = useState(false);
+  const [modalAddFee, setModalAddFee] = useState(false);
 
   const [name, setName] = useState();
   const [leasingFee, setLeasingFee] = useState();
@@ -40,11 +51,13 @@ const CreateInvoice = props => {
 
   const [listChargeServices, setListChargeServices] = useState([]);
 
-  const [listHauses, setListHauses] = useState([]);
-  const [listUnits, setListUnits] = useState([]);
-  const [modalHause, setModalHause] = useState(false);
-  const [modalUnit, setModalUnit] = useState(false);
-
+  useEffect(() => {
+    if (bill) {
+      let eachOther = [...otherBills, bill];
+      setOtherBills(eachOther);
+      setBill(null);
+    }
+  }, [bill]);
   useEffect(() => {
     const getListData = async () => {
       await GetListHausesApi(tokenStore)
@@ -67,6 +80,8 @@ const CreateInvoice = props => {
     await GetListUnitsApi(tokenStore, hauseId)
       .then(res => {
         if (res?.status == 200) {
+          setUnit(null);
+          setContract(null);
           setListUnits(res?.data);
           setLoadingAddContract(false);
         }
@@ -82,17 +97,21 @@ const CreateInvoice = props => {
     await GetUnitDetailAPi(tokenStore, unitId)
       .then(res => {
         if (res?.status == 200) {
-          setDetailUnit(res?.data);
+          console.log(res?.data);
           setListChargeServices(res?.data?.chargeServices);
-          setLoadingAddContract(false);
         }
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        console.log(error);
+      });
     await GetActiveContractApi(tokenStore, unitId)
       .then(res => {
         if (res?.status == 200) {
           setContract(res?.data);
+          setLoadingAddContract(false);
         } else if (res?.status == 204) {
+          setContract(null);
+          setLoadingAddContract(false);
           Alert.alert(
             'Thông báo',
             'Phòng không có hợp đồng nên không tạo được hóa đơn !',
@@ -102,10 +121,22 @@ const CreateInvoice = props => {
       })
       .catch(error => console.log(error));
   };
-
+  const startDate = new Date(contract?.startDate);
+  const endDate = new Date(contract?.endDate);
   return (
     <View style={styles.container}>
       {loadingAddContract && <CustomLoading />}
+      {modalAddFee && (
+        <CustomModalAddOtherFee
+          modalVisible={modalAddFee}
+          onRequestClose={() => setModalAddFee(false)}
+          pressClose={() => setModalAddFee(false)}
+          pressConfirm={otherFee => {
+            setBill(otherFee);
+            setModalAddFee(false);
+          }}
+        />
+      )}
       {modalHause && (
         <CustomModalPicker
           data={listHauses}
@@ -151,22 +182,74 @@ const CreateInvoice = props => {
           value={unit?.name}
           onPress={() => setModalUnit(true)}
         />
-        <CustomInput
-          important={true}
-          type={'input'}
-          styleViewInput={{marginTop: 20}}
-          title={'Tên hóa đơn'}
-          placeholder={'Nhập tên hóa đơn'}
-          defaultValue={name}
-          onEndEditing={evt => setName(evt.nativeEvent.name)}
-        />
-        <View style={[styles.shadowView, styles.detailIvoice]}>
-          <CustomFeeOfInvoice
-            title={'Tiền  phòng:'}
-            defaultValue={`${detailUnit?.rentMonthlyFee.toLocaleString()}`}
-            unit={'VNĐ'}
-          />
-        </View>
+        {contract != null && (
+          <View>
+            <View style={[styles.shadowView, styles.viewInfor]}>
+              <View style={styles.viewRow}>
+                <Image
+                  source={icons.ic_calendar}
+                  style={{width: 20, height: 20, marginRight: 5}}
+                />
+                <Text style={{color: '#374047', fontSize: 13}}>{`Từ ${dateToDMY(
+                  startDate,
+                )} đến ${dateToDMY(endDate)}`}</Text>
+              </View>
+              <View style={styles.viewRow}>
+                <Image
+                  source={icons.ic_home}
+                  style={{width: 20, height: 20, marginRight: 5}}
+                />
+                <Text style={{color: '#374047', fontSize: 13}}>
+                  {`${contract?.unit?.house?.name} - ${contract?.unit?.name}`}
+                </Text>
+              </View>
+              <View style={styles.viewRow}>
+                <Text style={{color: '#374047', fontSize: 13}}>
+                  Chủ hợp đồng:
+                </Text>
+                <Text
+                  style={{color: '#374047', fontSize: 13, fontWeight: '600'}}>
+                  {` ${contract?.contractOwner?.fullName}`}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.viewLine} />
+            <CustomInput
+              important={true}
+              type={'input'}
+              title={'Tên hóa đơn'}
+              placeholder={'Nhập tên hóa đơn'}
+              defaultValue={name}
+              onEndEditing={evt => setName(evt.nativeEvent.name)}
+            />
+            <CustomUnitFee
+              important={true}
+              title={'Tiền phòng'}
+              defaultValue={`${contract?.leasingFee}`}
+            />
+
+            <View style={styles.viewLine} />
+
+            <CustomTextTitle label={'Phí dịch vụ'} />
+            {listChargeServices.length > 0 && <CustomFeeOfInvoice />}
+            {otherBills.length > 0 && (
+              <FlatList
+                data={otherBills}
+                keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
+                renderItem={({item, index}) => {
+                  return <CustomUnitFee title={`${item?.name}`} />;
+                }}
+              />
+            )}
+            <CustomButton
+              label={'Thêm phí khác'}
+              styleButton={{marginTop: 10}}
+              styleLabel={styles.textAddOtherFee}
+              onPress={() => setModalAddFee(true)}
+            />
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -184,11 +267,23 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  detailIvoice: {
-    marginTop: 10,
-    padding: 10,
-    borderRadius: 8,
+  viewInfor: {
     backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 10,
+  },
+  viewRow: {flexDirection: 'row', alignItems: 'center'},
+  viewLine: {
+    height: 0.5,
+    width: '100%',
+    backgroundColor: '#97A1A7',
+    marginVertical: 20,
+  },
+  textAddOtherFee: {
+    color: colors.mainColor,
+    fontWeight: '600',
+    fontSize: 17,
   },
 });
 export default CreateInvoice;
