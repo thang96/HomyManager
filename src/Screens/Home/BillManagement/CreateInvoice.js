@@ -20,8 +20,14 @@ import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {GetActiveContractApi} from '../../../Api/Home/ContractApis/ContractApis';
 import CustomUnitFee from '../../../Components/ComponentHome/Invoice/CustomUnitFee';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
+import CustomNote from '../../../Components/CommonComponent/CustomNote';
 import CustomModalAddOtherFee from '../../../Components/ComponentHome/Invoice/CustomModalAddOtherFee';
 import CustomFeeOfInvoice from '../../../Components/ComponentHome/Invoice/CustomFeeOfInvoice';
+import {uuid} from '../../../utils/uuid';
+import RenderImage from '../../../Components/ComponentHome/RenderImage';
+import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
+import ImagePicker from 'react-native-image-crop-picker';
+
 const CreateInvoice = props => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
@@ -39,6 +45,7 @@ const CreateInvoice = props => {
   const [modalHause, setModalHause] = useState(false);
   const [modalUnit, setModalUnit] = useState(false);
   const [modalAddFee, setModalAddFee] = useState(false);
+  const [modalCamera, setModalCamera] = useState(false);
 
   const [name, setName] = useState();
   const [leasingFee, setLeasingFee] = useState();
@@ -48,6 +55,8 @@ const CreateInvoice = props => {
   const [notice, setNotice] = useState();
   const [contractId, setContractId] = useState(null);
   const [invoiceServices, setInvoiceServices] = useState([]);
+
+  const [invoiceImages, setInvoiceImages] = useState([]);
 
   const [listChargeServices, setListChargeServices] = useState([]);
 
@@ -123,9 +132,67 @@ const CreateInvoice = props => {
   };
   const startDate = new Date(contract?.startDate);
   const endDate = new Date(contract?.endDate);
+
+  const openCamera = () => {
+    setModalCamera(false);
+    ImagePicker.openCamera({width: 300, height: 400})
+      .then(image => {
+        let eachImg = {...image, uri: image?.path};
+        const eachResult = [...invoiceImages, eachImg];
+        setInvoiceImages(eachResult);
+      })
+      .catch(e => {
+        ImagePicker.clean();
+        setModalCamera(false);
+      });
+  };
+
+  const openGallery = () => {
+    setModalCamera(false);
+    ImagePicker.openPicker({multiple: true})
+      .then(async image => {
+        let albumImg = [];
+        for (let index = 0; index < image.length; index++) {
+          let element = image[index];
+          let eachElement = {...element, uri: element?.path};
+          albumImg.push(eachElement);
+        }
+        const eachResult = [...invoiceImages];
+        const newResult = eachResult.concat(albumImg);
+        setInvoiceImages(newResult);
+      })
+      .catch(e => {
+        ImagePicker.clean();
+        setModalCamera(false);
+      });
+  };
+
+  const renderImage = (item, index) => {
+    return (
+      <RenderImage
+        deleteButton={true}
+        data={item}
+        deleteItem={() => {
+          let result = [...invoiceImages];
+          let newResult = result.filter(itemResult => itemResult !== item);
+          setInvoiceImages(newResult);
+        }}
+      />
+    );
+  };
+
   return (
     <View style={styles.container}>
       {loadingAddContract && <CustomLoading />}
+      {modalCamera && (
+        <CustomModalCamera
+          openCamera={() => openCamera()}
+          openGallery={() => openGallery()}
+          modalVisible={modalCamera}
+          onRequestClose={() => setModalCamera(false)}
+          cancel={() => setModalCamera(false)}
+        />
+      )}
       {modalAddFee && (
         <CustomModalAddOtherFee
           modalVisible={modalAddFee}
@@ -182,78 +249,145 @@ const CreateInvoice = props => {
           value={unit?.name}
           onPress={() => setModalUnit(true)}
         />
-        {contract != null && (
-          <View>
-            <View style={[styles.shadowView, styles.viewInfor]}>
-              <View style={styles.viewRow}>
-                <Image
-                  source={icons.ic_calendar}
-                  style={{width: 20, height: 20, marginRight: 5}}
-                />
-                <Text style={{color: '#374047', fontSize: 13}}>{`Từ ${dateToDMY(
-                  startDate,
-                )} đến ${dateToDMY(endDate)}`}</Text>
-              </View>
-              <View style={styles.viewRow}>
-                <Image
-                  source={icons.ic_home}
-                  style={{width: 20, height: 20, marginRight: 5}}
-                />
-                <Text style={{color: '#374047', fontSize: 13}}>
-                  {`${contract?.unit?.house?.name} - ${contract?.unit?.name}`}
-                </Text>
-              </View>
-              <View style={styles.viewRow}>
-                <Text style={{color: '#374047', fontSize: 13}}>
-                  Chủ hợp đồng:
-                </Text>
-                <Text
-                  style={{color: '#374047', fontSize: 13, fontWeight: '600'}}>
-                  {` ${contract?.contractOwner?.fullName}`}
-                </Text>
-              </View>
+        {/* {contract != null && ( */}
+        <View>
+          <View style={[styles.shadowView, styles.viewInfor]}>
+            <View style={styles.viewRow}>
+              <Image
+                source={icons.ic_calendar}
+                style={{width: 20, height: 20, marginRight: 5}}
+              />
+              <Text style={{color: '#374047', fontSize: 13}}>{`Từ ${dateToDMY(
+                startDate,
+              )} đến ${dateToDMY(endDate)}`}</Text>
             </View>
+            <View style={styles.viewRow}>
+              <Image
+                source={icons.ic_home}
+                style={{width: 20, height: 20, marginRight: 5}}
+              />
+              <Text style={{color: '#374047', fontSize: 13}}>
+                {`${contract?.unit?.house?.name} - ${contract?.unit?.name}`}
+              </Text>
+            </View>
+            <View style={styles.viewRow}>
+              <Text style={{color: '#374047', fontSize: 13}}>
+                Chủ hợp đồng:
+              </Text>
+              <Text style={{color: '#374047', fontSize: 13, fontWeight: '600'}}>
+                {` ${contract?.contractOwner?.fullName}`}
+              </Text>
+            </View>
+          </View>
 
-            <View style={styles.viewLine} />
-            <CustomInput
-              important={true}
-              type={'input'}
-              title={'Tên hóa đơn'}
-              placeholder={'Nhập tên hóa đơn'}
-              defaultValue={name}
-              onEndEditing={evt => setName(evt.nativeEvent.name)}
+          <View style={styles.viewLine} />
+          <CustomInput
+            important={true}
+            type={'input'}
+            title={'Tên hóa đơn'}
+            placeholder={'Nhập tên hóa đơn'}
+            defaultValue={name}
+            onEndEditing={evt => setName(evt.nativeEvent.name)}
+          />
+          <CustomUnitFee
+            important={true}
+            title={'Tiền phòng'}
+            defaultValue={`${contract?.leasingFee}`}
+          />
+
+          <View style={styles.viewLine} />
+
+          <CustomTextTitle label={'Phí dịch vụ'} />
+          {otherBills.length > 0 && (
+            <FlatList
+              data={otherBills}
+              keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
+              renderItem={({item, index}) => {
+                return <CustomFeeOfInvoice title={`${item?.name}`} />;
+              }}
             />
-            <CustomUnitFee
-              important={true}
-              title={'Tiền phòng'}
-              defaultValue={`${contract?.leasingFee}`}
-            />
+          )}
+          {listChargeServices.length > 0 && <CustomFeeOfInvoice />}
 
-            <View style={styles.viewLine} />
+          <CustomFeeOfInvoice price={3 * 4000} />
 
-            <CustomTextTitle label={'Phí dịch vụ'} />
-            {listChargeServices.length > 0 && <CustomFeeOfInvoice />}
-            {otherBills.length > 0 && (
+          <CustomButton
+            label={'Thêm phí khác'}
+            styleButton={{marginTop: 20}}
+            styleLabel={styles.textAddOtherFee}
+            onPress={() => setModalAddFee(true)}
+          />
+
+          <View style={styles.viewLine} />
+
+          <CustomNote
+            title={'Ghi chú'}
+            placeholder={'Nhập ghi chú'}
+            defaultValue={''}
+            onEndEditing={evnt => {}}
+          />
+
+          <View style={styles.viewLine} />
+
+          <CustomTextTitle label={'Ảnh dịch vụ'} />
+          <View
+            style={{
+              height: 220,
+              marginVertical: 5,
+              borderRadius: 10,
+              backgroundColor: 'white',
+            }}>
+            {invoiceImages.length > 0 ? (
               <FlatList
-                data={otherBills}
-                keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
-                renderItem={({item, index}) => {
-                  return <CustomUnitFee title={`${item?.name}`} />;
-                }}
+                horizontal
+                data={invoiceImages}
+                keyExtractor={uuid}
+                renderItem={({item}) => renderImage(item)}
+              />
+            ) : (
+              <CustomButton
+                styleButton={{flex: 1}}
+                label={'Tải lên ảnh dịch vụ'}
+                styleLabel={[styles.title, {marginTop: 5}]}
+                disabled={true}
+                icon={icons.ic_upload}
+                styleIcon={{with: 100, height: 100, alignSelf: 'center'}}
               />
             )}
-            <CustomButton
-              label={'Thêm phí khác'}
-              styleButton={{marginTop: 10}}
-              styleLabel={styles.textAddOtherFee}
-              onPress={() => setModalAddFee(true)}
-            />
           </View>
-        )}
+          <CustomButton
+            styleButton={[styles.buttonUploadIM]}
+            label={'Tải lên ảnh dịch vụ'}
+            styleLabel={styles.labelUploadIM}
+            onPress={() => setModalCamera(true)}
+          />
+          <View style={{height: 56}} />
+          <CustomTotalPrice totalPrice={10000000} />
+        </View>
+        {/* )} */}
+        <View style={{height: 25}} />
       </ScrollView>
     </View>
   );
 };
+
+const CustomTotalPrice = props => {
+  const {totalPrice} = props;
+  return (
+    <View style={styles.viewBetween}>
+      <Text style={{color: '#000000'}}>Tổng:</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Text
+          style={{
+            color: colors.mainColor,
+            fontWeight: '600',
+          }}>{`${totalPrice}`}</Text>
+        <Text style={{color: '#000000'}}> VNĐ</Text>
+      </View>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: colors.backgroundGrey},
   shadowView: {
@@ -284,6 +418,17 @@ const styles = StyleSheet.create({
     color: colors.mainColor,
     fontWeight: '600',
     fontSize: 17,
+  },
+  buttonUploadIM: {
+    height: 50,
+    backgroundColor: colors.mainColor,
+    borderRadius: 10,
+  },
+  labelUploadIM: {color: 'white', fontWeight: '500', fontSize: 15},
+  viewBetween: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });
 export default CreateInvoice;
