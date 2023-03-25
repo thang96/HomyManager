@@ -30,10 +30,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {serviceState, updateServices} from '../../../Store/slices/commonSlice';
 import {updateStatus} from '../../../Store/slices/statusSlice';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
-import {
-  CreateInvoicesApi,
-  PostImageInvoiceApi,
-} from '../../../Api/Home/InvoiceApis/InvoiceApis';
+import {CreateInvoicesApi} from '../../../Api/Home/InvoiceApis/InvoiceApis';
+import {PostImageInvoiceApi} from '../../../Api/Home/FileDataApis/FileDataApis';
 
 const CreateInvoice = props => {
   const dispatch = useDispatch();
@@ -54,28 +52,14 @@ const CreateInvoice = props => {
   const [modalCreateInvoice, setModalCreateInvoice] = useState(false);
 
   const [name, setName] = useState();
-  const [code, setCode] = useState();
-  const [status, setStatus] = useState(0);
-  const [flowStatus, setFlowStatus] = useState(0);
   const [leasingFee, setLeasingFee] = useState(0);
   const [serviceFee, setServiceFee] = useState(0);
   const [otherFee, setOtherFee] = useState(0);
   const [totalFee, setTotalFee] = useState(0);
   const [notice, setNotice] = useState();
-  const [createTime, setCreateTime] = useState();
-  const [issuedDate, setIssuedDate] = useState();
-  const [paymentDate, setPaymentDate] = useState();
-  const [contractId, setContractId] = useState(null);
+
   const [invoiceServices, setInvoiceServices] = useState([]);
-  // "invoiceServices": [
-  //   {
-  //     "chargeServiceId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  //     "chargeServiceName": "string",
-  //     "calculateUnit": "string",
-  //     "fee": 0,
-  //     "usageAmount": 0
-  //   }
-  // ]
+
   const [invoiceImages, setInvoiceImages] = useState([]);
 
   const [listChargeServices, setListChargeServices] = useState([]);

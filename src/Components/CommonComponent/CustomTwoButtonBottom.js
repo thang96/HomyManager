@@ -7,9 +7,9 @@ const CustomTwoButtonBottom = props => {
   const {
     styleView,
     leftLabel,
+    rightLabel,
     styleLabelLeft,
     styleButtonLeft,
-    rightLabel,
     styleLabelRight,
     styleButtonRight,
     onPressLeft,

@@ -43,6 +43,7 @@ import ListPaymentSelect from './Home/PaymentManagement/ListPaymentSelect';
 //----------- InvoiceManagement
 import InvoiceManagement from './Home/BillManagement/InvoiceManagement';
 import CreateInvoice from './Home/BillManagement/CreateInvoice';
+import InvoiceDetail from './Home/BillManagement/InvoiceDetail';
 //----------- UserManager
 import UserManager from './Home/UserManagement/UserManager';
 import ManagerList from './Home/UserManagement/ManagerList';
@@ -96,6 +97,7 @@ export {
   //-- InvoiceManagement
   InvoiceManagement,
   CreateInvoice,
+  InvoiceDetail,
   //-- PaymentManagement
   PaymentManagement,
   AddPayment,

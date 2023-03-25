@@ -21,6 +21,7 @@ import {token} from '../../../Store/slices/tokenSlice';
 import {GetListContractsApi} from '../../../Api/Home/ContractApis/ContractApis';
 import {dateToDMY} from '../../../utils/common';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
+import RenderContract from '../../../Components/ComponentHome/RenderContract';
 
 const CustomIsActive = props => {
   const navigation = useNavigation();
@@ -47,58 +48,15 @@ const CustomIsActive = props => {
     let startDate = dateToDMY(eachStartDate);
     let endDate = dateToDMY(eachEndDate);
     return (
-      <View style={styles.viewContract}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ContractDetail', item?.id)}>
-          <View style={[styles.viewRow, {justifyContent: 'space-between'}]}>
-            <Text style={{fontWeight: '600', color: '#5F6E78'}}>
-              {item?.description}
-            </Text>
-            <CustomButton
-              disabled={true}
-              styleButton={styles.buttonActive}
-              label={'Hoạt động'}
-              styleLabel={{fontSize: 12, color: 'white'}}
-            />
-          </View>
-          <View style={[styles.viewRow]}>
-            <Image source={icons.ic_calendar} style={styles.icon} />
-            <Text style={styles.content}>{`${startDate} đến ${endDate}`}</Text>
-          </View>
-          <View style={[styles.viewRow]}>
-            <Image source={icons.ic_homeTabBar} style={styles.icon} />
-            <Text style={styles.content}>{`${item?.unit?.name}`}</Text>
-          </View>
-          <View style={[styles.viewRow]}>
-            <Text style={styles.content}>{'Người tạo: '}</Text>
-            <Text style={styles.label}>{`${item?.creator}`}</Text>
-          </View>
-        </TouchableOpacity>
-        <View
-          style={[
-            styles.viewRow,
-            {justifyContent: 'space-between', marginTop: 3},
-          ]}>
-          <CustomButton
-            styleButton={[
-              styles.buttonRender,
-              {borderColor: colors.backgroundOrange},
-            ]}
-            label={'Chỉnh sửa'}
-            styleLabel={{fontWeight: '600', color: colors.backgroundOrange}}
-          />
-          <CustomButton
-            styleButton={[styles.buttonRender, {borderColor: colors.mainColor}]}
-            label={'Thanh lý'}
-            styleLabel={{fontWeight: '600', color: colors.mainColor}}
-          />
-          <CustomButton
-            styleButton={[styles.buttonRender, {borderColor: 'red'}]}
-            label={'Xóa'}
-            styleLabel={{fontWeight: '600', color: 'red'}}
-          />
-        </View>
-      </View>
+      <RenderContract
+        description={item?.description}
+        startDate={`${startDate}`}
+        endDate={`${endDate}`}
+        houseName={`${item?.unit?.house?.name}`}
+        unitName={`${item?.unit?.name}`}
+        contractOwner={`${item?.contractOwner?.fullName}`}
+        onPress={() => navigation.navigate('ContractDetail', item?.id)}
+      />
     );
   };
   return (
@@ -112,39 +70,5 @@ const CustomIsActive = props => {
     </View>
   );
 };
-const styles = StyleSheet.create({
-  viewContract: {
-    height: 176,
-    padding: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    backgroundColor: 'white',
-    margin: 1,
-    borderRadius: 8,
-    marginBottom: 15,
-  },
-  viewRow: {flexDirection: 'row', alignItems: 'center'},
-  buttonActive: {
-    backgroundColor: colors.backgroundButton,
-    width: 100,
-    height: 30,
-    borderRadius: 4,
-  },
-  content: {fontSize: 13, color: '#374047'},
-  label: {fontSize: 15, color: '#374047', fontWeight: '600'},
-  icon: {height: 20, width: 20, marginRight: 5},
-  buttonRender: {
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingHorizontal: 5,
-    height: 35,
-    width: 110,
-  },
-});
+const styles = StyleSheet.create({});
 export default CustomIsActive;

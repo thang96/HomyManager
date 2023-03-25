@@ -18,14 +18,14 @@ import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {dateToDMY, dateToYMD} from '../../../utils/common';
-import {
-  CreateNewTenantApi,
-  PostImageIdentityApi,
-  PostImageUserApi,
-} from '../../../Api/Home/TenantApis/TenantApis';
+import {CreateNewTenantApi} from '../../../Api/Home/TenantApis/TenantApis';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
+import {
+  PostImageIdentityApi,
+  PostImageUserApi,
+} from '../../../Api/Home/FileDataApis/FileDataApis';
 
 const AddNewTenant = () => {
   const navigation = useNavigation();

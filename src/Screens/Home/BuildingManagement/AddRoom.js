@@ -28,15 +28,13 @@ import {
   updateAmenity,
   updateServices,
 } from '../../../Store/slices/commonSlice';
-import {
-  CreateNewUnitApi,
-  PostImageUnitApi,
-} from '../../../Api/Home/UnitApis/UnitApis';
+import {CreateNewUnitApi} from '../../../Api/Home/UnitApis/UnitApis';
 import {updateStatus} from '../../../Store/slices/statusSlice';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import CustomPickerDay from '../../../Components/CommonComponent/CustomPickerDay';
 import {UNITTYPE} from '../../../Resource/DataPicker';
+import {PostImageUnitApi} from '../../../Api/Home/FileDataApis/FileDataApis';
 
 const AddRoom = () => {
   const navigation = useNavigation();

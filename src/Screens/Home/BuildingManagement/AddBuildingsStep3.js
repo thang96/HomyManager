@@ -1,17 +1,6 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  KeyboardAvoidingView,
-  FlatList,
-  Keyboard,
-  Alert,
-} from 'react-native';
+import {StyleSheet, View, Text, TextInput, FlatList} from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
@@ -29,15 +18,13 @@ import {
 import {token} from '../../../Store/slices/tokenSlice';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
-import {
-  CreateNewBuildingApi,
-  PostImageBuildingApi,
-} from '../../../Api/Home/BuildingApis/BuildingApis';
+import {CreateNewBuildingApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
 import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppBar';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import {updateStatus} from '../../../Store/slices/statusSlice';
+import {PostImageBuildingApi} from '../../../Api/Home/FileDataApis/FileDataApis';
 
 const AddBuildingsStep3 = props => {
   const navigation = useNavigation();

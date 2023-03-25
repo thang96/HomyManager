@@ -50,13 +50,11 @@ import {
   updateTenants,
 } from '../../../Store/slices/commonSlice';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
-import {
-  CreateNewContractApi,
-  PostImageContractApi,
-} from '../../../Api/Home/ContractApis/ContractApis';
+import {CreateNewContractApi} from '../../../Api/Home/ContractApis/ContractApis';
 import {updateStatus} from '../../../Store/slices/statusSlice';
 import CustomNote from '../../../Components/CommonComponent/CustomNote';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
+import {PostImageContractApi} from '../../../Api/Home/FileDataApis/FileDataApis';
 
 const CreateContract = () => {
   const navigation = useNavigation();
