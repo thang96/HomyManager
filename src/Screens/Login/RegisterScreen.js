@@ -43,7 +43,7 @@ const RegisterScreen = () => {
     setLoading(true);
     let data = {
       userName: userName,
-      fullName: userName,
+      fullName: fullName,
       phoneNumber: phoneNumber,
       password: password,
       email: email,

@@ -3,13 +3,22 @@ import {StyleSheet, Text, View, TextInput, Dimensions} from 'react-native';
 import {colors, icons} from '../../../Constants';
 import CustomButton from '../../CommonComponent/CustomButton';
 const CustomFeeOfInvoice = props => {
-  const {defaultValue, onEndEditing, pressDelete, price} = props;
+  const {
+    defaultValue,
+    onEndEditing,
+    fee,
+    name,
+    calculateUnit,
+    totalPrice,
+    pressDelete,
+  } = props;
   const widthView = Dimensions.get('window').width / 2 - 20;
   return (
     <View style={styles.container}>
       <View style={styles.viewBetween}>
-        <Text style={{color: '#374047'}}>Điện</Text>
-        <Text style={{color: '#374047'}}>{`Đơn giá: 4000`}</Text>
+        <Text style={{color: '#374047'}}>{`${name}`}</Text>
+        <Text
+          style={{color: '#374047'}}>{`Đơn giá: ${fee}/${calculateUnit}`}</Text>
       </View>
       <View style={styles.viewBetween}>
         <View
@@ -22,6 +31,7 @@ const CustomFeeOfInvoice = props => {
           <TextInput
             style={{flex: 1}}
             placeholder={'Nhập số lượng'}
+            keyboardType={'numeric'}
             defaultValue={defaultValue}
             onEndEditing={onEndEditing}
           />
@@ -34,7 +44,7 @@ const CustomFeeOfInvoice = props => {
           ]}>
           <View style={{paddingVertical: 3}}>
             <Text style={{fontSize: 12, color: '#5F6E78'}}>Tổng:</Text>
-            <Text style={styles.textPrice}>{`${price} VNĐ`}</Text>
+            <Text style={styles.textPrice}>{`${totalPrice} VNĐ`}</Text>
           </View>
           <CustomButton
             icon={icons.ic_trash}

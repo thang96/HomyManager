@@ -7,7 +7,7 @@ import {ScrollView} from 'react-native-virtualized-view';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomInput from '../../../Components/CommonComponent/CustomInput';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {useNavigation} from '@react-navigation/native';
 import CustomModalPicker from '../../../Components/CommonComponent/CustomModalPicker';
@@ -21,14 +21,23 @@ import {GetActiveContractApi} from '../../../Api/Home/ContractApis/ContractApis'
 import CustomUnitFee from '../../../Components/ComponentHome/Invoice/CustomUnitFee';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomNote from '../../../Components/CommonComponent/CustomNote';
-import CustomModalAddOtherFee from '../../../Components/ComponentHome/Invoice/CustomModalAddOtherFee';
 import CustomFeeOfInvoice from '../../../Components/ComponentHome/Invoice/CustomFeeOfInvoice';
 import {uuid} from '../../../utils/uuid';
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
+import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import ImagePicker from 'react-native-image-crop-picker';
+import {serviceState, updateServices} from '../../../Store/slices/commonSlice';
+import {updateStatus} from '../../../Store/slices/statusSlice';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
+import {
+  CreateInvoicesApi,
+  PostImageInvoiceApi,
+} from '../../../Api/Home/InvoiceApis/InvoiceApis';
 
 const CreateInvoice = props => {
+  const dispatch = useDispatch();
+  const services = useSelector(serviceState);
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
   const [loadingAddContract, setLoadingAddContract] = useState(true);
@@ -37,36 +46,40 @@ const CreateInvoice = props => {
   const [contract, setContract] = useState(null);
   // console.log(contract);
 
-  const [otherBills, setOtherBills] = useState([]);
-  const [bill, setBill] = useState();
-  const [chargeServices, setChargeServices] = useState([]);
   const [listHauses, setListHauses] = useState([]);
   const [listUnits, setListUnits] = useState([]);
   const [modalHause, setModalHause] = useState(false);
   const [modalUnit, setModalUnit] = useState(false);
-  const [modalAddFee, setModalAddFee] = useState(false);
   const [modalCamera, setModalCamera] = useState(false);
+  const [modalCreateInvoice, setModalCreateInvoice] = useState(false);
 
   const [name, setName] = useState();
-  const [leasingFee, setLeasingFee] = useState();
-  const [serviceFee, setserviceFee] = useState();
-  const [otherFee, setotherFee] = useState();
-  const [totalFee, setTotalFee] = useState();
+  const [code, setCode] = useState();
+  const [status, setStatus] = useState(0);
+  const [flowStatus, setFlowStatus] = useState(0);
+  const [leasingFee, setLeasingFee] = useState(0);
+  const [serviceFee, setServiceFee] = useState(0);
+  const [otherFee, setOtherFee] = useState(0);
+  const [totalFee, setTotalFee] = useState(0);
   const [notice, setNotice] = useState();
+  const [createTime, setCreateTime] = useState();
+  const [issuedDate, setIssuedDate] = useState();
+  const [paymentDate, setPaymentDate] = useState();
   const [contractId, setContractId] = useState(null);
   const [invoiceServices, setInvoiceServices] = useState([]);
-
+  // "invoiceServices": [
+  //   {
+  //     "chargeServiceId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  //     "chargeServiceName": "string",
+  //     "calculateUnit": "string",
+  //     "fee": 0,
+  //     "usageAmount": 0
+  //   }
+  // ]
   const [invoiceImages, setInvoiceImages] = useState([]);
 
   const [listChargeServices, setListChargeServices] = useState([]);
 
-  useEffect(() => {
-    if (bill) {
-      let eachOther = [...otherBills, bill];
-      setOtherBills(eachOther);
-      setBill(null);
-    }
-  }, [bill]);
   useEffect(() => {
     const getListData = async () => {
       await GetListHausesApi(tokenStore)
@@ -80,6 +93,47 @@ const CreateInvoice = props => {
     };
     getListData();
   }, []);
+
+  useEffect(() => {
+    if (contract) {
+      setLeasingFee(contract?.leasingFee);
+    }
+  }, [contract]);
+
+  useEffect(() => {
+    let eachData = [];
+    for (let index = 0; index < services.length; index++) {
+      const element = services[index];
+      if (element?.isCheck == true) {
+        let newElement = {...element, totalPrice: 0};
+        eachData.push(newElement);
+      }
+    }
+    setListChargeServices(eachData);
+  }, [services]);
+  useEffect(() => {
+    let price = 0;
+    let eachInvoiceServices = [];
+    for (let index = 0; index < listChargeServices.length; index++) {
+      const element = listChargeServices[index];
+      price += element?.totalPrice;
+      let eachElement = {
+        chargeServiceId: element?.id,
+        chargeServiceName: element?.name,
+        calculateUnit: element?.calculateUnit,
+        fee: element.fee,
+        usageAmount: parseInt(element.quantity),
+      };
+      eachInvoiceServices.push(eachElement);
+    }
+    setInvoiceServices(eachInvoiceServices);
+    setServiceFee(price);
+  }, [listChargeServices]);
+  useEffect(() => {
+    let totalPrice =
+      parseInt(otherFee) + parseInt(leasingFee) + parseInt(serviceFee);
+    setTotalFee(totalPrice);
+  }, [otherFee, leasingFee, serviceFee]);
 
   const getListUnit = async item => {
     setHause(item);
@@ -106,8 +160,19 @@ const CreateInvoice = props => {
     await GetUnitDetailAPi(tokenStore, unitId)
       .then(res => {
         if (res?.status == 200) {
-          console.log(res?.data);
-          setListChargeServices(res?.data?.chargeServices);
+          let chargeServicesData = res?.data?.chargeServices;
+          let eachChargeServices = [];
+          for (let index = 0; index < chargeServicesData.length; index++) {
+            const element = chargeServicesData[index];
+            let newElement = {
+              ...element,
+              totalPrice: 0,
+              quantity: '',
+              isCheck: true,
+            };
+            eachChargeServices.push(newElement);
+          }
+          dispatch(updateServices(eachChargeServices));
         }
       })
       .catch(error => {
@@ -181,9 +246,57 @@ const CreateInvoice = props => {
     );
   };
 
+  const createInvoice = async () => {
+    setModalCreateInvoice(false);
+    setLoadingAddContract(true);
+    let data = {
+      name: name,
+      code: 'string',
+      status: 0,
+      flowStatus: 0,
+      leasingFee: parseInt(leasingFee),
+      serviceFee: parseInt(serviceFee),
+      otherFee: parseInt(otherFee),
+      totalFee: parseInt(totalFee),
+      notice: notice,
+      createTime: '2023-03-25T08:12:58.486Z',
+      issuedDate: '2023-03-25T08:12:58.486Z',
+      paymentDate: '2023-03-25T08:12:58.486Z',
+      contractId: `${contract?.id}`,
+      invoiceServices: invoiceServices,
+    };
+    await CreateInvoicesApi(tokenStore, data)
+      .then(async res => {
+        if (res?.status == 200) {
+          let invoiceId = res?.data?.id;
+          await PostImageInvoiceApi(tokenStore, invoiceId, invoiceImages)
+            .then(() => {
+              if (res?.status == 200) {
+                dispatch(updateStatus(false));
+                setLoadingAddContract(false);
+                navigation.goBack();
+              }
+            })
+            .catch(error => console.log(error, 'PostImageInvoice'));
+        }
+      })
+      .catch(error => {
+        console.log(error, 'create');
+        Alert.alert('Cảnh báo', 'Có lỗi sảy ra,vui lòng liên hệ admin...');
+      });
+  };
+
   return (
     <View style={styles.container}>
       {loadingAddContract && <CustomLoading />}
+      {modalCreateInvoice && (
+        <CustomModalNotify
+          title={'Tạo hóa đơn'}
+          label={'Bạn có muốn tạo hóa đơn này?'}
+          onRequestClose={() => setModalCreateInvoice(false)}
+          pressConfirm={() => createInvoice()}
+        />
+      )}
       {modalCamera && (
         <CustomModalCamera
           openCamera={() => openCamera()}
@@ -193,17 +306,7 @@ const CreateInvoice = props => {
           cancel={() => setModalCamera(false)}
         />
       )}
-      {modalAddFee && (
-        <CustomModalAddOtherFee
-          modalVisible={modalAddFee}
-          onRequestClose={() => setModalAddFee(false)}
-          pressClose={() => setModalAddFee(false)}
-          pressConfirm={otherFee => {
-            setBill(otherFee);
-            setModalAddFee(false);
-          }}
-        />
-      )}
+
       {modalHause && (
         <CustomModalPicker
           data={listHauses}
@@ -249,123 +352,157 @@ const CreateInvoice = props => {
           value={unit?.name}
           onPress={() => setModalUnit(true)}
         />
-        {/* {contract != null && ( */}
-        <View>
-          <View style={[styles.shadowView, styles.viewInfor]}>
-            <View style={styles.viewRow}>
-              <Image
-                source={icons.ic_calendar}
-                style={{width: 20, height: 20, marginRight: 5}}
-              />
-              <Text style={{color: '#374047', fontSize: 13}}>{`Từ ${dateToDMY(
-                startDate,
-              )} đến ${dateToDMY(endDate)}`}</Text>
+        {contract != null && (
+          <View>
+            <View style={[styles.shadowView, styles.viewInfor]}>
+              <View style={styles.viewRow}>
+                <Image
+                  source={icons.ic_calendar}
+                  style={{width: 20, height: 20, marginRight: 5}}
+                />
+                <Text style={{color: '#374047', fontSize: 13}}>{`Từ ${dateToDMY(
+                  startDate,
+                )} đến ${dateToDMY(endDate)}`}</Text>
+              </View>
+              <View style={styles.viewRow}>
+                <Image
+                  source={icons.ic_home}
+                  style={{width: 20, height: 20, marginRight: 5}}
+                />
+                <Text style={{color: '#374047', fontSize: 13}}>
+                  {`${contract?.unit?.house?.name} - ${contract?.unit?.name}`}
+                </Text>
+              </View>
+              <View style={styles.viewRow}>
+                <Text style={{color: '#374047', fontSize: 13}}>
+                  Chủ hợp đồng:
+                </Text>
+                <Text
+                  style={{color: '#374047', fontSize: 13, fontWeight: '600'}}>
+                  {` ${contract?.contractOwner?.fullName}`}
+                </Text>
+              </View>
             </View>
-            <View style={styles.viewRow}>
-              <Image
-                source={icons.ic_home}
-                style={{width: 20, height: 20, marginRight: 5}}
-              />
-              <Text style={{color: '#374047', fontSize: 13}}>
-                {`${contract?.unit?.house?.name} - ${contract?.unit?.name}`}
-              </Text>
-            </View>
-            <View style={styles.viewRow}>
-              <Text style={{color: '#374047', fontSize: 13}}>
-                Chủ hợp đồng:
-              </Text>
-              <Text style={{color: '#374047', fontSize: 13, fontWeight: '600'}}>
-                {` ${contract?.contractOwner?.fullName}`}
-              </Text>
-            </View>
-          </View>
 
-          <View style={styles.viewLine} />
-          <CustomInput
-            important={true}
-            type={'input'}
-            title={'Tên hóa đơn'}
-            placeholder={'Nhập tên hóa đơn'}
-            defaultValue={name}
-            onEndEditing={evt => setName(evt.nativeEvent.name)}
-          />
-          <CustomUnitFee
-            important={true}
-            title={'Tiền phòng'}
-            defaultValue={`${contract?.leasingFee}`}
-          />
-
-          <View style={styles.viewLine} />
-
-          <CustomTextTitle label={'Phí dịch vụ'} />
-          {otherBills.length > 0 && (
-            <FlatList
-              data={otherBills}
-              keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
-              renderItem={({item, index}) => {
-                return <CustomFeeOfInvoice title={`${item?.name}`} />;
-              }}
+            <View style={styles.viewLine} />
+            <CustomInput
+              important={true}
+              type={'input'}
+              title={'Tên hóa đơn'}
+              placeholder={'Nhập tên hóa đơn'}
+              defaultValue={name}
+              onEndEditing={evt => setName(evt.nativeEvent.text)}
             />
-          )}
-          {listChargeServices.length > 0 && <CustomFeeOfInvoice />}
+            <CustomUnitFee
+              important={true}
+              title={'Tiền phòng'}
+              defaultValue={`${contract?.leasingFee}`}
+              onEndEditing={evt => setLeasingFee(evt.nativeEvent.text)}
+            />
+            <CustomUnitFee
+              title={'Phí khác'}
+              keyboardType={'numeric'}
+              placeholder={'0'}
+              defaultValue={otherFee}
+              onEndEditing={evt => setOtherFee(evt.nativeEvent.text)}
+            />
 
-          <CustomFeeOfInvoice price={3 * 4000} />
+            <View style={styles.viewLine} />
 
-          <CustomButton
-            label={'Thêm phí khác'}
-            styleButton={{marginTop: 20}}
-            styleLabel={styles.textAddOtherFee}
-            onPress={() => setModalAddFee(true)}
-          />
+            <CustomTextTitle
+              label={'Phí dịch vụ'}
+              labelButton={'Thêm'}
+              icon={icons.ic_plus}
+              onPress={() => navigation.navigate('Service')}
+            />
 
-          <View style={styles.viewLine} />
-
-          <CustomNote
-            title={'Ghi chú'}
-            placeholder={'Nhập ghi chú'}
-            defaultValue={''}
-            onEndEditing={evnt => {}}
-          />
-
-          <View style={styles.viewLine} />
-
-          <CustomTextTitle label={'Ảnh dịch vụ'} />
-          <View
-            style={{
-              height: 220,
-              marginVertical: 5,
-              borderRadius: 10,
-              backgroundColor: 'white',
-            }}>
-            {invoiceImages.length > 0 ? (
+            {listChargeServices.length > 0 && (
               <FlatList
-                horizontal
-                data={invoiceImages}
-                keyExtractor={uuid}
-                renderItem={({item}) => renderImage(item)}
-              />
-            ) : (
-              <CustomButton
-                styleButton={{flex: 1}}
-                label={'Tải lên ảnh dịch vụ'}
-                styleLabel={[styles.title, {marginTop: 5}]}
-                disabled={true}
-                icon={icons.ic_upload}
-                styleIcon={{with: 100, height: 100, alignSelf: 'center'}}
+                listKey="listChargeServices"
+                data={listChargeServices}
+                keyExtractor={key => key?.id}
+                renderItem={({item, index}) => {
+                  return (
+                    <CustomFeeOfInvoice
+                      calculateUnit={item?.calculateUnit}
+                      name={item?.name}
+                      fee={item?.fee}
+                      totalPrice={item?.totalPrice}
+                      defaultValue={item?.quantity}
+                      onEndEditing={evt => {
+                        let newQuantity = evt.nativeEvent.text;
+                        let newTotalPrice =
+                          parseInt(newQuantity) * parseInt(item?.fee);
+                        let newItem = {
+                          ...item,
+                          quantity: newQuantity,
+                          totalPrice: newTotalPrice,
+                        };
+                        let eachService = [...listChargeServices];
+                        eachService[index] = newItem;
+                        setListChargeServices(eachService);
+                      }}
+                    />
+                  );
+                }}
               />
             )}
+
+            <View style={styles.viewLine} />
+
+            <CustomNote
+              title={'Ghi chú'}
+              placeholder={'Nhập ghi chú'}
+              defaultValue={notice}
+              onEndEditing={evnt => setNotice(evnt.nativeEvent.text)}
+            />
+
+            <View style={styles.viewLine} />
+
+            <CustomTextTitle label={'Ảnh dịch vụ'} />
+            <View
+              style={{
+                height: 220,
+                marginVertical: 5,
+                borderRadius: 10,
+                backgroundColor: 'white',
+              }}>
+              {invoiceImages.length > 0 ? (
+                <FlatList
+                  horizontal
+                  data={invoiceImages}
+                  keyExtractor={uuid}
+                  renderItem={({item}) => renderImage(item)}
+                />
+              ) : (
+                <CustomButton
+                  styleButton={{flex: 1}}
+                  label={'Tải lên ảnh dịch vụ'}
+                  styleLabel={[styles.title, {marginTop: 5}]}
+                  disabled={true}
+                  icon={icons.ic_upload}
+                  styleIcon={{with: 100, height: 100, alignSelf: 'center'}}
+                />
+              )}
+            </View>
+            <CustomButton
+              styleButton={[styles.buttonUploadIM]}
+              label={'Tải lên ảnh dịch vụ'}
+              styleLabel={styles.labelUploadIM}
+              onPress={() => setModalCamera(true)}
+            />
+            <View style={{height: 56}} />
+            <CustomTotalPrice totalPrice={`${totalFee.toLocaleString()}`} />
+            <CustomTwoButtonBottom
+              styleButtonLeft={styles.styleButtonLeft}
+              styleLabelLeft={styles.styleLabelLeft}
+              leftLabel={'Hủy hóa đơn'}
+              rightLabel={'Tạo hóa đơn'}
+              onPressLeft={() => navigation.goBack()}
+              onPressRight={() => setModalCreateInvoice(true)}
+            />
           </View>
-          <CustomButton
-            styleButton={[styles.buttonUploadIM]}
-            label={'Tải lên ảnh dịch vụ'}
-            styleLabel={styles.labelUploadIM}
-            onPress={() => setModalCamera(true)}
-          />
-          <View style={{height: 56}} />
-          <CustomTotalPrice totalPrice={10000000} />
-        </View>
-        {/* )} */}
-        <View style={{height: 25}} />
+        )}
       </ScrollView>
     </View>
   );
@@ -430,5 +567,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  styleButtonLeft: {
+    borderColor: '#FE7A37',
+    backgroundColor: 'white',
+    marginRight: 5,
+  },
+  styleLabelLeft: {color: '#FE7A37', fontSize: 15, fontWeight: '600'},
 });
 export default CreateInvoice;

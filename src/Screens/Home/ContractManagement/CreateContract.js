@@ -153,20 +153,6 @@ const CreateContract = () => {
           }
         })
         .catch(error => console.log(error));
-
-      await GetListTenantsApi(tokenStore)
-        .then(res => {
-          if (res?.status == 200) {
-            let eachData = res?.data;
-            let eachArray = [];
-            eachData.map((data, index) => {
-              let newData = {...data, isCheck: false};
-              eachArray.push(newData);
-            });
-            dispatch(updateTenants(eachArray));
-          }
-        })
-        .catch(error => console.log(error));
     };
     getListData();
   }, []);
@@ -311,6 +297,7 @@ const CreateContract = () => {
   };
 
   const createNewContract = async () => {
+    setModalCreateContract(false);
     setLoadingAddContract(true);
     let data = {
       startDate: startDate,

@@ -17,14 +17,15 @@ import {icons, colors} from '../../../Constants';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomButtonCarendar from '../../../Components/ComponentHome/CustomButtonCarendar';
 
 const breakLine = Array(19).fill('');
 
-const BillNotCreatedYet = props => {
-  const [listBill, setListBill] = useState([]);
-  const [date, setDate] = useState(new Date());
-  const [valueDate, setValueDate] = useState('03-03-2023');
+const InvoiceUnconfimred = props => {
+  const {data} = props;
+  const [invoiceUnconfirmred, setInvoiceUnconfirmred] = useState([]);
+  useEffect(() => {
+    setInvoiceUnconfirmred(data);
+  }, [props]);
 
   const renderBillNotCreatedYet = (item, index) => {
     return (
@@ -33,18 +34,10 @@ const BillNotCreatedYet = props => {
           <View style={styles.viewRowBetween}>
             <View>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text
-                  style={{
-                    fontWeight: '600',
-                    color: colors.mainColor,
-                    lineHeight: 20,
-                    fontSize: 15,
-                  }}>
-                  {item?.price}
-                </Text>
+                <Text style={styles.textTotalFee}>{item?.totalFee}</Text>
                 <Text style={{fontSize: 13, color: '#374047'}}>{' VNĐ'}</Text>
               </View>
-              <CustomSuggest label={item?.note} />
+              <CustomSuggest label={item?.name} />
             </View>
             <CustomButton
               label={'Xem'}
@@ -60,8 +53,19 @@ const BillNotCreatedYet = props => {
         </View>
         <View style={[styles.viewBill, {height: 40}]}>
           <View style={styles.viewRowBetween}>
-            <Text style={{color: '#374047'}}>{item?.place}</Text>
-            <Text style={{color: colors.backgroundOrange}}>{item?.status}</Text>
+            <Text
+              style={{
+                color: '#374047',
+              }}>{`${item?.contract?.unit?.house?.name} - ${item?.contract?.unit?.name}`}</Text>
+            <Text style={{color: colors.backgroundOrange}}>
+              {item?.status == 0
+                ? 'Chưa tạo'
+                : item?.status == 1
+                ? 'Chưa thanh toán'
+                : item?.status == 2
+                ? 'Đã thanh toán'
+                : ''}
+            </Text>
           </View>
         </View>
       </View>
@@ -69,19 +73,15 @@ const BillNotCreatedYet = props => {
   };
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
-      <CustomButtonCarendar
-        value={valueDate}
-        label={'Chọn ngày'}
-        icon={icons.ic_calendar}
-        onPress={() => {}}
-      />
-
       <CustomTextTitle label={'Hóa đơn chưa tạo'} />
-      <FlatList
-        data={listBill}
-        keyExtractor={(key, index) => index.toString()}
-        renderItem={({item, index}) => renderBillNotCreatedYet(item, index)}
-      />
+      {invoiceUnconfirmred.length > 0 && (
+        <FlatList
+          listkey={'invoiceUnconfirmred'}
+          data={invoiceUnconfirmred}
+          keyExtractor={key => key?.id}
+          renderItem={({item, index}) => renderBillNotCreatedYet(item, index)}
+        />
+      )}
     </View>
   );
 };
@@ -132,5 +132,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.borderInput,
     marginLeft: 10,
   },
+  textTotalFee: {
+    fontWeight: '600',
+    color: colors.mainColor,
+    lineHeight: 20,
+    fontSize: 15,
+  },
 });
-export default BillNotCreatedYet;
+export default InvoiceUnconfimred;

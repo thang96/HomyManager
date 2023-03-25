@@ -17,15 +17,17 @@ import {icons, colors} from '../../../Constants';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 
 const ServiceManager = props => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [keyboard, setKeyboard] = useState(false);
-  const isFocused = useIsFocused();
+  const isLoading = useSelector(statusState);
   const [textSearch, setTextSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const tokenStore = useSelector(token);
@@ -40,33 +42,22 @@ const ServiceManager = props => {
   }, []);
 
   useEffect(() => {
+    const getListService = async () => {
+      await GetListServicesApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            setListSevice(res?.data);
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+    };
     getListService();
-  }, [isFocused]);
-
-  const getListService = async () => {
-    await GetListServicesApi(tokenStore)
-      .then(res => {
-        if (res?.status == 200) {
-          setListSevice(res?.data);
-          setLoading(false);
-        }
-      })
-      .catch(error => console.log(error));
-  };
+  }, [isLoading]);
 
   const [listSevice, setListSevice] = useState([]);
 
   const renderListService = (item, index) => {
-    const updateItem = () => {
-      let newList = [...listSevice];
-      let itemCheck = newList[index];
-      let newItem = {
-        ...itemCheck,
-        isCheck: itemCheck?.isCheck == false ? true : false,
-      };
-      newList[index] = newItem;
-      setListSevice(newList);
-    };
     return (
       <RenderService
         icon={`${item?.icon}`}
@@ -116,7 +107,10 @@ const ServiceManager = props => {
 
           <CustomButtonBottom
             label={'Thêm dịch vụ mới'}
-            onPress={() => navigation.navigate('AddService')}
+            onPress={() => {
+              dispatch(updateStatus(true));
+              navigation.navigate('AddService');
+            }}
           />
         </View>
       </KeyboardAvoidingView>

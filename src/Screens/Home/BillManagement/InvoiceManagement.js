@@ -18,14 +18,15 @@ import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
-import BillNotCreatedYet from './InvoiceNotCreatedYet';
-import BillUnpaid from './InvoiceUnpaid';
-import BillIsOverdue from './InvoiceIsOverdue';
-import BillPaid from './InvoicePaid';
 import {GetListInvoicesApi} from '../../../Api/Home/InvoiceApis/InvoiceApis';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 import {token} from '../../../Store/slices/tokenSlice';
 import {useDispatch, useSelector} from 'react-redux';
+import InvoiceUnconfimred from '../../../Components/ComponentHome/Invoice/InvoiceUnconfimred';
+import CustomButtonCarendar from '../../../Components/ComponentHome/CustomButtonCarendar';
+import InvoiceUnpaid from '../../../Components/ComponentHome/Invoice/InvoiceUnpaid';
+import InvoicePaid from '../../../Components/ComponentHome/Invoice/InvoicePaid';
+import InvoiceOutOfDate from '../../../Components/ComponentHome/Invoice/InvoiceOutOfDate';
 
 const InvoiceManagement = props => {
   const navigation = useNavigation();
@@ -36,8 +37,10 @@ const InvoiceManagement = props => {
   const [keyboard, setKeyboard] = useState(false);
   const [textSearch, setTextSearch] = useState('');
   const [isActive, setIsActive] = useState(1);
-  const [listInvoice, setListInvoice] = useState(1);
-
+  const [listInvoiceUnconfimred, setListInvoiceUnconfimred] = useState([]);
+  const [listInvoiceUnpaid, setListInvoiceUnpaid] = useState([]);
+  const [listInvoicePaid, setListInvoicePaid] = useState(1);
+  const [valueDate, setValueDate] = useState('03-03-2023');
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
       setKeyboard(true);
@@ -52,7 +55,23 @@ const InvoiceManagement = props => {
       await GetListInvoicesApi(tokenStore)
         .then(res => {
           if (res?.status == 200) {
-            setListInvoice(res?.data);
+            let eachListInvoice = res?.data;
+            let unconfimred = [];
+            let unpaid = [];
+            let paid = [];
+            for (let index = 0; index < eachListInvoice.length; index++) {
+              const element = eachListInvoice[index];
+              if (element?.status == 0) {
+                unconfimred.push(element);
+              } else if (element?.status == 1) {
+                unpaid.push(element);
+              } else if (element?.status == 2) {
+                paid.push(element);
+              }
+            }
+            setListInvoiceUnconfimred(unconfimred);
+            setListInvoiceUnpaid(unpaid);
+            setListInvoicePaid(paid);
             setLoading(false);
           }
         })
@@ -112,7 +131,7 @@ const InvoiceManagement = props => {
                   },
                   styles.viewButton,
                 ]}
-                label={'Quá hạn'}
+                label={'Đã thanh toán'}
                 styleLabel={{color: isActive == 3 ? 'white' : '#7F8A93'}}
                 onPress={() => setIsActive(3)}
               />
@@ -124,20 +143,27 @@ const InvoiceManagement = props => {
                   },
                   styles.viewButton,
                 ]}
-                label={'Đã thanh toán'}
+                label={'Quá hạn'}
                 styleLabel={{color: isActive == 4 ? 'white' : '#7F8A93'}}
                 onPress={() => setIsActive(4)}
               />
             </ScrollView>
           </View>
+          <CustomButtonCarendar
+            value={valueDate}
+            label={'Chọn ngày'}
+            icon={icons.ic_calendar}
+            onPress={() => {}}
+          />
+
           {isActive == 1 ? (
-            <BillNotCreatedYet />
+            <InvoiceUnconfimred data={listInvoiceUnconfimred} />
           ) : isActive == 2 ? (
-            <BillUnpaid />
+            <InvoiceUnpaid data={listInvoiceUnpaid} />
           ) : isActive == 3 ? (
-            <BillIsOverdue />
+            <InvoicePaid data={listInvoicePaid} />
           ) : isActive == 4 ? (
-            <BillPaid />
+            <InvoiceOutOfDate />
           ) : null}
           <CustomButtonBottom
             label={'Thêm hóa đơn'}

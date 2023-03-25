@@ -19,11 +19,15 @@ import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwo
 import {useDispatch, useSelector} from 'react-redux';
 import {tenantState, updateTenants} from '../../../Store/slices/commonSlice';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import {GetListTenantsApi} from '../../../Api/Home/TenantApis/TenantApis';
+import {token} from '../../../Store/slices/tokenSlice';
 
 const TenantList = () => {
   const navigation = useNavigation();
-  const route = useRoute();
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const tokenStore = useSelector(token);
   const tenantsSelect = useSelector(tenantState);
   const [keyboard, setKeyboard] = useState(null);
   const [textSearch, setTextSearch] = useState('');
@@ -32,6 +36,26 @@ const TenantList = () => {
   useEffect(() => {
     setListTenants(tenantsSelect);
   }, [tenantsSelect]);
+
+  useEffect(() => {
+    const getData = async () => {
+      await GetListTenantsApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachData = res?.data;
+            let eachArray = [];
+            eachData.map((data, index) => {
+              let newData = {...data, isCheck: false};
+              eachArray.push(newData);
+            });
+            dispatch(updateTenants(eachArray));
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getData();
+  }, []);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -74,6 +98,7 @@ const TenantList = () => {
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {loading && <CustomLoading />}
       <CustomSearchAppBar
         iconLeft={icons.ic_back}
         label={'Danh sách người thuê'}

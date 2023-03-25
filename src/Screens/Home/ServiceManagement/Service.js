@@ -20,28 +20,50 @@ import {
   updateAmenity,
 } from '../../../Store/slices/commonSlice';
 import {token} from '../../../Store/slices/tokenSlice';
+import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
+import {statusState} from '../../../Store/slices/statusSlice';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import {uuid} from '../../../utils/uuid';
 
 const Service = props => {
-  const listServices = useSelector(serviceState);
+  const loadingState = useSelector(statusState);
   const tokenStore = useSelector(token);
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [services, setServices] = useState([]);
+  const [listSevice, setListSevice] = useState([]);
+  const [loading, setLoading] = useState([]);
 
   useEffect(() => {
-    setServices(listServices);
-  }, [listServices]);
+    const getListService = async () => {
+      await GetListServicesApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachData = res?.data;
+            let eachService = [];
+            for (let index = 0; index < eachData.length; index++) {
+              const element = eachData[index];
+              let newElement = {...element, isCheck: false};
+              eachService.push(newElement);
+            }
+            setListSevice(eachService);
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getListService();
+  }, [loadingState]);
 
   const renderListService = (item, index) => {
     const updateItem = () => {
-      let newList = [...services];
+      let newList = [...listSevice];
       let itemCheck = newList[index];
       let newItem = {
         ...itemCheck,
         isCheck: itemCheck?.isCheck == false ? true : false,
       };
       newList[index] = newItem;
-      setServices(newList);
+      setListSevice(newList);
     };
     return (
       <CustomChecker
@@ -54,12 +76,13 @@ const Service = props => {
   };
 
   const updateservices = () => {
-    dispatch(updateServices(services));
+    dispatch(updateServices(listSevice));
     navigation.goBack();
   };
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
+      {loading && <CustomLoading />}
       <CustomAppBar
         iconLeft={icons.ic_back}
         label={'Dịch vụ'}
@@ -74,15 +97,15 @@ const Service = props => {
         </Text>
         <CustomTextTitle label={'Dịch vụ đã thêm'} />
 
-        {services.length > 0 ? (
+        {listSevice.length > 0 ? (
           <FlatList
             listKey="listPaidSevice"
             style={{justifyContent: 'space-between'}}
             horizontal={false}
             scrollEnabled={false}
             numColumns={2}
-            data={services}
-            keyExtractor={(key, index) => `${key.id}${index}`}
+            data={listSevice}
+            keyExtractor={uuid}
             renderItem={({item, index}) => renderListService(item, index)}
           />
         ) : null}
