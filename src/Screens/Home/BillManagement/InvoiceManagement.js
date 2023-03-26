@@ -107,7 +107,7 @@ const InvoiceManagement = props => {
                   },
                   styles.viewButton,
                 ]}
-                label={'Chưa tạo'}
+                label={'Chưa chốt'}
                 styleLabel={{color: isActive == 1 ? 'white' : '#7F8A93'}}
                 onPress={() => setIsActive(1)}
               />
@@ -135,7 +135,7 @@ const InvoiceManagement = props => {
                 styleLabel={{color: isActive == 3 ? 'white' : '#7F8A93'}}
                 onPress={() => setIsActive(3)}
               />
-              <CustomButton
+              {/* <CustomButton
                 styleButton={[
                   {
                     backgroundColor:
@@ -146,7 +146,7 @@ const InvoiceManagement = props => {
                 label={'Quá hạn'}
                 styleLabel={{color: isActive == 4 ? 'white' : '#7F8A93'}}
                 onPress={() => setIsActive(4)}
-              />
+              /> */}
             </ScrollView>
           </View>
           <CustomButtonCarendar
@@ -162,13 +162,14 @@ const InvoiceManagement = props => {
             <InvoiceUnpaid data={listInvoiceUnpaid} />
           ) : isActive == 3 ? (
             <InvoicePaid data={listInvoicePaid} />
-          ) : isActive == 4 ? (
-            <InvoiceOutOfDate />
-          ) : null}
+          ) : // : isActive == 4 ? (
+          //   <InvoiceOutOfDate />
+          // )
+          null}
           <CustomButtonBottom
             label={'Thêm hóa đơn'}
             onPress={() => {
-              dispatch(updateStatus(false));
+              dispatch(updateStatus(true));
               navigation.navigate('CreateInvoice');
             }}
           />

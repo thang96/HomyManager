@@ -230,243 +230,241 @@ const AddBuildings = props => {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       {loading && <CustomLoading />}
-      <KeyboardAvoidingView style={{flex: 1}}>
-        {modalCamera && (
-          <CustomModalCamera
-            openCamera={() => openCamera()}
-            openGallery={() => openGallery()}
-            modalVisible={modalCamera}
-            onRequestClose={() => setModalCamera(false)}
-            cancel={() => setModalCamera(false)}
-          />
-        )}
-        {modalopenTime && (
-          <CustomModalDateTimePicker
-            onCancel={() => setModalopenTime(false)}
-            value={openTime}
-            mode={'time'}
-            openPicker={modalopenTime}
-            onDateChange={value => {
-              let newTime = value.toLocaleTimeString('en-VN');
-              setOpenTime(value);
-              setOpenTimeValue(newTime);
-            }}
-            onPress={() => setModalopenTime(false)}
-          />
-        )}
-        {modalcloseTime && (
-          <CustomModalDateTimePicker
-            onCancel={() => setModalcloseTime(false)}
-            value={closeTime}
-            mode={'time'}
-            openPicker={modalcloseTime}
-            onDateChange={value => {
-              let newTime = value.toLocaleTimeString('en-VN');
-              setCloseTime(value);
-              setCloseTimeValue(newTime);
-            }}
-            onPress={() => setModalcloseTime(false)}
-          />
-        )}
-        {modalCity && (
-          <CustomModalPicker
-            modalVisible={modalCity}
-            data={listCity}
-            pressClose={() => setModalCity(false)}
-            onPressItem={item => {
-              setModalCity(false);
-              getDistrictData(item);
-            }}
-          />
-        )}
-        {modalDistrict && (
-          <CustomModalPicker
-            modalVisible={modalDistrict}
-            data={listDistrict}
-            pressClose={() => setModalDistrict(false)}
-            onPressItem={item => {
-              setModalDistrict(false);
-              getWardData(item);
-            }}
-          />
-        )}
-        {modalWard && (
-          <CustomModalPicker
-            modalVisible={modalWard}
-            data={listWard}
-            pressClose={() => setModalWard(false)}
-            onPressItem={item => {
-              setWardName(item?.name);
-              setWardId(item?.id);
-              setModalWard(false);
-            }}
-          />
-        )}
-        <CustomStepAppBar
-          iconLeft={icons.ic_back}
-          label={'Thiết lập thông tin'}
-          iconRight={icons.ic_bell}
-          pressIconRight={() => navigation.navigate('NotificationScreen')}
-          iconSecondRight={icons.ic_moreOption}
-          pressIconLeft={() => navigation.goBack()}
-          step={1}
+      {modalCamera && (
+        <CustomModalCamera
+          openCamera={() => openCamera()}
+          openGallery={() => openGallery()}
+          modalVisible={modalCamera}
+          onRequestClose={() => setModalCamera(false)}
+          cancel={() => setModalCamera(false)}
+        />
+      )}
+      {modalopenTime && (
+        <CustomModalDateTimePicker
+          onCancel={() => setModalopenTime(false)}
+          value={openTime}
+          mode={'time'}
+          openPicker={modalopenTime}
+          onDateChange={value => {
+            let newTime = value.toLocaleTimeString('en-VN');
+            setOpenTime(value);
+            setOpenTimeValue(newTime);
+          }}
+          onPress={() => setModalopenTime(false)}
+        />
+      )}
+      {modalcloseTime && (
+        <CustomModalDateTimePicker
+          onCancel={() => setModalcloseTime(false)}
+          value={closeTime}
+          mode={'time'}
+          openPicker={modalcloseTime}
+          onDateChange={value => {
+            let newTime = value.toLocaleTimeString('en-VN');
+            setCloseTime(value);
+            setCloseTimeValue(newTime);
+          }}
+          onPress={() => setModalcloseTime(false)}
+        />
+      )}
+      {modalCity && (
+        <CustomModalPicker
+          modalVisible={modalCity}
+          data={listCity}
+          pressClose={() => setModalCity(false)}
+          onPressItem={item => {
+            setModalCity(false);
+            getDistrictData(item);
+          }}
+        />
+      )}
+      {modalDistrict && (
+        <CustomModalPicker
+          modalVisible={modalDistrict}
+          data={listDistrict}
+          pressClose={() => setModalDistrict(false)}
+          onPressItem={item => {
+            setModalDistrict(false);
+            getWardData(item);
+          }}
+        />
+      )}
+      {modalWard && (
+        <CustomModalPicker
+          modalVisible={modalWard}
+          data={listWard}
+          pressClose={() => setModalWard(false)}
+          onPressItem={item => {
+            setWardName(item?.name);
+            setWardId(item?.id);
+            setModalWard(false);
+          }}
+        />
+      )}
+      <CustomStepAppBar
+        iconLeft={icons.ic_back}
+        label={'Thiết lập thông tin'}
+        iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        iconSecondRight={icons.ic_moreOption}
+        pressIconLeft={() => navigation.goBack()}
+        step={1}
+      />
+
+      <ScrollView style={[styles.eachContainer]}>
+        <CustomSuggest
+          label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
+        />
+        <CustomTextTitle label={'Thông tin tòa nhà'} />
+        <CustomInput
+          important={true}
+          type={'input'}
+          title={'Tên tòa nhà'}
+          placeholder={'Nhập tên tòa nhà'}
+          defaultValue={name}
+          onEndEditing={evt => setName(evt.nativeEvent.text)}
+        />
+        <CustomInput
+          important={true}
+          keyboardType={'numeric'}
+          type={'input'}
+          styleViewInput={{marginTop: 10}}
+          title={'Số tầng'}
+          placeholder={'Nhập số tầng'}
+          defaultValue={numberOfFloor}
+          onEndEditing={evt => setNumberOfFloor(evt.nativeEvent.text)}
         />
 
-        <ScrollView style={[styles.eachContainer]}>
-          <CustomSuggest
-            label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
-          />
-          <CustomTextTitle label={'Thông tin tòa nhà'} />
-          <CustomInput
-            important={true}
-            type={'input'}
-            title={'Tên tòa nhà'}
-            placeholder={'Nhập tên tòa nhà'}
-            defaultValue={name}
-            onEndEditing={evt => setName(evt.nativeEvent.text)}
-          />
-          <CustomInput
-            important={true}
-            keyboardType={'numeric'}
-            type={'input'}
-            styleViewInput={{marginTop: 10}}
-            title={'Số tầng'}
-            placeholder={'Nhập số tầng'}
-            defaultValue={numberOfFloor}
-            onEndEditing={evt => setNumberOfFloor(evt.nativeEvent.text)}
-          />
+        <CustomTimeButtons
+          styleContainer={{marginTop: 10}}
+          title={'Giờ mở - đóng cửa'}
+          leftLabel={'Từ'}
+          rightLabel={'Đến'}
+          styleButtonLeft={{marginRight: 5}}
+          styleButtonRight={{marginLeft: 5}}
+          valueLeft={openTimeValue}
+          valueRight={closeTimeValue}
+          onPressLeft={() => setModalopenTime(true)}
+          onPressRightt={() => setModalcloseTime(true)}
+        />
+        <CustomInput
+          important={true}
+          styleViewInput={{marginTop: 10}}
+          type={'input'}
+          keyboardType="numeric"
+          title={'Chi phí thuê nhà'}
+          placeholder="Nhập chi phí thuê nhà"
+          defaultValue={leasingFee}
+          onEndEditing={evt => setLeasingFee(evt.nativeEvent.text)}
+        />
 
-          <CustomTimeButtons
-            styleContainer={{marginTop: 10}}
-            title={'Giờ mở - đóng cửa'}
-            leftLabel={'Từ'}
-            rightLabel={'Đến'}
-            styleButtonLeft={{marginRight: 5}}
-            styleButtonRight={{marginLeft: 5}}
-            valueLeft={openTimeValue}
-            valueRight={closeTimeValue}
-            onPressLeft={() => setModalopenTime(true)}
-            onPressRightt={() => setModalcloseTime(true)}
+        <Text style={[styles.label, {marginTop: 10}]}>Mô tả</Text>
+        <View style={styles.viewTextInput}>
+          <TextInput
+            multiline
+            placeholder="Nhập mô tả cho tòa nhà"
+            defaultValue={description}
+            onEndEditing={evt => setDescription(evt.nativeEvent.text)}
           />
-          <CustomInput
-            important={true}
-            styleViewInput={{marginTop: 10}}
-            type={'input'}
-            keyboardType="numeric"
-            title={'Chi phí thuê nhà'}
-            placeholder="Nhập chi phí thuê nhà"
-            defaultValue={leasingFee}
-            onEndEditing={evt => setLeasingFee(evt.nativeEvent.text)}
-          />
+        </View>
 
-          <Text style={[styles.label, {marginTop: 10}]}>Mô tả</Text>
-          <View style={styles.viewTextInput}>
-            <TextInput
-              multiline
-              placeholder="Nhập mô tả cho tòa nhà"
-              defaultValue={description}
-              onEndEditing={evt => setDescription(evt.nativeEvent.text)}
-            />
-          </View>
+        <View style={styles.line} />
+        <CustomTextTitle label={'Địa chỉ tòa nhà'} />
+        <CustomInput
+          type={'button'}
+          styleViewInput={{marginTop: 10}}
+          title={'Tỉnh/ Thành phố'}
+          placeholder={'Chọn Tỉnh/ Thành phố'}
+          value={cityName}
+          onPress={() => setModalCity(true)}
+        />
+        <CustomInput
+          type={'button'}
+          styleViewInput={{marginTop: 10}}
+          title={'Quận/ Huyện'}
+          placeholder={'Chọn Quận/ Huyện'}
+          value={districtName}
+          onPress={() => setModalDistrict(true)}
+        />
+        <CustomInput
+          type={'button'}
+          styleViewInput={{marginTop: 10}}
+          title={'Phường/ Xã'}
+          placeholder={'Chọn Phường/ Xã'}
+          value={wardName}
+          onPress={() => setModalWard(true)}
+        />
+        <Text style={[styles.label, {marginTop: 10}]}>Địa chỉ cụ thể</Text>
+        <View style={styles.viewTextInput}>
+          <TextInput
+            multiline
+            placeholder="Nhập địa chỉ cụ thể"
+            defaultValue={address}
+            onEndEditing={evt => setAddress(evt.nativeEvent.text)}
+          />
+        </View>
 
-          <View style={styles.line} />
-          <CustomTextTitle label={'Địa chỉ tòa nhà'} />
-          <CustomInput
-            type={'button'}
-            styleViewInput={{marginTop: 10}}
-            title={'Tỉnh/ Thành phố'}
-            placeholder={'Chọn Tỉnh/ Thành phố'}
-            value={cityName}
-            onPress={() => setModalCity(true)}
+        {managerSelect.length > 0 && (
+          <FlatList
+            data={managerSelect}
+            keyExtractor={(key, index) => `${key?.id}${index.toString()}`}
+            renderItem={({item, index}) => {
+              return (
+                <CustomPersonInfor
+                  styleView={{marginTop: 10}}
+                  avatar={item?.avatar}
+                  userName={`${item?.fullName}`}
+                  phoneNumber={`${item?.phoneNumber}`}
+                  onPress={() => {}}
+                />
+              );
+            }}
           />
-          <CustomInput
-            type={'button'}
-            styleViewInput={{marginTop: 10}}
-            title={'Quận/ Huyện'}
-            placeholder={'Chọn Quận/ Huyện'}
-            value={districtName}
-            onPress={() => setModalDistrict(true)}
-          />
-          <CustomInput
-            type={'button'}
-            styleViewInput={{marginTop: 10}}
-            title={'Phường/ Xã'}
-            placeholder={'Chọn Phường/ Xã'}
-            value={wardName}
-            onPress={() => setModalWard(true)}
-          />
-          <Text style={[styles.label, {marginTop: 10}]}>Địa chỉ cụ thể</Text>
-          <View style={styles.viewTextInput}>
-            <TextInput
-              multiline
-              placeholder="Nhập địa chỉ cụ thể"
-              defaultValue={address}
-              onEndEditing={evt => setAddress(evt.nativeEvent.text)}
-            />
-          </View>
+        )}
 
-          {managerSelect.length > 0 && (
+        <View style={styles.line} />
+        <Text style={[styles.textTitle, {marginVertical: 5}]}>
+          Thêm ảnh tòa nhà
+        </Text>
+        <View
+          style={{
+            height: 220,
+            marginVertical: 5,
+            borderRadius: 10,
+            backgroundColor: 'white',
+          }}>
+          {hauseImages.length > 0 ? (
             <FlatList
-              data={managerSelect}
-              keyExtractor={(key, index) => `${key?.id}${index.toString()}`}
-              renderItem={({item, index}) => {
-                return (
-                  <CustomPersonInfor
-                    styleView={{marginTop: 10}}
-                    avatar={item?.avatar}
-                    userName={`${item?.fullName}`}
-                    phoneNumber={`${item?.phoneNumber}`}
-                    onPress={() => {}}
-                  />
-                );
-              }}
+              horizontal
+              data={hauseImages}
+              keyExtractor={uuid}
+              renderItem={({item}) => renderImage(item)}
+            />
+          ) : (
+            <CustomButton
+              styleButton={{flex: 1}}
+              label={'Tải lên ảnh đại diện tòa nhà'}
+              styleLabel={[styles.title, {marginTop: 5}]}
+              disabled={true}
+              icon={icons.ic_upload}
+              styleIcon={{with: 100, height: 100, alignSelf: 'center'}}
             />
           )}
-
-          <View style={styles.line} />
-          <Text style={[styles.textTitle, {marginVertical: 5}]}>
-            Thêm ảnh tòa nhà
-          </Text>
-          <View
-            style={{
-              height: 220,
-              marginVertical: 5,
-              borderRadius: 10,
-              backgroundColor: 'white',
-            }}>
-            {hauseImages.length > 0 ? (
-              <FlatList
-                horizontal
-                data={hauseImages}
-                keyExtractor={uuid}
-                renderItem={({item}) => renderImage(item)}
-              />
-            ) : (
-              <CustomButton
-                styleButton={{flex: 1}}
-                label={'Tải lên ảnh đại diện tòa nhà'}
-                styleLabel={[styles.title, {marginTop: 5}]}
-                disabled={true}
-                icon={icons.ic_upload}
-                styleIcon={{with: 100, height: 100, alignSelf: 'center'}}
-              />
-            )}
-          </View>
-          <CustomButton
-            styleButton={[styles.buttonUploadIM]}
-            label={'Tải lên ảnh đại diện tòa nhà'}
-            styleLabel={styles.labelUploadIM}
-            onPress={() => setModalCamera(true)}
-          />
-          <View style={{marginBottom: 56}} />
-          <CustomTwoButtonBottom
-            leftLabel={'Hủy'}
-            rightLabel={'Tiếp tục'}
-            onPressLeft={() => navigation.goBack()}
-            onPressRight={() => goToStepTwo()}
-          />
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </View>
+        <CustomButton
+          styleButton={[styles.buttonUploadIM]}
+          label={'Tải lên ảnh đại diện tòa nhà'}
+          styleLabel={styles.labelUploadIM}
+          onPress={() => setModalCamera(true)}
+        />
+        <View style={{marginBottom: 56}} />
+        <CustomTwoButtonBottom
+          leftLabel={'Hủy'}
+          rightLabel={'Tiếp tục'}
+          onPressLeft={() => navigation.goBack()}
+          onPressRight={() => goToStepTwo()}
+        />
+      </ScrollView>
     </View>
   );
 };

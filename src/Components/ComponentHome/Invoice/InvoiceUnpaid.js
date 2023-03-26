@@ -23,6 +23,7 @@ const breakLine = Array(19).fill('');
 const InvoiceUnpaid = props => {
   const {data} = props;
   const [invoiceUnconfirmred, setInvoiceUnconfirmred] = useState([]);
+  const navigation = useNavigation();
   useEffect(() => {
     setInvoiceUnconfirmred(data);
   }, [props]);
@@ -43,12 +44,15 @@ const InvoiceUnpaid = props => {
               label={'Xem'}
               styleLabel={styles.labelShow}
               styleButton={styles.buttonShow}
+              onPress={() =>
+                navigation.navigate('InvoiceUnpaidDetail', item?.id)
+              }
             />
           </View>
         </View>
         <View style={styles.viewLine}>
           {breakLine.map((line, index) => {
-            return <View style={styles.line} />;
+            return <View key={`${index.toString()}`} style={styles.line} />;
           })}
         </View>
         <View style={[styles.viewBill, {height: 40}]}>

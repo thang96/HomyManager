@@ -40,7 +40,7 @@ const RenderInvoice = props => {
             }}>{`${houseName} - ${unitName}`}</Text>
           <Text style={{color: colors.backgroundOrange}}>
             {status == 0
-              ? 'Chưa tạo'
+              ? 'Chưa chốt'
               : status == 1
               ? 'Chưa thanh toán'
               : status == 2

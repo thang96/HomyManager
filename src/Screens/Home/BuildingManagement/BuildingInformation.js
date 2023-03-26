@@ -157,7 +157,7 @@ const BuildingInformation = () => {
 
         <CustomTextTitle label={'Thông tin thanh toán'} />
         <PaymentMethods
-          icon={icons?.ic_cashPayment}
+          icon={hauseInfor?.bankAccount?.bank?.logo}
           title={'Thanh toán bằng tiền mặt'}
           describe={'Thanh toán bằng tiền mặt'}
         />

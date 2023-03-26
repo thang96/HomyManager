@@ -45,7 +45,7 @@ const InvoiceUnconfimred = props => {
   };
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
-      <CustomTextTitle label={'Hóa đơn chưa tạo'} />
+      <CustomTextTitle label={'Hóa đơn chưa chốt'} />
       {invoiceUnconfirmred.length > 0 && (
         <FlatList
           listkey={'invoiceUnconfirmred'}

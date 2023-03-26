@@ -44,6 +44,8 @@ import ListPaymentSelect from './Home/PaymentManagement/ListPaymentSelect';
 import InvoiceManagement from './Home/BillManagement/InvoiceManagement';
 import CreateInvoice from './Home/BillManagement/CreateInvoice';
 import InvoiceDetail from './Home/BillManagement/InvoiceDetail';
+import InvoiceUnpaidDetail from './Home/BillManagement/InvoiceUnpaidDetail';
+import InvoicePaidDetail from './Home/BillManagement/InvoicePaidDetail';
 //----------- UserManager
 import UserManager from './Home/UserManagement/UserManager';
 import ManagerList from './Home/UserManagement/ManagerList';
@@ -94,10 +96,12 @@ export {
   ContractManagement,
   CreateContract,
   ContractDetail,
+  InvoicePaidDetail,
   //-- InvoiceManagement
   InvoiceManagement,
   CreateInvoice,
   InvoiceDetail,
+  InvoiceUnpaidDetail,
   //-- PaymentManagement
   PaymentManagement,
   AddPayment,

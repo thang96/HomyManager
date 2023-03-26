@@ -76,3 +76,22 @@ export const PutInvoiceIssueApi = (token, invoiceId) => {
       });
   });
 };
+
+export const PutInvoiceConfirmPaymentApi = (token, invoiceId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(`${BASEURL}/invoices/${invoiceId}/payment-confirm`, null, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
