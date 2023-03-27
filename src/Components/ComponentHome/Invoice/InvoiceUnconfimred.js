@@ -20,7 +20,7 @@ import {useDispatch} from 'react-redux';
 import {updateStatus} from '../../../Store/slices/statusSlice';
 
 const InvoiceUnconfimred = props => {
-  const {data} = props;
+  const {data, onPress} = props;
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [invoiceUnconfirmred, setInvoiceUnconfirmred] = useState([]);
@@ -31,15 +31,12 @@ const InvoiceUnconfimred = props => {
   const renderBillNotCreatedYet = (item, index) => {
     return (
       <RenderInvoice
-        totalFee={`${item?.totalFee}`}
+        totalFee={`${item?.totalFee?.toLocaleString()}`}
         status={`${item?.status}`}
         name={`${item?.name}`}
         houseName={`${item?.contract?.unit?.house?.name}`}
         unitName={`${item?.contract?.unit?.name}`}
-        onPress={() => {
-          dispatch(updateStatus(true));
-          navigation.navigate('InvoiceDetail', item?.id);
-        }}
+        onPress={() => onPress(item?.id)}
       />
     );
   };

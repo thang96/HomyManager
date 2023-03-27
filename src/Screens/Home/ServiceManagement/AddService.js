@@ -39,6 +39,7 @@ const AddService = props => {
   const [description, setDescription] = useState('');
 
   const createNewService = async () => {
+    setModalService(false);
     setLoadingService(true);
     let data = {
       name: name,
@@ -93,14 +94,14 @@ const AddService = props => {
             defaultValue={name}
             onEndEditing={evt => setName(evt.nativeEvent.text)}
           />
-          <CustomInput
+          {/* <CustomInput
             important={true}
             styleViewInput={{marginTop: 20}}
             type={'button'}
             title={'Thu phí dựa trên'}
             placeholder={'Lũy tiến theo chỉ số'}
             value={calculateMethod}
-          />
+          /> */}
           <CustomInput
             important={true}
             styleViewInput={{marginTop: 20}}
@@ -117,7 +118,7 @@ const AddService = props => {
             title={'Phí dịch vụ'}
             placeholder={'Nhập phí dịch vụ'}
             keyboardType={'numeric'}
-            defaultValue={fee}
+            defaultValue={fee ? `${parseInt(fee).toLocaleString()}` : ''}
             onEndEditing={evt => setFee(evt.nativeEvent.text)}
           />
           <Text style={[styles.label, {marginTop: 20}]}>Ghi chú</Text>

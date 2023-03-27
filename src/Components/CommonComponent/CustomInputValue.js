@@ -28,7 +28,7 @@ const CustomInputValue = props => {
         {important && <Text style={{color: 'red'}}> *</Text>}
       </View>
       {type == 'input' && (
-        <View style={styles.viewContainer}>
+        <View style={styles.viewButton}>
           <TextInput
             style={{flex: 1}}
             placeholder={placeholder}
@@ -43,7 +43,7 @@ const CustomInputValue = props => {
       )}
       {type == 'button' && (
         <TouchableOpacity
-          style={[styles.viewContainer, {justifyContent: 'space-between'}]}>
+          style={[styles.viewButton, {justifyContent: 'space-between'}]}>
           <Text style={styles.textUnit}>{value}</Text>
           <View style={styles.viewUnit}>
             <Text style={styles.textUnit}>{unit}</Text>
@@ -55,8 +55,8 @@ const CustomInputValue = props => {
 };
 const styles = StyleSheet.create({
   label: {fontSize: 15, color: '#374047'},
-  viewContainer: {
-    height: 48,
+  viewButton: {
+    height: 50,
     flexDirection: 'row',
     backgroundColor: 'white',
     flex: 1,

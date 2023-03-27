@@ -22,10 +22,12 @@ import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonI
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {GetListTenantsApi} from '../../../Api/Home/TenantApis/TenantApis';
 import {token} from '../../../Store/slices/tokenSlice';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 
 const TenantList = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
+  const loadingState = useSelector(statusState);
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
   const tenantsSelect = useSelector(tenantState);
@@ -55,7 +57,7 @@ const TenantList = () => {
         .catch(error => console.log(error));
     };
     getData();
-  }, []);
+  }, [loadingState]);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -82,7 +84,7 @@ const TenantList = () => {
     return (
       <CustomPersonInfor
         styleView={{marginTop: 10}}
-        avatar={item?.avatar}
+        avatar={item?.avatarImage?.fileUrl}
         userName={item?.fullName}
         phoneNumber={item?.phoneNumber}
         isCheck={item?.isCheck}
@@ -128,7 +130,10 @@ const TenantList = () => {
         leftLabel={'Lưu'}
         rightLabel={'Thêm mới'}
         onPressLeft={() => updateTenantList()}
-        onPressRight={() => navigation.navigate('AddNewTenant')}
+        onPressRight={() => {
+          dispatch(updateStatus(true));
+          navigation.navigate('AddNewTenant');
+        }}
       />
     </View>
   );

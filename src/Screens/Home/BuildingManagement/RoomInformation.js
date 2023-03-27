@@ -35,8 +35,6 @@ const RoomInformation = props => {
   const navigation = useNavigation();
   const [unit, setUnit] = useState();
   const [loading, setLoading] = useState(true);
-  const [listPaidSevice, setListPaidSevice] = useState([]);
-  const [listFreeSevice, setListFreeSevice] = useState([]);
 
   useEffect(() => {
     const getListData = async () => {
@@ -52,45 +50,11 @@ const RoomInformation = props => {
     getListData();
   }, []);
 
-  const renderPaidSevice = (item, index) => {
-    let value = item;
-    return (
-      <RenderService
-        label={item?.label}
-        value={item?.value}
-        onPress={() => {
-          deletePaidService(value);
-        }}
-      />
-    );
-  };
-  const deletePaidService = (item, index) => {
-    let result = [...listPaidSevice];
-    let newResult = result.filter(itemResult => itemResult !== item);
-    setListPaidSevice(newResult);
-  };
-  const renderFreeSevice = (item, index) => {
-    let value = item;
-    return (
-      <RenderAmenity
-        label={item?.label}
-        value={item?.value}
-        onPress={() => {
-          deleteFreeSevice(value);
-        }}
-      />
-    );
-  };
-  const deleteFreeSevice = (item, index) => {
-    let result = [...listFreeSevice];
-    let newResult = result.filter(itemResult => itemResult !== item);
-    setListFreeSevice(newResult);
-  };
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       {loading && <CustomLoading />}
       <CustomAppBarRoomInfor
-        rentMonthlyFee={`${unit?.rentMonthlyFee}`}
+        rentMonthlyFee={`${unit?.rentMonthlyFee?.toLocaleString()}`}
         nameRoom={`${unit?.name}`}
         onPressLeft={() => navigation.goBack()}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
@@ -117,48 +81,30 @@ const RoomInformation = props => {
           <BoxShowInfor
             styleView={{marginTop: 10}}
             label={'Loại phòng'}
-            content={'Studio'}
+            content={`${unit?.roomType}`}
           />
         </View>
         <View style={[styles.viewRow, {marginTop: 10}]}>
           <BoxShowInfor
             label={'Đặt cọc'}
-            content={`${unit?.depositMoney}`}
+            content={`${unit?.depositMoney?.toLocaleString()}`}
             unit={'VNĐ'}
           />
           <View style={{width: 10}} />
           <BoxShowInfor
             label={'Giá'}
-            content={`${unit?.rentMonthlyFee}`}
+            content={`${unit?.rentMonthlyFee?.toLocaleString()}`}
             unit={'VNĐ'}
           />
         </View>
 
         <View style={styles.line} />
 
-        <CustomTextTitle label={'Hình ảnh của phòng'} />
-        {unit?.images?.length > 0 && (
-          <FlatList
-            listKey="imagesUnit"
-            horizontal
-            data={unit?.images}
-            keyExtractor={key => key?.id}
-            renderItem={({item, index}) => {
-              return <RenderImage data={item} deleteItem={async () => {}} />;
-            }}
-          />
-        )}
-        <View style={styles.line} />
-
         <CustomTextTitle label={'Hợp đồng cho thuê'} />
-
-        {/* <CustomContract /> */}
 
         <View style={styles.line} />
 
         <CustomTextTitle label={'Thông tin người ở'} />
-
-        {/* <CustomTenantInformation styleView={{marginBottom: 10}} /> */}
 
         <View style={styles.line} />
 
@@ -212,6 +158,20 @@ const RoomInformation = props => {
           <Text style={styles.pickerTotal}>{`${unit?.amenities?.length}`}</Text>
         </View>
 
+        <View style={styles.line} />
+
+        <CustomTextTitle label={'Hình ảnh của phòng'} />
+        {unit?.images?.length > 0 && (
+          <FlatList
+            listKey="imagesUnit"
+            horizontal
+            data={unit?.images}
+            keyExtractor={key => key?.id}
+            renderItem={({item, index}) => {
+              return <RenderImage data={item} deleteItem={async () => {}} />;
+            }}
+          />
+        )}
         <View style={styles.line} />
 
         <CustomTextTitle label={'Mô tả phòng'} />

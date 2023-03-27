@@ -6,7 +6,9 @@ import {colors, icons, images} from '../../../Constants';
 import BoxShowInfor from '../../../Components/CommonComponent/BoxShowInfor';
 import {FlatList} from 'react-native-gesture-handler';
 import CustomAppBarBuildingInfor from '../../../Components/CommonComponent/CustomAppBarBuildingInfor';
+import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
+import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {HauseDetailApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import RenderService from '../../../Components/ComponentHome/RenderService';
@@ -24,7 +26,6 @@ const BuildingInformation = () => {
   const tokenStore = useSelector(token);
   const [loading, setLoading] = useState(true);
   const [hauseInfor, setHauseInfor] = useState();
-  const [units, setListUnits] = useState([]);
   const [openTimeValue, setOpenTimeValue] = useState('');
   const [closeTimeValue, setCloseTimeValue] = useState('');
 
@@ -40,13 +41,6 @@ const BuildingInformation = () => {
             setCloseTimeValue(eachCloseTime.toLocaleTimeString('en-VN'));
             setHauseInfor(res?.data);
             setLoading(false);
-          }
-        })
-        .catch(error => console.error(error));
-      await GetListUnitsApi(tokenStore, hauseId)
-        .then(res => {
-          if (res?.status == 200) {
-            setListUnits(res?.data);
           }
         })
         .catch(error => console.error(error));
@@ -79,14 +73,14 @@ const BuildingInformation = () => {
       <CustomAppBarBuildingInfor
         pressIconRight={() => navigation.navigate('NotificationScreen')}
         nameBuilding={`${hauseInfor?.name}`}
-        addressBuilding={`${hauseInfor?.address}`}
+        addressBuilding={`${hauseInfor?.fullAddress}`}
         onPressLeft={() => navigation.goBack()}
       />
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 20}}>
         <View style={styles.viewUtils}>
           <CustomOptionBT
             title={'Phòng'}
-            content={units?.length ? `${units.length}` : '0'}
+            content={`${hauseInfor?.unitTotal ?? 0}`}
             icon={icons.ic_bed}
             styleImageBG={{tintColor: '#1297c0'}}
             styleBGIcon={{backgroundColor: '#ebf9fd'}}
@@ -96,21 +90,21 @@ const BuildingInformation = () => {
           />
           <CustomOptionBT
             title={'Trống'}
-            content={'8'}
+            content={`${hauseInfor?.emptyUnitTotal}`}
             icon={icons.ic_key}
             styleImageBG={{tintColor: '#ff8d37'}}
             styleBGIcon={{backgroundColor: '#fff3e9'}}
           />
           <CustomOptionBT
             title={'Người'}
-            content={'6'}
+            content={`${hauseInfor?.unitTotal}`}
             icon={icons.ic_men}
             styleImageBG={{tintColor: '#7ace68'}}
             styleBGIcon={{backgroundColor: '#e6f6e2'}}
           />
           <CustomOptionBT
             title={'Sự cố'}
-            content={'2'}
+            content={`${hauseInfor?.issueTotal}`}
             icon={icons.ic_hammer}
             styleImageBG={{tintColor: '#f5dc00'}}
             styleBGIcon={{backgroundColor: '#fefdd9'}}
@@ -138,28 +132,39 @@ const BuildingInformation = () => {
         </View>
         <BoxShowInfor
           label={'Chi phí thuê'}
-          content={`${hauseInfor?.leasingFee}`}
+          content={`${hauseInfor?.leasingFee?.toLocaleString()}`}
           unit={'VNĐ'}
         />
-        <View style={styles.line} />
 
-        <CustomTextTitle label={'Hình ảnh tòa nhà'} />
-        {hauseInfor?.images?.length > 0 && (
+        <View style={styles.line} />
+        <CustomTextTitle label={'Danh sách người thuê'} />
+        {hauseInfor?.houseUsers?.length > 0 ? (
           <FlatList
-            listKey="imagesHause"
-            horizontal
-            data={hauseInfor?.images}
-            keyExtractor={key => key?.id}
-            renderItem={({item, index}) => renderImageHauses(item, index)}
+            listKey="houseUsers"
+            horizontal={false}
+            scrollEnabled={false}
+            numColumns={3}
+            keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
+            data={hauseInfor?.houseUsers}
+            renderItem={({item, index}) => {
+              return (
+                <CustomPersonInfor
+                  styleView={{marginTop: 10}}
+                  avatar={item?.avatar}
+                  userName={item?.fullName}
+                  phoneNumber={item?.phoneNumber}
+                />
+              );
+            }}
           />
-        )}
+        ) : null}
         <View style={styles.line} />
 
         <CustomTextTitle label={'Thông tin thanh toán'} />
         <PaymentMethods
           icon={hauseInfor?.bankAccount?.bank?.logo}
-          title={'Thanh toán bằng tiền mặt'}
-          describe={'Thanh toán bằng tiền mặt'}
+          title={hauseInfor?.bankAccount?.name}
+          describe={hauseInfor?.bankAccount?.notice}
         />
         <View style={styles.line} />
 
@@ -204,23 +209,23 @@ const BuildingInformation = () => {
               styles.pickerTotal
             }>{`${hauseInfor?.amenities.length}`}</Text>
         </View>
-        <View style={{height: 56}} />
 
-        {/* <CustomTwoButtonBottom
-          styleView={{marginVertical: 20}}
-          leftLabel={'Hủy'}
-          styleButtonLeft={{
-            borderColor: colors.backgroundOrange,
-            backgroundColor: 'white',
-            marginRight: 5,
-          }}
-          styleLabelLeft={{
-            color: colors.backgroundOrange,
-            fontSize: 15,
-            fontWeight: '600',
-          }}
-          rightLabel={'Lưu'}
-        /> */}
+        <View style={styles.line} />
+
+        <CustomTextTitle label={'Hình ảnh tòa nhà'} />
+        {hauseInfor?.images?.length > 0 && (
+          <FlatList
+            listKey="imagesHause"
+            horizontal
+            data={hauseInfor?.images}
+            keyExtractor={key => key?.id}
+            renderItem={({item, index}) => renderImageHauses(item, index)}
+          />
+        )}
+        <View style={styles.line} />
+        <CustomTextTitle label={'Lưu ý'} />
+        <CustomSuggest label={`${hauseInfor?.notice}`} />
+        <View style={{height: 56}} />
       </ScrollView>
     </View>
   );

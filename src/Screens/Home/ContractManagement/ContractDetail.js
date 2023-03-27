@@ -11,6 +11,8 @@ import {ScrollView} from 'react-native-virtualized-view';
 import {dateToDMY} from '../../../utils/common';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
+import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
+import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 const ContractDetail = props => {
@@ -20,6 +22,7 @@ const ContractDetail = props => {
   const tokenStore = useSelector(token);
   const [contract, setContract] = useState();
   const [loadingContract, setLoadingContract] = useState(true);
+  console.log(contract);
   useEffect(() => {
     const getData = async () => {
       await GetContractDetailAPi(tokenStore, contractId)
@@ -45,7 +48,7 @@ const ContractDetail = props => {
       <RenderService
         icon={`${item?.icon}`}
         label={`${item?.name}`}
-        value={`${item?.fee}`}
+        value={`${item?.fee?.toLocaleString()}`}
         onPress={() => navigation.navigate('ServiceDetail', item?.id)}
       />
     );
@@ -62,10 +65,10 @@ const ContractDetail = props => {
       />
       {loadingContract && <CustomLoading />}
       <ScrollView style={{paddingTop: 10, paddingHorizontal: 10}}>
-        <View style={styles.viewBetween}>
+        {/* <View style={styles.viewBetween}>
           <Text style={styles.textInfor}>{'#12345'}</Text>
           <Text style={styles.textInfor}>{`Ngày tạo: chưa có`}</Text>
-        </View>
+        </View> */}
 
         <View style={[styles.viewRow, {marginTop: 10}]}>
           <Image
@@ -93,12 +96,12 @@ const ContractDetail = props => {
 
         <CustomViewShowBetween
           title={'Tiền phòng'}
-          value={`${contract?.leasingFee}`}
+          value={`${contract?.leasingFee?.toLocaleString()}`}
           unit={'VNĐ'}
         />
         <CustomViewShowBetween
           title={'Tiền cọc'}
-          value={`${contract?.depositMoney}`}
+          value={`${contract?.depositMoney?.toLocaleString()}`}
           unit={'VNĐ'}
         />
         <CustomViewShowBetween
@@ -135,8 +138,23 @@ const ContractDetail = props => {
 
         <View style={styles.viewLine} />
         <CustomTextTitle label={'Danh sách người thuê'} />
-        {contract?.tenants?.length > 0}
+        {contract?.tenants?.length > 0 && (
+          <FlatList
+            data={contract?.tenants}
+            keyExtractor={key => key?.id}
+            renderItem={({item, index}) => {
+              return (
+                <CustomPersonInfor
+                  avatar={item?.avatarImage}
+                  userName={item?.fullName}
+                  phoneNumber={item?.phoneNumber}
+                />
+              );
+            }}
+          />
+        )}
         <CustomTextTitle label={'Điều khoản'} />
+        <CustomSuggest label={`${contract?.termAndCondition}`} />
         <View style={{height: 56}} />
       </ScrollView>
       <CustomButtonBottom label={'Thêm hóa đơn'} />

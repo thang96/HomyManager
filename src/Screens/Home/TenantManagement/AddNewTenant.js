@@ -148,9 +148,10 @@ const AddNewTenant = () => {
   };
 
   const createNewTenant = async () => {
+    setModalAddTenant(false);
     setLoadingAddTenant(true);
     let data = {
-      userName: phoneNumber,
+      userName: userName,
       fullName: fullName,
       phoneNumber: phoneNumber,
       email: email,
@@ -159,7 +160,7 @@ const AddNewTenant = () => {
       identityIssueDate: `${identityIssueDate}`,
       identityIssuePlace: identityIssuePlace,
       address: address,
-      password: '',
+      password: password,
     };
     await CreateNewTenantApi(tokenStore, data)
       .then(async res => {
@@ -171,7 +172,7 @@ const AddNewTenant = () => {
                 await PostImageIdentityApi(tokenStore, tenantId, albumImage)
                   .then(res => {
                     if (res?.status == 200) {
-                      dispatch(updateStatus(true));
+                      dispatch(updateStatus(false));
                       setLoadingAddTenant(false);
                       navigation.goBack();
                     }
@@ -335,6 +336,24 @@ const AddNewTenant = () => {
           placeholder={'Nhập địa chỉ'}
           defaultValue={address}
           onEndEditing={evt => setAddress(evt.nativeEvent.text)}
+        />
+        <View style={styles.line} />
+        <CustomTextTitle label={'Tạo tài khoản cho người thuê'} />
+        <CustomInput
+          type={'input'}
+          title={'Tài khoản'}
+          placeholder={'Nhập tài khoản'}
+          important={true}
+          defaultValue={userName}
+          onEndEditing={evt => setUserName(evt.nativeEvent.text)}
+        />
+        <CustomInput
+          type={'input'}
+          title={'Mật khẩu'}
+          placeholder={'Nhập mật khẩu'}
+          important={true}
+          defaultValue={password}
+          onEndEditing={evt => setPassword(evt.nativeEvent.text)}
         />
         <View style={styles.line} />
         <CustomTextTitle label={'Thêm ảnh người dùng'} />

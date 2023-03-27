@@ -32,7 +32,7 @@ const FloorInformation = () => {
   const [hauseInfor, setHauseInfor] = useState();
   const hauseId = route.params;
   const statusLoading = useSelector(statusState);
-
+  console.log(listFloors);
   useEffect(() => {
     const getListUnit = async () => {
       await GetListUnitsApi(tokenStore, hauseId)
@@ -65,8 +65,8 @@ const FloorInformation = () => {
         <CustomFloorInfor
           numberRoom={`${item?.name}`}
           status={`${item?.status}`}
-          username={`${item?.username}`}
-          price={`${item?.rentMonthlyFee}`}
+          username={`${item?.tenantUser}` ?? ''}
+          price={`${item?.rentMonthlyFee?.toLocaleString()}`}
           onPress={() => {
             navigation.navigate('RoomInformation', item?.id);
           }}
@@ -80,7 +80,7 @@ const FloorInformation = () => {
       {loading && <CustomLoading />}
       <CustomAppBarFloorInfor
         hauseName={`${hauseInfor?.name}`}
-        address={`${hauseInfor?.address}`}
+        address={`${hauseInfor?.fullAddress}`}
         onPressLeft={() => navigation.goBack()}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
       />

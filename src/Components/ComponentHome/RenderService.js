@@ -13,6 +13,7 @@ const RenderService = props => {
   const widthWindow = Dimensions.get('window').width / 2 - 15;
   return (
     <TouchableOpacity
+      disabled={true}
       onPress={onPress}
       style={[styles.viewContainer, viewStyle, {width: widthWindow}]}>
       {icon && <Image source={icon} style={styles.icon} />}

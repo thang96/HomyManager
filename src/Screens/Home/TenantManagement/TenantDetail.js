@@ -1,6 +1,6 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
@@ -10,7 +10,8 @@ import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetTenantDetailApi} from '../../../Api/Home/TenantApis/TenantApis';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
-import {dateToDMY} from '../../../utils/common';
+import RenderImage from '../../../Components/ComponentHome/RenderImage';
+import {convertDate, dateToDMY} from '../../../utils/common';
 const TenantDetail = props => {
   const route = useRoute();
   const navigation = useNavigation();
@@ -65,7 +66,8 @@ const TenantDetail = props => {
               style={styles.textNumberPhone}>{`${tenant?.phoneNumber}`}</Text>
           </View>
         </View>
-        <View style={{flex: 1, paddingHorizontal: 10}}>
+
+        {/* <View style={{paddingHorizontal: 10}}>
           <CustomTextTitle label={'Phòng đang ở'} />
           <View style={styles.viewBetween}>
             <BoxShowInfor label={'Tòa nhà'} content={'Tòa nhà D2'} />
@@ -77,9 +79,9 @@ const TenantDetail = props => {
             <View style={{width: 5}} />
             <BoxShowInfor label={'Loại phòng'} content={'Studio'} />
           </View>
-        </View>
+        </View> */}
 
-        <View style={{flex: 1, paddingHorizontal: 10}}>
+        <View style={{paddingHorizontal: 10}}>
           <CustomTextTitle label={'Thông tin cá nhân'} />
           <BoxShowInfor label={'Địa chỉ'} content={`${tenant?.address}`} />
           <View style={[styles.viewBetween, {marginTop: 5}]}>
@@ -92,13 +94,29 @@ const TenantDetail = props => {
           </View>
 
           <View style={[styles.viewBetween, {marginTop: 5}]}>
-            <BoxShowInfor label={'Ngày sinh'} content={`${tenant?.birthDay}`} />
+            <BoxShowInfor
+              label={'Ngày sinh'}
+              content={`${convertDate(tenant?.birthDay)}`}
+            />
             <View style={{width: 5}} />
             <BoxShowInfor
               label={'Số CMNN/CCCD'}
               content={`${tenant?.identityNumber}`}
             />
           </View>
+        </View>
+        <View style={{flex: 1, paddingHorizontal: 10}}>
+          <CustomTextTitle label={'Ảnh CMND/CCCD'} />
+          {tenant?.identityImages?.length > 0 && (
+            <FlatList
+              horizontal
+              data={tenant?.identityImages}
+              keyExtractor={key => key?.id}
+              renderItem={({item, index}) => {
+                return <RenderImage data={item} />;
+              }}
+            />
+          )}
         </View>
       </ScrollView>
     </View>

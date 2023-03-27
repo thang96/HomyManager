@@ -41,13 +41,14 @@ const AddUtilities = props => {
   }, []);
 
   const createNewAmenity = async () => {
-    setModalAddAmenity(true);
+    setModalAddAmenity(false);
+    setLoadingAddAmenity(true);
     let data = {name: name, description: description};
     await CreateNewAmenityApi(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
           if (res?.status == 200) {
-            setModalAddAmenity(false);
+            setLoadingAddAmenity(false);
             navigation.goBack();
           }
         }

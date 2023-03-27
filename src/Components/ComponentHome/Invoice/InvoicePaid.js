@@ -17,11 +17,12 @@ import {icons, colors} from '../../../Constants';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
+import RenderInvoice from './RenderInvoice';
 
 const breakLine = Array(19).fill('');
 
 const InvoicePaid = props => {
-  const {data} = props;
+  const {data, onPress} = props;
   const [invoiceUnconfirmred, setInvoiceUnconfirmred] = useState([]);
   const navigation = useNavigation();
   useEffect(() => {
@@ -30,47 +31,14 @@ const InvoicePaid = props => {
 
   const renderBillNotCreatedYet = (item, index) => {
     return (
-      <View style={styles.viewAroundBill}>
-        <View style={[styles.viewBill, {height: 64}]}>
-          <View style={styles.viewRowBetween}>
-            <View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={styles.textTotalFee}>{item?.totalFee}</Text>
-                <Text style={{fontSize: 13, color: '#374047'}}>{' VNĐ'}</Text>
-              </View>
-              <CustomSuggest label={item?.name} />
-            </View>
-            <CustomButton
-              label={'Xem'}
-              styleLabel={styles.labelShow}
-              styleButton={styles.buttonShow}
-              onPress={() => navigation.navigate('InvoicePaidDetail', item?.id)}
-            />
-          </View>
-        </View>
-        <View style={styles.viewLine}>
-          {breakLine.map((line, index) => {
-            return <View key={`${index.toString()}`} style={styles.line} />;
-          })}
-        </View>
-        <View style={[styles.viewBill, {height: 40}]}>
-          <View style={styles.viewRowBetween}>
-            <Text
-              style={{
-                color: '#374047',
-              }}>{`${item?.contract?.unit?.house?.name} - ${item?.contract?.unit?.name}`}</Text>
-            <Text style={{color: colors.backgroundOrange}}>
-              {item?.status == 0
-                ? 'Chưa tạo'
-                : item?.status == 1
-                ? 'Chưa thanh toán'
-                : item?.status == 2
-                ? 'Đã thanh toán'
-                : ''}
-            </Text>
-          </View>
-        </View>
-      </View>
+      <RenderInvoice
+        totalFee={`${item?.totalFee?.toLocaleString()}`}
+        status={`${item?.status}`}
+        name={`${item?.name}`}
+        houseName={`${item?.contract?.unit?.house?.name}`}
+        unitName={`${item?.contract?.unit?.name}`}
+        onPress={() => onPress(item?.id)}
+      />
     );
   };
   return (

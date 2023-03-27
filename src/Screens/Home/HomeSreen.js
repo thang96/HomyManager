@@ -35,7 +35,7 @@ const HomeScreen = () => {
   const widthImage = Dimensions.get('window').width / 2 - 20;
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
-  console.log(tokenStore);
+  // console.log(tokenStore);
   const [keyboard, setKeyboard] = useState(false);
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -181,20 +181,20 @@ const HomeScreen = () => {
               styleBGIcon={{backgroundColor: '#edfcfb'}}
               onPress={() => navigation.navigate('PaymentManagement')}
             />
-            <CustomOptionBT
+            {/* <CustomOptionBT
               title={'Điện-nước'}
               svgIcon={svgs.Water}
               styleBGIcon={{backgroundColor: '#edfcfb'}}
-              onPress={() => setModalNotify(true)}
-            />
+              onPress={() => {}}
+            /> */}
           </View>
           <View style={[styles.viewRow, {marginTop: 15}]}>
-            <CustomOptionBT
+            {/* <CustomOptionBT
               title={'Sổ nợ'}
               svgIcon={svgs.Document}
               styleBGIcon={{backgroundColor: '#edfcfb'}}
-              onPress={() => navigation.navigate('CreateInvoice')}
-            />
+              onPress={() => {}}
+            /> */}
           </View>
         </View>
         <View style={[styles.viewRow, {marginTop: 15, marginBottom: 10}]}>

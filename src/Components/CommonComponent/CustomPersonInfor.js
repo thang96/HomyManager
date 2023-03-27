@@ -27,7 +27,7 @@ const CustomPersonInfor = props => {
           <Image
             resizeMode="contain"
             style={styles.avatar}
-            source={avatar ? {uri: avatar} : icons.ic_user}
+            source={typeof avatar == 'string' ? {uri: avatar} : icons.ic_user}
           />
         </TouchableOpacity>
       </View>

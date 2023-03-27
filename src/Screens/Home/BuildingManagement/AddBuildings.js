@@ -40,6 +40,7 @@ import {
 import {GetListManagersApi} from '../../../Api/Home/ManagerApis/ManagerApis';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
+import CustomInputValue from '../../../Components/CommonComponent/CustomInputValue';
 
 const AddBuildings = props => {
   const navigation = useNavigation();
@@ -347,15 +348,18 @@ const AddBuildings = props => {
           onPressLeft={() => setModalopenTime(true)}
           onPressRightt={() => setModalcloseTime(true)}
         />
-        <CustomInput
-          important={true}
-          styleViewInput={{marginTop: 10}}
+        <CustomInputValue
+          viewContainer={{marginTop: 10}}
           type={'input'}
-          keyboardType="numeric"
-          title={'Chi phí thuê nhà'}
-          placeholder="Nhập chi phí thuê nhà"
-          defaultValue={leasingFee}
-          onEndEditing={evt => setLeasingFee(evt.nativeEvent.text)}
+          label={'Chi phí thuê nhà'}
+          important={true}
+          unit={'VNĐ'}
+          placeholder={'Nhập chi phí thuê nhà'}
+          keyboardType={'numeric'}
+          defaultValue={
+            leasingFee ? `${parseInt(leasingFee)?.toLocaleString()}` : ''
+          }
+          onEndEditing={event => setLeasingFee(event.nativeEvent.text)}
         />
 
         <Text style={[styles.label, {marginTop: 10}]}>Mô tả</Text>

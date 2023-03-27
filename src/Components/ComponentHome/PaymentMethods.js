@@ -5,8 +5,8 @@ const PaymentMethods = props => {
   return (
     <View style={[styles.container, styles.viewShadow]}>
       <Image
-        source={icon}
-        style={{width: 32, height: 32, marginHorizontal: 10}}
+        source={typeof icon == 'string' ? {uri: icon} : null}
+        style={{width: 80, height: 32, marginHorizontal: 10}}
       />
       <View>
         <Text style={styles.title}>{title}</Text>

@@ -62,7 +62,7 @@ const ServiceManager = props => {
       <RenderService
         icon={`${item?.icon}`}
         label={`${item?.name}`}
-        value={`${item?.fee}`}
+        value={`${item?.fee?.toLocaleString()}`}
         onPress={() => navigation.navigate('ServiceDetail', item?.id)}
       />
     );

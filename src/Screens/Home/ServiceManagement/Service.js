@@ -21,7 +21,7 @@ import {
 } from '../../../Store/slices/commonSlice';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
-import {statusState} from '../../../Store/slices/statusSlice';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {uuid} from '../../../utils/uuid';
 
@@ -115,7 +115,10 @@ const Service = props => {
         leftLabel={'Lưu'}
         rightLabel={'Thêm mới'}
         onPressLeft={() => updateservices()}
-        onPressRight={() => navigation.navigate('AddService')}
+        onPressRight={() => {
+          dispatch(updateStatus(true));
+          navigation.navigate('AddService');
+        }}
       />
     </View>
   );

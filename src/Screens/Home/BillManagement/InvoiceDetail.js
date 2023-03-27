@@ -17,6 +17,7 @@ import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import {colors, icons} from '../../../Constants';
 import {token} from '../../../Store/slices/tokenSlice';
 import {updateStatus} from '../../../Store/slices/statusSlice';
+import {convertDate} from '../../../utils/common';
 const breakLine = Array(19).fill('');
 
 const InvoiceDetail = props => {
@@ -105,7 +106,7 @@ const InvoiceDetail = props => {
           <View style={styles.viewBetween}>
             <Text style={styles.title}>{``}</Text>
             <Text style={{color: '#000000', fontSize: 13}}>
-              {`${invoice?.createTime}`}
+              {`${convertDate(invoice?.createTime)}`}
             </Text>
           </View>
 

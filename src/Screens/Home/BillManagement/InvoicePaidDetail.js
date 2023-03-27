@@ -11,18 +11,11 @@ import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
-import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import {colors, icons} from '../../../Constants';
 import {token} from '../../../Store/slices/tokenSlice';
-import {updateStatus} from '../../../Store/slices/statusSlice';
-import CustomButton from '../../../Components/CommonComponent/CustomButton';
-import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
-import ImagePicker from 'react-native-image-crop-picker';
-import {uuid} from '../../../utils/uuid';
-import {PostImageInvoiceApi} from '../../../Api/Home/FileDataApis/FileDataApis';
-import {PutInvoiceUploadServiceApi} from '../../../Api/Home/InvoiceApis/InvoiceApis';
+import {convertDate} from '../../../utils/common';
+
 const breakLine = Array(19).fill('');
 
 const InvoicePaidDetail = props => {
@@ -35,7 +28,7 @@ const InvoicePaidDetail = props => {
   const [invoiceServices, setInvoiceServices] = useState([]);
   const [serviceImages, setServiceImages] = useState([]);
   const [paymentmages, setPaymentImages] = useState([]);
-
+  console.log('12');
   useEffect(() => {
     const getData = async () => {
       await GetInvoiceDetailApi(tokenStore, invoiceId)
@@ -76,21 +69,13 @@ const InvoicePaidDetail = props => {
         <View style={[styles.shadowView, styles.viewInvoice]}>
           <View style={styles.viewBetween}>
             <Text style={styles.title}>{`${invoice?.name}`}</Text>
-            <Text style={{color: 'red', fontSize: 13}}>
-              {invoice?.status == 0
-                ? 'Chưa chốt'
-                : invoice?.status == 1
-                ? 'Chưa thanh toán'
-                : invoice?.status == 1
-                ? 'Đã thanh toán'
-                : ''}
-            </Text>
+            <Text style={{color: 'red', fontSize: 13}}>{'Đã thanh toán'}</Text>
           </View>
 
           <View style={styles.viewBetween}>
             <Text style={styles.title}>{``}</Text>
             <Text style={{color: '#000000', fontSize: 13}}>
-              {`${invoice?.createTime}`}
+              {`${convertDate(invoice?.createTime)}`}
             </Text>
           </View>
 
@@ -134,7 +119,7 @@ const InvoicePaidDetail = props => {
           <View style={styles.viewLine}>
             {breakLine.map((line, index) => {
               return (
-                <View key={`${index.toString()}`} style={styles.breakLine} />
+                <View key={`${index.toString()}a`} style={styles.breakLine} />
               );
             })}
           </View>
@@ -164,7 +149,7 @@ const InvoicePaidDetail = props => {
           <View style={styles.viewLine}>
             {breakLine.map((line, index) => {
               return (
-                <View key={`${index.toString()}`} style={styles.breakLine} />
+                <View key={`${index.toString()}b`} style={styles.breakLine} />
               );
             })}
           </View>
@@ -179,7 +164,7 @@ const InvoicePaidDetail = props => {
           <View style={styles.viewLine}>
             {breakLine.map((line, index) => {
               return (
-                <View key={`${index.toString()}`} style={styles.breakLine} />
+                <View key={`${index.toString()}c`} style={styles.breakLine} />
               );
             })}
           </View>
@@ -193,6 +178,7 @@ const InvoicePaidDetail = props => {
         <CustomTextTitle label={'Ảnh dịch vụ'} />
         {serviceImages.length > 0 && (
           <FlatList
+            listKey={'serviceImages'}
             horizontal
             data={serviceImages}
             keyExtractor={key => key?.id}
@@ -202,6 +188,7 @@ const InvoicePaidDetail = props => {
         <CustomTextTitle label={'Ảnh thanh toán'} />
         {paymentmages.length > 0 && (
           <FlatList
+            listKey={'paymentmages'}
             horizontal
             data={paymentmages}
             keyExtractor={key => key?.id}

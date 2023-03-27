@@ -32,7 +32,11 @@ const CustomAppBar = props => {
           onPress={pressIconLeft}
         />
       )}
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && (
+        <Text numberOfLines={1} style={styles.label}>
+          {label}
+        </Text>
+      )}
       {iconRight && (
         <CustomButton
           styleButton={[{marginRight: 15}]}
@@ -71,7 +75,7 @@ const styles = StyleSheet.create({
     color: 'white',
     marginLeft: 8,
     flex: 1,
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '600',
     fontFamily: 'sf-pro-text-semibold',
     letterSpacing: -0.5,

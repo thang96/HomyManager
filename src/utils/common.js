@@ -1,3 +1,8 @@
+export const convertDate = value => {
+  var d = new Date(value);
+  var convertDate = dateToDMY(d);
+  return convertDate;
+};
 export const dateToYMD = value => {
   var d = value.getDate();
   var m = value.getMonth() + 1; //Month from 0 to 11

@@ -59,7 +59,7 @@ const TenantManager = () => {
     return (
       <CustomPersonInfor
         styleView={{marginTop: 10}}
-        avatar={item?.avatar}
+        avatar={item?.avatarImage?.fileUrl}
         userName={item?.fullName}
         phoneNumber={item?.phoneNumber}
         pressAvatar={() => navigation.navigate('TenantDetail', item?.id)}

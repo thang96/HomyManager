@@ -17,12 +17,8 @@ import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import {colors, icons} from '../../../Constants';
 import {token} from '../../../Store/slices/tokenSlice';
 import {updateStatus} from '../../../Store/slices/statusSlice';
-import CustomButton from '../../../Components/CommonComponent/CustomButton';
-import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
-import ImagePicker from 'react-native-image-crop-picker';
-import {uuid} from '../../../utils/uuid';
-import {PostImageInvoiceApi} from '../../../Api/Home/FileDataApis/FileDataApis';
-import {PutInvoiceUploadServiceApi} from '../../../Api/Home/InvoiceApis/InvoiceApis';
+import {convertDate} from '../../../utils/common';
+
 const breakLine = Array(19).fill('');
 
 const InvoiceUnpaidDetail = props => {
@@ -115,7 +111,7 @@ const InvoiceUnpaidDetail = props => {
           <View style={styles.viewBetween}>
             <Text style={styles.title}>{``}</Text>
             <Text style={{color: '#000000', fontSize: 13}}>
-              {`${invoice?.createTime}`}
+              {`${convertDate(invoice?.createTime)}`}
             </Text>
           </View>
 

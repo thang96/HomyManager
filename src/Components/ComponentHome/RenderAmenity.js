@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     minHeight: 38,
-    backgroundColor: colors.mainColor,
+    backgroundColor: 'white',
     elevation: 1,
     zIndex: 1,
     borderRadius: 5,
@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
     margin: 2,
   },
   styleIcon: {width: 12, height: 12, tintColor: 'white', marginLeft: 3},
-  text: {fontSize: 13, fontWeight: '400', color: 'white'},
+  text: {fontSize: 13, fontWeight: '400', color: colors.mainColor},
 });
 export default RenderAmenity;

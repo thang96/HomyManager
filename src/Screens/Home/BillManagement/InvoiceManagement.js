@@ -157,11 +157,28 @@ const InvoiceManagement = props => {
           />
 
           {isActive == 1 ? (
-            <InvoiceUnconfimred data={listInvoiceUnconfimred} />
+            <InvoiceUnconfimred
+              data={listInvoiceUnconfimred}
+              onPress={id => {
+                dispatch(updateStatus(true));
+                navigation.navigate('InvoiceDetail', id);
+              }}
+            />
           ) : isActive == 2 ? (
-            <InvoiceUnpaid data={listInvoiceUnpaid} />
+            <InvoiceUnpaid
+              data={listInvoiceUnpaid}
+              onPress={id => {
+                dispatch(updateStatus(true));
+                navigation.navigate('InvoiceUnpaidDetail', id);
+              }}
+            />
           ) : isActive == 3 ? (
-            <InvoicePaid data={listInvoicePaid} />
+            <InvoicePaid
+              data={listInvoicePaid}
+              onPress={id => {
+                navigation.navigate('InvoicePaidDetail', id);
+              }}
+            />
           ) : // : isActive == 4 ? (
           //   <InvoiceOutOfDate />
           // )

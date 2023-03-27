@@ -514,7 +514,9 @@ const CreateContract = () => {
           unit={'VNĐ'}
           placeholder={'Nhập tiền thuê phòng'}
           keyboardType={'numeric'}
-          defaultValue={leasingFee}
+          defaultValue={
+            leasingFee ? `${parseInt(leasingFee)?.toLocaleString()}` : ''
+          }
           onEndEditing={event => setLeasingFee(event.nativeEvent.text)}
         />
         <CustomInputValue
@@ -525,7 +527,9 @@ const CreateContract = () => {
           unit={'VNĐ'}
           placeholder={'Nhập tiền cọc'}
           keyboardType={'numeric'}
-          defaultValue={depositMoney}
+          defaultValue={
+            depositMoney ? `${parseInt(depositMoney)?.toLocaleString()}` : ''
+          }
           onEndEditing={event => setDepositMoney(event.nativeEvent.text)}
         />
         <View style={styles.line} />

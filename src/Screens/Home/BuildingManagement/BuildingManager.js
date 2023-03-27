@@ -45,8 +45,8 @@ const BuildingManager = () => {
       await GetListHausesApi(tokenStore)
         .then(res => {
           if (res?.status == 200) {
-            setLoading(false);
             setListHauses(res?.data);
+            setLoading(false);
           }
         })
         .catch(error => console.log(error));
@@ -59,8 +59,11 @@ const BuildingManager = () => {
       <CustomRenderBuilding
         imageBuilding={item?.image?.fileUrl}
         name={`${item?.name}`}
-        address={`${item?.address}`}
+        fullAddress={`${item?.fullAddress}`}
         numberRooms={`${item?.rooms ?? 0}`}
+        unitTotal={`${item?.unitTotal}`}
+        issueTotal={`${item?.issueTotal}`}
+        emptyUnitTotal={`${item?.emptyUnitTotal ?? 0}`}
         onPress={() => {
           let hauseId = item?.id;
           navigation.navigate('BuildingInformation', hauseId);
@@ -119,7 +122,15 @@ const styles = StyleSheet.create({
 });
 
 const CustomRenderBuilding = props => {
-  const {name, address, onPress, numberRooms, imageBuilding} = props;
+  const {
+    name,
+    fullAddress,
+    onPress,
+    issueTotal,
+    imageBuilding,
+    unitTotal,
+    emptyUnitTotal,
+  } = props;
   return (
     <TouchableOpacity onPress={onPress} style={styleRender.button}>
       <Image
@@ -133,11 +144,10 @@ const CustomRenderBuilding = props => {
       <View style={styleRender.viewBetween}>
         <View style={styleRender.viewRow}>
           <Text style={styleRender.name}>{name}</Text>
-          <Image source={icons.ic_plus} style={styleRender.icon} />
         </View>
         <View style={{flex: 1}}>
           <Text numberOfLines={2} style={styleRender.address}>
-            {address}
+            {fullAddress}
           </Text>
         </View>
         <View style={[styleRender.viewRow]}>
@@ -155,25 +165,51 @@ const CustomRenderBuilding = props => {
                   fontWeight: '600',
                   color: '#5F6E78',
                 }}>
-                {numberRooms}
+                {unitTotal}
               </Text>
               <Text style={{fontSize: 10, color: '#7F8A93'}}>Phòng</Text>
             </View>
           </View>
-          <CustomButton
-            disabled={true}
-            label={'4'}
-            icon={icons.ic_key}
-            styleIcon={styleRender.icon}
-            styleButton={styleRender.styleButton}
-          />
-          <CustomButton
-            disabled={true}
-            label={'2'}
-            icon={icons.ic_exclamation}
-            styleIcon={styleRender.icon}
-            styleButton={styleRender.styleButton}
-          />
+
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={styleRender.viewImage}>
+              <Image
+                source={icons.ic_key}
+                style={{width: 18, height: 18, tintColor: '#7ACE68'}}
+              />
+            </View>
+            <View style={{alignItems: 'center'}}>
+              <Text
+                style={{
+                  fontSize: 11,
+                  fontWeight: '600',
+                  color: '#5F6E78',
+                }}>
+                {emptyUnitTotal}
+              </Text>
+              <Text style={{fontSize: 10, color: '#7F8A93'}}>Trống</Text>
+            </View>
+          </View>
+
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={styleRender.viewImage}>
+              <Image
+                source={icons.ic_exclamation}
+                style={{width: 18, height: 18, tintColor: '#FE7A37'}}
+              />
+            </View>
+            <View style={{alignItems: 'center'}}>
+              <Text
+                style={{
+                  fontSize: 11,
+                  fontWeight: '600',
+                  color: '#5F6E78',
+                }}>
+                {issueTotal}
+              </Text>
+              <Text style={{fontSize: 10, color: '#7F8A93'}}>Sự cố</Text>
+            </View>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
