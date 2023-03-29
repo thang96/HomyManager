@@ -4,12 +4,12 @@ import {colors, icons} from '../../Constants';
 import CustomButton from './CustomButton';
 
 const CustomButtonBottom = props => {
-  const {label, onPress, styleButton} = props;
+  const {label, onPress, styleButton, isAddNew} = props;
   return (
     <View style={[styles.viewContainer]}>
       <CustomButton
         styleButton={[styles.button, styleButton]}
-        icon={icons.ic_plus}
+        icon={!isAddNew ? icons.ic_plus : null}
         styleIcon={{width: 24, height: 24, tintColor: 'white', marginRight: 5}}
         label={label}
         styleLabel={styles.label}

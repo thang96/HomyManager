@@ -7,34 +7,58 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import {icons} from '../../Constants';
+import CustomButton from '../CommonComponent/CustomButton';
 
 const RenderService = props => {
-  const {viewStyle, icon, label, value, onPress} = props;
+  const {
+    viewStyle,
+    icon,
+    calculateUnit,
+    name,
+    fee,
+    onPress,
+    isDelete,
+    deleteService,
+    disabled,
+  } = props;
   const widthWindow = Dimensions.get('window').width / 2 - 15;
   return (
     <TouchableOpacity
-      disabled={true}
+      disabled={disabled}
       onPress={onPress}
       style={[styles.viewContainer, viewStyle, {width: widthWindow}]}>
-      {icon && <Image source={icon} style={styles.icon} />}
+      {/* {icon && <Image source={icon} style={styles.icon} />} */}
       <View style={{flex: 1}}>
-        {label && (
+        {name && (
           <Text
             numberOfLines={1}
             style={{fontSize: 13, fontWeight: '600', color: '#374047'}}>
-            {label}
+            {`${name}`}
           </Text>
         )}
-        {value && (
-          <Text style={{fontSize: 13, color: '#0191FF'}}>{`${value}`}</Text>
+        {fee && (
+          <Text
+            numberOfLines={1}
+            style={{
+              fontSize: 13,
+              color: '#0191FF',
+            }}>{`${fee}/${calculateUnit}`}</Text>
         )}
       </View>
+      {isDelete && (
+        <CustomButton
+          styleIcon={styles.iconService}
+          icon={icons.ic_close}
+          onPress={deleteService}
+        />
+      )}
     </TouchableOpacity>
   );
 };
 const styles = StyleSheet.create({
   viewContainer: {
-    minHeight: 52,
+    height: 52,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -46,10 +70,17 @@ const styles = StyleSheet.create({
     margin: 2.5,
     backgroundColor: 'white',
     borderRadius: 4,
-    paddingHorizontal: 5,
+    paddingLeft: 5,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  icon: {width: 30, height: 30, marginHorizontal: 5},
+  // icon: {width: 30, height: 30, marginHorizontal: 5},
+  iconService: {
+    width: 15,
+    height: 15,
+    tintColor: '#FF1E1E',
+    marginHorizontal: 5,
+  },
 });
 export default RenderService;

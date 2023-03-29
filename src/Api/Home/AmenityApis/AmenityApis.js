@@ -77,7 +77,7 @@ export const PutAmenityApi = (token, data, amenitieId) => {
   });
 };
 
-export const DeleteAmenityApi = (token, data, amenitieId) => {
+export const DeleteAmenityApi = (token, amenitieId) => {
   return new Promise((resolve, reject) => {
     axios
       .delete(`${BASEURL}/amenities${amenitieId}`, {

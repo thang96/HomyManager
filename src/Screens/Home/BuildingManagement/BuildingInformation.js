@@ -16,8 +16,7 @@ import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
-import {GetListUnitsApi} from '../../../Api/Home/UnitApis/UnitApis';
-import PaymentMethods from '../../../Components/ComponentHome/PaymentMethods';
+import CustomBankAccountInfor from '../../../Components/ComponentHome/BankAccount/CustomBankAccountInfor';
 
 const BuildingInformation = () => {
   const navigation = useNavigation();
@@ -28,7 +27,7 @@ const BuildingInformation = () => {
   const [hauseInfor, setHauseInfor] = useState();
   const [openTimeValue, setOpenTimeValue] = useState('');
   const [closeTimeValue, setCloseTimeValue] = useState('');
-
+  // console.log(hauseInfor);
   useEffect(() => {
     const getDataHause = async () => {
       let hauseId = route.params;
@@ -50,16 +49,22 @@ const BuildingInformation = () => {
 
   const renderSevices = (item, index) => {
     return (
-      <RenderService label={item?.name} value={item?.fee} icon={item?.icon} />
+      <RenderService
+        disabled={true}
+        name={item?.name}
+        fee={item?.fee}
+        icon={item?.icon}
+        calculateUnit={item?.calculateUnit}
+      />
     );
   };
 
   const renderAmenitys = (item, index) => {
-    return <RenderAmenity label={item?.name} />;
+    return <RenderAmenity disabled={true} label={item?.name} />;
   };
 
   const renderImageHauses = (item, index) => {
-    return <RenderImage data={item} deleteItem={async () => {}} />;
+    return <RenderImage data={item} />;
   };
 
   return (
@@ -161,10 +166,15 @@ const BuildingInformation = () => {
         <View style={styles.line} />
 
         <CustomTextTitle label={'Thông tin thanh toán'} />
-        <PaymentMethods
-          icon={hauseInfor?.bankAccount?.bank?.logo}
-          title={hauseInfor?.bankAccount?.name}
-          describe={hauseInfor?.bankAccount?.notice}
+
+        <CustomBankAccountInfor
+          viewCustom={{marginBottom: 10}}
+          imageUrl={hauseInfor?.bankAccount?.bank?.logo}
+          userName={hauseInfor?.bankAccount?.name}
+          accountNo={hauseInfor?.bankAccount?.notice}
+          pressDetail={() =>
+            navigation.navigate('PaymentDetail', hauseInfor?.bankAccount?.id)
+          }
         />
         <View style={styles.line} />
 
@@ -223,8 +233,10 @@ const BuildingInformation = () => {
           />
         )}
         <View style={styles.line} />
-        <CustomTextTitle label={'Lưu ý'} />
+        <CustomTextTitle label={'Lưu ý cho người thuê'} />
         <CustomSuggest label={`${hauseInfor?.notice}`} />
+        <CustomTextTitle label={'Lưu ý cho hóa đơn'} />
+        <CustomSuggest label={`${hauseInfor?.billNotice}`} />
         <View style={{height: 56}} />
       </ScrollView>
     </View>
@@ -264,7 +276,7 @@ const styles = StyleSheet.create({
     margin: 1,
     elevation: 3,
   },
-  textPicker: {fontSize: 15, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
+  textPicker: {fontSize: 11, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
   pickerTotal: {
     fontSize: 15,
     color: 'rgba(254, 122, 55, 1)',

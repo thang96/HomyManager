@@ -46,9 +46,9 @@ const ContractDetail = props => {
   const renderListService = (item, index) => {
     return (
       <RenderService
-        icon={`${item?.icon}`}
-        label={`${item?.name}`}
-        value={`${item?.fee?.toLocaleString()}`}
+        calculateUnit={item?.calculateUnit}
+        name={`${item?.name}`}
+        fee={`${item?.fee?.toLocaleString()}`}
         onPress={() => navigation.navigate('ServiceDetail', item?.id)}
       />
     );

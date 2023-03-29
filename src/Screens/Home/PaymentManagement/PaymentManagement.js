@@ -56,6 +56,9 @@ const PaymentManagement = props => {
                   imageUrl={item?.bank?.logo}
                   userName={item?.accountName}
                   accountNo={item?.accountNo}
+                  pressDetail={() =>
+                    navigation.navigate('PaymentDetail', item?.id)
+                  }
                 />
               );
             }}

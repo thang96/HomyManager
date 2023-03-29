@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Alert, FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import {colors, icons} from '../../../Constants';
 import {dateToDMY} from '../../../utils/common';
@@ -29,6 +29,7 @@ import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNo
 import ImagePicker from 'react-native-image-crop-picker';
 import {serviceState, updateServices} from '../../../Store/slices/commonSlice';
 import {updateStatus} from '../../../Store/slices/statusSlice';
+import {convertDate} from '../../../utils/common';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {CreateInvoicesApi} from '../../../Api/Home/InvoiceApis/InvoiceApis';
 import {PostImageInvoiceApi} from '../../../Api/Home/FileDataApis/FileDataApis';
@@ -55,7 +56,7 @@ const CreateInvoice = props => {
   const [leasingFee, setLeasingFee] = useState(0);
   const [serviceFee, setServiceFee] = useState(0);
   const [otherFee, setOtherFee] = useState(0);
-  const [totalFee, setTotalFee] = useState(0);
+
   const [notice, setNotice] = useState();
 
   const [invoiceServices, setInvoiceServices] = useState([]);
@@ -95,6 +96,7 @@ const CreateInvoice = props => {
     }
     setListChargeServices(eachData);
   }, [services]);
+
   useEffect(() => {
     let price = 0;
     let eachInvoiceServices = [];
@@ -113,10 +115,11 @@ const CreateInvoice = props => {
     setInvoiceServices(eachInvoiceServices);
     setServiceFee(price);
   }, [listChargeServices]);
-  useEffect(() => {
+
+  const totalFee = useMemo(() => {
     let totalPrice =
       parseInt(otherFee) + parseInt(leasingFee) + parseInt(serviceFee);
-    setTotalFee(totalPrice);
+    return totalPrice;
   }, [otherFee, leasingFee, serviceFee]);
 
   const getListUnit = async item => {
@@ -179,8 +182,6 @@ const CreateInvoice = props => {
       })
       .catch(error => console.log(error));
   };
-  const startDate = new Date(contract?.startDate);
-  const endDate = new Date(contract?.endDate);
 
   const openCamera = () => {
     setModalCamera(false);
@@ -344,9 +345,15 @@ const CreateInvoice = props => {
                   source={icons.ic_calendar}
                   style={{width: 20, height: 20, marginRight: 5}}
                 />
-                <Text style={{color: '#374047', fontSize: 13}}>{`Từ ${dateToDMY(
-                  startDate,
-                )} đến ${dateToDMY(endDate)}`}</Text>
+                <Text
+                  style={{
+                    color: '#374047',
+                    fontSize: 13,
+                  }}>
+                  {`Từ ${convertDate(contract?.startDate)} đến ${convertDate(
+                    contract?.endDate,
+                  )}`}
+                </Text>
               </View>
               <View style={styles.viewRow}>
                 <Image
@@ -380,7 +387,9 @@ const CreateInvoice = props => {
             <CustomUnitFee
               important={true}
               title={'Tiền phòng'}
-              defaultValue={`${contract?.leasingFee}`}
+              defaultValue={`${parseInt(
+                contract?.leasingFee,
+              )?.toLocaleString()}`}
               onEndEditing={evt => setLeasingFee(evt.nativeEvent.text)}
             />
             <CustomUnitFee
@@ -408,23 +417,32 @@ const CreateInvoice = props => {
                 renderItem={({item, index}) => {
                   return (
                     <CustomFeeOfInvoice
+                      pressDelete={() => {
+                        let eachData = [...listChargeServices];
+                        let newResult = eachData.filter(
+                          itemResult => itemResult !== item,
+                        );
+                        setListChargeServices(newResult);
+                      }}
                       calculateUnit={item?.calculateUnit}
                       name={item?.name}
-                      fee={item?.fee}
-                      totalPrice={item?.totalPrice}
+                      fee={item?.fee?.toLocaleString()}
+                      totalPrice={item?.totalPrice?.toLocaleString()}
                       defaultValue={item?.quantity}
                       onEndEditing={evt => {
                         let newQuantity = evt.nativeEvent.text;
-                        let newTotalPrice =
-                          parseInt(newQuantity) * parseInt(item?.fee);
-                        let newItem = {
-                          ...item,
-                          quantity: newQuantity,
-                          totalPrice: newTotalPrice,
-                        };
-                        let eachService = [...listChargeServices];
-                        eachService[index] = newItem;
-                        setListChargeServices(eachService);
+                        if (newQuantity != '') {
+                          let newTotalPrice =
+                            parseInt(newQuantity) * parseInt(item?.fee);
+                          let newItem = {
+                            ...item,
+                            quantity: newQuantity,
+                            totalPrice: newTotalPrice,
+                          };
+                          let eachService = [...listChargeServices];
+                          eachService[index] = newItem;
+                          setListChargeServices(eachService);
+                        }
                       }}
                     />
                   );

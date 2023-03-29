@@ -39,6 +39,8 @@ import {
   InvoiceDetail,
   InvoiceUnpaidDetail,
   InvoicePaidDetail,
+  AmenityDetail,
+  PaymentDetail,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -115,6 +117,13 @@ const StackHomepage = () => {
         }}
       />
       <Stack.Screen
+        component={PaymentDetail}
+        name={'PaymentDetail'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         component={ListPaymentSelect}
         name={'ListPaymentSelect'}
         options={{
@@ -173,6 +182,13 @@ const StackHomepage = () => {
       <Stack.Screen
         component={Utilities}
         name={'Utilities'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={AmenityDetail}
+        name={'AmenityDetail'}
         options={{
           headerShown: false,
         }}

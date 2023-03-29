@@ -8,6 +8,7 @@ const CustomInput = props => {
     important,
     type,
     styleViewInput,
+    styleInput,
     title,
     placeholder,
     keyboardType,
@@ -28,7 +29,7 @@ const CustomInput = props => {
       {type == 'input' && (
         <CustomInputText
           keyboardType={keyboardType}
-          styleViewTextInput={styles.viewInput}
+          styleViewTextInput={[styles.viewInput, styleInput]}
           placeholder={placeholder}
           onChangeText={onChangeText}
           value={value}
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     borderColor: '#ACB4B9',
     paddingHorizontal: 5,
     backgroundColor: 'white',
-    borderColor: '#dadee0',
+    borderColor: '#ACB4B9',
   },
   viewInput: {
     borderWidth: 1,

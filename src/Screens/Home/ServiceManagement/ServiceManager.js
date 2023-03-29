@@ -3,13 +3,10 @@ import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
   KeyboardAvoidingView,
   FlatList,
   Keyboard,
+  Alert,
 } from 'react-native';
 
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
@@ -20,7 +17,10 @@ import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearch
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import RenderService from '../../../Components/ComponentHome/RenderService';
-import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
+import {
+  DeleteServiceApi,
+  GetListServicesApi,
+} from '../../../Api/Home/ServiceApis/ServiceApis';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 
 const ServiceManager = props => {
@@ -42,30 +42,51 @@ const ServiceManager = props => {
   }, []);
 
   useEffect(() => {
-    const getListService = async () => {
-      await GetListServicesApi(tokenStore)
-        .then(res => {
-          if (res?.status == 200) {
-            setListSevice(res?.data);
-            setLoading(false);
-          }
-        })
-        .catch(error => console.log(error));
-    };
     getListService();
   }, [isLoading]);
+
+  const getListService = async () => {
+    await GetListServicesApi(tokenStore)
+      .then(res => {
+        if (res?.status == 200) {
+          setListSevice(res?.data);
+          setLoading(false);
+        }
+      })
+      .catch(error => console.log(error));
+  };
 
   const [listSevice, setListSevice] = useState([]);
 
   const renderListService = (item, index) => {
     return (
       <RenderService
+        isDelete={true}
         icon={`${item?.icon}`}
-        label={`${item?.name}`}
-        value={`${item?.fee?.toLocaleString()}`}
+        name={`${item?.name}`}
+        calculateUnit={`${item?.calculateUnit}`}
+        fee={`${item?.fee?.toLocaleString()}`}
         onPress={() => navigation.navigate('ServiceDetail', item?.id)}
+        deleteService={() => {
+          Alert.alert('Xóa dịch vụ', 'Bạn có muốn xóa dịch vụ này ?', [
+            {text: 'Hủy', style: 'cancel'},
+            {text: 'Xóa', onPress: () => deleteService(item?.id)},
+          ]);
+        }}
       />
     );
+  };
+  const deleteService = async id => {
+    setLoading(true);
+    await DeleteServiceApi(tokenStore, id)
+      .then(res => {
+        if (res?.status == 200) {
+          getListService();
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   return (

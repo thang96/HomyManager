@@ -6,4 +6,5 @@ export default {
   im_frame2: require('../Assets/Images/im_frame2.jpg'),
   im_frame3: require('../Assets/Images/im_frame3.jpg'),
   im_frame4: require('../Assets/Images/im_frame4.jpg'),
+  im_backgroundAccount: require('../Assets/Images/im_backgroundAccount.jpg'),
 };

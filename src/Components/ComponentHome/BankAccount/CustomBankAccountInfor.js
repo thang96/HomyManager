@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {icons} from '../../../Constants';
 import CustomButton from '../../CommonComponent/CustomButton';
 const CustomBankAccountInfor = props => {
@@ -11,22 +11,29 @@ const CustomBankAccountInfor = props => {
     isSelect,
     isCheck,
     onPress,
+    pressDetail,
+    disabledDetail,
   } = props;
   return (
     <View style={[styles.container, styles.shadowView, viewCustom]}>
-      <Image
-        source={typeof imageUrl == 'string' ? {uri: imageUrl} : null}
-        style={styles.image}
-        resizeMode={'contain'}
-      />
-      <View style={{flex: 1}}>
-        <Text numberOfLines={1} style={styles.userName}>
-          {userName}
-        </Text>
-        <Text numberOfLines={1} style={styles.accountNo}>
-          {accountNo}
-        </Text>
-      </View>
+      <TouchableOpacity
+        disabled={disabledDetail}
+        onPress={pressDetail}
+        style={[styles.viewRow, {flex: 1}]}>
+        <Image
+          source={typeof imageUrl == 'string' ? {uri: imageUrl} : null}
+          style={styles.image}
+          resizeMode={'contain'}
+        />
+        <View style={{flex: 1}}>
+          <Text numberOfLines={1} style={styles.userName}>
+            {userName}
+          </Text>
+          <Text numberOfLines={1} style={styles.accountNo}>
+            {accountNo}
+          </Text>
+        </View>
+      </TouchableOpacity>
       <View>
         {isSelect && (
           <View style={styles.styleButton}>
@@ -80,5 +87,6 @@ const styles = StyleSheet.create({
   userName: {color: '#374047', fontWeight: '600', fontSize: 15},
   accountNo: {color: '#5F6E78', fontSize: 13},
   styleIcon: {width: 20, height: 20, tintColor: '#797979'},
+  viewRow: {flexDirection: 'row', alignItems: 'center'},
 });
 export default CustomBankAccountInfor;

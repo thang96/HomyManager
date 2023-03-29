@@ -121,9 +121,10 @@ const RoomInformation = props => {
             renderItem={({item, index}) => {
               return (
                 <RenderService
-                  label={item?.name}
-                  value={item?.fee}
-                  icon={item?.icon}
+                  name={item?.name}
+                  fee={item?.fee}
+                  calculateUnit={item?.calculateUnit}
+                  onPress={() => navigation.navigate('ServiceDetail', item?.id)}
                 />
               );
             }}
@@ -149,7 +150,12 @@ const RoomInformation = props => {
             keyExtractor={(key, index) => `${key?.id}${index.toString()}`}
             data={unit?.amenities}
             renderItem={({item, index}) => {
-              return <RenderAmenity label={item?.name} />;
+              return (
+                <RenderAmenity
+                  label={item?.name}
+                  onPress={() => navigation.navigate('AmenityDetail', item?.id)}
+                />
+              );
             }}
           />
         ) : null}
@@ -203,7 +209,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   textBuilding: {fontSize: 25, fontWeight: 'bold', color: 'white'},
-  textPicker: {fontSize: 15, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
+  textPicker: {fontSize: 11, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
   pickerTotal: {
     fontSize: 15,
     color: 'rgba(254, 122, 55, 1)',

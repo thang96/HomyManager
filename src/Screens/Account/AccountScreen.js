@@ -5,15 +5,40 @@ import {useNavigation} from '@react-navigation/native';
 import CustomAppBar from '../../Components/CommonComponent/CustomAppBar';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import CustomButton from '../../Components/CommonComponent/CustomButton';
-import {useSelector} from 'react-redux';
-import {userInfor} from '../../Store/slices/userInfoSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {updateUserInfor, userInfor} from '../../Store/slices/userInfoSlice';
+import {updateStatus, statusState} from '../../Store/slices/statusSlice';
+import {GetUserAPi} from '../../Api/User/UserApis';
+import {token} from '../../Store/slices/tokenSlice';
+import CustomLoading from '../../Components/CommonComponent/CustomLoading';
 
 const AccountScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const userStore = useSelector(userInfor);
+  const stateLoading = useSelector(statusState);
+  const tokenStore = useSelector(token);
+  const [loading, setLoading] = useState(true);
+  // console.log(userStore);
+  useEffect(() => {
+    const getData = async () => {
+      if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
+        await GetUserAPi(tokenStore)
+          .then(res => {
+            if (res?.status == 200) {
+              setLoading(false);
+              dispatch(updateUserInfor(res?.data));
+            }
+          })
+          .catch(error => console.log(error));
+      }
+    };
+    getData();
+  }, [stateLoading]);
 
   return (
     <View style={styles.container}>
+      {loading && <CustomLoading />}
       <CustomAppBar
         svgLeft={svgs.LogoApp}
         label={'Tài khoản'}
@@ -26,7 +51,9 @@ const AccountScreen = () => {
           <View style={styles.viewRow}>
             <Image
               source={
-                userStore?.avatar ? {uri: userStore?.avatar} : icons.ic_user
+                userStore?.avatarImage
+                  ? {uri: userStore?.avatarImage?.fileUrl}
+                  : icons.ic_user
               }
               style={styles.avatar}
             />
@@ -36,7 +63,14 @@ const AccountScreen = () => {
               <Text style={styles.userName}>{`${userStore?.fullName}`}</Text>
             </View>
           </View>
-          <CustomButton label={'Chỉnh sửa'} styleLabel={styles.styleLabel} />
+          <CustomButton
+            label={'Chỉnh sửa'}
+            styleLabel={styles.styleLabel}
+            onPress={() => {
+              dispatch(updateStatus(true));
+              navigation.navigate('EditAccount');
+            }}
+          />
         </View>
         <CustomComponentButton
           styleButton={[styles.viewShadow, {marginTop: 20}]}
@@ -47,6 +81,7 @@ const AccountScreen = () => {
           styleButton={[styles.viewShadow, {marginTop: 20}]}
           icon={icons.ic_lock}
           label={'Đổi mật khẩu'}
+          onPress={() => navigation.navigate('ChangePassword')}
         />
 
         <View style={[styles.viewMidle, styles.viewShadow, {marginTop: 20}]}>
@@ -62,15 +97,17 @@ const AccountScreen = () => {
             label={'Phiên bản'}
           />
         </View>
-        <CustomComponentButton
-          styleButton={[styles.viewShadow, {marginTop: 20}]}
-          icon={icons.ic_trash}
-          label={'Xóa tài khoản'}
-        />
+
         <CustomComponentButton
           styleButton={[styles.viewShadow, {marginTop: 20}]}
           icon={icons.ic_logOut}
           label={'Đăng xuất'}
+          onPress={async () => {
+            let user = {username: '', password: ''};
+            await AsyncStorage.setItem('token', '');
+            await AsyncStorage.setItem('user', JSON.stringify(user));
+            navigation.navigate('LoginScreen');
+          }}
         />
       </ScrollView>
     </View>

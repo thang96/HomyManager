@@ -27,6 +27,7 @@ import ServiceDetail from './Home/ServiceManagement/ServiceDetail';
 //----------- UtilitiesManager
 import UtilitiesManager from './Home/UtilitiesManagement/UtilitiesManager';
 import Utilities from './Home/UtilitiesManagement/Utilities';
+import AmenityDetail from './Home/UtilitiesManagement/AmenityDetail';
 import AddUtilities from './Home/UtilitiesManagement/AddUtilities';
 //----------- WaterAndElectricityManagement
 import WaterAndElectricityManagement from './Home/WaterAndElectricityManagement/WaterAndElectricityManager';
@@ -39,6 +40,7 @@ import ContractDetail from './Home/ContractManagement/ContractDetail';
 //----------- PaymentManagement
 import PaymentManagement from './Home/PaymentManagement/PaymentManagement';
 import AddPayment from './Home/PaymentManagement/AddPayment';
+import PaymentDetail from './Home/PaymentManagement/PaymentDetail';
 import ListPaymentSelect from './Home/PaymentManagement/ListPaymentSelect';
 //----------- InvoiceManagement
 import InvoiceManagement from './Home/BillManagement/InvoiceManagement';
@@ -69,6 +71,8 @@ import MessageScreen from './Message/MessageScreen';
 import ChatScreen from './Message/ChatScreen';
 // AccountScreen -----------------------------------------------------------------
 import AccountScreen from './Account/AccountScreen';
+import EditAccount from './Account/EditAccount';
+import ChangePassword from './Account/ChangePassword';
 
 export {
   // SplashScreen
@@ -105,6 +109,7 @@ export {
   //-- PaymentManagement
   PaymentManagement,
   AddPayment,
+  PaymentDetail,
   ListPaymentSelect,
   //-- ServiceManager
   ServiceManager,
@@ -114,6 +119,7 @@ export {
   //-- UtilitiesManager
   UtilitiesManager,
   Utilities,
+  AmenityDetail,
   AddUtilities,
   //-- WaterAndElectricityManagement
   WaterAndElectricityManagement,
@@ -141,4 +147,6 @@ export {
   ChatScreen,
   // AccountScreen ------------------------------------------
   AccountScreen,
+  EditAccount,
+  ChangePassword,
 };

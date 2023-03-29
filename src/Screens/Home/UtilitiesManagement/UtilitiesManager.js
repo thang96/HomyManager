@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   Keyboard,
+  Alert,
 } from 'react-native';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import {icons, colors} from '../../../Constants';
@@ -21,7 +22,10 @@ import {token} from '../../../Store/slices/tokenSlice';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
-import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
+import {
+  GetListAmenitysApi,
+  DeleteAmenityApi,
+} from '../../../Api/Home/AmenityApis/AmenityApis';
 
 const UtilitiesManager = props => {
   const navigation = useNavigation();
@@ -29,29 +33,30 @@ const UtilitiesManager = props => {
   const tokenStore = useSelector(token);
   const dispatch = useDispatch();
   const [keyboard, setKeyboard] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
 
   useEffect(() => {
-    const getListData = async () => {
-      await GetListAmenitysApi(tokenStore)
-        .then(res => {
-          if (res?.status == 200) {
-            let eachData = res?.data;
-            let eachArray = [];
-            eachData.map((data, index) => {
-              let newData = {...data, isCheck: false};
-              eachArray.push(newData);
-            });
-            dispatch(updateAmenity(eachArray));
-            setListSevice(res?.data);
-            setLoading(false);
-          }
-        })
-        .catch(error => console.log(error));
-    };
     getListData();
   }, [isLoading]);
+
+  const getListData = async () => {
+    await GetListAmenitysApi(tokenStore)
+      .then(res => {
+        if (res?.status == 200) {
+          let eachData = res?.data;
+          let eachArray = [];
+          eachData.map((data, index) => {
+            let newData = {...data, isCheck: false};
+            eachArray.push(newData);
+          });
+          dispatch(updateAmenity(eachArray));
+          setListSevice(res?.data);
+          setLoading(false);
+        }
+      })
+      .catch(error => console.log(error));
+  };
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -64,11 +69,37 @@ const UtilitiesManager = props => {
   const [listSevice, setListSevice] = useState([]);
 
   const renderListService = (item, index) => {
-    return <RenderAmenity label={item?.name} />;
+    return (
+      <RenderAmenity
+        label={item?.name}
+        isDelete={true}
+        onPress={() => navigation.navigate('AmenityDetail', item?.id)}
+        deleteAmenity={() => {
+          Alert.alert('Xóa tiện ích', 'Bạn có muốn xóa tiện ích này ?', [
+            {text: 'Hủy', style: 'cancel'},
+            {text: 'Xóa', onPress: () => deleteAmenity(item?.id)},
+          ]);
+        }}
+      />
+    );
+  };
+
+  const deleteAmenity = async id => {
+    setLoading(true);
+    await DeleteAmenityApi(tokenStore, id)
+      .then(res => {
+        if (res?.status == 200) {
+          getListData();
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {loading && <CustomLoading />}
       <CustomSearchAppBar
         iconLeft={icons.ic_back}
         label={'Quản lý tiện ích'}
