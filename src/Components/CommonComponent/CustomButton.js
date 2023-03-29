@@ -25,7 +25,7 @@ const CustomButton = props => {
       {svgIcon && <IconItem width={widthSvg} height={heightSvg} />}
       {icon && (
         <Image
-          source={typeof icon == 'string' ? {uri: icon} : icon}
+          source={typeof icon == 'string' ? {uri: `${icon}`} : icon}
           style={styleIcon}
           resizeMode={'contain'}
         />

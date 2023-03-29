@@ -17,7 +17,7 @@ import {icons, colors} from '../../../Constants';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomInput from '../../../Components/CommonComponent/CustomInput';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {
   CreateNewService,
@@ -25,9 +25,11 @@ import {
 } from '../../../Api/Home/ServiceApis/ServiceApis';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
+import {updateStatus} from '../../../Store/slices/statusSlice';
 
 const AddService = props => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const tokenStore = useSelector(token);
   const [loadingService, setLoadingService] = useState('');
   const [modalService, setModalService] = useState('');
@@ -51,6 +53,7 @@ const AddService = props => {
     await CreateNewService(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
+          dispatch(updateStatus(false));
           setLoadingService(false);
           navigation.goBack();
         }
@@ -94,14 +97,7 @@ const AddService = props => {
             defaultValue={name}
             onEndEditing={evt => setName(evt.nativeEvent.text)}
           />
-          {/* <CustomInput
-            important={true}
-            styleViewInput={{marginTop: 20}}
-            type={'button'}
-            title={'Thu phí dựa trên'}
-            placeholder={'Lũy tiến theo chỉ số'}
-            value={calculateMethod}
-          /> */}
+
           <CustomInput
             important={true}
             styleViewInput={{marginTop: 20}}

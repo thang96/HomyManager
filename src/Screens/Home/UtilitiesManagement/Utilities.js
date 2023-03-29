@@ -19,18 +19,43 @@ import CustomChecker from '../../../Components/ComponentHome/CustomChecker';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {useDispatch, useSelector} from 'react-redux';
 import {amenityState, updateAmenity} from '../../../Store/slices/commonSlice';
+import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import {statusState} from '../../../Store/slices/statusSlice';
 
 const Utilities = props => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const listAmenity = useSelector(amenityState);
+  const loadingState = useSelector(statusState);
   const [amenitys, setAcmenitys] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (listAmenity.length > 0) {
       setAcmenitys(listAmenity);
     }
   }, [listAmenity]);
+
+  useEffect(() => {
+    const getListAmenity = async () => {
+      await GetListAmenitysApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let eachData = res?.data;
+            let eachArray = [];
+            eachData.map((data, index) => {
+              let newData = {...data, isCheck: false};
+              eachArray.push(newData);
+            });
+            dispatch(updateAmenity(eachArray));
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getListAmenity();
+  }, [loadingState]);
 
   const renderListService = (item, index) => {
     const updateItem = () => {
@@ -59,6 +84,7 @@ const Utilities = props => {
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {loading && <CustomLoading />}
       <CustomAppBar
         iconLeft={icons.ic_back}
         label={'Tiện ích'}
@@ -89,7 +115,10 @@ const Utilities = props => {
         leftLabel={'Lưu'}
         rightLabel={'Thêm mới'}
         onPressLeft={() => updateAmenitys()}
-        onPressRight={() => navigation.navigate('AddUtilities')}
+        onPressRight={() => {
+          dispatch(updateStatus(true));
+          navigation.navigate('AddUtilities');
+        }}
       />
     </View>
   );

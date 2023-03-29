@@ -18,13 +18,14 @@ import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearch
 import {useDispatch, useSelector} from 'react-redux';
 import {amenityState, updateAmenity} from '../../../Store/slices/commonSlice';
 import {token} from '../../../Store/slices/tokenSlice';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 
 const UtilitiesManager = props => {
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
+  const isLoading = useSelector(statusState);
   const tokenStore = useSelector(token);
   const dispatch = useDispatch();
   const [keyboard, setKeyboard] = useState(false);
@@ -50,7 +51,7 @@ const UtilitiesManager = props => {
         .catch(error => console.log(error));
     };
     getListData();
-  }, [isFocused]);
+  }, [isLoading]);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => {
@@ -63,16 +64,6 @@ const UtilitiesManager = props => {
   const [listSevice, setListSevice] = useState([]);
 
   const renderListService = (item, index) => {
-    const updateItem = () => {
-      let newList = [...listSevice];
-      let itemCheck = newList[index];
-      let newItem = {
-        ...itemCheck,
-        isCheck: itemCheck?.isCheck == false ? true : false,
-      };
-      newList[index] = newItem;
-      setListSevice(newList);
-    };
     return <RenderAmenity label={item?.name} />;
   };
 
@@ -110,7 +101,10 @@ const UtilitiesManager = props => {
 
         <CustomButtonBottom
           label={'Thêm tiện ích mới'}
-          onPress={() => navigation.navigate('AddUtilities')}
+          onPress={() => {
+            dispatch(updateStatus(true));
+            navigation.navigate('AddUtilities');
+          }}
         />
       </View>
     </View>

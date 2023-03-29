@@ -99,7 +99,7 @@ const TenantManager = () => {
       <CustomButtonBottom
         label={'Thêm mới người thuê'}
         onPress={() => {
-          dispatch(updateStatus(false));
+          dispatch(updateStatus(true));
           navigation.navigate('AddNewTenant');
         }}
       />

@@ -136,8 +136,8 @@ const BuildingInformation = () => {
           unit={'VNĐ'}
         />
 
-        <View style={styles.line} />
-        <CustomTextTitle label={'Danh sách người thuê'} />
+        {/* <View style={styles.line} /> */}
+        {/* <CustomTextTitle label={'Danh sách người thuê'} />
         {hauseInfor?.houseUsers?.length > 0 ? (
           <FlatList
             listKey="houseUsers"
@@ -157,7 +157,7 @@ const BuildingInformation = () => {
               );
             }}
           />
-        ) : null}
+        ) : null} */}
         <View style={styles.line} />
 
         <CustomTextTitle label={'Thông tin thanh toán'} />

@@ -12,15 +12,11 @@ import {
   commonState,
   serviceState,
   amenityState,
-  updateServices,
-  updateAmenity,
 } from '../../../Store/slices/commonSlice';
 import {token} from '../../../Store/slices/tokenSlice';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {CreateNewBuildingApi} from '../../../Api/Home/BuildingApis/BuildingApis';
-import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
-import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppBar';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import {updateStatus} from '../../../Store/slices/statusSlice';
@@ -28,7 +24,7 @@ import {PostImageBuildingApi} from '../../../Api/Home/FileDataApis/FileDataApis'
 
 const AddBuildingsStep3 = props => {
   const navigation = useNavigation();
-  const [loadingStep3, setLoadingStep3] = useState(true);
+  const [loadingStep3, setLoadingStep3] = useState(false);
   const dispatch = useDispatch();
   const [modalNotify, setModalNotify] = useState(false);
   const createBuildingInfor = useSelector(commonState);
@@ -43,40 +39,6 @@ const AddBuildingsStep3 = props => {
 
   const [listService, setListService] = useState([]);
   const [listAmenity, setListAmenity] = useState([]);
-
-  useEffect(() => {
-    const getListData = async () => {
-      await GetListServicesApi(tokenStore)
-        .then(res => {
-          if (res?.status == 200) {
-            let eachData = res?.data;
-            let eachArray = [];
-            eachData.map((data, index) => {
-              let newData = {...data, isCheck: false};
-              eachArray.push(newData);
-            });
-            dispatch(updateServices(eachArray));
-            setLoadingStep3(false);
-          }
-        })
-        .catch(error => console.log(error));
-      await GetListAmenitysApi(tokenStore)
-        .then(res => {
-          if (res?.status == 200) {
-            let eachData = res?.data;
-            let eachArray = [];
-            eachData.map((data, index) => {
-              let newData = {...data, isCheck: false};
-              eachArray.push(newData);
-            });
-            dispatch(updateAmenity(eachArray));
-            setLoadingStep3(false);
-          }
-        })
-        .catch(error => console.log(error));
-    };
-    getListData();
-  }, []);
 
   useEffect(() => {
     let eachService = [];

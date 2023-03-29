@@ -476,18 +476,19 @@ const CreateInvoice = props => {
               onPress={() => setModalCamera(true)}
             />
             <View style={{height: 56}} />
-            <CustomTotalPrice totalPrice={`${totalFee.toLocaleString()}`} />
-            <CustomTwoButtonBottom
-              styleButtonLeft={styles.styleButtonLeft}
-              styleLabelLeft={styles.styleLabelLeft}
-              leftLabel={'Hủy hóa đơn'}
-              rightLabel={'Tạo hóa đơn'}
-              onPressLeft={() => navigation.goBack()}
-              onPressRight={() => setModalCreateInvoice(true)}
-            />
           </View>
         )}
       </ScrollView>
+
+      <CustomTotalPrice totalPrice={`${totalFee.toLocaleString()}`} />
+      <CustomTwoButtonBottom
+        styleButtonLeft={styles.styleButtonLeft}
+        styleLabelLeft={styles.styleLabelLeft}
+        leftLabel={'Hủy hóa đơn'}
+        rightLabel={'Tạo hóa đơn'}
+        onPressLeft={() => navigation.goBack()}
+        onPressRight={() => setModalCreateInvoice(true)}
+      />
     </View>
   );
 };

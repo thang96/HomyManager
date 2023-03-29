@@ -4,7 +4,6 @@ import {
   IssueInformation,
   MarkTheIssue,
   WorkScreen,
-  BillOfIssue,
   AddExtraFee,
 } from '../../../Screens';
 const Stack = createStackNavigator();
@@ -32,13 +31,7 @@ const StackWorkpage = () => {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        component={BillOfIssue}
-        name={'BillOfIssue'}
-        options={{
-          headerShown: false,
-        }}
-      />
+
       <Stack.Screen
         component={AddExtraFee}
         name={'AddExtraFee'}

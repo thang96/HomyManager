@@ -19,26 +19,20 @@ import {ScrollView} from 'react-native-virtualized-view';
 import CustomInput from '../../../Components/CommonComponent/CustomInput';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {CreateNewAmenityApi} from '../../../Api/Home/AmenityApis/AmenityApis';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
+import {updateStatus} from '../../../Store/slices/statusSlice';
 
 const AddUtilities = props => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
   const [loadingAddAmenity, setLoadingAddAmenity] = useState(false);
   const [modalAddAmenity, setModalAddAmenity] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const noteRef = useRef();
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidHide', () => {
-      if (!loadingAddAmenity) {
-        noteRef.current.blur();
-      }
-    });
-  }, []);
 
   const createNewAmenity = async () => {
     setModalAddAmenity(false);
@@ -49,6 +43,7 @@ const AddUtilities = props => {
         if (res?.status == 200) {
           if (res?.status == 200) {
             setLoadingAddAmenity(false);
+            dispatch(updateStatus(false));
             navigation.goBack();
           }
         }
@@ -98,7 +93,6 @@ const AddUtilities = props => {
         </View>
         <View style={styles.viewTextInput}>
           <TextInput
-            ref={noteRef}
             multiline
             placeholder="Nhập ghi chú cho tiện ích"
             onEndEditing={evt => setDescription(evt.nativeEvent.text)}
@@ -109,9 +103,12 @@ const AddUtilities = props => {
       </ScrollView>
 
       <CustomTwoButtonBottom
-        leftLabel={'Lưu'}
+        leftLabel={'Trở lại'}
         rightLabel={'Thêm mới'}
-        onPressLeft={() => navigation.goBack()}
+        onPressLeft={() => {
+          dispatch(updateStatus(false));
+          navigation.goBack();
+        }}
         onPressRight={() => setModalAddAmenity(true)}
       />
     </View>

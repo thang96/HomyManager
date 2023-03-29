@@ -8,7 +8,7 @@ import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import CustomBankAccountInfor from '../../../Components/ComponentHome/BankAccount/CustomBankAccountInfor';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {colors, icons} from '../../../Constants';
-import {updateStatus} from '../../../Store/slices/statusSlice';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 import {token} from '../../../Store/slices/tokenSlice';
 import {
   bankAccountState,
@@ -18,6 +18,7 @@ import {GetBankAccountsApi} from '../../../Api/Home/BankAccountApis/BankAccountA
 const ListPaymentSelect = props => {
   const navigation = useNavigation();
   const bankAccountsStore = useSelector(bankAccountState);
+  const statusLoading = useSelector(statusState);
   const tokenStore = useSelector(token);
   const [bankAccounts, setBankAccounts] = useState([]);
   const [eachBankAccounts, setEachBankAccounts] = useState([]);
@@ -48,7 +49,7 @@ const ListPaymentSelect = props => {
         .catch(error => console.log(error));
     };
     getData();
-  }, []);
+  }, [statusLoading]);
 
   const renderItem = (item, index) => {
     return (

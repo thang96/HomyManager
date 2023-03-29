@@ -35,7 +35,7 @@ const RoomInformation = props => {
   const navigation = useNavigation();
   const [unit, setUnit] = useState();
   const [loading, setLoading] = useState(true);
-
+  // console.log(unit);
   useEffect(() => {
     const getListData = async () => {
       await GetUnitDetailAPi(tokenStore, unitId)

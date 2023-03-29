@@ -9,7 +9,6 @@ import {
   Text,
 } from 'react-native';
 import {colors, icons, images, svgs} from '../../Constants';
-import LogoApp from '../../Assets/Svgs/LogoApp.svg';
 import {useNavigation} from '@react-navigation/native';
 import CustomSearchAppBar from '../../Components/CommonComponent/CustomSearchAppBar';
 import {ScrollView} from 'react-native-virtualized-view';
@@ -34,7 +33,7 @@ const MessageScreen = () => {
         onPress={() => navigation.navigate('ChatScreen', item)}
         style={[styles.viewShadow, styles.buttonMessage]}>
         <Image
-          source={{uri: item?.url}}
+          // source={{uri: item?.url}}
           style={{width: 50, height: 50, borderRadius: 50, marginRight: 10}}
         />
         <View style={{flex: 1}}>
@@ -64,7 +63,7 @@ const MessageScreen = () => {
   return (
     <View style={styles.container}>
       <CustomSearchAppBar
-        svgLeft={LogoApp}
+        svgLeft={svgs.LogoApp}
         label={'Tin nhắn'}
         iconRight={icons.ic_bell}
         pressIconRight={() => navigation.navigate('NotificationScreen')}

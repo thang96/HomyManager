@@ -28,7 +28,7 @@ const InvoicePaidDetail = props => {
   const [invoiceServices, setInvoiceServices] = useState([]);
   const [serviceImages, setServiceImages] = useState([]);
   const [paymentmages, setPaymentImages] = useState([]);
-  console.log('12');
+
   useEffect(() => {
     const getData = async () => {
       await GetInvoiceDetailApi(tokenStore, invoiceId)

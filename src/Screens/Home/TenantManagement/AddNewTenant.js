@@ -416,7 +416,7 @@ const AddNewTenant = () => {
 
         <View style={{height: 56}} />
         <CustomTwoButtonBottom
-          leftLabel={'Lưu'}
+          leftLabel={'Trở lại'}
           rightLabel={'Thêm mới'}
           onPressLeft={() => navigation.goBack()}
           onPressRight={() => setModalAddTenant(true)}
