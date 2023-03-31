@@ -41,6 +41,8 @@ import {
   InvoicePaidDetail,
   AmenityDetail,
   PaymentDetail,
+  QuickAddRoom,
+  EditRoomInformation,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -252,6 +254,20 @@ const StackHomepage = () => {
       <Stack.Screen
         component={AddRoom}
         name={'AddRoom'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={QuickAddRoom}
+        name={'QuickAddRoom'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={EditRoomInformation}
+        name={'EditRoomInformation'}
         options={{
           headerShown: false,
         }}

@@ -12,7 +12,14 @@ import Money from '../../Assets/Svgs/Money.svg';
 const widthLine = Dimensions.get('window').width - 20;
 
 const CustomAppBarRoomInfor = props => {
-  const {onPressLeft, pressIconRight, nameRoom, rentMonthlyFee} = props;
+  const {
+    onPressLeft,
+    pressIconRight,
+    nameRoom,
+    rentMonthlyFee,
+    pressQuickAddRoom,
+    pressEdit,
+  } = props;
   return (
     <ImageBackground source={images.im_appBar} style={{paddingHorizontal: 10}}>
       <View style={styles.viewAppBarTop}>
@@ -67,6 +74,7 @@ const CustomAppBarRoomInfor = props => {
             ]}
             styleIcon={styles.icon}
             styleLabel={{color: 'white', fontSize: 12}}
+            onPress={pressQuickAddRoom}
           />
           <CustomButton
             label={'Sửa'}
@@ -74,6 +82,7 @@ const CustomAppBarRoomInfor = props => {
             styleButton={[{backgroundColor: colors.green}, styles.styleButton]}
             styleIcon={styles.icon}
             styleLabel={{color: 'white', fontSize: 12}}
+            onPress={pressEdit}
           />
         </View>
       </View>

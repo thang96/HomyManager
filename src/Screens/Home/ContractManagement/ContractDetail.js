@@ -65,11 +65,6 @@ const ContractDetail = props => {
       />
       {loadingContract && <CustomLoading />}
       <ScrollView style={{paddingTop: 10, paddingHorizontal: 10}}>
-        {/* <View style={styles.viewBetween}>
-          <Text style={styles.textInfor}>{'#12345'}</Text>
-          <Text style={styles.textInfor}>{`Ngày tạo: chưa có`}</Text>
-        </View> */}
-
         <View style={[styles.viewRow, {marginTop: 10}]}>
           <Image
             source={icons.ic_homeTabBar}
@@ -145,7 +140,7 @@ const ContractDetail = props => {
             renderItem={({item, index}) => {
               return (
                 <CustomPersonInfor
-                  avatar={item?.avatarImage}
+                  avatar={item?.avatarImage?.fileUrl}
                   userName={item?.fullName}
                   phoneNumber={item?.phoneNumber}
                 />

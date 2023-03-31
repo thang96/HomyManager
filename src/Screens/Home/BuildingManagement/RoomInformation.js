@@ -1,32 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Keyboard,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  SectionList,
-} from 'react-native';
-import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
-import CustomButton from '../../../Components/CommonComponent/CustomButton';
+import {StyleSheet, View, Text} from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import BoxShowInfor from '../../../Components/CommonComponent/BoxShowInfor';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
+import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import {FlatList} from 'react-native-gesture-handler';
-import File from '../../../Assets/Svgs/File.svg';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 import CustomAppBarRoomInfor from '../../../Components/CommonComponent/CustomAppBarRoomInfor';
 import {GetUnitDetailAPi} from '../../../Api/Home/UnitApis/UnitApis';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
+import {convertDate} from '../../../utils/common';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
+import RenderContract from '../../../Components/ComponentHome/RenderContract';
 
 const RoomInformation = props => {
   const route = useRoute();
@@ -35,7 +26,7 @@ const RoomInformation = props => {
   const navigation = useNavigation();
   const [unit, setUnit] = useState();
   const [loading, setLoading] = useState(true);
-  // console.log(unit);
+  // console.log(unit?.activeContract?.tenants);
   useEffect(() => {
     const getListData = async () => {
       await GetUnitDetailAPi(tokenStore, unitId)
@@ -49,7 +40,7 @@ const RoomInformation = props => {
     };
     getListData();
   }, []);
-
+  //QuickAddRoom
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       {loading && <CustomLoading />}
@@ -58,6 +49,8 @@ const RoomInformation = props => {
         nameRoom={`${unit?.name}`}
         onPressLeft={() => navigation.goBack()}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
+        pressQuickAddRoom={() => navigation.navigate('QuickAddRoom', unit?.id)}
+        pressEdit={() => navigation.navigate('EditRoomInformation', unit?.id)}
       />
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
         <CustomTextTitle label={'Thông tin phòng'} />
@@ -101,10 +94,41 @@ const RoomInformation = props => {
         <View style={styles.line} />
 
         <CustomTextTitle label={'Hợp đồng cho thuê'} />
-
+        {unit?.activeContract && (
+          <RenderContract
+            description={unit?.activeContract?.description}
+            startDate={`${convertDate(unit?.activeContract?.startDate)}`}
+            endDate={`${convertDate(unit?.activeContract?.endDate)}`}
+            houseName={`${unit?.activeContract?.unit?.house?.name}`}
+            unitName={`${unit?.activeContract?.unit?.name}`}
+            contractOwner={`${unit?.activeContract?.contractOwner?.fullName}`}
+            onPress={() =>
+              navigation.navigate('ContractDetail', unit?.activeContract?.id)
+            }
+          />
+        )}
         <View style={styles.line} />
 
         <CustomTextTitle label={'Thông tin người ở'} />
+        {unit?.activeContract?.tenants.length > 0 && (
+          <FlatList
+            data={unit?.activeContract?.tenants}
+            keyExtractor={key => key?.id}
+            renderItem={({item, index}) => {
+              return (
+                <CustomPersonInfor
+                  styleView={{marginTop: 10}}
+                  avatar={item?.avatarImage?.fileUrl}
+                  userName={item?.fullName}
+                  phoneNumber={item?.phoneNumber}
+                  pressAvatar={() =>
+                    navigation.navigate('TenantDetail', item?.id)
+                  }
+                />
+              );
+            }}
+          />
+        )}
 
         <View style={styles.line} />
 
@@ -216,137 +240,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-
-const CustomTenantInformation = props => {
-  const {styleView} = props;
-  return (
-    <View
-      style={[
-        {
-          backgroundColor: 'rgba(1,1,1,0.1)',
-          borderRadius: 10,
-          borderLeftWidth: 5,
-          borderLeftColor: colors.green,
-          justifyContent: 'center',
-          padding: 10,
-          height: 64,
-        },
-        styleView,
-      ]}>
-      <View style={styles.viewRow}>
-        <Text style={{fontWeight: '600', color: '#374047', fontSize: 13}}>
-          Nguyễn Văn A
-        </Text>
-        <CustomButton
-          label={'Xóa'}
-          styleLabel={{fontWeight: '400', color: '#E62154', fontSize: 12}}
-        />
-      </View>
-      <View style={styles.viewRow}>
-        <Text style={{fontWeight: '400', color: '#374047', fontSize: 12}}>
-          {'SĐT: 0123456789'}
-        </Text>
-        <Text style={{fontWeight: '400', color: '#374047', fontSize: 12}}>
-          {'Ngày vào: 01-02-2022'}
-        </Text>
-      </View>
-    </View>
-  );
-};
-
-const CustomContract = props => {
-  const {} = props;
-  return (
-    <View
-      style={{
-        backgroundColor: 'rgba(1,1,1,0.1)',
-        borderRadius: 10,
-        borderLeftWidth: 5,
-        borderLeftColor: colors.backgroundButton,
-        justifyContent: 'center',
-        padding: 10,
-        height: 110,
-      }}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <File width={18} height={18} />
-        <Text
-          style={{
-            marginLeft: 5,
-            color: '#5F6E78',
-            fontSize: 13,
-            fontWeight: '400',
-          }}>{`Số hợp đồng: #12345`}</Text>
-      </View>
-      <View
-        style={{flexDirection: 'row', alignItems: 'center', marginVertical: 5}}>
-        <Text
-          style={{
-            color: '#374047',
-            fontFamily: 'sf-pro-text-regular',
-            lineHeight: 18,
-            fontWeight: '400',
-            fontStyle: 'normal',
-            fontSize: 13,
-          }}>
-          Thời hạn:
-        </Text>
-        <Text
-          style={{
-            color: '#374047',
-            fontFamily: 'sf-pro-text-bold',
-            lineHeight: 18,
-            fontWeight: '600',
-            fontStyle: 'normal',
-            letterSpacing: -1,
-            fontSize: 13,
-          }}>{`Từ 09-02-2023 Đến 09-03-2025`}</Text>
-      </View>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <CustomButton
-          styleButton={{
-            height: 34,
-            borderWidth: 1,
-            borderColor: colors.backgroundOrange,
-            borderRadius: 5,
-            paddingHorizontal: 10,
-          }}
-          label={'Chỉnh sửa'}
-          styleLabel={{
-            fontWeight: '400',
-            color: colors.backgroundOrange,
-            fontSize: 13,
-          }}
-        />
-        <CustomButton
-          styleButton={{
-            height: 34,
-            borderWidth: 1,
-            borderColor: colors.backgroundButton,
-            borderRadius: 5,
-            paddingHorizontal: 10,
-            marginHorizontal: 10,
-          }}
-          label={'Thanh lý'}
-          styleLabel={{
-            fontWeight: '400',
-            color: colors.backgroundButton,
-            fontSize: 13,
-          }}
-        />
-        <CustomButton
-          styleButton={{
-            height: 34,
-            borderWidth: 1,
-            borderColor: 'red',
-            borderRadius: 5,
-            paddingHorizontal: 10,
-          }}
-          label={'Xóa'}
-          styleLabel={{fontWeight: '400', color: 'red', fontSize: 13}}
-        />
-      </View>
-    </View>
-  );
-};
 
 export default RoomInformation;

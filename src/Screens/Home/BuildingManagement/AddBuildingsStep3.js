@@ -110,17 +110,19 @@ const AddBuildingsStep3 = props => {
         if (res?.status == 200) {
           let hauseId = res?.data?.id;
           let hauseImages = createBuildingInfor?.hauseImages;
-          await PostImageBuildingApi(tokenStore, hauseId, hauseImages)
-            .then(res => {
-              if (res?.status == 200) {
-                dispatch(updateStatus(false));
-                setLoadingStep3(false);
-                navigation.navigate('BuildingManager');
-              }
-            })
-            .catch(error => {
-              alert(error);
-            });
+          if (hauseImages?.length > 0) {
+            await PostImageBuildingApi(tokenStore, hauseId, hauseImages)
+              .then(res => {
+                if (res?.status == 200) {
+                  dispatch(updateStatus(false));
+                  setLoadingStep3(false);
+                  navigation.navigate('BuildingManager');
+                }
+              })
+              .catch(error => {
+                alert(error);
+              });
+          }
         }
       })
       .catch(error => console.log(error));

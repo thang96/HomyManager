@@ -47,28 +47,33 @@ const FloorInformation = () => {
               listFloor.push(obj);
             }
             setListRoomOfFloor(listFloor);
-
-            await GetListUnitsApi(tokenStore, hauseId)
-              .then(res => {
-                if (res?.status == 200) {
-                  let response = res?.data;
-                  let eachListFloors = [...listRoomOfFloor];
-                  for (let index = 0; index < response.length; index++) {
-                    const element = response[index];
-                    const floorNumber = element?.floorNumber;
-                    eachListFloors[floorNumber - 1]?.floorInfor?.push(element);
-                  }
-                  setListFloors(eachListFloors);
-                  setLoading(false);
-                }
-              })
-              .catch(error => console.log(error));
           }
         })
         .catch(error => console.log(error));
     };
     getListUnit();
   }, [hauseId, statusLoading]);
+
+  useEffect(() => {
+    const getData = async () => {
+      await GetListUnitsApi(tokenStore, hauseId)
+        .then(res => {
+          if (res?.status == 200) {
+            let response = res?.data;
+            let eachListFloors = [...listRoomOfFloor];
+            for (let index = 0; index < response.length; index++) {
+              const element = response[index];
+              const floorNumber = element?.floorNumber;
+              eachListFloors[floorNumber - 1]?.floorInfor?.push(element);
+            }
+            setListFloors(eachListFloors);
+            setLoading(false);
+          }
+        })
+        .catch(error => console.log(error));
+    };
+    getData();
+  }, [listRoomOfFloor]);
 
   const renderListFloor = (item, index) => {
     return (
@@ -92,6 +97,7 @@ const FloorInformation = () => {
                     username={`${item?.tenantUser}` ?? ''}
                     price={`${item?.rentMonthlyFee?.toLocaleString()}`}
                     onPress={() => {
+                      dispatch(updateStatus(false));
                       navigation.navigate('RoomInformation', item?.id);
                     }}
                   />

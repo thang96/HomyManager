@@ -225,21 +225,23 @@ const AddRoom = () => {
       .then(async res => {
         if (res?.status == 200) {
           let unitId = res?.data?.id;
-          await PostImageUnitApi(tokenStore, unitId, unitImages)
-            .then(res => {
-              if (res?.status == 200) {
-                dispatch(updateStatus(true));
-                navigation.navigate('FloorInformation', hauseId);
+          if (unitImages?.length > 0) {
+            await PostImageUnitApi(tokenStore, unitId, unitImages)
+              .then(res => {
+                if (res?.status == 200) {
+                  dispatch(updateStatus(true));
+                  navigation.navigate('FloorInformation', unitId);
+                  setLoadingRoom(false);
+                }
+              })
+              .catch(error => {
                 setLoadingRoom(false);
-              }
-            })
-            .catch(error => {
-              setLoadingRoom(false);
-              Alert.alert(
-                'Thông báo',
-                `Đã có lỗi sảy ra,vui lòng liên hệ với admin...`,
-              );
-            });
+                Alert.alert(
+                  'Thông báo',
+                  `Đã có lỗi sảy ra,vui lòng liên hệ với admin...`,
+                );
+              });
+          }
         }
       })
       .catch(error => {

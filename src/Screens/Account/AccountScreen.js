@@ -11,6 +11,7 @@ import {updateStatus, statusState} from '../../Store/slices/statusSlice';
 import {GetUserAPi} from '../../Api/User/UserApis';
 import {token} from '../../Store/slices/tokenSlice';
 import CustomLoading from '../../Components/CommonComponent/CustomLoading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AccountScreen = () => {
   const navigation = useNavigation();
@@ -26,15 +27,15 @@ const AccountScreen = () => {
         await GetUserAPi(tokenStore)
           .then(res => {
             if (res?.status == 200) {
-              setLoading(false);
               dispatch(updateUserInfor(res?.data));
+              setLoading(false);
             }
           })
           .catch(error => console.log(error));
       }
     };
     getData();
-  }, [stateLoading]);
+  }, [stateLoading, userStore]);
 
   return (
     <View style={styles.container}>
@@ -51,10 +52,11 @@ const AccountScreen = () => {
           <View style={styles.viewRow}>
             <Image
               source={
-                userStore?.avatarImage
+                userStore?.avatarImage?.fileUrl
                   ? {uri: userStore?.avatarImage?.fileUrl}
                   : icons.ic_user
               }
+              resizeMode="contain"
               style={styles.avatar}
             />
             <View>
@@ -104,9 +106,9 @@ const AccountScreen = () => {
           label={'Đăng xuất'}
           onPress={async () => {
             let user = {username: '', password: ''};
-            await AsyncStorage.setItem('token', '');
-            await AsyncStorage.setItem('user', JSON.stringify(user));
-            navigation.navigate('LoginScreen');
+            await AsyncStorage.removeItem('token');
+            await AsyncStorage.removeItem('user');
+            navigation.navigate('LoginNavigation');
           }}
         />
       </ScrollView>

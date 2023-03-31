@@ -32,7 +32,9 @@ const RenderContract = props => {
         </View>
         <View style={[styles.viewRow]}>
           <Image source={icons.ic_homeTabBar} style={styles.icon} />
-          <Text style={styles.content}>{`${houseName} - ${unitName}`}</Text>
+          <Text
+            numberOfLines={1}
+            style={styles.content}>{`${houseName} - ${unitName}`}</Text>
         </View>
         <View style={[styles.viewRow]}>
           <Text style={styles.content}>{'Người tạo: '}</Text>

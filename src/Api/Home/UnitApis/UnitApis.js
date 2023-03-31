@@ -58,10 +58,10 @@ export const CreateNewUnitApi = (token, hauseId, data) => {
   });
 };
 
-export const PutUnitApi = (token, hauseId, data) => {
+export const PutUnitApi = (token, unitId, data) => {
   return new Promise((resolve, reject) => {
     axios
-      .post(`${BASEURL}/units/${hauseId}`, data, {
+      .put(`${BASEURL}/units/${unitId}`, data, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

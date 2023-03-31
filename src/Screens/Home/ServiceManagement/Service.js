@@ -40,11 +40,10 @@ const Service = props => {
           if (res?.status == 200) {
             let eachData = res?.data;
             let eachService = [];
-            for (let index = 0; index < eachData.length; index++) {
-              const element = eachData[index];
-              let newElement = {...element, isCheck: false};
-              eachService.push(newElement);
-            }
+            eachData.map((data, index) => {
+              let newData = {...data, isCheck: false};
+              eachService.push(newData);
+            });
             setListSevice(eachService);
             setLoading(false);
           }

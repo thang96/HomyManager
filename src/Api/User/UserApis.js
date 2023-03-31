@@ -23,7 +23,7 @@ export const GetUserAPi = token => {
 export const PutUserAPi = (token, data) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/users/me`, data, {
+      .put(`${BASEURL}/users/me`, data, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

@@ -19,6 +19,8 @@ import AddBuildingsStep3 from './Home/BuildingManagement/AddBuildingsStep3';
 import RoomInformation from './Home/BuildingManagement/RoomInformation';
 import FloorInformation from './Home/BuildingManagement/FloorInformation';
 import AddRoom from './Home/BuildingManagement/AddRoom';
+import QuickAddRoom from './Home/BuildingManagement/QuickAddRoom';
+import EditRoomInformation from './Home/BuildingManagement/EditRoomInformation';
 //----------- ServiceManager
 import ServiceManager from './Home/ServiceManagement/ServiceManager';
 import Service from './Home/ServiceManagement/Service';
@@ -96,6 +98,8 @@ export {
   AddBuildingsStep2,
   AddBuildingsStep3,
   AddRoom,
+  QuickAddRoom,
+  EditRoomInformation,
   //-- ContractManagement
   ContractManagement,
   CreateContract,

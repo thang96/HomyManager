@@ -173,6 +173,25 @@ export const PostImageInvoiceApi = (token, invoiceId, invoiceImages) => {
   });
 };
 
+export const DeleteImageApi = (token, imageId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`${BASEURL}/files/${imageId}`, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
 const getFileName = file => {
   if (file.name !== undefined) {
     return file.name;

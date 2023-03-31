@@ -22,20 +22,22 @@ import {amenityState, updateAmenity} from '../../../Store/slices/commonSlice';
 import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {statusState} from '../../../Store/slices/statusSlice';
+import {token} from '../../../Store/slices/tokenSlice';
 
 const Utilities = props => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const listAmenity = useSelector(amenityState);
+  const tokenStore = useSelector(token);
   const loadingState = useSelector(statusState);
   const [amenitys, setAcmenitys] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (listAmenity.length > 0) {
-      setAcmenitys(listAmenity);
-    }
-  }, [listAmenity]);
+  // useEffect(() => {
+  //   if (listAmenity.length > 0) {
+  //     setAcmenitys(listAmenity);
+  //   }
+  // }, [listAmenity]);
 
   useEffect(() => {
     const getListAmenity = async () => {
@@ -48,7 +50,7 @@ const Utilities = props => {
               let newData = {...data, isCheck: false};
               eachArray.push(newData);
             });
-            dispatch(updateAmenity(eachArray));
+            setAcmenitys(eachArray);
             setLoading(false);
           }
         })

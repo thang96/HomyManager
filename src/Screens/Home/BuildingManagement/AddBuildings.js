@@ -427,9 +427,8 @@ const AddBuildings = props => {
         )}
 
         <View style={styles.line} />
-        <Text style={[styles.textTitle, {marginVertical: 5}]}>
-          Thêm ảnh tòa nhà
-        </Text>
+
+        <CustomTextTitle label={'Thêm ảnh tòa nhà'} />
         <View
           style={{
             height: 220,
