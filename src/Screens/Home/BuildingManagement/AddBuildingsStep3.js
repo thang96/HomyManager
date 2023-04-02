@@ -82,9 +82,9 @@ const AddBuildingsStep3 = props => {
       <View>
         {item?.isCheck == true && (
           <RenderService
-            label={item?.name}
-            value={item?.fee}
-            icon={item?.icon}
+            name={item?.name}
+            fee={item?.fee}
+            calculateUnit={item?.calculateUnit}
           />
         )}
       </View>
@@ -133,8 +133,8 @@ const AddBuildingsStep3 = props => {
       {loadingStep3 && <CustomLoading />}
       {modalNotify && (
         <CustomModalNotify
-          title={'Thông báo'}
-          label={'Bạn có một thông báo mới,vui lòng xác nhận'}
+          title={'Tạo tòa nhà'}
+          label={'Bạn có muốn tạo tòa nhà này ?'}
           modalVisible={modalNotify}
           onRequestClose={() => setModalNotify(false)}
           pressConfirm={() => createNewBuilding()}
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     alignSelf: 'center',
   },
-  textPicker: {fontSize: 15, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
+  textPicker: {fontSize: 11, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
   pickerTotal: {
     fontSize: 15,
     color: 'rgba(254, 122, 55, 1)',

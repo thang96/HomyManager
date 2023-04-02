@@ -3,6 +3,11 @@ export const convertDate = value => {
   var convertDate = dateToDMY(d);
   return convertDate;
 };
+export const convertTime = value => {
+  var d = new Date(value);
+  var convertDate = d.toLocaleTimeString('en-VN');
+  return convertDate;
+};
 export const dateToYMD = value => {
   var d = value.getDate();
   var m = value.getMonth() + 1; //Month from 0 to 11

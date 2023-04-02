@@ -27,17 +27,10 @@ import {token} from '../../../Store/slices/tokenSlice';
 const Utilities = props => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const listAmenity = useSelector(amenityState);
   const tokenStore = useSelector(token);
   const loadingState = useSelector(statusState);
-  const [amenitys, setAcmenitys] = useState([]);
+  const [listAmenitys, setListAmenitys] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   if (listAmenity.length > 0) {
-  //     setAcmenitys(listAmenity);
-  //   }
-  // }, [listAmenity]);
 
   useEffect(() => {
     const getListAmenity = async () => {
@@ -50,7 +43,7 @@ const Utilities = props => {
               let newData = {...data, isCheck: false};
               eachArray.push(newData);
             });
-            setAcmenitys(eachArray);
+            setListAmenitys(eachArray);
             setLoading(false);
           }
         })
@@ -61,14 +54,14 @@ const Utilities = props => {
 
   const renderListService = (item, index) => {
     const updateItem = () => {
-      let newList = [...amenitys];
+      let newList = [...listAmenitys];
       let itemCheck = newList[index];
       let newItem = {
         ...itemCheck,
         isCheck: itemCheck?.isCheck == false ? true : false,
       };
       newList[index] = newItem;
-      setAcmenitys(newList);
+      setListAmenitys(newList);
     };
     return (
       <CustomChecker
@@ -80,6 +73,13 @@ const Utilities = props => {
   };
 
   const updateAmenitys = () => {
+    let amenitys = [];
+    for (let index = 0; index < listAmenitys.length; index++) {
+      const element = listAmenitys[index];
+      if (element?.isCheck == true) {
+        amenitys.push(element);
+      }
+    }
     dispatch(updateAmenity(amenitys));
     navigation.goBack();
   };
@@ -100,14 +100,14 @@ const Utilities = props => {
         />
         <CustomTextTitle label={'Tiện ích hiện có'} />
 
-        {amenitys.length > 0 ? (
+        {listAmenitys.length > 0 ? (
           <FlatList
             listKey="listPaidSevice"
             style={{justifyContent: 'space-between'}}
             horizontal={false}
             scrollEnabled={false}
             numColumns={2}
-            data={amenitys}
+            data={listAmenitys}
             keyExtractor={key => `${key.id}`}
             renderItem={({item, index}) => renderListService(item, index)}
           />

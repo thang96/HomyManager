@@ -200,6 +200,7 @@ const EditAccount = props => {
       />
     );
   };
+
   const deleteImage = async imageId => {
     setLoading(true);
     await DeleteImageApi(tokenStore, imageId)
@@ -212,6 +213,7 @@ const EditAccount = props => {
         console.log(error);
       });
   };
+
   const updateInforAcoount = async () => {
     setModaSaveAccount(false);
     setLoading(true);

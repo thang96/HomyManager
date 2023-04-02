@@ -115,10 +115,10 @@ export const CreateNewBuildingApi = (token, data) => {
   });
 };
 
-export const PutBuildingApi = (token, data, houseId) => {
+export const PutBuildingApi = (token, houseId, data) => {
   return new Promise((resolve, reject) => {
     axios
-      .put(`${BASEURL}/houses${houseId}`, data, {
+      .put(`${BASEURL}/houses/${houseId}`, data, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

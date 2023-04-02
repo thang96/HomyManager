@@ -75,7 +75,14 @@ const Service = props => {
   };
 
   const updateservices = () => {
-    dispatch(updateServices(listSevice));
+    let services = [];
+    for (let index = 0; index < listSevice.length; index++) {
+      const element = listSevice[index];
+      if (element?.isCheck == true) {
+        services.push(element);
+      }
+    }
+    dispatch(updateServices(services));
     navigation.goBack();
   };
 

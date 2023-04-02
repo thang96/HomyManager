@@ -21,6 +21,7 @@ import FloorInformation from './Home/BuildingManagement/FloorInformation';
 import AddRoom from './Home/BuildingManagement/AddRoom';
 import QuickAddRoom from './Home/BuildingManagement/QuickAddRoom';
 import EditRoomInformation from './Home/BuildingManagement/EditRoomInformation';
+import EditHouseInformation from './Home/BuildingManagement/EditHouseInformation';
 //----------- ServiceManager
 import ServiceManager from './Home/ServiceManagement/ServiceManager';
 import Service from './Home/ServiceManagement/Service';
@@ -100,6 +101,7 @@ export {
   AddRoom,
   QuickAddRoom,
   EditRoomInformation,
+  EditHouseInformation,
   //-- ContractManagement
   ContractManagement,
   CreateContract,

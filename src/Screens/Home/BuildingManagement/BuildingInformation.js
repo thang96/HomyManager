@@ -27,10 +27,10 @@ const BuildingInformation = () => {
   const [hauseInfor, setHauseInfor] = useState();
   const [openTimeValue, setOpenTimeValue] = useState('');
   const [closeTimeValue, setCloseTimeValue] = useState('');
-  // console.log(hauseInfor);
+  const hauseId = route.params;
+
   useEffect(() => {
     const getDataHause = async () => {
-      let hauseId = route.params;
       await HauseDetailApi(tokenStore, hauseId)
         .then(res => {
           if (res?.status == 200) {
@@ -121,6 +121,7 @@ const BuildingInformation = () => {
         <CustomTextTitle
           label={'Thông tin tòa nhà'}
           labelButton={'Chỉnh sửa'}
+          onPress={() => navigation.navigate('EditHouseInformation', hauseId)}
         />
         <View style={[styles.viewRow, {marginBottom: 10}]}>
           <BoxShowInfor

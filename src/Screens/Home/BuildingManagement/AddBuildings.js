@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundGrey,
   },
   content: {color: 'grey', fontSize: 12},
-  label: {fontSize: 15, color: '#5f666b'},
+  label: {fontSize: 15, color: '#374047'},
   viewTime: {
     height: 32,
     paddingHorizontal: 3,
@@ -509,7 +509,7 @@ const styles = StyleSheet.create({
   },
   line: {
     width: '100%',
-    height: 1,
+    height: 0.5,
     backgroundColor: 'black',
     marginVertical: 20,
     alignSelf: 'center',
