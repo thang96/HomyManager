@@ -21,6 +21,7 @@ import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppB
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import {updateStatus} from '../../../Store/slices/statusSlice';
 import {PostImageBuildingApi} from '../../../Api/Home/FileDataApis/FileDataApis';
+import CustomNote from '../../../Components/CommonComponent/CustomNote';
 
 const AddBuildingsStep3 = props => {
   const navigation = useNavigation();
@@ -210,27 +211,19 @@ const AddBuildingsStep3 = props => {
 
         <CustomTextTitle label={'Lưu ý'} />
 
-        <Text style={[styles.label]}>Lưu ý của tòa nhà</Text>
-        <View style={styles.viewTextInput}>
-          <TextInput
-            style={{color: 'black', width: '100%'}}
-            multiline={true}
-            placeholder="Nhập lưu ý của tòa nhà"
-            defaultValue={notice}
-            onEndEditing={evt => setNotice(evt.nativeEvent.text)}
-          />
-        </View>
+        <CustomNote
+          title={'Lưu ý của tòa nhà'}
+          placeholder={'Nhập lưu ý của tòa nhà'}
+          defaultValue={notice}
+          onEndEditing={evt => setNotice(evt.nativeEvent.text)}
+        />
 
-        <Text style={[styles.label, {marginTop: 20}]}>Ghi chú hóa đơn</Text>
-        <View style={styles.viewTextInput}>
-          <TextInput
-            style={{color: 'black'}}
-            multiline={true}
-            placeholder="Nhập ghi chú hóa đơn"
-            defaultValue={billNotice}
-            onEndEditing={evt => setBillNotice(evt.nativeEvent.text)}
-          />
-        </View>
+        <CustomNote
+          title={'Ghi chú hóa đơn'}
+          placeholder={'Nhập ghi chú hóa đơn'}
+          defaultValue={billNotice}
+          onEndEditing={evt => setBillNotice(evt.nativeEvent.text)}
+        />
 
         <View style={{marginBottom: 56}} />
         <CustomTwoButtonBottom

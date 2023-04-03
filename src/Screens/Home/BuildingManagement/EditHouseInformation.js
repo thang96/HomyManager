@@ -47,6 +47,7 @@ import {
   serviceState,
 } from '../../../Store/slices/commonSlice';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
+import CustomNote from '../../../Components/CommonComponent/CustomNote';
 
 const EditHouseInformation = props => {
   const route = useRoute();
@@ -90,25 +91,6 @@ const EditHouseInformation = props => {
           if (res?.status == 200) {
             let response = res?.data;
             setHauseInfor(response);
-            // let eachService = [];
-            // let eachAmenities = [];
-            // if (response?.chargeServices?.length > 0) {
-            //   response?.chargeServices.forEach(element => {
-            //     let newElement = {...element, isCheck: true};
-            //     eachService.push(newElement);
-            //   });
-            // }
-            // if (response?.amenities?.length > 0) {
-            //   response?.amenities.forEach(element => {
-            //     let newElement = {...element, isCheck: true};
-            //     eachAmenities.push(newElement);
-            //   });
-            // }
-            // setHauseInfor({
-            //   ...response,
-            //   chargeServices: eachService,
-            //   amenities: eachAmenities,
-            // });
             setLoading(false);
           }
         })
@@ -518,18 +500,17 @@ const EditHouseInformation = props => {
             setHauseInfor(newHause);
           }}
         />
-        <Text style={[styles.label, {marginTop: 10}]}>Mô tả</Text>
-        <View style={styles.viewTextInput}>
-          <TextInput
-            multiline
-            placeholder="Nhập mô tả cho tòa nhà"
-            defaultValue={hauseInfor?.description}
-            onEndEditing={evt => {
-              let newHause = {...hauseInfor, description: evt.nativeEvent.text};
-              setHauseInfor(newHause);
-            }}
-          />
-        </View>
+
+        <CustomNote
+          viewCustom={{marginTop: 10}}
+          title={'Mô tả'}
+          placeholder="Nhập mô tả cho tòa nhà"
+          defaultValue={hauseInfor?.description}
+          onEndEditing={evt => {
+            let newHause = {...hauseInfor, description: evt.nativeEvent.text};
+            setHauseInfor(newHause);
+          }}
+        />
 
         {StraightLine()}
         <CustomTextTitle label={'Địa chỉ tòa nhà'} />
@@ -557,15 +538,16 @@ const EditHouseInformation = props => {
           value={hauseInfor?.ward?.name}
           onPress={() => setModalWard(true)}
         />
-        <Text style={[styles.label, {marginTop: 10}]}>Địa chỉ cụ thể</Text>
-        <View style={styles.viewTextInput}>
-          <TextInput
-            multiline
-            placeholder="Nhập địa chỉ cụ thể"
-            defaultValue={hauseInfor?.address}
-            onEndEditing={evt => setAddress(evt.nativeEvent.text)}
-          />
-        </View>
+        <CustomNote
+          viewCustom={{marginTop: 10}}
+          title={'Địa chỉ cụ thể'}
+          placeholder="Nhập địa chỉ cụ thể"
+          defaultValue={hauseInfor?.address}
+          onEndEditing={evt => {
+            let newHause = {...hauseInfor, address: evt.nativeEvent.text};
+            setHauseInfor(newHause);
+          }}
+        />
 
         <CustomTextTitle label={'Thêm hình ảnh'} />
         <View style={styles.viewRenderImg}>
@@ -700,33 +682,26 @@ const EditHouseInformation = props => {
         {StraightLine()}
         <CustomTextTitle label={'Lưu ý'} />
 
-        <Text style={[styles.label]}>Lưu ý của tòa nhà</Text>
-        <View style={styles.viewTextInput}>
-          <TextInput
-            style={{color: 'black', width: '100%'}}
-            multiline={true}
-            placeholder="Nhập lưu ý của tòa nhà"
-            defaultValue={hauseInfor?.notice}
-            onEndEditing={evt => {
-              let newHause = {...hauseInfor, notice: evt.nativeEvent.text};
-              setHauseInfor(newHause);
-            }}
-          />
-        </View>
+        <CustomNote
+          title={'Lưu ý của tòa nhà'}
+          placeholder="Nhập lưu ý của tòa nhà"
+          defaultValue={hauseInfor?.notice}
+          onEndEditing={evt => {
+            let newHause = {...hauseInfor, notice: evt.nativeEvent.text};
+            setHauseInfor(newHause);
+          }}
+        />
+        <CustomNote
+          viewCustom={{marginTop: 10}}
+          title={'Ghi chú hóa đơn'}
+          placeholder="Nhập ghi chú hóa đơn"
+          defaultValue={hauseInfor?.billNotice}
+          onEndEditing={evt => {
+            let newHause = {...hauseInfor, billNotice: evt.nativeEvent.text};
+            setHauseInfor(newHause);
+          }}
+        />
 
-        <Text style={[styles.label, {marginTop: 20}]}>Ghi chú hóa đơn</Text>
-        <View style={styles.viewTextInput}>
-          <TextInput
-            style={{color: 'black'}}
-            multiline={true}
-            placeholder="Nhập ghi chú hóa đơn"
-            defaultValue={hauseInfor?.billNotice}
-            onEndEditing={evt => {
-              let newHause = {...hauseInfor, billNotice: evt.nativeEvent.text};
-              setHauseInfor(newHause);
-            }}
-          />
-        </View>
         <View style={{height: 56}} />
         <CustomTwoButtonBottom
           leftLabel={'Trở lại'}

@@ -4,16 +4,12 @@ import {
   StyleSheet,
   View,
   Text,
-  Keyboard,
   ScrollView,
   Image,
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetListHausesApi} from '../../Api/Home/BuildingApis/BuildingApis';
-import {GetListTenantsApi} from '../../Api/Home/TenantApis/TenantApis';
-import {GetListContractsApi} from '../../Api/Home/ContractApis/ContractApis';
 import {GetUserAPi} from '../../Api/User/UserApis';
 import CustomButton from '../../Components/CommonComponent/CustomButton';
 import CustomLoading from '../../Components/CommonComponent/CustomLoading';
@@ -24,6 +20,7 @@ import {updateUserInfor, userInfor} from '../../Store/slices/userInfoSlice';
 import CustomModalNotify from '../../Components/CommonComponent/CustomModalNotify';
 import {GetHomeScreenInforApi} from '../../Api/Home/HomeApis';
 import {statusState} from '../../Store/slices/statusSlice';
+import useKeyboard from '../../Hook/useKeyboard';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -35,16 +32,8 @@ const HomeScreen = () => {
   const widthImage = Dimensions.get('window').width / 2 - 20;
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
-  // console.log(tokenStore);
-  const [keyboard, setKeyboard] = useState(false);
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboard(true);
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboard(false);
-    });
-  }, []);
+
+  const keyboard = useKeyboard();
 
   useEffect(() => {
     const getData = async () => {

@@ -41,6 +41,7 @@ import {GetListManagersApi} from '../../../Api/Home/ManagerApis/ManagerApis';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import CustomInputValue from '../../../Components/CommonComponent/CustomInputValue';
+import CustomNote from '../../../Components/CommonComponent/CustomNote';
 
 const AddBuildings = props => {
   const navigation = useNavigation();
@@ -356,21 +357,16 @@ const AddBuildings = props => {
           unit={'VNĐ'}
           placeholder={'Nhập chi phí thuê nhà'}
           keyboardType={'numeric'}
-          defaultValue={
-            leasingFee ? `${parseInt(leasingFee)?.toLocaleString()}` : ''
-          }
+          defaultValue={`${leasingFee}`}
           onEndEditing={event => setLeasingFee(event.nativeEvent.text)}
         />
 
-        <Text style={[styles.label, {marginTop: 10}]}>Mô tả</Text>
-        <View style={styles.viewTextInput}>
-          <TextInput
-            multiline
-            placeholder="Nhập mô tả cho tòa nhà"
-            defaultValue={description}
-            onEndEditing={evt => setDescription(evt.nativeEvent.text)}
-          />
-        </View>
+        <CustomNote
+          title={'Mô tả'}
+          placeholder={'Nhập mô tả cho tòa nhà'}
+          defaultValue={description}
+          onEndEditing={evt => setDescription(evt.nativeEvent.text)}
+        />
 
         <View style={styles.line} />
         <CustomTextTitle label={'Địa chỉ tòa nhà'} />
@@ -398,44 +394,18 @@ const AddBuildings = props => {
           value={wardName}
           onPress={() => setModalWard(true)}
         />
-        <Text style={[styles.label, {marginTop: 10}]}>Địa chỉ cụ thể</Text>
-        <View style={styles.viewTextInput}>
-          <TextInput
-            multiline
-            placeholder="Nhập địa chỉ cụ thể"
-            defaultValue={address}
-            onEndEditing={evt => setAddress(evt.nativeEvent.text)}
-          />
-        </View>
 
-        {managerSelect.length > 0 && (
-          <FlatList
-            data={managerSelect}
-            keyExtractor={(key, index) => `${key?.id}${index.toString()}`}
-            renderItem={({item, index}) => {
-              return (
-                <CustomPersonInfor
-                  styleView={{marginTop: 10}}
-                  avatar={item?.avatar}
-                  userName={`${item?.fullName}`}
-                  phoneNumber={`${item?.phoneNumber}`}
-                  onPress={() => {}}
-                />
-              );
-            }}
-          />
-        )}
+        <CustomNote
+          title={'Địa chỉ cụ thể'}
+          placeholder={'Nhập địa chỉ cụ thể'}
+          defaultValue={address}
+          onEndEditing={evt => setAddress(evt.nativeEvent.text)}
+        />
 
         <View style={styles.line} />
 
         <CustomTextTitle label={'Thêm ảnh tòa nhà'} />
-        <View
-          style={{
-            height: 220,
-            marginVertical: 5,
-            borderRadius: 10,
-            backgroundColor: 'white',
-          }}>
+        <View style={styles.viewUploadImage}>
           {hauseImages.length > 0 ? (
             <FlatList
               horizontal
@@ -480,7 +450,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundGrey,
   },
   content: {color: 'grey', fontSize: 12},
-  label: {fontSize: 15, color: '#374047'},
   viewTime: {
     height: 32,
     paddingHorizontal: 3,
@@ -514,8 +483,12 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     alignSelf: 'center',
   },
-  icon: {width: 20, height: 20},
-
+  viewUploadImage: {
+    height: 220,
+    marginVertical: 5,
+    borderRadius: 10,
+    backgroundColor: 'white',
+  },
   buttonUploadIM: {
     height: 50,
     backgroundColor: colors.mainColor,

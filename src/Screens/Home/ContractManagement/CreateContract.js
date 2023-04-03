@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -77,9 +77,6 @@ const CreateContract = () => {
   const [termAndCondition, setTermAndCondition] = useState();
   const [description, setDescription] = useState();
   const [unitId, setUnitId] = useState();
-  const [serviceIds, setServiceIds] = useState([]);
-  const [amenityIds, setAmenityIds] = useState([]);
-  const [tenantIds, setTenantIds] = useState([]);
 
   const [contractImages, setContractImages] = useState([]);
 
@@ -123,39 +120,14 @@ const CreateContract = () => {
           }
         })
         .catch(error => console.log(error));
-
-      await GetListServicesApi(tokenStore)
-        .then(res => {
-          if (res?.status == 200) {
-            let eachData = res?.data;
-            let eachArray = [];
-            eachData.map((data, index) => {
-              let newData = {...data, isCheck: false};
-              eachArray.push(newData);
-            });
-            dispatch(updateServices(eachArray));
-          }
-        })
-        .catch(error => console.log(error));
-
-      await GetListAmenitysApi(tokenStore)
-        .then(res => {
-          if (res?.status == 200) {
-            let eachData = res?.data;
-            let eachArray = [];
-            eachData.map((data, index) => {
-              let newData = {...data, isCheck: false};
-              eachArray.push(newData);
-            });
-            dispatch(updateAmenity(eachArray));
-          }
-        })
-        .catch(error => console.log(error));
+      dispatch(updateAmenity([]));
+      dispatch(updateServices([]));
+      dispatch(updateTenants([]));
     };
     getListData();
   }, []);
 
-  useEffect(() => {
+  useMemo(() => {
     let eachService = [];
     if (serviceSelect.length > 0) {
       serviceSelect.map((item, index) => {
@@ -163,8 +135,11 @@ const CreateContract = () => {
           eachService.push(item);
         }
       });
-      setListService(eachService);
     }
+    setListService(eachService);
+  }, [serviceSelect]);
+
+  useMemo(() => {
     let eachAmenityIds = [];
     if (amenitySelect.length > 0) {
       amenitySelect.map((item, index) => {
@@ -172,42 +147,30 @@ const CreateContract = () => {
           eachAmenityIds.push(item);
         }
       });
-      setListAmenity(eachAmenityIds);
     }
+    setListAmenity(eachAmenityIds);
+  }, [amenitySelect]);
+
+  useMemo(() => {
     let eachTenants = [];
-    if (amenitySelect.length > 0) {
+    if (tenantSelect.length > 0) {
       tenantSelect.map((item, index) => {
         if (item?.isCheck == true) {
           eachTenants.push(item);
         }
       });
-      setListTenant(eachTenants);
     }
-  }, [serviceSelect, amenitySelect, tenantSelect]);
-
-  useEffect(() => {
-    const setListData = () => {
-      let eachServiceIds = [];
-      let eachAmenityIds = [];
-      let eachTenantIds = [];
-      listService.map((item, index) => {
-        eachServiceIds.push(item?.id);
-      });
-      listAmenity.map((item, index) => {
-        eachAmenityIds.push(item?.id);
-      });
-      listTenant.map((item, index) => {
-        eachTenantIds.push(item?.id);
-      });
-      setServiceIds(eachServiceIds);
-      setAmenityIds(eachAmenityIds);
-      setTenantIds(eachTenantIds);
-    };
-    setListData();
-  }, [listService, listAmenity, listTenant]);
+    setListTenant(eachTenants);
+  }, [tenantSelect]);
 
   const renderSelectSevice = (item, index) => {
-    return <RenderService label={item?.name} value={item?.fee} />;
+    return (
+      <RenderService
+        name={item?.name}
+        fee={item?.fee}
+        calculateUnit={item?.calculateUnit}
+      />
+    );
   };
 
   const renderSelectAmenity = (item, index) => {
@@ -297,6 +260,18 @@ const CreateContract = () => {
   const createNewContract = async () => {
     setModalCreateContract(false);
     setLoadingAddContract(true);
+    let eachServiceIds = [];
+    let eachAmenityIds = [];
+    let eachTenantIds = [];
+    listService.map((item, index) => {
+      eachServiceIds.push(item?.id);
+    });
+    listAmenity.map((item, index) => {
+      eachAmenityIds.push(item?.id);
+    });
+    listTenant.map((item, index) => {
+      eachTenantIds.push(item?.id);
+    });
     let data = {
       startDate: startDate,
       endDate: endDate,
@@ -307,9 +282,9 @@ const CreateContract = () => {
       description: description,
       termAndCondition: termAndCondition,
       unitId: unitId?.id,
-      serviceIds: serviceIds,
-      amenityIds: amenityIds,
-      tenantIds: tenantIds,
+      serviceIds: eachServiceIds,
+      amenityIds: eachAmenityIds,
+      tenantIds: eachTenantIds,
     };
     await CreateNewContractApi(tokenStore, data)
       .then(async res => {
@@ -377,6 +352,7 @@ const CreateContract = () => {
           mode={'date'}
           openPicker={modalStartDate}
           onDateChange={value => {
+            setTimeStart(value);
             setStartDate(dateToYMD(value));
             setStartDateValue(dateToDMY(value));
           }}
@@ -390,6 +366,7 @@ const CreateContract = () => {
           mode={'date'}
           openPicker={modalEndDate}
           onDateChange={value => {
+            setTimeEnd(value);
             setEndDate(dateToYMD(value));
             setEndDateValue(dateToDMY(value));
           }}
@@ -677,7 +654,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     marginVertical: 20,
   },
-  textPicker: {fontSize: 15, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
+  textPicker: {fontSize: 11, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
   pickerTotal: {
     fontSize: 15,
     color: 'rgba(254, 122, 55, 1)',

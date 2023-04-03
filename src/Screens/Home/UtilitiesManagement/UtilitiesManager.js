@@ -26,13 +26,14 @@ import {
   GetListAmenitysApi,
   DeleteAmenityApi,
 } from '../../../Api/Home/AmenityApis/AmenityApis';
+import useKeyboard from '../../../Hook/useKeyboard';
 
 const UtilitiesManager = props => {
   const navigation = useNavigation();
   const isLoading = useSelector(statusState);
   const tokenStore = useSelector(token);
   const dispatch = useDispatch();
-  const [keyboard, setKeyboard] = useState(false);
+  const keyboard = useKeyboard();
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
 
@@ -58,14 +59,6 @@ const UtilitiesManager = props => {
       .catch(error => console.log(error));
   };
 
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboard(true);
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboard(false);
-    });
-  }, []);
   const [listSevice, setListSevice] = useState([]);
 
   const renderListService = (item, index) => {

@@ -22,10 +22,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetListTenantsApi} from '../../../Api/Home/TenantApis/TenantApis';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
+import useKeyboard from '../../../Hook/useKeyboard';
+
 const TenantManager = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [keyboard, setKeyboard] = useState(null);
+  const keyboard = useKeyboard();
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
   const [listTenants, setListTenants] = useState([]);
@@ -45,15 +47,6 @@ const TenantManager = () => {
     };
     getListTenants();
   }, [focusLoading]);
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboard(true);
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboard(false);
-    });
-  }, []);
 
   const renderListTenants = (item, index) => {
     return (

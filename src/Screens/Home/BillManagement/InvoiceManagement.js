@@ -26,7 +26,7 @@ import InvoiceUnconfimred from '../../../Components/ComponentHome/Invoice/Invoic
 import CustomButtonCarendar from '../../../Components/ComponentHome/CustomButtonCarendar';
 import InvoiceUnpaid from '../../../Components/ComponentHome/Invoice/InvoiceUnpaid';
 import InvoicePaid from '../../../Components/ComponentHome/Invoice/InvoicePaid';
-import InvoiceOutOfDate from '../../../Components/ComponentHome/Invoice/InvoiceOutOfDate';
+import useKeyboard from '../../../Hook/useKeyboard';
 
 const InvoiceManagement = props => {
   const navigation = useNavigation();
@@ -34,21 +34,13 @@ const InvoiceManagement = props => {
   const loadingInvoice = useSelector(statusState);
   const [loading, setLoading] = useState(true);
   const tokenStore = useSelector(token);
-  const [keyboard, setKeyboard] = useState(false);
+  const keyboard = useKeyboard();
   const [textSearch, setTextSearch] = useState('');
   const [isActive, setIsActive] = useState(1);
   const [listInvoiceUnconfimred, setListInvoiceUnconfimred] = useState([]);
   const [listInvoiceUnpaid, setListInvoiceUnpaid] = useState([]);
   const [listInvoicePaid, setListInvoicePaid] = useState(1);
   const [valueDate, setValueDate] = useState('03-03-2023');
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboard(true);
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboard(false);
-    });
-  }, []);
 
   useEffect(() => {
     const getListData = async () => {
@@ -135,18 +127,6 @@ const InvoiceManagement = props => {
                 styleLabel={{color: isActive == 3 ? 'white' : '#7F8A93'}}
                 onPress={() => setIsActive(3)}
               />
-              {/* <CustomButton
-                styleButton={[
-                  {
-                    backgroundColor:
-                      isActive == 4 ? colors.backgroundOrange : 'white',
-                  },
-                  styles.viewButton,
-                ]}
-                label={'Quá hạn'}
-                styleLabel={{color: isActive == 4 ? 'white' : '#7F8A93'}}
-                onPress={() => setIsActive(4)}
-              /> */}
             </ScrollView>
           </View>
           <CustomButtonCarendar

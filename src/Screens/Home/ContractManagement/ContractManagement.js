@@ -10,22 +10,14 @@ import CustomLiquidated from './CustomLiquidated';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import {useDispatch} from 'react-redux';
 import {updateStatus} from '../../../Store/slices/statusSlice';
+import useKeyboard from '../../../Hook/useKeyboard';
 
 const ContractManagement = props => {
   const navigation = useNavigation();
-  const [keyboard, setKeyboard] = useState(false);
+  const keyboard = useKeyboard();
   const [textSearch, setTextSearch] = useState('');
   const [isActive, setIsActive] = useState(1);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboard(true);
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboard(false);
-    });
-  }, []);
 
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>

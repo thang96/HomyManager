@@ -36,10 +36,6 @@ const TenantList = () => {
   const [listTenants, setListTenants] = useState([]);
 
   useEffect(() => {
-    setListTenants(tenantsSelect);
-  }, [tenantsSelect]);
-
-  useEffect(() => {
     const getData = async () => {
       await GetListTenantsApi(tokenStore)
         .then(res => {
@@ -50,7 +46,7 @@ const TenantList = () => {
               let newData = {...data, isCheck: false};
               eachArray.push(newData);
             });
-            dispatch(updateTenants(eachArray));
+            setListTenants(eachArray);
             setLoading(false);
           }
         })
@@ -94,7 +90,14 @@ const TenantList = () => {
   };
 
   const updateTenantList = () => {
-    dispatch(updateTenants(listTenants));
+    let tenants = [];
+    for (let index = 0; index < listTenants.length; index++) {
+      const element = listTenants[index];
+      if (element?.isCheck == true) {
+        tenants.push(element);
+      }
+    }
+    dispatch(updateTenants(tenants));
     navigation.goBack();
   };
 

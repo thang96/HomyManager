@@ -8,7 +8,7 @@ import {
   Keyboard,
   Alert,
 } from 'react-native';
-
+import useKeyboard from '../../../Hook/useKeyboard';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import {icons, colors} from '../../../Constants';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
@@ -26,20 +26,11 @@ import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 const ServiceManager = props => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [keyboard, setKeyboard] = useState(false);
+  const keyboard = useKeyboard();
   const isLoading = useSelector(statusState);
   const [textSearch, setTextSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const tokenStore = useSelector(token);
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboard(true);
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboard(false);
-    });
-  }, []);
 
   useEffect(() => {
     getListService();
