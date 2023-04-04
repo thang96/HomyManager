@@ -11,7 +11,7 @@ import {colors, icons} from '../../Constants';
 import CustomButton from '../CommonComponent/CustomButton';
 
 const RenderAmenity = props => {
-  const widthImage = Dimensions.get('window').width / 3 - 10;
+  const widthImage = Dimensions.get('window').width / 2 - 15;
   const {label, isDelete, deleteAmenity, onPress, disabled} = props;
   return (
     <View style={[styles.container, {width: widthImage}]}>
@@ -39,13 +39,20 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 52,
+    height: 60,
     backgroundColor: 'white',
-    elevation: 1,
     zIndex: 1,
     borderRadius: 5,
-    paddingLeft: 5,
-    margin: 2,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    margin: 2.5,
   },
   styleIcon: {width: 12, height: 12, tintColor: 'white', marginLeft: 3},
   text: {

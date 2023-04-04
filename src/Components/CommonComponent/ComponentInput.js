@@ -1,31 +1,24 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, View, Text, TextInput} from 'react-native';
+import {colors} from '../../Constants';
 
-const CustomInputValue = props => {
+const ComponentInput = props => {
   const {
     type,
-    label,
+    title,
     unit,
     placeholder,
     keyboardType,
     important,
-    viewContainer,
+    viewComponent,
     value,
-    defaultValue,
-    onEndEditing,
     onChangeText,
   } = props;
   return (
-    <View style={viewContainer}>
+    <View style={viewComponent}>
       <View
         style={{flexDirection: 'row', marginBottom: 3, alignItems: 'center'}}>
-        <Text style={styles.label}>{label}</Text>
+        <Text style={styles.label}>{title}</Text>
         {important && <Text style={{color: 'red'}}> *</Text>}
       </View>
       {type == 'input' && (
@@ -33,9 +26,19 @@ const CustomInputValue = props => {
           <TextInput
             style={{flex: 1}}
             placeholder={placeholder}
+            placeholderTextColor={'grey'}
             keyboardType={keyboardType}
-            defaultValue={defaultValue}
-            onEndEditing={onEndEditing}
+            value={value}
+            onChangeText={onChangeText}
+          />
+        </View>
+      )}
+      {type == 'inputUnit' && (
+        <View style={styles.viewButton}>
+          <TextInput
+            style={{flex: 1}}
+            placeholder={placeholder}
+            keyboardType={keyboardType}
             value={value}
             onChangeText={onChangeText}
           />
@@ -46,14 +49,16 @@ const CustomInputValue = props => {
           )}
         </View>
       )}
-      {type == 'button' && (
-        <TouchableOpacity
-          style={[styles.viewButton, {justifyContent: 'space-between'}]}>
-          <Text style={styles.textUnit}>{value}</Text>
-          <View style={styles.viewUnit}>
-            <Text style={styles.textUnit}>{unit}</Text>
-          </View>
-        </TouchableOpacity>
+      {type == 'inputNote' && (
+        <View style={styles.viewInput}>
+          <TextInput
+            multiline
+            placeholder={placeholder}
+            keyboardType={keyboardType}
+            value={value}
+            onChangeText={onChangeText}
+          />
+        </View>
       )}
     </View>
   );
@@ -67,7 +72,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 1,
     borderRadius: 4,
-    borderColor: '#dadee0',
+    borderColor: '#ACB4B9',
     paddingHorizontal: 10,
     alignItems: 'center',
   },
@@ -80,5 +85,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textUnit: {borderRadius: 5, color: '#374047', fontSize: 13},
+  viewInput: {
+    backgroundColor: 'white',
+    height: 120,
+    paddingHorizontal: 10,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#ACB4B9',
+  },
 });
-export default CustomInputValue;
+export default ComponentInput;

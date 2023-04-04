@@ -9,6 +9,8 @@ const CustomNote = props => {
     title,
     important,
     viewCustom,
+    value,
+    onChangeText,
   } = props;
   return (
     <View style={[styles.container, viewCustom]}>
@@ -23,6 +25,8 @@ const CustomNote = props => {
           placeholder={placeholder}
           defaultValue={defaultValue}
           onEndEditing={onEndEditing}
+          value={value}
+          onChangeText={onChangeText}
         />
       </View>
     </View>

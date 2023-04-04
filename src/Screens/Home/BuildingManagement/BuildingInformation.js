@@ -109,14 +109,15 @@ const BuildingInformation = () => {
           />
           <CustomOptionBT
             title={'Người'}
-            content={`${hauseInfor?.unitTotal}`}
+            content={`${hauseInfor?.unitTotal ?? 0}`}
             icon={icons.ic_men}
             styleImageBG={{tintColor: '#7ace68'}}
             styleBGIcon={{backgroundColor: '#e6f6e2'}}
+            onPress={() => navigation.navigate('TenantManager')}
           />
           <CustomOptionBT
             title={'Sự cố'}
-            content={`${hauseInfor?.issueTotal}`}
+            content={`${hauseInfor?.issueTotal ?? 0}`}
             icon={icons.ic_hammer}
             styleImageBG={{tintColor: '#f5dc00'}}
             styleBGIcon={{backgroundColor: '#fefdd9'}}
@@ -145,7 +146,7 @@ const BuildingInformation = () => {
         </View>
         <BoxShowInfor
           label={'Chi phí thuê'}
-          content={`${hauseInfor?.leasingFee?.toLocaleString()}`}
+          content={`${hauseInfor?.leasingFee?.toLocaleString() ?? 0}`}
           unit={'VNĐ'}
         />
 

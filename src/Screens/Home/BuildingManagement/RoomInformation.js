@@ -45,8 +45,8 @@ const RoomInformation = props => {
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       {loading && <CustomLoading />}
       <CustomAppBarRoomInfor
-        rentMonthlyFee={`${unit?.rentMonthlyFee?.toLocaleString()}`}
-        nameRoom={`${unit?.name}`}
+        rentMonthlyFee={`${unit?.rentMonthlyFee?.toLocaleString() ?? 0}`}
+        nameRoom={`${unit?.name ?? ''}`}
         onPressLeft={() => navigation.goBack()}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
         pressQuickAddRoom={() => navigation.navigate('QuickAddRoom', unit?.id)}
@@ -60,33 +60,33 @@ const RoomInformation = props => {
           <View style={{width: 10}} />
           <BoxShowInfor
             label={'Diện tích'}
-            content={`${unit?.area}`}
+            content={`${unit?.area ?? 0}`}
             unit={'m2'}
           />
         </View>
         <View style={[styles.viewRow, {marginTop: 10}]}>
           <BoxShowInfor
             label={'Số người tối đa'}
-            content={`${unit?.limitTenantNumber}`}
+            content={`${unit?.limitTenantNumber ?? 0}`}
             unit={'Người'}
           />
           <View style={{width: 10}} />
           <BoxShowInfor
             styleView={{marginTop: 10}}
             label={'Loại phòng'}
-            content={`${unit?.roomType}`}
+            content={`${unit?.roomType ?? 0}`}
           />
         </View>
         <View style={[styles.viewRow, {marginTop: 10}]}>
           <BoxShowInfor
             label={'Đặt cọc'}
-            content={`${unit?.depositMoney?.toLocaleString()}`}
+            content={`${unit?.depositMoney?.toLocaleString() ?? 0}`}
             unit={'VNĐ'}
           />
           <View style={{width: 10}} />
           <BoxShowInfor
             label={'Giá'}
-            content={`${unit?.rentMonthlyFee?.toLocaleString()}`}
+            content={`${unit?.rentMonthlyFee?.toLocaleString() ?? 0}`}
             unit={'VNĐ'}
           />
         </View>
@@ -156,10 +156,9 @@ const RoomInformation = props => {
         ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
-          <Text
-            style={
-              styles.pickerTotal
-            }>{`${unit?.chargeServices?.length}`}</Text>
+          <Text style={styles.pickerTotal}>{`${
+            unit?.chargeServices?.length ?? 0
+          }`}</Text>
         </View>
 
         <View style={styles.line} />
@@ -185,7 +184,9 @@ const RoomInformation = props => {
         ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
-          <Text style={styles.pickerTotal}>{`${unit?.amenities?.length}`}</Text>
+          <Text style={styles.pickerTotal}>{`${
+            unit?.amenities?.length ?? 0
+          }`}</Text>
         </View>
 
         <View style={styles.line} />

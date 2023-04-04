@@ -3,12 +3,10 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {
   StyleSheet,
   View,
-  Text,
-  TextInput,
-  Image,
-  KeyboardAvoidingView,
   FlatList,
   Alert,
+  TextInput,
+  ScrollView,
 } from 'react-native';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
@@ -17,14 +15,12 @@ import {icons, colors} from '../../../Constants';
 import ImagePicker from 'react-native-image-crop-picker';
 import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
 import {uuid} from '../../../utils/uuid';
-import CustomInput from '../../../Components/CommonComponent/CustomInput';
 import CustomTimeButtons from '../../../Components/CommonComponent/CustomTimeButton';
 import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppBar';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomModalPicker from '../../../Components/CommonComponent/CustomModalPicker';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
-import {ScrollView} from 'react-native-virtualized-view';
 import {
   GetLocationCitysApi,
   GetDistrictByCityIdApi,
@@ -32,16 +28,14 @@ import {
 } from '../../../Api/Home/BuildingApis/BuildingApis';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
-import {
-  managerState,
-  updateCommon,
-  updateManagers,
-} from '../../../Store/slices/commonSlice';
+import {updateCommon, updateManagers} from '../../../Store/slices/commonSlice';
 import {GetListManagersApi} from '../../../Api/Home/ManagerApis/ManagerApis';
-import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
-import CustomInputValue from '../../../Components/CommonComponent/CustomInputValue';
-import CustomNote from '../../../Components/CommonComponent/CustomNote';
+import {formatNumber, validateNumber} from '../../../utils/common';
+import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
+import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
+import ComponentButton from '../../../Components/CommonComponent/ComponentButton';
+import ComponentRenderImage from '../../../Components/CommonComponent/ComponentRenderImage';
 
 const AddBuildings = props => {
   const navigation = useNavigation();
@@ -178,27 +172,13 @@ const AddBuildings = props => {
       });
   };
 
-  const renderImage = (item, index) => {
-    return (
-      <RenderImage
-        deleteButton={true}
-        data={item}
-        deleteItem={() => {
-          let result = [...hauseImages];
-          let newResult = result.filter(itemResult => itemResult !== item);
-          setHauseImages(newResult);
-        }}
-      />
-    );
-  };
-
   const goToStepTwo = () => {
     let data = {
       name: name,
       numberOfFloor: parseInt(numberOfFloor),
       openTime: `${openTime}`,
       closeTime: `${closeTime}`,
-      leasingFee: parseInt(leasingFee),
+      leasingFee: parseInt(validateNumber(leasingFee)),
       description: description,
       cityId: cityId,
       districtId: districtId,
@@ -216,11 +196,9 @@ const AddBuildings = props => {
       navigation.navigate('AddBuildingsStep2');
     }
   };
-  const [value, setValue] = useState();
 
-  console.log(value);
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={styles.container}>
       {loading && <CustomLoading />}
       {modalCamera && (
         <CustomModalCamera
@@ -302,41 +280,33 @@ const AddBuildings = props => {
         pressIconLeft={() => navigation.goBack()}
         step={1}
       />
-      <TextInput
-        keyboardType="number-pad"
-        defaultValue={value?.key}
-        onChangeText={e => {
-          let amount = new Intl.NumberFormat({
-            style: 'currency',
-            currency: 'EUR',
-          }).format(e);
-          setValue(amount);
-        }}
-      />
+
       <ScrollView
-        keyboardShouldPersistTaps={'always'}
+        nestedScrollEnabled={true}
+        keyboardDismissMode="none"
         style={[styles.eachContainer]}>
         <CustomSuggest
           label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
         />
         <CustomTextTitle label={'Thông tin tòa nhà'} />
-        <CustomInput
+
+        <ComponentInput
           important={true}
           type={'input'}
           title={'Tên tòa nhà'}
           placeholder={'Nhập tên tòa nhà'}
-          defaultValue={name}
-          onEndEditing={evt => setName(evt.nativeEvent.text)}
+          value={name}
+          onChangeText={text => setName(text)}
         />
-        <CustomInput
+        <ComponentInput
           important={true}
-          keyboardType={'numeric'}
           type={'input'}
-          styleViewInput={{marginTop: 10}}
           title={'Số tầng'}
           placeholder={'Nhập số tầng'}
-          defaultValue={numberOfFloor}
-          onEndEditing={evt => setNumberOfFloor(evt.nativeEvent.text)}
+          keyboardType={'number-pad'}
+          viewComponent={{marginTop: 10}}
+          value={numberOfFloor}
+          onChangeText={text => setNumberOfFloor(text)}
         />
 
         <CustomTimeButtons
@@ -351,92 +321,80 @@ const AddBuildings = props => {
           onPressLeft={() => setModalopenTime(true)}
           onPressRightt={() => setModalcloseTime(true)}
         />
-        <CustomInputValue
-          viewContainer={{marginTop: 10}}
-          type={'input'}
-          label={'Chi phí thuê nhà'}
+        <ComponentInput
           important={true}
+          type={'inputUnit'}
+          title={'Chi phí thuê nhà'}
           unit={'VNĐ'}
           placeholder={'Nhập chi phí thuê nhà'}
-          keyboardType={'numeric'}
-          // value={leasingFee?.key}
-          defaultValue={
-            leasingFee ? `${parseInt(leasingFee)?.toLocaleString()}` : ''
-          }
-          onChangeText={text => {
-            setLeasingFee(text);
-          }}
+          keyboardType={'number-pad'}
+          viewComponent={{marginTop: 10}}
+          value={`${formatNumber(leasingFee)}`}
+          onChangeText={text => setLeasingFee(text)}
         />
-
-        <CustomNote
+        <ComponentInput
+          type={'inputNote'}
           title={'Mô tả'}
           placeholder={'Nhập mô tả cho tòa nhà'}
-          defaultValue={description}
-          onEndEditing={evt => setDescription(evt.nativeEvent.text)}
+          viewComponent={{marginTop: 10}}
+          value={description}
+          onChangeText={text => setDescription(text)}
         />
 
-        <View style={styles.line} />
+        {StraightLine()}
         <CustomTextTitle label={'Địa chỉ tòa nhà'} />
-        <CustomInput
-          type={'button'}
-          styleViewInput={{marginTop: 10}}
+        <ComponentButton
+          important={true}
+          type={'buttonSelect'}
+          viewComponent={{marginTop: 10}}
           title={'Tỉnh/ Thành phố'}
           placeholder={'Chọn Tỉnh/ Thành phố'}
           value={cityName}
           onPress={() => setModalCity(true)}
         />
-        <CustomInput
-          type={'button'}
-          styleViewInput={{marginTop: 10}}
+        <ComponentButton
+          important={true}
+          type={'buttonSelect'}
+          viewComponent={{marginTop: 10}}
           title={'Quận/ Huyện'}
           placeholder={'Chọn Quận/ Huyện'}
           value={districtName}
           onPress={() => setModalDistrict(true)}
         />
-        <CustomInput
-          type={'button'}
-          styleViewInput={{marginTop: 10}}
+        <ComponentButton
+          important={true}
+          type={'buttonSelect'}
+          viewComponent={{marginTop: 10}}
           title={'Phường/ Xã'}
           placeholder={'Chọn Phường/ Xã'}
           value={wardName}
           onPress={() => setModalWard(true)}
         />
 
-        <CustomNote
+        <ComponentInput
+          type="inputNote"
           title={'Địa chỉ cụ thể'}
           placeholder={'Nhập địa chỉ cụ thể'}
-          defaultValue={address}
-          onEndEditing={evt => setAddress(evt.nativeEvent.text)}
+          viewComponent={{marginTop: 10}}
+          value={address}
+          onChangeText={text => setAddress(text)}
         />
 
-        <View style={styles.line} />
-
-        <CustomTextTitle label={'Thêm ảnh tòa nhà'} />
-        <View style={styles.viewUploadImage}>
-          {hauseImages.length > 0 ? (
-            <FlatList
-              horizontal
-              data={hauseImages}
-              keyExtractor={uuid}
-              renderItem={({item}) => renderImage(item)}
-            />
-          ) : (
-            <CustomButton
-              styleButton={{flex: 1}}
-              label={'Tải lên ảnh đại diện tòa nhà'}
-              styleLabel={[styles.title, {marginTop: 5}]}
-              disabled={true}
-              icon={icons.ic_upload}
-              styleIcon={{with: 100, height: 100, alignSelf: 'center'}}
-            />
-          )}
-        </View>
-        <CustomButton
-          styleButton={[styles.buttonUploadIM]}
+        {StraightLine()}
+        <ComponentRenderImage
+          title={'Thêm ảnh tòa nhà'}
           label={'Tải lên ảnh đại diện tòa nhà'}
-          styleLabel={styles.labelUploadIM}
-          onPress={() => setModalCamera(true)}
+          labelUpload={'Tải lên ảnh tòa nhà'}
+          data={hauseImages}
+          deleteButton={true}
+          openModal={() => setModalCamera(true)}
+          deleteItem={item => {
+            let result = [...hauseImages];
+            let newResult = result.filter(itemResult => itemResult !== item);
+            setHauseImages(newResult);
+          }}
         />
+
         <View style={{marginBottom: 56}} />
         <CustomTwoButtonBottom
           leftLabel={'Hủy'}
@@ -450,58 +408,13 @@ const AddBuildings = props => {
 };
 
 const styles = StyleSheet.create({
+  container: {flex: 1},
   eachContainer: {
     flex: 1,
     paddingHorizontal: 10,
     paddingTop: 10,
     backgroundColor: colors.backgroundGrey,
   },
-  content: {color: 'grey', fontSize: 12},
-  viewTime: {
-    height: 32,
-    paddingHorizontal: 3,
-    backgroundColor: '#ebedee',
-    borderRadius: 4,
-  },
-  time: {
-    borderRadius: 5,
-    color: '#50595f',
-    fontSize: 14,
-  },
-  title: {fontSize: 13, color: 'grey'},
-  viewRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  viewTextInput: {
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    marginTop: 5,
-    borderRadius: 10,
-    borderColor: '#e2e5e6',
-    height: 120,
-    backgroundColor: 'white',
-  },
-  line: {
-    width: '100%',
-    height: 0.5,
-    backgroundColor: 'black',
-    marginVertical: 20,
-    alignSelf: 'center',
-  },
-  viewUploadImage: {
-    height: 220,
-    marginVertical: 5,
-    borderRadius: 10,
-    backgroundColor: 'white',
-  },
-  buttonUploadIM: {
-    height: 50,
-    backgroundColor: colors.mainColor,
-    borderRadius: 10,
-  },
-  labelUploadIM: {color: 'white', fontWeight: '500', fontSize: 15},
 });
 
 export default AddBuildings;

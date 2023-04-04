@@ -1,27 +1,15 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  KeyboardAvoidingView,
-  FlatList,
-} from 'react-native';
+import {StyleSheet, View, ScrollView, KeyboardAvoidingView} from 'react-native';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTimeButtons from '../../../Components/CommonComponent/CustomTimeButton';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomButtonValue from '../../../Components/CommonComponent/CustomButtonValue';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   bankAccountState,
   commonState,
-  updateBankAccounts,
   updateCommon,
 } from '../../../Store/slices/commonSlice';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
@@ -29,6 +17,7 @@ import CustomPickerDay from '../../../Components/CommonComponent/CustomPickerDay
 import {BILLINGDATE, PAYMENTDATE} from '../../../Resource/DataPicker';
 import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppBar';
 import CustomBankAccountInfor from '../../../Components/ComponentHome/BankAccount/CustomBankAccountInfor';
+import ComponentButton from '../../../Components/CommonComponent/ComponentButton';
 
 const AddBuildingsStep2 = props => {
   const navigation = useNavigation();
@@ -38,8 +27,8 @@ const AddBuildingsStep2 = props => {
   const [bank, setBank] = useState(null);
 
   const [billingDate, setBillingDate] = useState(BILLINGDATE[0]);
-  const [paymentDateFrom, setPaymentDateFrom] = useState(PAYMENTDATEFROM[0]);
-  const [paymentDateTo, setPaymentDateTo] = useState(PAYMENTDATETO[4]);
+  const [paymentDateFrom, setPaymentDateFrom] = useState(PAYMENTDATE[0]);
+  const [paymentDateTo, setPaymentDateTo] = useState(PAYMENTDATE[4]);
   const [bankAccountId, setBankAccountId] = useState([]);
 
   const [modalbillingDate, setModalbillingDate] = useState(false);
@@ -108,17 +97,20 @@ const AddBuildingsStep2 = props => {
           pressIconLeft={() => navigation.goBack()}
           step={2}
         />
-        <ScrollView style={[styles.eachContainer]}>
+        <ScrollView
+          nestedScrollEnabled={true}
+          keyboardDismissMode="none"
+          style={[styles.eachContainer]}>
           <CustomSuggest
             label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
           />
 
           <CustomTextTitle label={'Thiết lập tiền nhà'} />
 
-          <CustomButtonValue
+          <ComponentButton
+            type={'buttonValue'}
             important={true}
             icon={icons.ic_down}
-            type={'button'}
             title={'Ngày chốt tiền'}
             placeholder={'Chọn ngày'}
             value={billingDate?.key}
