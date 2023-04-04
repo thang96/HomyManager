@@ -1,5 +1,5 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {StyleSheet, View, Text, TextInput, FlatList} from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
@@ -33,15 +33,13 @@ const AddBuildingsStep3 = props => {
   const amenitySelect = useSelector(amenityState);
   const tokenStore = useSelector(token);
 
-  const [serviceIds, setServiceIds] = useState([]);
-  const [amenityIds, setAmenityIds] = useState([]);
   const [notice, setNotice] = useState('');
   const [billNotice, setBillNotice] = useState('');
 
   const [listService, setListService] = useState([]);
   const [listAmenity, setListAmenity] = useState([]);
 
-  useEffect(() => {
+  useMemo(() => {
     let eachService = [];
     if (serviceSelect.length > 0) {
       serviceSelect.map((item, index) => {
@@ -51,6 +49,9 @@ const AddBuildingsStep3 = props => {
       });
       setListService(eachService);
     }
+  }, [serviceSelect]);
+
+  useMemo(() => {
     let eachAmenityIds = [];
     if (amenitySelect.length > 0) {
       amenitySelect.map((item, index) => {
@@ -60,35 +61,15 @@ const AddBuildingsStep3 = props => {
       });
       setListAmenity(eachAmenityIds);
     }
-  }, [serviceSelect, amenitySelect]);
-
-  useEffect(() => {
-    const setListData = () => {
-      let eachServiceIds = [];
-      let eachAmenityIds = [];
-      listService.map((item, index) => {
-        eachServiceIds.push(item?.id);
-      });
-      listAmenity.map((item, index) => {
-        eachAmenityIds.push(item?.id);
-      });
-      setServiceIds(eachServiceIds);
-      setAmenityIds(eachAmenityIds);
-    };
-    setListData();
-  }, [listService, listAmenity]);
+  }, [amenitySelect]);
 
   const renderPaidSevice = (item, index) => {
     return (
-      <View>
-        {item?.isCheck == true && (
-          <RenderService
-            name={item?.name}
-            fee={item?.fee}
-            calculateUnit={item?.calculateUnit}
-          />
-        )}
-      </View>
+      <RenderService
+        name={item?.name}
+        fee={item?.fee}
+        calculateUnit={item?.calculateUnit}
+      />
     );
   };
 
@@ -99,10 +80,18 @@ const AddBuildingsStep3 = props => {
   const createNewBuilding = async () => {
     setModalNotify(false);
     setLoadingStep3(true);
+    let eachServiceIds = [];
+    let eachAmenityIds = [];
+    listService.map((item, index) => {
+      eachServiceIds.push(item?.id);
+    });
+    listAmenity.map((item, index) => {
+      eachAmenityIds.push(item?.id);
+    });
     let data = {
       ...createBuildingInfor,
-      serviceIds: serviceIds,
-      amenityIds: amenityIds,
+      serviceIds: eachServiceIds,
+      amenityIds: eachAmenityIds,
       notice: notice,
       billNotice: billNotice,
     };
@@ -115,7 +104,7 @@ const AddBuildingsStep3 = props => {
             await PostImageBuildingApi(tokenStore, hauseId, hauseImages)
               .then(res => {
                 if (res?.status == 200) {
-                  dispatch(updateStatus(false));
+                  dispatch(updateStatus('updateHouse'));
                   setLoadingStep3(false);
                   navigation.navigate('BuildingManager');
                 }
@@ -123,6 +112,10 @@ const AddBuildingsStep3 = props => {
               .catch(error => {
                 alert(error);
               });
+          } else {
+            dispatch(updateStatus(false));
+            setLoadingStep3(false);
+            navigation.navigate('BuildingManager');
           }
         }
       })

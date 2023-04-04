@@ -26,11 +26,7 @@ import {
 } from '../../../Store/slices/commonSlice';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 import CustomPickerDay from '../../../Components/CommonComponent/CustomPickerDay';
-import {
-  BILLINGDATE,
-  PAYMENTDATEFROM,
-  PAYMENTDATETO,
-} from '../../../Resource/DataPicker';
+import {BILLINGDATE, PAYMENTDATE} from '../../../Resource/DataPicker';
 import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppBar';
 import CustomBankAccountInfor from '../../../Components/ComponentHome/BankAccount/CustomBankAccountInfor';
 
@@ -81,7 +77,7 @@ const AddBuildingsStep2 = props => {
       )}
       {modalpaymentDateTo && (
         <CustomPickerDay
-          data={PAYMENTDATETO}
+          data={PAYMENTDATE}
           modalVisible={modalpaymentDateTo}
           onRequestClose={() => setModalpaymentDateTo(false)}
           onPress={item => {
@@ -92,7 +88,7 @@ const AddBuildingsStep2 = props => {
       )}
       {modalpaymentDateFrom && (
         <CustomPickerDay
-          data={PAYMENTDATEFROM}
+          data={PAYMENTDATE}
           modalVisible={modalpaymentDateFrom}
           onRequestClose={() => setModalpaymentDateFrom(false)}
           onPress={item => {

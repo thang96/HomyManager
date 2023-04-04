@@ -58,7 +58,7 @@ const RenderService = props => {
 };
 const styles = StyleSheet.create({
   viewContainer: {
-    height: 52,
+    minHeight: 52,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -70,12 +70,11 @@ const styles = StyleSheet.create({
     margin: 2.5,
     backgroundColor: 'white',
     borderRadius: 4,
-    paddingLeft: 5,
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // icon: {width: 30, height: 30, marginHorizontal: 5},
   iconService: {
     width: 15,
     height: 15,

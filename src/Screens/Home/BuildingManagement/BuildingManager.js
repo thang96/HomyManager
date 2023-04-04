@@ -20,25 +20,17 @@ import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle
 import {colors, icons, images} from '../../../Constants';
 import {token} from '../../../Store/slices/tokenSlice';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
+import useKeyboard from '../../../Hook/useKeyboard';
 
 const BuildingManager = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const loadingHause = useSelector(statusState);
-  const [keyboard, setKeyboard] = useState(false);
+  const keyboard = useKeyboard();
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
   const [listHauses, setListHauses] = useState([]);
   const tokenStore = useSelector(token);
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboard(true);
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboard(false);
-    });
-  }, []);
 
   useEffect(() => {
     const getData = async () => {
@@ -74,6 +66,7 @@ const BuildingManager = () => {
 
   return (
     <View style={styles.container}>
+      {loading && <CustomLoading />}
       <CustomSearchAppBar
         iconLeft={icons.ic_back}
         label={'Quản lý tòa nhà'}

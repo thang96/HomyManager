@@ -666,7 +666,7 @@ const EditHouseInformation = props => {
             style={{justifyContent: 'space-between'}}
             horizontal={false}
             scrollEnabled={false}
-            numColumns={3}
+            numColumns={2}
             keyExtractor={(key, index) => `listAmenity${index.toString()}`}
             data={hauseInfor?.amenities}
             renderItem={({item, index}) => renderFreeSevice(item, index)}

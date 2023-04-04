@@ -20,7 +20,7 @@ const RenderAmenity = props => {
           disabled={disabled}
           onPress={onPress}
           style={{flex: 1}}>
-          <Text numberOfLines={2} style={[styles.text]}>
+          <Text numberOfLines={1} style={[styles.text]}>
             {label}
           </Text>
         </TouchableOpacity>
@@ -48,7 +48,13 @@ const styles = StyleSheet.create({
     margin: 2,
   },
   styleIcon: {width: 12, height: 12, tintColor: 'white', marginLeft: 3},
-  text: {fontSize: 12, fontWeight: '400', color: colors.mainColor},
+  text: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: colors.mainColor,
+    textAlign: 'center',
+    alignSelf: 'center',
+  },
   iconDelete: {
     width: 15,
     height: 15,

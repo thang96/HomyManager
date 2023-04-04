@@ -1,6 +1,13 @@
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import BoxShowInfor from '../../../Components/CommonComponent/BoxShowInfor';
@@ -95,7 +102,7 @@ const BuildingInformation = () => {
           />
           <CustomOptionBT
             title={'Trống'}
-            content={`${hauseInfor?.emptyUnitTotal}`}
+            content={`${hauseInfor?.emptyUnitTotal ?? 0}`}
             icon={icons.ic_key}
             styleImageBG={{tintColor: '#ff8d37'}}
             styleBGIcon={{backgroundColor: '#fff3e9'}}

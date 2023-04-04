@@ -32,7 +32,6 @@ const HomeScreen = () => {
   const widthImage = Dimensions.get('window').width / 2 - 20;
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
-
   const keyboard = useKeyboard();
 
   useEffect(() => {

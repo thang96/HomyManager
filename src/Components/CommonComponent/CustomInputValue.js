@@ -19,6 +19,7 @@ const CustomInputValue = props => {
     value,
     defaultValue,
     onEndEditing,
+    onChangeText,
   } = props;
   return (
     <View style={viewContainer}>
@@ -35,6 +36,8 @@ const CustomInputValue = props => {
             keyboardType={keyboardType}
             defaultValue={defaultValue}
             onEndEditing={onEndEditing}
+            value={value}
+            onChangeText={onChangeText}
           />
           <View style={styles.viewUnit}>
             <Text style={styles.textUnit}>{unit}</Text>

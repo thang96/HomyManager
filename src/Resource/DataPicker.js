@@ -1,14 +1,12 @@
 export const BILLINGDATE = [
   {
+    key: 'Đầu tháng',
+    value: -1,
+  },
+  {
     key: 'Cuối tháng',
     value: 0,
   },
-  {
-    key: 'Ngày 1 tháng sau',
-    value: -1,
-  },
-];
-export const PAYMENTDATEFROM = [
   {
     key: 'Ngày 1',
     value: 1,
@@ -130,7 +128,7 @@ export const PAYMENTDATEFROM = [
     value: 30,
   },
 ];
-export const PAYMENTDATETO = [
+export const PAYMENTDATE = [
   {
     key: 'Ngày 1',
     value: 1,

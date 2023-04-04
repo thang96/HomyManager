@@ -148,7 +148,13 @@ const AddRoom = () => {
   }, [listService, listAmenity]);
 
   const renderPaidSevice = (item, index) => {
-    return <RenderService label={item?.name} value={item?.fee} />;
+    return (
+      <RenderService
+        name={item?.name}
+        fee={`${item?.fee}`}
+        calculateUnit={item?.calculateUnit}
+      />
+    );
   };
 
   const renderFreeSevice = (item, index) => {
@@ -341,7 +347,7 @@ const AddRoom = () => {
           styleViewInput={{marginTop: 10}}
           title={'Giá thuê phòng'}
           placeholder={'Nhập giá thuê phòng'}
-          defaultValue={rentMonthlyFee}
+          defaultValue={`${rentMonthlyFee}`}
           onEndEditing={event => setRentMonthlyFee(event.nativeEvent.text)}
         />
         <CustomInput
@@ -531,7 +537,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     marginVertical: 20,
   },
-  textPicker: {fontSize: 15, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
+  textPicker: {fontSize: 11, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
   pickerTotal: {
     fontSize: 15,
     color: 'rgba(254, 122, 55, 1)',

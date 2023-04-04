@@ -143,7 +143,7 @@ const InvoiceDetail = props => {
           <View style={styles.viewBetween}>
             <Text style={styles.label}>Tiền phòng</Text>
             <Text style={styles.label}>
-              {`${invoice?.contract?.unit?.rentMonthlyFee.toLocaleString()}`}
+              {`${invoice?.leasingFee?.toLocaleString()}`}
             </Text>
           </View>
 

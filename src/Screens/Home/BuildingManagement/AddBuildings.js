@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -46,10 +46,8 @@ import CustomNote from '../../../Components/CommonComponent/CustomNote';
 const AddBuildings = props => {
   const navigation = useNavigation();
   const tokenStore = useSelector(token);
-  const managerRedux = useSelector(managerState);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const [managerSelect, setManagerSelect] = useState([]);
 
   const [name, setName] = useState('');
   const [numberOfFloor, setNumberOfFloor] = useState('');
@@ -110,18 +108,7 @@ const AddBuildings = props => {
         .catch(error => console.log(error));
     };
     getData();
-  }, [tokenStore]);
-
-  useEffect(() => {
-    let eachManager = [];
-    for (let index = 0; index < managerRedux.length; index++) {
-      const element = managerRedux[index];
-      if (element?.isCheck == true) {
-        eachManager.push(element);
-      }
-    }
-    setManagerSelect(eachManager);
-  }, [managerRedux]);
+  }, []);
 
   const getDistrictData = async item => {
     setCityName(item?.name);
@@ -229,6 +216,9 @@ const AddBuildings = props => {
       navigation.navigate('AddBuildingsStep2');
     }
   };
+  const [value, setValue] = useState();
+
+  console.log(value);
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       {loading && <CustomLoading />}
@@ -312,8 +302,20 @@ const AddBuildings = props => {
         pressIconLeft={() => navigation.goBack()}
         step={1}
       />
-
-      <ScrollView style={[styles.eachContainer]}>
+      <TextInput
+        keyboardType="number-pad"
+        defaultValue={value?.key}
+        onChangeText={e => {
+          let amount = new Intl.NumberFormat({
+            style: 'currency',
+            currency: 'EUR',
+          }).format(e);
+          setValue(amount);
+        }}
+      />
+      <ScrollView
+        keyboardShouldPersistTaps={'always'}
+        style={[styles.eachContainer]}>
         <CustomSuggest
           label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
         />
@@ -357,8 +359,13 @@ const AddBuildings = props => {
           unit={'VNĐ'}
           placeholder={'Nhập chi phí thuê nhà'}
           keyboardType={'numeric'}
-          defaultValue={`${leasingFee}`}
-          onEndEditing={event => setLeasingFee(event.nativeEvent.text)}
+          // value={leasingFee?.key}
+          defaultValue={
+            leasingFee ? `${parseInt(leasingFee)?.toLocaleString()}` : ''
+          }
+          onChangeText={text => {
+            setLeasingFee(text);
+          }}
         />
 
         <CustomNote
