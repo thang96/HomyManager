@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import {ScrollView} from 'react-native-virtualized-view';
@@ -36,6 +37,7 @@ const FloorInformation = () => {
   const statusLoading = useSelector(statusState);
 
   useEffect(() => {
+    setLoading(true);
     const getListUnit = async () => {
       await HauseDetailApi(tokenStore, hauseId)
         .then(async res => {
@@ -52,7 +54,7 @@ const FloorInformation = () => {
         .catch(error => console.log(error));
     };
     getListUnit();
-  }, [hauseId, statusLoading]);
+  }, [statusLoading]);
 
   useEffect(() => {
     const getData = async () => {
@@ -83,7 +85,6 @@ const FloorInformation = () => {
             <CustomTextTitle
               viewTitle={{paddingHorizontal: 10}}
               label={`Tầng ${item?.floorNumber}`}
-              labelButton={'Thêm phòng'}
             />
             <FlatList
               numColumns={2}
@@ -119,27 +120,32 @@ const FloorInformation = () => {
         onPressLeft={() => navigation.goBack()}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
       />
+      {loading ? (
+        <ActivityIndicator color={colors.mainColor} size={'large'} />
+      ) : (
+        <>
+          <ScrollView style={{paddingHorizontal: 5, paddingTop: 10}}>
+            {listFloors.length > 0 ? (
+              <FlatList
+                numColumns={1}
+                data={listFloors}
+                keyExtractor={(key, index) => index.toString()}
+                renderItem={({item, index}) => renderListFloor(item, index)}
+              />
+            ) : null}
 
-      <ScrollView style={{paddingHorizontal: 5, paddingTop: 10}}>
-        {listFloors.length > 0 ? (
-          <FlatList
-            numColumns={1}
-            data={listFloors}
-            keyExtractor={(key, index) => index.toString()}
-            renderItem={({item, index}) => renderListFloor(item, index)}
+            <View style={{height: 56}} />
+          </ScrollView>
+          <CustomButtonBottom
+            styleButton={{backgroundColor: colors.mainColor}}
+            label={'Thêm phòng'}
+            onPress={() => {
+              dispatch(updateStatus(false));
+              navigation.navigate('AddRoom', route.params);
+            }}
           />
-        ) : null}
-
-        <View style={{height: 56}} />
-      </ScrollView>
-      <CustomButtonBottom
-        styleButton={{backgroundColor: colors.mainColor}}
-        label={'Thêm tầng mới'}
-        onPress={() => {
-          dispatch(updateStatus(false));
-          navigation.navigate('AddRoom', route.params);
-        }}
-      />
+        </>
+      )}
     </View>
   );
 };

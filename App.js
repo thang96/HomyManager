@@ -12,6 +12,7 @@ import {Provider} from 'react-redux';
 import {store} from './src/Store/store';
 import MainNavigation from './src/Navigations/MainNavigation';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {

@@ -58,7 +58,7 @@ const RenderService = props => {
 };
 const styles = StyleSheet.create({
   viewContainer: {
-    minHeight: 52,
+    height: 60,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

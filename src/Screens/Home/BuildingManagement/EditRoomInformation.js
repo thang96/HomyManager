@@ -42,7 +42,10 @@ import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNo
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import CustomPickerDay from '../../../Components/CommonComponent/CustomPickerDay';
 import {UNITTYPE} from '../../../Resource/DataPicker';
-import {PostImageUnitApi} from '../../../Api/Home/FileDataApis/FileDataApis';
+import {
+  DeleteImageApi,
+  PostImageUnitApi,
+} from '../../../Api/Home/FileDataApis/FileDataApis';
 
 const EditRoomInformation = () => {
   const navigation = useNavigation();
@@ -215,14 +218,56 @@ const EditRoomInformation = () => {
         deleteButton={true}
         data={item}
         deleteItem={() => {
-          let result = [...unit?.images];
-          let newResult = result.filter(itemResult => itemResult !== item);
-          let eachResult = {...unit, images: newResult};
-          setUnit(eachResult);
+          if (item?.id) {
+            Alert.alert(
+              'Cảnh báo !',
+              'Đây là ảnh đang có trên server, bạn có muốn xóa ?',
+              [
+                {text: 'Cancel', style: 'cancel'},
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    let result = [...unit?.images];
+                    let newResult = result.filter(
+                      itemResult => itemResult !== item,
+                    );
+                    let eachResult = {...unit, images: newResult};
+                    setUnit(eachResult);
+                    deleteImage(item?.id);
+                  },
+                },
+              ],
+            );
+          } else {
+            let eachAlbumImg = [...unitImages];
+            let newAlbumImg = eachAlbumImg.filter(
+              itemResult => itemResult !== item,
+            );
+            setUnitImages(newAlbumImg);
+
+            let result = [...unit?.images];
+            let newResult = result.filter(itemResult => itemResult !== item);
+            let eachResult = {...unit, images: newResult};
+            setUnit(eachResult);
+          }
         }}
       />
     );
   };
+
+  const deleteImage = async imageId => {
+    setLoadingRoom(true);
+    await DeleteImageApi(tokenStore, imageId)
+      .then(res => {
+        if (res?.status == 200) {
+          setLoadingRoom(false);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   const createNewUnit = async () => {
     setModalAddRoom(false);
     setLoadingRoom(true);
@@ -243,17 +288,23 @@ const EditRoomInformation = () => {
     await PutUnitApi(tokenStore, unitId, data)
       .then(async res => {
         if (res?.status == 200) {
-          await PostImageUnitApi(tokenStore, unitId, unitImages)
-            .then(res => {
-              if (res?.status == 200) {
-                dispatch(updateStatus(false));
-                setLoadingRoom(false);
-                navigation.navigate('FloorInformation', hause?.id);
-              }
-            })
-            .catch(error => {
-              console.log(error, 'img');
-            });
+          if (unitImages?.length > 0) {
+            await PostImageUnitApi(tokenStore, unitId, unitImages)
+              .then(res => {
+                if (res?.status == 200) {
+                  dispatch(updateStatus(updateRoomInfor));
+                  setLoadingRoom(false);
+                  navigation.navigate('FloorInformation', hause?.id);
+                }
+              })
+              .catch(error => {
+                console.log(error, 'img');
+              });
+          } else {
+            dispatch(updateStatus('updateRoomInfor'));
+            setLoadingRoom(false);
+            navigation.navigate('FloorInformation', hause?.id);
+          }
         }
       })
       .catch(error => {

@@ -66,7 +66,7 @@ const CustomAppBarRoomInfor = props => {
         <View
           style={{flexDirection: 'row', alignItems: 'center', marginTop: 5}}>
           <CustomButton
-            label={'Thêm phòng nhanh'}
+            label={'Sao chép phòng'}
             icon={icons.ic_plus}
             styleButton={[
               {backgroundColor: colors.backgroundOrange, marginRight: 10},

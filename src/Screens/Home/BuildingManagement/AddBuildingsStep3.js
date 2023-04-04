@@ -1,7 +1,13 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {StyleSheet, View, Text, TextInput, FlatList} from 'react-native';
-import {ScrollView} from 'react-native-virtualized-view';
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  ScrollView,
+  LogBox,
+} from 'react-native';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
@@ -12,6 +18,9 @@ import {
   commonState,
   serviceState,
   amenityState,
+  updateAmenity,
+  updateServices,
+  updateTenants,
 } from '../../../Store/slices/commonSlice';
 import {token} from '../../../Store/slices/tokenSlice';
 import RenderService from '../../../Components/ComponentHome/RenderService';
@@ -21,7 +30,7 @@ import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppB
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import {updateStatus} from '../../../Store/slices/statusSlice';
 import {PostImageBuildingApi} from '../../../Api/Home/FileDataApis/FileDataApis';
-import CustomNote from '../../../Components/CommonComponent/CustomNote';
+import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
 
 const AddBuildingsStep3 = props => {
   const navigation = useNavigation();
@@ -38,6 +47,12 @@ const AddBuildingsStep3 = props => {
 
   const [listService, setListService] = useState([]);
   const [listAmenity, setListAmenity] = useState([]);
+
+  useEffect(() => {
+    LogBox.ignoreAllLogs();
+    dispatch(updateAmenity([]));
+    dispatch(updateServices([]));
+  }, []);
 
   useMemo(() => {
     let eachService = [];
@@ -113,7 +128,7 @@ const AddBuildingsStep3 = props => {
                 alert(error);
               });
           } else {
-            dispatch(updateStatus(false));
+            dispatch(updateStatus('updateHouse'));
             setLoadingStep3(false);
             navigation.navigate('BuildingManager');
           }
@@ -145,7 +160,10 @@ const AddBuildingsStep3 = props => {
         step={3}
       />
 
-      <ScrollView style={[styles.eachContainer]}>
+      <ScrollView
+        nestedScrollEnabled={true}
+        keyboardDismissMode="none"
+        style={styles.eachContainer}>
         <CustomSuggest
           label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
         />
@@ -156,18 +174,21 @@ const AddBuildingsStep3 = props => {
           icon={icons.ic_plus}
           onPress={() => navigation.navigate('Service')}
         />
-
-        {listService.length > 0 ? (
-          <FlatList
-            listKey="listService"
-            horizontal={false}
-            scrollEnabled={false}
-            numColumns={2}
-            keyExtractor={key => `${key?.id}`}
-            data={listService}
-            renderItem={({item, index}) => renderPaidSevice(item, index)}
-          />
-        ) : null}
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {listService.length > 0 ? (
+              <FlatList
+                listKey="listService"
+                horizontal={false}
+                scrollEnabled={false}
+                numColumns={2}
+                keyExtractor={key => `${key?.id}`}
+                data={listService}
+                renderItem={({item, index}) => renderPaidSevice(item, index)}
+              />
+            ) : null}
+          </ScrollView>
+        </View>
 
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
@@ -182,19 +203,22 @@ const AddBuildingsStep3 = props => {
           icon={icons.ic_plus}
           onPress={() => navigation.navigate('Utilities')}
         />
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {listAmenity.length > 0 ? (
+              <FlatList
+                listKey="listAmenity"
+                horizontal={false}
+                scrollEnabled={false}
+                numColumns={2}
+                keyExtractor={key => `${key?.id}`}
+                data={listAmenity}
+                renderItem={({item, index}) => renderFreeSevice(item, index)}
+              />
+            ) : null}
+          </ScrollView>
+        </View>
 
-        {listAmenity.length > 0 ? (
-          <FlatList
-            listKey="listAmenity"
-            style={{justifyContent: 'space-between'}}
-            horizontal={false}
-            scrollEnabled={false}
-            numColumns={3}
-            keyExtractor={key => `${key?.id}`}
-            data={listAmenity}
-            renderItem={({item, index}) => renderFreeSevice(item, index)}
-          />
-        ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
           <Text style={styles.pickerTotal}>{`${listAmenity.length}`}</Text>
@@ -204,18 +228,20 @@ const AddBuildingsStep3 = props => {
 
         <CustomTextTitle label={'Lưu ý'} />
 
-        <CustomNote
+        <ComponentInput
+          type={'inputNote'}
           title={'Lưu ý của tòa nhà'}
           placeholder={'Nhập lưu ý của tòa nhà'}
-          defaultValue={notice}
-          onEndEditing={evt => setNotice(evt.nativeEvent.text)}
+          value={notice}
+          onChangeText={text => setNotice(text)}
         />
-
-        <CustomNote
+        <ComponentInput
+          viewComponent={{marginTop: 10}}
+          type={'inputNote'}
           title={'Ghi chú hóa đơn'}
           placeholder={'Nhập ghi chú hóa đơn'}
-          defaultValue={billNotice}
-          onEndEditing={evt => setBillNotice(evt.nativeEvent.text)}
+          value={billNotice}
+          onChangeText={text => setBillNotice(text)}
         />
 
         <View style={{marginBottom: 56}} />

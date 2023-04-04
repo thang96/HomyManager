@@ -16,12 +16,13 @@ const CustomTimeButtons = props => {
     onPressRightt,
     iconLeft,
     iconRight,
+    important,
   } = props;
   return (
     <View style={styleContainer}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Text style={styles.label}>{title}</Text>
-        <Text style={{color: 'red', fontSize: 14}}> *</Text>
+        {important && <Text style={{color: 'red', fontSize: 14}}> *</Text>}
       </View>
       <View style={[styles.viewRow, {marginTop: 5}]}>
         {leftLabel && (

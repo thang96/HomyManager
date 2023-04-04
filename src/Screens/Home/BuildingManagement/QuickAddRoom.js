@@ -243,7 +243,7 @@ const QuickAddRoom = () => {
             await PostImageUnitApi(tokenStore, unitId, unitImages)
               .then(res => {
                 if (res?.status == 200) {
-                  dispatch(updateStatus(true));
+                  dispatch(updateStatus('updateRoom'));
                   navigation.navigate('FloorInformation', hause?.id);
                   setLoadingRoom(false);
                 }
@@ -251,6 +251,10 @@ const QuickAddRoom = () => {
               .catch(error => {
                 console.log(error, 'postimg');
               });
+          } else {
+            dispatch(updateStatus('updateRoom'));
+            navigation.navigate('FloorInformation', hause?.id);
+            setLoadingRoom(false);
           }
         }
       })
