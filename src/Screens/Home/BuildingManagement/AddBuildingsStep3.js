@@ -20,7 +20,6 @@ import {
   amenityState,
   updateAmenity,
   updateServices,
-  updateTenants,
 } from '../../../Store/slices/commonSlice';
 import {token} from '../../../Store/slices/tokenSlice';
 import RenderService from '../../../Components/ComponentHome/RenderService';
@@ -31,6 +30,7 @@ import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNo
 import {updateStatus} from '../../../Store/slices/statusSlice';
 import {PostImageBuildingApi} from '../../../Api/Home/FileDataApis/FileDataApis';
 import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
+import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 
 const AddBuildingsStep3 = props => {
   const navigation = useNavigation();
@@ -195,7 +195,7 @@ const AddBuildingsStep3 = props => {
           <Text style={styles.pickerTotal}>{`${listService.length}`}</Text>
         </View>
 
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle
           label={'Tiện ích miễn phí'}
@@ -224,7 +224,7 @@ const AddBuildingsStep3 = props => {
           <Text style={styles.pickerTotal}>{`${listAmenity.length}`}</Text>
         </View>
 
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Lưu ý'} />
 
@@ -262,29 +262,11 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: colors.backgroundGrey,
   },
-  content: {color: 'rgba(127, 138, 147, 1)', fontSize: 13},
-  line: {
-    width: '100%',
-    height: 1,
-    backgroundColor: 'black',
-    marginVertical: 20,
-    alignSelf: 'center',
-  },
-  textPicker: {fontSize: 11, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
+  textPicker: {fontSize: 11, fontWeight: '400', color: 'orange'},
   pickerTotal: {
     fontSize: 15,
-    color: 'rgba(254, 122, 55, 1)',
+    color: 'orange',
     fontWeight: '600',
   },
-  viewTextInput: {
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    marginTop: 5,
-    borderRadius: 5,
-    borderColor: colors.borderInput,
-    height: 120,
-    backgroundColor: 'white',
-  },
-  label: {fontSize: 15, color: 'rgba(55, 64, 71, 1)', fontWeight: '400'},
 });
 export default AddBuildingsStep3;

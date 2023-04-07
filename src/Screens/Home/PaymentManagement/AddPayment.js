@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {Alert, Keyboard, StyleSheet, Text, View} from 'react-native';
-import {ScrollView} from 'react-native-virtualized-view';
+import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   CreateBankAccountApi,
@@ -11,14 +10,13 @@ import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomInput from '../../../Components/CommonComponent/CustomInput';
-import CustomNote from '../../../Components/CommonComponent/CustomNote';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {colors, icons} from '../../../Constants';
 import {token} from '../../../Store/slices/tokenSlice';
 import CustomViewBank from '../../../Components/ComponentHome/BankAccount/CustomViewBank';
 import CustomModalListBank from '../../../Components/ComponentHome/BankAccount/CustomModalListBank';
+import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
 import {updateStatus} from '../../../Store/slices/statusSlice';
 const AddPayment = props => {
   const dispatch = useDispatch();
@@ -63,7 +61,7 @@ const AddPayment = props => {
     await CreateBankAccountApi(tokenStore, data)
       .then(res => {
         if (res?.status == 200) {
-          dispatch(updateStatus(false));
+          dispatch(updateStatus('updateBankAccount'));
           setLoading(false);
           navigation.goBack();
         }
@@ -107,19 +105,22 @@ const AddPayment = props => {
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
+      <ScrollView
+        nestedScrollEnabled={true}
+        keyboardDismissMode="none"
+        style={{paddingHorizontal: 10, paddingTop: 10}}>
         <CustomSuggest
           label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
         />
         <CustomTextTitle label={'Thông tin thanh toán'} />
-        <CustomInput
-          important={true}
+        <ComponentInput
           type={'input'}
           title={'Tên gợi nhớ'}
           placeholder={'Nhập tên gợi nhớ'}
-          defaultValue={name}
-          onEndEditing={evt => setName(evt.nativeEvent.text)}
+          value={name}
+          onChangeText={text => setName(text)}
         />
+
         <CustomViewBank
           important={true}
           styleViewInput={{marginTop: 10}}
@@ -128,32 +129,44 @@ const AddPayment = props => {
           bank={bank}
           onPress={() => setModalBank(true)}
         />
-        <CustomInput
+        <ComponentInput
           important={true}
-          styleViewInput={{marginTop: 10}}
+          viewComponent={{marginTop: 10}}
+          keyboardType={'number-pad'}
           type={'input'}
-          keyboardType={'numeric'}
           title={'Số tài khoản'}
           placeholder={'Nhập số tài khoản'}
-          defaultValue={accountNo}
-          onEndEditing={evt => setAccountNo(evt.nativeEvent.text)}
+          value={accountNo}
+          onChangeText={text => setAccountNo(text)}
         />
-        <CustomInput
+        <ComponentInput
           important={true}
-          styleViewInput={{marginTop: 10}}
+          viewComponent={{marginTop: 10}}
+          keyboardType={'number-pad'}
+          type={'input'}
+          title={'Số tài khoản'}
+          placeholder={'Nhập số tài khoản'}
+          value={accountNo}
+          onChangeText={text => setAccountNo(text)}
+        />
+        <ComponentInput
+          important={true}
+          viewComponent={{marginTop: 10}}
           type={'input'}
           title={'Tên chủ tài khoản'}
           placeholder={'Nhập tên chủ tài khoản'}
-          defaultValue={accountName}
-          onEndEditing={evt => setAccountName(evt.nativeEvent.text)}
+          value={accountName}
+          onChangeText={text => setAccountName(text)}
         />
-        <CustomNote
-          viewCustom={{marginTop: 10}}
+        <ComponentInput
+          viewComponent={{marginTop: 10}}
+          type={'inputNote'}
           title={'Ghi chú'}
           placeholder={'Nhập ghi chú'}
-          defaultValue={notice}
-          onEndEditing={evt => setNotice(evt.nativeEvent.text)}
+          value={notice}
+          onChangeText={text => setNotice(text)}
         />
+
         <View style={{height: 56}} />
         <CustomTwoButtonBottom
           leftLabel={'Hủy'}

@@ -22,6 +22,7 @@ import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonI
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {GetListTenantsApi} from '../../../Api/Home/TenantApis/TenantApis';
 import {token} from '../../../Store/slices/tokenSlice';
+import useKeyboard from '../../../Hook/useKeyboard';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 
 const TenantList = () => {
@@ -31,7 +32,7 @@ const TenantList = () => {
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
   const tenantsSelect = useSelector(tenantState);
-  const [keyboard, setKeyboard] = useState(null);
+  const keyboard = useKeyboard();
   const [textSearch, setTextSearch] = useState('');
   const [listTenants, setListTenants] = useState([]);
 
@@ -54,15 +55,6 @@ const TenantList = () => {
     };
     getData();
   }, [loadingState]);
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboard(true);
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboard(false);
-    });
-  }, []);
 
   const renderListTenants = (item, index) => {
     let value = item;
@@ -116,7 +108,7 @@ const TenantList = () => {
         placeholder={'Tìm kiếm...'}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
+      <View style={{paddingHorizontal: 10, paddingTop: 10, flex: 1}}>
         {listTenants.length > 0 ? (
           <FlatList
             listKey="listTenants"
@@ -127,7 +119,7 @@ const TenantList = () => {
             renderItem={({item, index}) => renderListTenants(item, index)}
           />
         ) : null}
-      </ScrollView>
+      </View>
 
       <CustomTwoButtonBottom
         leftLabel={'Lưu'}

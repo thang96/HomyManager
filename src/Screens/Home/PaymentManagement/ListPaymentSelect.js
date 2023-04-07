@@ -1,7 +1,6 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {ScrollView} from 'react-native-virtualized-view';
+import {FlatList, StyleSheet, ScrollView, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
@@ -81,7 +80,7 @@ const ListPaymentSelect = props => {
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
+      <View style={styles.eachContainer}>
         {bankAccounts?.length > 0 && (
           <FlatList
             data={bankAccounts}
@@ -89,7 +88,7 @@ const ListPaymentSelect = props => {
             renderItem={({item, index}) => renderItem(item, index)}
           />
         )}
-      </ScrollView>
+      </View>
       <CustomTwoButtonBottom
         leftLabel={'Lưu'}
         rightLabel={'Thêm mới'}
@@ -107,5 +106,6 @@ const ListPaymentSelect = props => {
 };
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: colors.backgroundGrey},
+  eachContainer: {paddingHorizontal: 10, paddingTop: 10, flex: 1},
 });
 export default ListPaymentSelect;

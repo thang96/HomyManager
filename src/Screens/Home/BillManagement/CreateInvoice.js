@@ -1,12 +1,18 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Alert, FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+} from 'react-native';
 import {colors, icons} from '../../../Constants';
-import {dateToDMY} from '../../../utils/common';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
-import {ScrollView} from 'react-native-virtualized-view';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomInput from '../../../Components/CommonComponent/CustomInput';
+import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {useNavigation} from '@react-navigation/native';
@@ -29,8 +35,10 @@ import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNo
 import ImagePicker from 'react-native-image-crop-picker';
 import {serviceState, updateServices} from '../../../Store/slices/commonSlice';
 import {updateStatus} from '../../../Store/slices/statusSlice';
-import {convertDate} from '../../../utils/common';
+import {convertDate, formatNumber, validateNumber} from '../../../utils/common';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
+import ComponentButton from '../../../Components/CommonComponent/ComponentButton';
+import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
 import {CreateInvoicesApi} from '../../../Api/Home/InvoiceApis/InvoiceApis';
 import {PostImageInvoiceApi} from '../../../Api/Home/FileDataApis/FileDataApis';
 
@@ -53,9 +61,8 @@ const CreateInvoice = props => {
   const [modalCreateInvoice, setModalCreateInvoice] = useState(false);
 
   const [name, setName] = useState();
-  const [leasingFee, setLeasingFee] = useState(0);
-  const [serviceFee, setServiceFee] = useState(0);
-  const [otherFee, setOtherFee] = useState(0);
+  const [serviceFee, setServiceFee] = useState();
+  const [otherFee, setOtherFee] = useState();
 
   const [notice, setNotice] = useState();
 
@@ -80,19 +87,11 @@ const CreateInvoice = props => {
   }, []);
 
   useEffect(() => {
-    if (contract) {
-      setLeasingFee(contract?.leasingFee);
-    }
-  }, [contract]);
-
-  useEffect(() => {
     let eachData = [];
     for (let index = 0; index < services.length; index++) {
       const element = services[index];
-      if (element?.isCheck == true) {
-        let newElement = {...element, totalPrice: 0};
-        eachData.push(newElement);
-      }
+      let newElement = {...element, totalPrice: 0};
+      eachData.push(newElement);
     }
     setListChargeServices(eachData);
   }, [services]);
@@ -108,7 +107,7 @@ const CreateInvoice = props => {
         chargeServiceName: element?.name,
         calculateUnit: element?.calculateUnit,
         fee: element.fee,
-        usageAmount: parseInt(element.quantity),
+        usageAmount: parseInt(`${element.quantity ? element.quantity : 0}`),
       };
       eachInvoiceServices.push(eachElement);
     }
@@ -118,9 +117,15 @@ const CreateInvoice = props => {
 
   const totalFee = useMemo(() => {
     let totalPrice =
-      parseInt(otherFee) + parseInt(leasingFee) + parseInt(serviceFee);
+      parseInt(otherFee != '' ? otherFee : 0) +
+      parseInt(
+        `${validateNumber(
+          `${contract?.leasingFee ? contract?.leasingFee : 0}`,
+        )}`,
+      ) +
+      parseInt(serviceFee ? serviceFee : 0);
     return totalPrice;
-  }, [otherFee, leasingFee, serviceFee]);
+  }, [otherFee, contract, serviceFee]);
 
   const getListUnit = async item => {
     setHause(item);
@@ -230,6 +235,36 @@ const CreateInvoice = props => {
       />
     );
   };
+  const renderFeeOfVoice = (item, index) => {
+    return (
+      <CustomFeeOfInvoice
+        pressDelete={() => {
+          let eachData = [...listChargeServices];
+          let newResult = eachData.filter(itemResult => itemResult !== item);
+          setListChargeServices(newResult);
+        }}
+        calculateUnit={item?.calculateUnit}
+        name={item?.name}
+        fee={`${formatNumber(`${item?.fee}`)}`}
+        totalPrice={`${formatNumber(`${item?.totalPrice}`)}`}
+        value={`${formatNumber(`${item?.quantity}`)}`}
+        onChangeText={text => {
+          let newQuantity = text;
+          let newTotalPrice =
+            parseInt(`${validateNumber(`${newQuantity ? newQuantity : 0}`)}`) *
+            parseInt(`${validateNumber(`${item?.fee}`)}`);
+          let newItem = {
+            ...item,
+            quantity: newQuantity,
+            totalPrice: newTotalPrice,
+          };
+          let eachService = [...listChargeServices];
+          eachService[index] = newItem;
+          setListChargeServices(eachService);
+        }}
+      />
+    );
+  };
 
   const createInvoice = async () => {
     setModalCreateInvoice(false);
@@ -239,10 +274,16 @@ const CreateInvoice = props => {
       code: 'string',
       status: 0,
       flowStatus: 0,
-      leasingFee: parseInt(leasingFee),
-      serviceFee: parseInt(serviceFee),
-      otherFee: parseInt(otherFee),
-      totalFee: parseInt(totalFee),
+      leasingFee: parseInt(
+        `${validateNumber(
+          `${contract?.leasingFee ? contract?.leasingFee : 0}`,
+        )}`,
+      ),
+      serviceFee: parseInt(
+        `${validateNumber(`${serviceFee ? serviceFee : 0}`)}`,
+      ),
+      otherFee: parseInt(`${validateNumber(`${otherFee ? otherFee : 0}`)}`),
+      totalFee: parseInt(`${validateNumber(`${totalFee ? totalFee : 0}`)}`),
       notice: notice,
       createTime: '2023-03-25T08:12:58.486Z',
       issuedDate: '2023-03-25T08:12:58.486Z',
@@ -254,20 +295,27 @@ const CreateInvoice = props => {
       .then(async res => {
         if (res?.status == 200) {
           let invoiceId = res?.data?.id;
-          await PostImageInvoiceApi(tokenStore, invoiceId, invoiceImages)
-            .then(() => {
-              if (res?.status == 200) {
-                dispatch(updateStatus(false));
-                setLoadingAddContract(false);
-                navigation.goBack();
-              }
-            })
-            .catch(error => console.log(error, 'PostImageInvoice'));
+          if (invoiceImages?.length > 0) {
+            await PostImageInvoiceApi(tokenStore, invoiceId, invoiceImages)
+              .then(() => {
+                if (res?.status == 200) {
+                  dispatch(updateStatus('updateInvoice'));
+                  setLoadingAddContract(false);
+                  navigation.goBack();
+                }
+              })
+              .catch(error => {
+                console.log(error, 'PostImageInvoice');
+              });
+          } else {
+            dispatch(updateStatus('updateInvoice'));
+            setLoadingAddContract(false);
+            navigation.goBack();
+          }
         }
       })
       .catch(error => {
         console.log(error, 'create');
-        Alert.alert('Cảnh báo', 'Có lỗi sảy ra,vui lòng liên hệ admin...');
       });
   };
 
@@ -291,7 +339,6 @@ const CreateInvoice = props => {
           cancel={() => setModalCamera(false)}
         />
       )}
-
       {modalHause && (
         <CustomModalPicker
           data={listHauses}
@@ -314,24 +361,27 @@ const CreateInvoice = props => {
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
+      <ScrollView
+        keyboardDismissMode="none"
+        nestedScrollEnabled={true}
+        style={{paddingHorizontal: 10, paddingTop: 10}}>
         <CustomSuggest
           label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
         />
         <CustomTextTitle label={'Thông tin hóa đơn'} />
-        <CustomInput
+        <ComponentButton
           important={true}
-          type={'button'}
-          styleViewInput={{marginTop: 10}}
+          type={'buttonSelect'}
+          viewComponent={{marginTop: 10}}
           title={'Tòa nhà'}
           placeholder={'Chọn tòa nhà'}
           value={hause?.name}
           onPress={() => setModalHause(true)}
         />
-        <CustomInput
+        <ComponentButton
           important={true}
-          type={'button'}
-          styleViewInput={{marginTop: 20}}
+          type={'buttonSelect'}
+          viewComponent={{marginTop: 10}}
           title={'Phòng'}
           placeholder={'Chọn phòng'}
           value={unit?.name}
@@ -376,31 +426,33 @@ const CreateInvoice = props => {
             </View>
 
             <View style={styles.viewLine} />
-            <CustomInput
+            <ComponentInput
               important={true}
               type={'input'}
               title={'Tên hóa đơn'}
               placeholder={'Nhập tên hóa đơn'}
-              defaultValue={name}
-              onEndEditing={evt => setName(evt.nativeEvent.text)}
+              value={name}
+              onChangeText={text => setName(text)}
             />
             <CustomUnitFee
               important={true}
+              keyboardType={'number-pad'}
               title={'Tiền phòng'}
-              defaultValue={`${parseInt(
-                contract?.leasingFee,
-              )?.toLocaleString()}`}
-              onEndEditing={evt => setLeasingFee(evt.nativeEvent.text)}
+              placeholder={'0'}
+              value={`${formatNumber(`${contract?.leasingFee}`)}`}
+              onChangeText={text => {
+                let newContract = {...contract, leasingFee: text};
+                setContract(newContract);
+              }}
             />
             <CustomUnitFee
               title={'Phí khác'}
-              keyboardType={'numeric'}
+              keyboardType={'number-pad'}
               placeholder={'0'}
-              defaultValue={otherFee}
-              onEndEditing={evt => setOtherFee(evt.nativeEvent.text)}
+              value={`${formatNumber(`${otherFee}`)}`}
+              onChangeText={text => setOtherFee(text)}
             />
-
-            <View style={styles.viewLine} />
+            {StraightLine()}
 
             <CustomTextTitle
               label={'Phí dịch vụ'}
@@ -408,49 +460,22 @@ const CreateInvoice = props => {
               icon={icons.ic_plus}
               onPress={() => navigation.navigate('Service')}
             />
+            <View>
+              <ScrollView horizontal={true} style={{width: '100%'}}>
+                {listChargeServices.length > 0 && (
+                  <FlatList
+                    listKey="listChargeServices"
+                    data={listChargeServices}
+                    keyExtractor={key => key?.id}
+                    renderItem={({item, index}) =>
+                      renderFeeOfVoice(item, index)
+                    }
+                  />
+                )}
+              </ScrollView>
+            </View>
 
-            {listChargeServices.length > 0 && (
-              <FlatList
-                listKey="listChargeServices"
-                data={listChargeServices}
-                keyExtractor={key => key?.id}
-                renderItem={({item, index}) => {
-                  return (
-                    <CustomFeeOfInvoice
-                      pressDelete={() => {
-                        let eachData = [...listChargeServices];
-                        let newResult = eachData.filter(
-                          itemResult => itemResult !== item,
-                        );
-                        setListChargeServices(newResult);
-                      }}
-                      calculateUnit={item?.calculateUnit}
-                      name={item?.name}
-                      fee={item?.fee?.toLocaleString()}
-                      totalPrice={item?.totalPrice?.toLocaleString()}
-                      defaultValue={item?.quantity}
-                      onEndEditing={evt => {
-                        let newQuantity = evt.nativeEvent.text;
-                        if (newQuantity != '') {
-                          let newTotalPrice =
-                            parseInt(newQuantity) * parseInt(item?.fee);
-                          let newItem = {
-                            ...item,
-                            quantity: newQuantity,
-                            totalPrice: newTotalPrice,
-                          };
-                          let eachService = [...listChargeServices];
-                          eachService[index] = newItem;
-                          setListChargeServices(eachService);
-                        }
-                      }}
-                    />
-                  );
-                }}
-              />
-            )}
-
-            <View style={styles.viewLine} />
+            {StraightLine()}
 
             <CustomNote
               title={'Ghi chú'}
@@ -459,7 +484,7 @@ const CreateInvoice = props => {
               onEndEditing={evnt => setNotice(evnt.nativeEvent.text)}
             />
 
-            <View style={styles.viewLine} />
+            {StraightLine()}
 
             <CustomTextTitle label={'Ảnh dịch vụ'} />
             <View
@@ -498,7 +523,7 @@ const CreateInvoice = props => {
         )}
       </ScrollView>
 
-      <CustomTotalPrice totalPrice={`${totalFee.toLocaleString()}`} />
+      <CustomTotalPrice totalPrice={`${formatNumber(`${totalFee}`)}`} />
       <CustomTwoButtonBottom
         styleButtonLeft={styles.styleButtonLeft}
         styleLabelLeft={styles.styleLabelLeft}
@@ -514,7 +539,7 @@ const CreateInvoice = props => {
 const CustomTotalPrice = props => {
   const {totalPrice} = props;
   return (
-    <View style={styles.viewBetween}>
+    <View style={[styles.viewBetween, {paddingHorizontal: 10}]}>
       <Text style={{color: '#000000'}}>Tổng:</Text>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Text

@@ -1,8 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-import {ScrollView} from 'react-native-virtualized-view';
+import {StyleSheet, View, Text, ScrollView} from 'react-native';
 import {colors, icons, images} from '../../../Constants';
 import BoxShowInfor from '../../../Components/CommonComponent/BoxShowInfor';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
@@ -14,19 +12,20 @@ import CustomAppBarRoomInfor from '../../../Components/CommonComponent/CustomApp
 import {GetUnitDetailAPi} from '../../../Api/Home/UnitApis/UnitApis';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
-import {convertDate} from '../../../utils/common';
+import {convertDate, formatNumber} from '../../../utils/common';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import RenderContract from '../../../Components/ComponentHome/RenderContract';
+import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 
 const RoomInformation = props => {
   const route = useRoute();
-  const unitId = route.params;
+  const unitId = route.params.unitId;
   const tokenStore = useSelector(token);
   const navigation = useNavigation();
   const [unit, setUnit] = useState();
   const [loading, setLoading] = useState(true);
-  // console.log(unit?.activeContract?.tenants);
+
   useEffect(() => {
     const getListData = async () => {
       await GetUnitDetailAPi(tokenStore, unitId)
@@ -40,58 +39,65 @@ const RoomInformation = props => {
     };
     getListData();
   }, []);
-  //QuickAddRoom
+
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       {loading && <CustomLoading />}
       <CustomAppBarRoomInfor
-        rentMonthlyFee={`${unit?.rentMonthlyFee?.toLocaleString() ?? 0}`}
+        rentMonthlyFee={`${formatNumber(`${unit?.rentMonthlyFee}`) ?? 0}`}
         nameRoom={`${unit?.name ?? ''}`}
         onPressLeft={() => navigation.goBack()}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
-        pressQuickAddRoom={() => navigation.navigate('QuickAddRoom', unit?.id)}
-        pressEdit={() => navigation.navigate('EditRoomInformation', unit?.id)}
+        pressQuickAddRoom={() =>
+          navigation.navigate('QuickAddRoom', route.params)
+        }
+        pressEdit={() =>
+          navigation.navigate('EditRoomInformation', route.params)
+        }
       />
-      <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
+      <ScrollView
+        nestedScrollEnabled={true}
+        keyboardDismissMode="none"
+        style={{paddingHorizontal: 10, paddingTop: 10}}>
         <CustomTextTitle label={'Thông tin phòng'} />
 
         <View style={styles.viewRow}>
-          <BoxShowInfor label={'Tầng'} content={`${unit?.floorNumber}`} />
+          <BoxShowInfor label={'Tầng'} content={`${unit?.floorNumber ?? ''}`} />
           <View style={{width: 10}} />
           <BoxShowInfor
             label={'Diện tích'}
-            content={`${unit?.area ?? 0}`}
+            content={`${unit?.area ?? ''}`}
             unit={'m2'}
           />
         </View>
         <View style={[styles.viewRow, {marginTop: 10}]}>
           <BoxShowInfor
             label={'Số người tối đa'}
-            content={`${unit?.limitTenantNumber ?? 0}`}
+            content={`${unit?.limitTenantNumber ?? ''}`}
             unit={'Người'}
           />
           <View style={{width: 10}} />
           <BoxShowInfor
             styleView={{marginTop: 10}}
             label={'Loại phòng'}
-            content={`${unit?.roomType ?? 0}`}
+            content={`${unit?.roomType ?? ''}`}
           />
         </View>
         <View style={[styles.viewRow, {marginTop: 10}]}>
           <BoxShowInfor
             label={'Đặt cọc'}
-            content={`${unit?.depositMoney?.toLocaleString() ?? 0}`}
+            content={`${formatNumber(`${unit?.depositMoney}`) ?? ''}`}
             unit={'VNĐ'}
           />
           <View style={{width: 10}} />
           <BoxShowInfor
             label={'Giá'}
-            content={`${unit?.rentMonthlyFee?.toLocaleString() ?? 0}`}
+            content={`${formatNumber(`${unit?.rentMonthlyFee}`) ?? ''}`}
             unit={'VNĐ'}
           />
         </View>
 
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Hợp đồng cho thuê'} />
         {unit?.activeContract && (
@@ -107,53 +113,63 @@ const RoomInformation = props => {
             }
           />
         )}
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Thông tin người ở'} />
-        {unit?.activeContract?.tenants.length > 0 && (
-          <FlatList
-            data={unit?.activeContract?.tenants}
-            keyExtractor={key => key?.id}
-            renderItem={({item, index}) => {
-              return (
-                <CustomPersonInfor
-                  styleView={{marginTop: 10}}
-                  avatar={item?.avatarImage?.fileUrl}
-                  userName={item?.fullName}
-                  phoneNumber={item?.phoneNumber}
-                  pressAvatar={() =>
-                    navigation.navigate('TenantDetail', item?.id)
-                  }
-                />
-              );
-            }}
-          />
-        )}
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {unit?.activeContract?.tenants.length > 0 && (
+              <FlatList
+                data={unit?.activeContract?.tenants}
+                keyExtractor={key => key?.id}
+                renderItem={({item, index}) => {
+                  return (
+                    <CustomPersonInfor
+                      styleView={{marginTop: 10}}
+                      avatar={item?.avatarImage?.fileUrl}
+                      userName={item?.fullName}
+                      phoneNumber={item?.phoneNumber}
+                      pressAvatar={() =>
+                        navigation.navigate('TenantDetail', item?.id)
+                      }
+                    />
+                  );
+                }}
+              />
+            )}
+          </ScrollView>
+        </View>
 
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Dịch vụ có phí'} />
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {unit?.chargeServices?.length > 0 ? (
+              <FlatList
+                listKey="chargeServices"
+                horizontal={false}
+                scrollEnabled={false}
+                numColumns={2}
+                keyExtractor={(key, index) => `${key?.id}${index.toString()}`}
+                data={unit?.chargeServices}
+                renderItem={({item, index}) => {
+                  return (
+                    <RenderService
+                      name={item?.name}
+                      fee={item?.fee}
+                      calculateUnit={item?.calculateUnit}
+                      onPress={() =>
+                        navigation.navigate('ServiceDetail', item?.id)
+                      }
+                    />
+                  );
+                }}
+              />
+            ) : null}
+          </ScrollView>
+        </View>
 
-        {unit?.chargeServices?.length > 0 ? (
-          <FlatList
-            listKey="chargeServices"
-            horizontal={false}
-            scrollEnabled={false}
-            numColumns={2}
-            keyExtractor={(key, index) => `${key?.id}${index.toString()}`}
-            data={unit?.chargeServices}
-            renderItem={({item, index}) => {
-              return (
-                <RenderService
-                  name={item?.name}
-                  fee={item?.fee}
-                  calculateUnit={item?.calculateUnit}
-                  onPress={() => navigation.navigate('ServiceDetail', item?.id)}
-                />
-              );
-            }}
-          />
-        ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
           <Text style={styles.pickerTotal}>{`${
@@ -161,27 +177,34 @@ const RoomInformation = props => {
           }`}</Text>
         </View>
 
-        <View style={styles.line} />
+        {StraightLine()}
         <CustomTextTitle label={'Tiện ích miễn phí'} />
 
-        {unit?.amenities?.length > 0 ? (
-          <FlatList
-            listKey="amenities"
-            horizontal={false}
-            scrollEnabled={false}
-            numColumns={3}
-            keyExtractor={(key, index) => `${key?.id}${index.toString()}`}
-            data={unit?.amenities}
-            renderItem={({item, index}) => {
-              return (
-                <RenderAmenity
-                  label={item?.name}
-                  onPress={() => navigation.navigate('AmenityDetail', item?.id)}
-                />
-              );
-            }}
-          />
-        ) : null}
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {unit?.amenities?.length > 0 ? (
+              <FlatList
+                listKey="amenities"
+                horizontal={false}
+                scrollEnabled={false}
+                numColumns={3}
+                keyExtractor={(key, index) => `${key?.id}${index.toString()}`}
+                data={unit?.amenities}
+                renderItem={({item, index}) => {
+                  return (
+                    <RenderAmenity
+                      label={item?.name}
+                      onPress={() =>
+                        navigation.navigate('AmenityDetail', item?.id)
+                      }
+                    />
+                  );
+                }}
+              />
+            ) : null}
+          </ScrollView>
+        </View>
+
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
           <Text style={styles.pickerTotal}>{`${
@@ -189,7 +212,7 @@ const RoomInformation = props => {
           }`}</Text>
         </View>
 
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Hình ảnh của phòng'} />
         {unit?.images?.length > 0 && (
@@ -203,16 +226,14 @@ const RoomInformation = props => {
             }}
           />
         )}
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Mô tả phòng'} />
         <Text style={{color: 'black', fontSize: 14}}>{unit?.description}</Text>
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Lưu ý cho người thuê'} />
         <Text style={{color: 'black', fontSize: 14}}>{unit?.notice}</Text>
-
-        <View style={styles.line} />
 
         <View style={{height: 56}} />
       </ScrollView>
@@ -221,13 +242,6 @@ const RoomInformation = props => {
 };
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: colors.backgroundGrey},
-  line: {
-    height: 0.5,
-    width: '100%',
-    alignSelf: 'center',
-    backgroundColor: '#97A1A7',
-    marginVertical: 20,
-  },
   viewRow: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -1,6 +1,13 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, Text, TextInput, View, FlatList, Alert} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  ScrollView,
+  View,
+  FlatList,
+  Alert,
+} from 'react-native';
 import {
   GetDistrictByCityIdApi,
   GetLocationCitysApi,
@@ -17,16 +24,10 @@ import {token} from '../../../Store/slices/tokenSlice';
 import {colors, icons} from '../../../Constants';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
-import {ScrollView} from 'react-native-virtualized-view';
 import CustomTimeButtons from '../../../Components/CommonComponent/CustomTimeButton';
-import CustomInput from '../../../Components/CommonComponent/CustomInput';
-import CustomInputValue from '../../../Components/CommonComponent/CustomInputValue';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
-import {convertDate, convertTime} from '../../../utils/common';
-import RenderImage from '../../../Components/ComponentHome/RenderImage';
-import CustomButton from '../../../Components/CommonComponent/CustomButton';
-import CustomButtonValue from '../../../Components/CommonComponent/CustomButtonValue';
+import {convertDate, convertTime, formatNumber} from '../../../utils/common';
 import CustomBankAccountInfor from '../../../Components/ComponentHome/BankAccount/CustomBankAccountInfor';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
@@ -47,7 +48,9 @@ import {
   serviceState,
 } from '../../../Store/slices/commonSlice';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
-import CustomNote from '../../../Components/CommonComponent/CustomNote';
+import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
+import ComponentButton from '../../../Components/CommonComponent/ComponentButton';
+import ComponentRenderImage from '../../../Components/CommonComponent/ComponentRenderImage';
 
 const EditHouseInformation = props => {
   const route = useRoute();
@@ -58,7 +61,7 @@ const EditHouseInformation = props => {
   const bankAccountsStore = useSelector(bankAccountState);
   const servicesStore = useSelector(serviceState);
   const amenitysStore = useSelector(amenityState);
-  const [hauseInfor, setHauseInfor] = useState(null);
+  const [hauseInfor, setHauseInfor] = useState('');
   const [openTime, setOpenTime] = useState(new Date());
   const [closeTime, setCloseTime] = useState(new Date());
   const [listCity, setListCity] = useState([]);
@@ -177,48 +180,6 @@ const EditHouseInformation = props => {
       });
   };
 
-  const renderImage = (item, index) => {
-    return (
-      <RenderImage
-        data={item}
-        deleteButton={true}
-        deleteItem={() => {
-          if (item?.id) {
-            Alert.alert(
-              'Cảnh báo !',
-              'Đây là ảnh đang có trên server, bạn có muốn xóa ?',
-              [
-                {text: 'Cancel', style: 'cancel'},
-                {
-                  text: 'OK',
-                  onPress: () => {
-                    let result = [...hauseInfor?.images];
-                    let newResult = result.filter(
-                      itemResult => itemResult !== item,
-                    );
-                    let newHause = {...hauseInfor, images: newResult};
-                    setHauseInfor(newHause);
-                    deleteImage(item?.id);
-                  },
-                },
-              ],
-            );
-          } else {
-            let eachAlbumImg = [...albumImage];
-            let newAlbumImg = eachAlbumImg.filter(
-              itemResult => itemResult !== item,
-            );
-            setAlbumImage(newAlbumImg);
-            let result = [...hauseInfor?.images];
-            let newResult = result.filter(itemResult => itemResult !== item);
-            let newHause = {...hauseInfor, images: newResult};
-            setHauseInfor(newHause);
-          }
-        }}
-      />
-    );
-  };
-
   const deleteImage = async imageId => {
     setLoading(true);
     await DeleteImageApi(tokenStore, imageId)
@@ -316,6 +277,7 @@ const EditHouseInformation = props => {
           mode={'time'}
           openPicker={modalopenTime}
           onDateChange={value => {
+            setOpenTime(value);
             let newHause = {...hauseInfor, openTime: value};
             setHauseInfor(newHause);
           }}
@@ -329,6 +291,7 @@ const EditHouseInformation = props => {
           mode={'time'}
           openPicker={modalcloseTime}
           onDateChange={value => {
+            setCloseTime(value);
             let newHause = {...hauseInfor, closeTime: value};
             setHauseInfor(newHause);
           }}
@@ -448,32 +411,36 @@ const EditHouseInformation = props => {
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={{paddingHorizontal: 10, marginTop: 10}}>
+      <ScrollView
+        nestedScrollEnabled={true}
+        keyboardDismissMode="none"
+        style={{paddingHorizontal: 10, marginTop: 10}}>
         <CustomTextTitle label={'Thông tin tòa nhà'} />
-        <CustomInput
+        <ComponentInput
           important={true}
           type={'input'}
           title={'Tên tòa nhà'}
           placeholder={'Nhập tên tòa nhà'}
-          defaultValue={hauseInfor?.name}
-          onEndEditing={evt => {
-            let newHause = {...hauseInfor, name: evt.nativeEvent.text};
+          value={hauseInfor?.name ?? ''}
+          onChangeText={text => {
+            let newHause = {...hauseInfor, name: text};
             setHauseInfor(newHause);
           }}
         />
-        <CustomInput
+        <ComponentInput
           important={true}
-          keyboardType={'numeric'}
+          viewComponent={{marginTop: 10}}
           type={'input'}
-          styleViewInput={{marginTop: 10}}
-          title={'Số tầng'}
+          title={'Tầng'}
           placeholder={'Nhập số tầng'}
-          defaultValue={`${hauseInfor?.numberOfFloor}`}
-          onEndEditing={evt => {
-            let newHause = {...hauseInfor, numberOfFloor: evt.nativeEvent.text};
+          keyboardType={'number-pad'}
+          value={`${formatNumber(`${hauseInfor?.numberOfFloor}`) ?? ''}`}
+          onChangeText={text => {
+            let newHause = {...hauseInfor, numberOfFloor: text};
             setHauseInfor(newHause);
           }}
         />
+
         <CustomTimeButtons
           styleContainer={{marginTop: 10}}
           title={'Giờ mở - đóng cửa'}
@@ -481,116 +448,133 @@ const EditHouseInformation = props => {
           rightLabel={'Đến'}
           styleButtonLeft={{marginRight: 5}}
           styleButtonRight={{marginLeft: 5}}
-          valueLeft={`${convertTime(hauseInfor?.openTime)}`}
-          valueRight={`${convertTime(hauseInfor?.closeTime)}`}
+          valueLeft={`${convertTime(hauseInfor?.openTime) ?? ''}`}
+          valueRight={`${convertTime(hauseInfor?.closeTime) ?? ''}`}
           onPressLeft={() => setModalopenTime(true)}
           onPressRightt={() => setModalcloseTime(true)}
         />
-        <CustomInputValue
-          viewContainer={{marginTop: 10}}
-          type={'input'}
-          label={'Chi phí thuê nhà'}
+        <ComponentInput
           important={true}
+          viewComponent={{marginTop: 10}}
+          type={'inputUnit'}
           unit={'VNĐ'}
+          title={'Chi phí thuê nhà'}
           placeholder={'Nhập chi phí thuê nhà'}
-          keyboardType={'numeric'}
-          defaultValue={`${hauseInfor?.leasingFee}`}
-          onEndEditing={evt => {
-            let newHause = {...hauseInfor, leasingFee: evt.nativeEvent.text};
+          keyboardType={'number-pad'}
+          value={`${formatNumber(`${hauseInfor?.leasingFee}`)}`}
+          onChangeText={text => {
+            let newHause = {...hauseInfor, leasingFee: text};
             setHauseInfor(newHause);
           }}
         />
-
-        <CustomNote
-          viewCustom={{marginTop: 10}}
+        <ComponentInput
+          viewComponent={{marginTop: 10}}
+          type={'inputNote'}
           title={'Mô tả'}
-          placeholder="Nhập mô tả cho tòa nhà"
-          defaultValue={hauseInfor?.description}
-          onEndEditing={evt => {
-            let newHause = {...hauseInfor, description: evt.nativeEvent.text};
+          placeholder={'Nhập mô tả cho tòa nhà'}
+          value={hauseInfor?.description}
+          onChangeText={text => {
+            let newHause = {...hauseInfor, description: text};
             setHauseInfor(newHause);
           }}
         />
 
         {StraightLine()}
         <CustomTextTitle label={'Địa chỉ tòa nhà'} />
-        <CustomInput
-          type={'button'}
-          styleViewInput={{marginTop: 10}}
+
+        <ComponentButton
+          type={'buttonSelect'}
+          viewComponent={{marginTop: 10}}
           title={'Tỉnh/ Thành phố'}
           placeholder={'Chọn Tỉnh/ Thành phố'}
           value={hauseInfor?.city?.name}
           onPress={() => setModalCity(true)}
         />
-        <CustomInput
-          type={'button'}
-          styleViewInput={{marginTop: 10}}
+        <ComponentButton
+          type={'buttonSelect'}
+          viewComponent={{marginTop: 10}}
           title={'Quận/ Huyện'}
           placeholder={'Chọn Quận/ Huyện'}
           value={hauseInfor?.district?.name}
           onPress={() => setModalDistrict(true)}
         />
-        <CustomInput
-          type={'button'}
-          styleViewInput={{marginTop: 10}}
+        <ComponentButton
+          type={'buttonSelect'}
+          viewComponent={{marginTop: 10}}
           title={'Phường/ Xã'}
           placeholder={'Chọn Phường/ Xã'}
           value={hauseInfor?.ward?.name}
           onPress={() => setModalWard(true)}
         />
-        <CustomNote
-          viewCustom={{marginTop: 10}}
+
+        <ComponentInput
+          viewComponent={{marginTop: 10}}
+          type={'inputNote'}
           title={'Địa chỉ cụ thể'}
-          placeholder="Nhập địa chỉ cụ thể"
-          defaultValue={hauseInfor?.address}
-          onEndEditing={evt => {
-            let newHause = {...hauseInfor, address: evt.nativeEvent.text};
+          placeholder={'Nhập địa chỉ cụ thể'}
+          value={hauseInfor?.address}
+          onChangeText={text => {
+            let newHause = {...hauseInfor, address: text};
             setHauseInfor(newHause);
           }}
         />
 
-        <CustomTextTitle label={'Thêm hình ảnh'} />
-        <View style={styles.viewRenderImg}>
-          {hauseInfor?.images?.length > 0 ? (
-            <FlatList
-              horizontal
-              data={hauseInfor?.images}
-              keyExtractor={(key, index) => `keyImg${index}`}
-              renderItem={({item}) => renderImage(item)}
-            />
-          ) : (
-            <CustomButton
-              styleButton={{flex: 1}}
-              label={'Tải lên ảnh phòng (1-6 ảnh)'}
-              styleLabel={[styles.title, {marginTop: 5}]}
-              disabled={true}
-              icon={icons.ic_upload}
-              styleIcon={{with: 100, height: 100, alignSelf: 'center'}}
-            />
-          )}
-        </View>
-
-        <CustomButton
-          styleButton={[styles.buttonUploadIM]}
-          label={'Tải lên ảnh phòng'}
-          styleLabel={styles.labelUploadIM}
-          onPress={() => setModalCamera(true)}
+        <ComponentRenderImage
+          title={'Thêm ảnh tòa nhà'}
+          label={'Tải lên ảnh mô tả tòa nhà'}
+          labelUpload={'Tải lên ảnh tòa nhà'}
+          data={hauseInfor?.images}
+          deleteButton={true}
+          openModal={() => setModalCamera(true)}
+          deleteItem={item => {
+            if (item?.id) {
+              Alert.alert(
+                'Cảnh báo !',
+                'Đây là ảnh đang có trên server, bạn có muốn xóa ?',
+                [
+                  {text: 'Cancel', style: 'cancel'},
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      let result = [...hauseInfor?.images];
+                      let newResult = result.filter(
+                        itemResult => itemResult !== item,
+                      );
+                      let newHause = {...hauseInfor, images: newResult};
+                      setHauseInfor(newHause);
+                      deleteImage(item?.id);
+                    },
+                  },
+                ],
+              );
+            } else {
+              let eachAlbumImg = [...albumImage];
+              let newAlbumImg = eachAlbumImg.filter(
+                itemResult => itemResult !== item,
+              );
+              setAlbumImage(newAlbumImg);
+              let result = [...hauseInfor?.images];
+              let newResult = result.filter(itemResult => itemResult !== item);
+              let newHause = {...hauseInfor, images: newResult};
+              setHauseInfor(newHause);
+            }
+          }}
         />
 
         <CustomTextTitle label={'Thiết lập tiền nhà'} />
 
-        <CustomButtonValue
+        <ComponentButton
           important={true}
-          icon={icons.ic_down}
-          type={'button'}
+          type={'buttonValue'}
           title={'Ngày chốt tiền'}
           placeholder={'Chọn ngày'}
+          icon={icons.ic_down}
           value={
             hauseInfor?.billingDate == 0
               ? 'Cuối tháng'
               : hauseInfor?.billingDate == -1
-              ? 'Ngày 1 tháng sau'
-              : ''
+              ? 'Đầu tháng'
+              : `Ngày ${hauseInfor?.billingDate}`
           }
           onPress={() => setModalbillingDate(true)}
         />
@@ -632,18 +616,23 @@ const EditHouseInformation = props => {
           icon={icons.ic_plus}
           onPress={() => navigation.navigate('Service')}
         />
-
-        {hauseInfor?.chargeServices?.length > 0 ? (
-          <FlatList
-            listKey="listService"
-            horizontal={false}
-            scrollEnabled={false}
-            numColumns={2}
-            keyExtractor={(key, index) => `chargeServices${index.toString()}`}
-            data={hauseInfor?.chargeServices}
-            renderItem={({item, index}) => renderPaidSevice(item, index)}
-          />
-        ) : null}
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {hauseInfor?.chargeServices?.length > 0 ? (
+              <FlatList
+                listKey="listService"
+                horizontal={false}
+                scrollEnabled={false}
+                numColumns={2}
+                keyExtractor={(key, index) =>
+                  `chargeServices${index.toString()}`
+                }
+                data={hauseInfor?.chargeServices}
+                renderItem={({item, index}) => renderPaidSevice(item, index)}
+              />
+            ) : null}
+          </ScrollView>
+        </View>
 
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
@@ -660,18 +649,22 @@ const EditHouseInformation = props => {
           onPress={() => navigation.navigate('Utilities')}
         />
 
-        {hauseInfor?.amenities?.length > 0 ? (
-          <FlatList
-            listKey="listAmenity"
-            style={{justifyContent: 'space-between'}}
-            horizontal={false}
-            scrollEnabled={false}
-            numColumns={2}
-            keyExtractor={(key, index) => `listAmenity${index.toString()}`}
-            data={hauseInfor?.amenities}
-            renderItem={({item, index}) => renderFreeSevice(item, index)}
-          />
-        ) : null}
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {hauseInfor?.amenities?.length > 0 ? (
+              <FlatList
+                listKey="listAmenity"
+                horizontal={false}
+                scrollEnabled={false}
+                numColumns={2}
+                keyExtractor={(key, index) => `listAmenity${index.toString()}`}
+                data={hauseInfor?.amenities}
+                renderItem={({item, index}) => renderFreeSevice(item, index)}
+              />
+            ) : null}
+          </ScrollView>
+        </View>
+
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
           <Text
@@ -682,22 +675,26 @@ const EditHouseInformation = props => {
         {StraightLine()}
         <CustomTextTitle label={'Lưu ý'} />
 
-        <CustomNote
+        <ComponentInput
+          viewComponent={{marginTop: 10}}
+          type={'inputNote'}
           title={'Lưu ý của tòa nhà'}
-          placeholder="Nhập lưu ý của tòa nhà"
-          defaultValue={hauseInfor?.notice}
-          onEndEditing={evt => {
-            let newHause = {...hauseInfor, notice: evt.nativeEvent.text};
+          placeholder={'Nhập lưu ý của tòa nhà'}
+          value={hauseInfor?.notice}
+          onChangeText={text => {
+            let newHause = {...hauseInfor, notice: text};
             setHauseInfor(newHause);
           }}
         />
-        <CustomNote
-          viewCustom={{marginTop: 10}}
+
+        <ComponentInput
+          viewComponent={{marginTop: 10}}
+          type={'inputNote'}
           title={'Ghi chú hóa đơn'}
-          placeholder="Nhập ghi chú hóa đơn"
-          defaultValue={hauseInfor?.billNotice}
-          onEndEditing={evt => {
-            let newHause = {...hauseInfor, billNotice: evt.nativeEvent.text};
+          placeholder={'Nhập ghi chú hóa đơn'}
+          value={hauseInfor?.billNotice}
+          onChangeText={text => {
+            let newHause = {...hauseInfor, billNotice: text};
             setHauseInfor(newHause);
           }}
         />

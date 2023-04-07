@@ -12,6 +12,7 @@ import {dateToDMY} from '../../../utils/common';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
+import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
@@ -87,7 +88,7 @@ const ContractDetail = props => {
             }>{`Từ ${contract?.startDate} Đến ${contract?.endDate}`}</Text>
         </View>
 
-        <View style={styles.viewLine} />
+        {StraightLine()}
 
         <CustomViewShowBetween
           title={'Tiền phòng'}
@@ -105,7 +106,7 @@ const ContractDetail = props => {
           unit={'Tháng'}
         />
 
-        <View style={styles.viewLine} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Dịch vụ có phí'} />
         {contract?.chargeServices.length > 0 && (
@@ -118,7 +119,7 @@ const ContractDetail = props => {
           />
         )}
 
-        <View style={styles.viewLine} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Tiện ích miễn phí'} />
         {contract?.amenities.length > 0 && (
@@ -131,7 +132,7 @@ const ContractDetail = props => {
           />
         )}
 
-        <View style={styles.viewLine} />
+        {StraightLine()}
         <CustomTextTitle label={'Danh sách người thuê'} />
         {contract?.tenants?.length > 0 && (
           <FlatList
@@ -191,12 +192,7 @@ const styles = StyleSheet.create({
   },
   viewRow: {flexDirection: 'row', alignItems: 'center'},
   icon: {width: 20, height: 20},
-  viewLine: {
-    height: 0.5,
-    width: '100%',
-    backgroundColor: '#97A1A7',
-    marginVertical: 10,
-  },
+
   textInfor: {color: '#374047', fontSize: 13},
 });
 export default ContractDetail;

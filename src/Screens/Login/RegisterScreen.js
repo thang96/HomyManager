@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
-  Image,
+  ScrollView,
   View,
   Alert,
   Text,
@@ -12,9 +12,8 @@ import CustomLoading from '../../Components/CommonComponent/CustomLoading';
 import CustomButton from '../../Components/CommonComponent/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import CustomSuggest from '../../Components/CommonComponent/CustomSuggest';
-import CustomInput from '../../Components/CommonComponent/CustomInput';
+import ComponentInput from '../../Components/CommonComponent/ComponentInput';
 import CustomModalNotify from '../../Components/CommonComponent/CustomModalNotify';
-import {ScrollView} from 'react-native-virtualized-view';
 import {AuthenticationRegisterAPi} from '../../Api/Login/LoginApis';
 
 const RegisterScreen = () => {
@@ -91,7 +90,7 @@ const RegisterScreen = () => {
           onPress={() => navigation.goBack()}
         />
         <View style={{height: 260}} />
-        <ScrollView style={{}}>
+        <ScrollView nestedScrollEnabled={true} keyboardDismissMode="none">
           <Text style={styles.title}>Đăng ký tài khoản</Text>
           <CustomSuggest
             labelStyle={{textAlign: 'center'}}
@@ -99,60 +98,60 @@ const RegisterScreen = () => {
               'Vui lòng cung cấp thông tin dưới đây để đăng ký tài khoản cho số điện thoại '
             }
           />
-          <CustomInput
-            styleViewInput={{marginTop: 15}}
+          <ComponentInput
+            viewComponent={{marginTop: 15}}
             important={true}
             type={'input'}
             title={'Họ và tên'}
             placeholder={'Nhập họ và tên'}
-            defaultValue={fullName}
-            onEndEditing={evt => setFullName(evt.nativeEvent.text)}
+            value={fullName}
+            onChangeText={text => setFullName(text)}
           />
-          <CustomInput
-            styleViewInput={{marginTop: 15}}
+          <ComponentInput
+            viewComponent={{marginTop: 15}}
             important={true}
             type={'input'}
             title={'Email'}
             placeholder={'Nhập email'}
-            defaultValue={email}
-            onEndEditing={evt => setEmail(evt.nativeEvent.text)}
+            value={email}
+            onChangeText={text => setEmail(text)}
           />
-          <CustomInput
-            styleViewInput={{marginTop: 15}}
+          <ComponentInput
+            viewComponent={{marginTop: 15}}
             important={true}
             type={'input'}
             title={'Số điện thoại'}
             placeholder={'Nhập số điện thoại'}
-            keyboardType={'numeric'}
-            defaultValue={phoneNumber}
-            onEndEditing={evt => setPhoneNumber(evt.nativeEvent.text)}
+            keyboardType={'number-pad'}
+            value={phoneNumber}
+            onChangeText={text => setPhoneNumber(text)}
           />
-          <CustomInput
-            styleViewInput={{marginTop: 15}}
+          <ComponentInput
+            viewComponent={{marginTop: 15}}
             important={true}
             type={'input'}
             title={'Tài khoản'}
             placeholder={'Nhập tài khoản'}
-            defaultValue={userName}
-            onEndEditing={evt => setUserName(evt.nativeEvent.text)}
+            value={userName}
+            onChangeText={text => setUserName(text)}
           />
-          <CustomInput
-            styleViewInput={{marginTop: 15}}
+          <ComponentInput
+            viewComponent={{marginTop: 15}}
             important={true}
             type={'input'}
             title={'Mật khẩu'}
             placeholder={'Nhập mật khẩu'}
-            defaultValue={password}
-            onEndEditing={evt => setPassword(evt.nativeEvent.text)}
+            value={password}
+            onChangeText={text => setPassword(text)}
           />
-          <CustomInput
-            styleViewInput={{marginTop: 15}}
+          <ComponentInput
+            viewComponent={{marginTop: 15}}
             important={true}
             type={'input'}
             title={'Nhập lại mật khẩu'}
             placeholder={'Nhập lại mật khẩu'}
-            defaultValue={rePassword}
-            onEndEditing={evt => setRePassword(evt.nativeEvent.text)}
+            value={rePassword}
+            onChangeText={text => setRePassword(text)}
           />
 
           <CustomButton

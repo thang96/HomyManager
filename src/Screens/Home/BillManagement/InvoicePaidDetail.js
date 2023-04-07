@@ -14,7 +14,12 @@ import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import {colors, icons} from '../../../Constants';
 import {token} from '../../../Store/slices/tokenSlice';
-import {convertDate} from '../../../utils/common';
+import {convertDate, formatNumber} from '../../../utils/common';
+import {
+  BreakLine,
+  StraightLine,
+} from '../../../Components/CommonComponent/LineComponent';
+import CustomViewServiceFee from '../../../Components/ComponentHome/Invoice/CustomViewServiceFee';
 
 const breakLine = Array(19).fill('');
 
@@ -28,6 +33,7 @@ const InvoicePaidDetail = props => {
   const [invoiceServices, setInvoiceServices] = useState([]);
   const [serviceImages, setServiceImages] = useState([]);
   const [paymentmages, setPaymentImages] = useState([]);
+  const timeNow = new Date();
 
   useEffect(() => {
     const getData = async () => {
@@ -52,7 +58,18 @@ const InvoicePaidDetail = props => {
   const renderImagePayment = (item, index) => {
     return <RenderImage data={item} />;
   };
-
+  const renderItem = (item, index) => {
+    let totalPrice =
+      parseInt(item?.fee ? item?.fee : 0) *
+      parseInt(item?.usageAmount ? item?.usageAmount : 0);
+    return (
+      <CustomViewServiceFee
+        chargeServiceName={item?.chargeServiceName}
+        usageAmount={item?.usageAmount}
+        totalPrice={totalPrice}
+      />
+    );
+  };
   return (
     <View style={styles.container}>
       {loading && <CustomLoading />}
@@ -68,14 +85,14 @@ const InvoicePaidDetail = props => {
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
         <View style={[styles.shadowView, styles.viewInvoice]}>
           <View style={styles.viewBetween}>
-            <Text style={styles.title}>{`${invoice?.name}`}</Text>
+            <Text style={styles.title}>{`${invoice?.name ?? ''}`}</Text>
             <Text style={{color: 'red', fontSize: 13}}>{'Đã thanh toán'}</Text>
           </View>
 
           <View style={styles.viewBetween}>
             <Text style={styles.title}>{``}</Text>
             <Text style={{color: '#000000', fontSize: 13}}>
-              {`${convertDate(invoice?.createTime)}`}
+              {`${convertDate(invoice?.createTime ?? timeNow)}`}
             </Text>
           </View>
 
@@ -87,7 +104,9 @@ const InvoicePaidDetail = props => {
             <Text
               style={{
                 color: 'black',
-              }}>{`${invoice?.contract?.unit?.house?.name} - ${invoice?.contract?.unit?.name}`}</Text>
+              }}>{`${invoice?.contract?.unit?.house?.name ?? ''} - ${
+              invoice?.contract?.unit?.name ?? ''
+            }`}</Text>
           </View>
 
           <View style={styles.viewRow}>
@@ -95,85 +114,51 @@ const InvoicePaidDetail = props => {
               source={icons.ic_location}
               style={{height: 20, width: 20, marginRight: 10}}
             />
-            <Text
-              style={{
-                color: 'black',
-              }}>{`${invoice?.contract?.unit?.house?.address}, ${invoice?.contract?.unit?.house?.ward?.name}, ${invoice?.contract?.unit?.house?.district?.name}, ${invoice?.contract?.unit?.house?.city?.name}`}</Text>
+            <View style={{flex: 1}}>
+              <Text
+                style={{
+                  color: 'black',
+                }}>{`${
+                invoice?.contract?.unit?.house?.fullAddress ?? ''
+              }`}</Text>
+            </View>
           </View>
 
-          <View style={styles.viewLine}>
-            {breakLine.map((line, index) => {
-              return (
-                <View key={`${index.toString()}`} style={styles.breakLine} />
-              );
-            })}
-          </View>
+          {BreakLine()}
 
           <View style={styles.viewBetween}>
             <Text style={styles.label}>Tiền phòng</Text>
             <Text style={styles.label}>
-              {`${invoice?.contract?.unit?.rentMonthlyFee.toLocaleString()}`}
+              {`${formatNumber(`${invoice?.leasingFee ?? 0}`)}`}
             </Text>
           </View>
 
-          <View style={styles.viewLine}>
-            {breakLine.map((line, index) => {
-              return (
-                <View key={`${index.toString()}a`} style={styles.breakLine} />
-              );
-            })}
-          </View>
+          {BreakLine()}
 
           {invoiceServices.length > 0 && (
             <FlatList
               data={invoiceServices}
               keyExtractor={key => key?.id}
-              renderItem={({item, index}) => {
-                return (
-                  <View style={styles.viewBetween}>
-                    <Text
-                      style={styles.label}>{`${item?.chargeServiceName}`}</Text>
-                    <Text
-                      style={
-                        styles.textQuality
-                      }>{`SL: ${item?.usageAmount}`}</Text>
-                    <Text style={styles.label}>
-                      {`${(item?.fee * item?.usageAmount).toLocaleString()}`}
-                    </Text>
-                  </View>
-                );
-              }}
+              renderItem={({item}) => renderItem(item)}
             />
           )}
 
-          <View style={styles.viewLine}>
-            {breakLine.map((line, index) => {
-              return (
-                <View key={`${index.toString()}b`} style={styles.breakLine} />
-              );
-            })}
-          </View>
+          {BreakLine()}
 
           <View style={styles.viewBetween}>
             <Text style={styles.label}>Tổng</Text>
             <Text style={{color: 'red', fontSize: 15, fontWeight: '600'}}>
-              {`${invoice?.totalFee?.toLocaleString()}`}
+              {`${formatNumber(`${invoice?.totalFee ?? 0}`)}`}
             </Text>
           </View>
 
-          <View style={styles.viewLine}>
-            {breakLine.map((line, index) => {
-              return (
-                <View key={`${index.toString()}c`} style={styles.breakLine} />
-              );
-            })}
-          </View>
+          {BreakLine()}
 
           <CustomTextTitle label={'Ghi chú'} />
-          <CustomSuggest label={`${invoice?.notice}`} />
+          <CustomSuggest label={`${invoice?.notice ?? ''}`} />
         </View>
 
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Ảnh dịch vụ'} />
         {serviceImages.length > 0 && (

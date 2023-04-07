@@ -1,28 +1,17 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  KeyboardAvoidingView,
-  FlatList,
-  Alert,
-  Keyboard,
-} from 'react-native';
+import {StyleSheet, View, Text, ScrollView, TextInput} from 'react-native';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
-import {ScrollView} from 'react-native-virtualized-view';
-import CustomInput from '../../../Components/CommonComponent/CustomInput';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {CreateNewAmenityApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
+import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
+import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
 import {updateStatus} from '../../../Store/slices/statusSlice';
 
 const AddUtilities = props => {
@@ -71,34 +60,34 @@ const AddUtilities = props => {
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={[styles.eachContainer]}>
-        <Text style={styles.content}>
-          Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ
-        </Text>
+      <ScrollView
+        nestedScrollEnabled={true}
+        keyboardDismissMode="none"
+        style={[styles.eachContainer]}>
+        <CustomSuggest
+          label={'Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ'}
+        />
+
         <CustomTextTitle label={'Thông tin tiện ích'} />
 
-        <CustomInput
+        <ComponentInput
           important={true}
           type={'input'}
           title={'Tên tiện ích'}
           placeholder={'Nhập tên tiện ích'}
-          onEndEditing={evt => setName(evt.nativeEvent.text)}
-          defaultValue={name}
+          value={name}
+          onChangeText={text => setName(text)}
+        />
+        <ComponentInput
+          important={true}
+          viewComponent={{marginTop: 10}}
+          type={'inputNote'}
+          title={'Mô tả tiện ích'}
+          placeholder={'Nhập mô tả tiện ích'}
+          value={description}
+          onChangeText={text => setDescription(text)}
         />
 
-        <View
-          style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
-          <Text style={[styles.label]}>Ghi chú</Text>
-          <Text style={{color: 'red', fontSize: 14}}> *</Text>
-        </View>
-        <View style={styles.viewTextInput}>
-          <TextInput
-            multiline
-            placeholder="Nhập ghi chú cho tiện ích"
-            onEndEditing={evt => setDescription(evt.nativeEvent.text)}
-            defaultValue={description}
-          />
-        </View>
         <View style={{marginBottom: 56}} />
       </ScrollView>
 
@@ -120,16 +109,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 10,
     backgroundColor: colors.backgroundGrey,
-  },
-  content: {color: 'rgba(127, 138, 147, 1)', fontSize: 13, fontWeight: '400'},
-  label: {fontSize: 15, color: 'rgba(55, 64, 71, 1)', fontWeight: '400'},
-  viewTextInput: {
-    height: 120,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: colors.borderInput,
-    padding: 10,
-    backgroundColor: 'white',
   },
 });
 export default AddUtilities;

@@ -4,8 +4,8 @@ import {colors, icons} from '../../../Constants';
 import CustomButton from '../../CommonComponent/CustomButton';
 const CustomFeeOfInvoice = props => {
   const {
-    defaultValue,
-    onEndEditing,
+    value,
+    onChangeText,
     fee,
     name,
     calculateUnit,
@@ -32,14 +32,15 @@ const CustomFeeOfInvoice = props => {
             style={{flex: 1}}
             placeholder={'Nhập số lượng'}
             keyboardType={'numeric'}
-            defaultValue={defaultValue}
-            onEndEditing={onEndEditing}
+            value={value}
+            onChangeText={onChangeText}
           />
         </View>
         <View
           style={[
             styles.viewBetween,
             styles.viewInput,
+            styles.shadowView,
             {width: widthView, paddingHorizontal: 5},
           ]}>
           <View style={{paddingVertical: 3}}>
@@ -56,8 +57,9 @@ const CustomFeeOfInvoice = props => {
     </View>
   );
 };
+const widthConponent = Dimensions.get('window').width - 20;
 const styles = StyleSheet.create({
-  container: {height: 74, width: '100%', marginTop: 10},
+  container: {height: 90, width: widthConponent},
   viewBetween: {
     flexDirection: 'row',
     alignItems: 'center',

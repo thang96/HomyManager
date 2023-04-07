@@ -99,7 +99,8 @@ const FloorInformation = () => {
                     price={`${item?.rentMonthlyFee?.toLocaleString()}`}
                     onPress={() => {
                       dispatch(updateStatus(false));
-                      navigation.navigate('RoomInformation', item?.id);
+                      let id = {houseId: hauseId, unitId: item?.id};
+                      navigation.navigate('RoomInformation', id);
                     }}
                   />
                 );
@@ -115,8 +116,8 @@ const FloorInformation = () => {
     <View style={styles.container}>
       {loading && <CustomLoading />}
       <CustomAppBarFloorInfor
-        hauseName={`${hauseInfor?.name}`}
-        address={`${hauseInfor?.fullAddress}`}
+        hauseName={`${hauseInfor?.name ?? ''}`}
+        address={`${hauseInfor?.fullAddress ?? ''}`}
         onPressLeft={() => navigation.goBack()}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
       />

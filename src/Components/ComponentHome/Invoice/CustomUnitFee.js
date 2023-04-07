@@ -2,14 +2,8 @@ import React from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {colors} from '../../../Constants';
 const CustomUnitFee = props => {
-  const {
-    title,
-    important,
-    defaultValue,
-    onEndEditing,
-    placeholder,
-    keyboardType,
-  } = props;
+  const {title, important, value, onChangeText, placeholder, keyboardType} =
+    props;
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row', alignItems: 'center', width: 130}}>
@@ -21,8 +15,8 @@ const CustomUnitFee = props => {
           style={{flex: 1}}
           keyboardType={keyboardType}
           placeholder={placeholder}
-          defaultValue={defaultValue}
-          onEndEditing={onEndEditing}
+          value={value}
+          onChangeText={onChangeText}
         />
         <View
           style={{backgroundColor: colors.backgroundInput, borderRadius: 4}}>

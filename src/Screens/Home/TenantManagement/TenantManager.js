@@ -32,7 +32,7 @@ const TenantManager = () => {
   const [textSearch, setTextSearch] = useState('');
   const [listTenants, setListTenants] = useState([]);
   const tokenStore = useSelector(token);
-  const focusLoading = useSelector(statusState);
+  const statusLoading = useSelector(statusState);
 
   useEffect(() => {
     const getListTenants = async () => {
@@ -46,7 +46,7 @@ const TenantManager = () => {
         .catch(error => console.log(error));
     };
     getListTenants();
-  }, [focusLoading]);
+  }, [statusLoading]);
 
   const renderListTenants = (item, index) => {
     return (
@@ -61,7 +61,7 @@ const TenantManager = () => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+    <View style={styles.container}>
       <CustomSearchAppBar
         iconLeft={icons.ic_back}
         label={'Quản lý người thuê'}
@@ -75,7 +75,7 @@ const TenantManager = () => {
         placeholder={'Tìm kiếm...'}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
+      <View style={styles.eachContainer}>
         {loading && <CustomLoading />}
         {listTenants.length > 0 ? (
           <FlatList
@@ -87,7 +87,7 @@ const TenantManager = () => {
             renderItem={({item, index}) => renderListTenants(item, index)}
           />
         ) : null}
-      </ScrollView>
+      </View>
 
       <CustomButtonBottom
         label={'Thêm mới người thuê'}
@@ -100,5 +100,8 @@ const TenantManager = () => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {flex: 1, backgroundColor: colors.backgroundGrey},
+  eachContainer: {paddingHorizontal: 10, paddingTop: 10, flex: 1},
+});
 export default TenantManager;

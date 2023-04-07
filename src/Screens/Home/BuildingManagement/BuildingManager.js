@@ -82,12 +82,7 @@ const BuildingManager = () => {
       />
 
       <View style={{flex: 1}}>
-        {loading && (
-          <CustomLoading
-            modalVisible={loading}
-            pressBack={() => navigation.goBack()}
-          />
-        )}
+        {loading && <CustomLoading />}
         <View style={{paddingHorizontal: 10, flex: 1}}>
           <CustomTextTitle label={'Tòa nhà hiện có'} />
           <FlatList

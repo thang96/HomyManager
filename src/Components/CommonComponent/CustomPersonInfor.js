@@ -1,8 +1,15 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import {colors, icons} from '../../Constants';
 import CustomButton from './CustomButton';
-
+const widthView = Dimensions.get('window').width - 22;
 const CustomPersonInfor = props => {
   const {
     styleView,
@@ -13,6 +20,7 @@ const CustomPersonInfor = props => {
     onPressCheck,
     pressAvatar,
   } = props;
+
   return (
     <View style={[styles.container, styleView]}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -84,6 +92,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2.62,
     elevation: 4,
     justifyContent: 'space-between',
+    width: widthView,
   },
   avatar: {
     width: 50,
@@ -102,7 +111,7 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     marginRight: 8,
-    tintColor: '#797979',
+    tintColor: colors.mainColor,
   },
   styleButtonRight: {width: 30, height: 30, tintColor: colors.mainColor},
 });

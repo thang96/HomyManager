@@ -1,31 +1,19 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  KeyboardAvoidingView,
-  FlatList,
-  Alert,
-} from 'react-native';
+import {StyleSheet, View, Text, TextInput, ScrollView} from 'react-native';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
-import {ScrollView} from 'react-native-virtualized-view';
-import CustomInput from '../../../Components/CommonComponent/CustomInput';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
-import {
-  CreateNewService,
-  GetListServicesApi,
-} from '../../../Api/Home/ServiceApis/ServiceApis';
+import {CreateNewService} from '../../../Api/Home/ServiceApis/ServiceApis';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import {updateStatus} from '../../../Store/slices/statusSlice';
+import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
+import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
+import {formatNumber, validateNumber} from '../../../utils/common';
 
 const AddService = props => {
   const navigation = useNavigation();
@@ -47,7 +35,7 @@ const AddService = props => {
       name: name,
       calculateMethod: calculateMethod,
       calculateUnit: calculateUnit,
-      fee: fee,
+      fee: validateNumber(fee),
       description: description,
     };
     await CreateNewService(tokenStore, data)
@@ -73,69 +61,70 @@ const AddService = props => {
           pressConfirm={() => createNewService()}
         />
       )}
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <CustomAppBar
-          iconLeft={icons.ic_back}
-          pressIconRight={() => navigation.navigate('NotificationScreen')}
-          label={'Thêm dịch vụ'}
-          iconRight={icons.ic_bell}
-          iconSecondRight={icons.ic_moreOption}
-          pressIconLeft={() => navigation.goBack()}
+      <CustomAppBar
+        iconLeft={icons.ic_back}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        label={'Thêm dịch vụ'}
+        iconRight={icons.ic_bell}
+        iconSecondRight={icons.ic_moreOption}
+        pressIconLeft={() => navigation.goBack()}
+      />
+      <ScrollView
+        nestedScrollEnabled={true}
+        keyboardDismissMode="none"
+        style={[styles.eachContainer]}>
+        <CustomSuggest
+          label={'Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ'}
         />
-        <ScrollView style={[styles.eachContainer]}>
-          <Text style={styles.content}>
-            Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ
-          </Text>
-          <CustomTextTitle label={'Thông tin dịch vụ'} />
+        <CustomTextTitle label={'Thông tin dịch vụ'} />
 
-          <CustomInput
-            important={true}
-            styleViewInput={{marginTop: 20}}
-            type={'input'}
-            title={'Tên dịch vụ'}
-            placeholder={'Nhập tên dịch vụ'}
-            defaultValue={name}
-            onEndEditing={evt => setName(evt.nativeEvent.text)}
-          />
-
-          <CustomInput
-            important={true}
-            styleViewInput={{marginTop: 20}}
-            type={'input'}
-            title={'Đợn vị đo'}
-            placeholder={'Đơn vị đo'}
-            defaultValue={calculateUnit}
-            onEndEditing={evt => setCalculateUnit(evt.nativeEvent.text)}
-          />
-          <CustomInput
-            important={true}
-            styleViewInput={{marginTop: 20}}
-            type={'input'}
-            title={'Phí dịch vụ'}
-            placeholder={'Nhập phí dịch vụ'}
-            keyboardType={'numeric'}
-            defaultValue={fee ? `${parseInt(fee).toLocaleString()}` : ''}
-            onEndEditing={evt => setFee(evt.nativeEvent.text)}
-          />
-          <Text style={[styles.label, {marginTop: 20}]}>Ghi chú</Text>
-          <View style={styles.viewTextInput}>
-            <TextInput
-              multiline
-              placeholder="Nhập ghi chú"
-              defaultValue={description}
-              onEndEditing={evt => setDescription(evt.nativeEvent.text)}
-            />
-          </View>
-          <View style={{marginBottom: 56}} />
-        </ScrollView>
-
-        <CustomTwoButtonBottom
-          leftLabel={'Trở lại'}
-          rightLabel={'Hoàn tất'}
-          onPressLeft={() => navigation.goBack()}
-          onPressRight={() => setModalService(true)}
+        <ComponentInput
+          important={true}
+          type={'input'}
+          title={'Tên dịch vụ'}
+          placeholder={'Nhập tên dịch vụ'}
+          value={name}
+          onChangeText={text => setName(text)}
         />
-      </KeyboardAvoidingView>
+        <ComponentInput
+          important={true}
+          viewComponent={{marginTop: 10}}
+          type={'input'}
+          title={'Đơn vị đo'}
+          placeholder={'Đơn vị đo'}
+          value={calculateUnit}
+          onChangeText={text => setCalculateUnit(text)}
+        />
+        <ComponentInput
+          important={true}
+          viewComponent={{marginTop: 10}}
+          type={'inputUnit'}
+          unit={'VNĐ'}
+          keyboardType={'number-pad'}
+          title={'Phí dịch vụ'}
+          placeholder={'Nhập phí dịch vụ'}
+          value={`${formatNumber(`${fee}`)}`}
+          onChangeText={text => setFee(text)}
+        />
+        <ComponentInput
+          important={true}
+          viewComponent={{marginTop: 10}}
+          type={'inputNote'}
+          title={'Ghi chú'}
+          placeholder={'Nhập ghi chú'}
+          value={description}
+          onChangeText={text => setDescription(text)}
+        />
+
+        <View style={{marginBottom: 56}} />
+      </ScrollView>
+
+      <CustomTwoButtonBottom
+        leftLabel={'Trở lại'}
+        rightLabel={'Hoàn tất'}
+        onPressLeft={() => navigation.goBack()}
+        onPressRight={() => setModalService(true)}
+      />
     </View>
   );
 };
@@ -145,16 +134,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 10,
     backgroundColor: colors.backgroundGrey,
-  },
-  content: {color: 'rgba(127, 138, 147, 1)', fontSize: 13, fontWeight: '400'},
-  label: {fontSize: 15, color: 'rgba(55, 64, 71, 1)', fontWeight: '400'},
-  viewTextInput: {
-    height: 120,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: colors.borderInput,
-    padding: 10,
-    backgroundColor: 'white',
   },
 });
 export default AddService;

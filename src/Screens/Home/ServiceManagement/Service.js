@@ -1,29 +1,19 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  KeyboardAvoidingView,
-  FlatList,
-} from 'react-native';
+import {StyleSheet, View, Text, FlatList} from 'react-native';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
 import CustomChecker from '../../../Components/ComponentHome/CustomChecker';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import {ScrollView} from 'react-native-virtualized-view';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  updateServices,
-  serviceState,
-  updateAmenity,
-} from '../../../Store/slices/commonSlice';
+import {updateServices} from '../../../Store/slices/commonSlice';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {uuid} from '../../../utils/uuid';
+import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 
 const Service = props => {
   const loadingState = useSelector(statusState);
@@ -97,26 +87,23 @@ const Service = props => {
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={[styles.eachContainer]}>
-        <Text style={styles.content}>
-          Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ
-        </Text>
+      <View style={[styles.eachContainer]}>
+        <CustomSuggest
+          label={'Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ'}
+        />
+
         <CustomTextTitle label={'Dịch vụ đã thêm'} />
 
         {listSevice.length > 0 ? (
           <FlatList
             listKey="listPaidSevice"
-            style={{justifyContent: 'space-between'}}
-            horizontal={false}
-            scrollEnabled={false}
             numColumns={2}
             data={listSevice}
             keyExtractor={uuid}
             renderItem={({item, index}) => renderListService(item, index)}
           />
         ) : null}
-      </ScrollView>
-
+      </View>
       <CustomTwoButtonBottom
         leftLabel={'Lưu'}
         rightLabel={'Thêm mới'}
@@ -136,6 +123,5 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: colors.backgroundGrey,
   },
-  content: {color: 'rgba(127, 138, 147, 1)', fontSize: 13, fontWeight: '400'},
 });
 export default Service;

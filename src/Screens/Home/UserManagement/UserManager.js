@@ -1,18 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Keyboard,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  SectionList,
-} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
-import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
@@ -22,10 +11,11 @@ import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {statusState} from '../../../Store/slices/statusSlice';
 import {GetListManagersApi} from '../../../Api/Home/ManagerApis/ManagerApis';
+import useKeyboard from '../../../Hook/useKeyboard';
 const UserManager = () => {
   const navigation = useNavigation();
   const statusLoading = useSelector(statusState);
-  const [keyboard, setKeyboard] = useState(null);
+  const keyboard = useKeyboard();
   const [loading, setLoading] = useState(true);
   const [textSearch, setTextSearch] = useState('');
   const [listManager, setListManager] = useState([]);
@@ -44,15 +34,6 @@ const UserManager = () => {
     };
     getListManager();
   }, [statusLoading]);
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboard(true);
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboard(false);
-    });
-  }, []);
 
   const renderListManager = (item, index) => {
     return (
@@ -81,7 +62,7 @@ const UserManager = () => {
         placeholder={'Tìm kiếm...'}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
+      <View style={{paddingHorizontal: 10, paddingTop: 10, flex: 1}}>
         {loading && <CustomLoading />}
         {listManager.length > 0 ? (
           <FlatList
@@ -93,7 +74,7 @@ const UserManager = () => {
             renderItem={({item, index}) => renderListManager(item, index)}
           />
         ) : null}
-      </ScrollView>
+      </View>
 
       <CustomButtonBottom
         label={'Thêm mới người quản lý'}

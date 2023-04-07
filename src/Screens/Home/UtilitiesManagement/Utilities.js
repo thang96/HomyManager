@@ -1,19 +1,9 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  KeyboardAvoidingView,
-  FlatList,
-} from 'react-native';
+import {StyleSheet, View, FlatList, ScrollView} from 'react-native';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
-import {ScrollView} from 'react-native-virtualized-view';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomChecker from '../../../Components/ComponentHome/CustomChecker';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
@@ -94,7 +84,7 @@ const Utilities = props => {
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={[styles.eachContainer]}>
+      <View style={[styles.eachContainer]}>
         <CustomSuggest
           label={'Chọn tiện ích miễn phí đã có hoặc thêm mới tiện ích'}
         />
@@ -103,16 +93,13 @@ const Utilities = props => {
         {listAmenitys.length > 0 ? (
           <FlatList
             listKey="listPaidSevice"
-            style={{justifyContent: 'space-between'}}
-            horizontal={false}
-            scrollEnabled={false}
             numColumns={2}
             data={listAmenitys}
             keyExtractor={key => `${key.id}`}
             renderItem={({item, index}) => renderListService(item, index)}
           />
         ) : null}
-      </ScrollView>
+      </View>
       <CustomTwoButtonBottom
         leftLabel={'Lưu'}
         rightLabel={'Thêm mới'}

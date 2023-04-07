@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import CustomAppBar from '../../Components/CommonComponent/CustomAppBar';
 import {colors, icons} from '../../Constants';
-import CustomInput from '../../Components/CommonComponent/CustomInput';
+import ComponentInput from '../../Components/CommonComponent/ComponentInput';
 import CustomTextTitle from '../../Components/CommonComponent/CustomTextTitle';
 import CustomTwoButtonBottom from '../../Components/CommonComponent/CustomTwoButtonBottom';
 import {useNavigation} from '@react-navigation/native';
@@ -19,14 +19,14 @@ const AddExtraFee = props => {
       />
       <ScrollView style={{marginHorizontal: 10}}>
         <CustomTextTitle label={'Thông tin khoản phí'} />
-        <CustomInput
+        <ComponentInput
           title={'Tiêu đề'}
           type={'input'}
           placeholder={'Nhập tiêu đề'}
           value={title}
           onChangeText={text => setTitle(text)}
         />
-        <CustomInput
+        <ComponentInput
           styleViewInput={{marginTop: 10}}
           title={'Số tiền'}
           type={'input'}

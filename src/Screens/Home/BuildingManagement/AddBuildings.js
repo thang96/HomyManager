@@ -171,14 +171,14 @@ const AddBuildings = props => {
         setModalCamera(false);
       });
   };
-
+  console.log(`${validateNumber(`${numberOfFloor}`)}`);
   const goToStepTwo = () => {
     let data = {
       name: name,
-      numberOfFloor: parseInt(numberOfFloor),
+      numberOfFloor: parseInt(`${validateNumber(`${numberOfFloor}`)}`),
       openTime: `${openTime}`,
       closeTime: `${closeTime}`,
-      leasingFee: parseInt(validateNumber(leasingFee)),
+      leasingFee: parseInt(`${validateNumber(`${leasingFee}`)}`),
       description: description,
       cityId: cityId,
       districtId: districtId,
@@ -305,7 +305,7 @@ const AddBuildings = props => {
           placeholder={'Nhập số tầng'}
           keyboardType={'number-pad'}
           viewComponent={{marginTop: 10}}
-          value={numberOfFloor}
+          value={`${formatNumber(`${numberOfFloor}`)}`}
           onChangeText={text => setNumberOfFloor(text)}
         />
 

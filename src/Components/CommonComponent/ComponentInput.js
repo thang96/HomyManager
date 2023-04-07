@@ -13,6 +13,8 @@ const ComponentInput = props => {
     viewComponent,
     value,
     onChangeText,
+    styleInput,
+    styleButton,
   } = props;
   return (
     <View style={viewComponent}>
@@ -22,7 +24,7 @@ const ComponentInput = props => {
         {important && <Text style={{color: 'red'}}> *</Text>}
       </View>
       {type == 'input' && (
-        <View style={styles.viewButton}>
+        <View style={[styles.viewButton, styleInput]}>
           <TextInput
             style={{flex: 1}}
             placeholder={placeholder}
@@ -34,7 +36,7 @@ const ComponentInput = props => {
         </View>
       )}
       {type == 'inputUnit' && (
-        <View style={styles.viewButton}>
+        <View style={[styles.viewButton, styleButton]}>
           <TextInput
             style={{flex: 1}}
             placeholder={placeholder}

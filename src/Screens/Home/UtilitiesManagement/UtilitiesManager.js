@@ -1,20 +1,8 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  KeyboardAvoidingView,
-  FlatList,
-  Keyboard,
-  Alert,
-} from 'react-native';
+import {StyleSheet, View, FlatList, Alert} from 'react-native';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import {icons, colors} from '../../../Constants';
-import {ScrollView} from 'react-native-virtualized-view';
 import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
 import {useDispatch, useSelector} from 'react-redux';
 import {amenityState, updateAmenity} from '../../../Store/slices/commonSlice';
@@ -106,58 +94,35 @@ const UtilitiesManager = props => {
         onChangeText={text => setTextSearch(text)}
         placeholder={'Tìm kiếm...'}
       />
-      <View style={{flex: 1, paddingHorizontal: 10}}>
-        {loading && <CustomLoading />}
-        <ScrollView style={[styles.eachContainer]}>
-          {listSevice.length > 0 ? (
-            <FlatList
-              listKey="listPaidSevice"
-              style={{justifyContent: 'space-between'}}
-              horizontal={false}
-              scrollEnabled={false}
-              numColumns={3}
-              data={listSevice}
-              keyExtractor={key => key.id}
-              renderItem={({item, index}) => renderListService(item, index)}
-            />
-          ) : null}
-        </ScrollView>
-
-        <CustomButtonBottom
-          label={'Thêm tiện ích mới'}
-          onPress={() => {
-            dispatch(updateStatus(true));
-            navigation.navigate('AddUtilities');
-          }}
-        />
+      {loading && <CustomLoading />}
+      <View style={[styles.eachContainer]}>
+        {listSevice.length > 0 ? (
+          <FlatList
+            listKey="listPaidSevice"
+            numColumns={2}
+            data={listSevice}
+            keyExtractor={key => key.id}
+            renderItem={({item, index}) => renderListService(item, index)}
+          />
+        ) : null}
       </View>
+
+      <CustomButtonBottom
+        label={'Thêm tiện ích mới'}
+        onPress={() => {
+          dispatch(updateStatus(true));
+          navigation.navigate('AddUtilities');
+        }}
+      />
     </View>
   );
 };
 const styles = StyleSheet.create({
   eachContainer: {
     flex: 1,
-
-    paddingTop: 10,
+    marginTop: 10,
     backgroundColor: colors.backgroundGrey,
+    paddingHorizontal: 10,
   },
-  textTitle: {color: '#173b5f', fontSize: 16, fontWeight: 'bold'},
-  content: {color: 'grey', fontSize: 14},
-  viewButton: {alignSelf: 'center', alignItems: 'center', marginVertical: 10},
-  styleButton: {
-    backgroundColor: colors.mainColor,
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    marginBottom: 5,
-  },
-  styleButton: {
-    backgroundColor: colors.mainColor,
-    height: 50,
-    borderRadius: 10,
-    marginBottom: 5,
-    flexDirection: 'row',
-  },
-  styleLabel: {color: 'white', fontWeight: '500', marginLeft: 5},
 });
 export default UtilitiesManager;

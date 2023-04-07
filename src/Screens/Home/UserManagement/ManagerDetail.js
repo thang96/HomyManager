@@ -8,7 +8,6 @@ import BoxShowInfor from '../../../Components/CommonComponent/BoxShowInfor';
 import {colors, icons, images} from '../../../Constants';
 import {useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
-import {GetTenantDetailApi} from '../../../Api/Home/TenantApis/TenantApis';
 import {GetManagerDetailApi} from '../../../Api/Home/ManagerApis/ManagerApis';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 const ManagerDetail = props => {

@@ -1,16 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Keyboard,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  SectionList,
-} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
@@ -19,6 +9,7 @@ import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwo
 import {useDispatch, useSelector} from 'react-redux';
 import {managerState, updateManagers} from '../../../Store/slices/commonSlice';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
+import useKeyboard from '../../../Hook/useKeyboard';
 
 const ManagerList = () => {
   const navigation = useNavigation();
@@ -26,22 +17,13 @@ const ManagerList = () => {
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
   const ManagerSelect = useSelector(managerState);
-  const [keyboard, setKeyboard] = useState(null);
+  const keyboard = useKeyboard();
   const [textSearch, setTextSearch] = useState('');
   const [listManager, setListManager] = useState([]);
 
   useEffect(() => {
     setListManager(ManagerSelect);
   }, [ManagerSelect, isFocus]);
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboard(true);
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboard(false);
-    });
-  }, []);
 
   const renderListManager = (item, index) => {
     let value = item;

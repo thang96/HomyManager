@@ -1,19 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  KeyboardAvoidingView,
-  FlatList,
-  Keyboard,
-  Text,
-  ScrollView,
-} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import {icons, colors} from '../../../Constants';
-// import {ScrollView} from 'react-native-virtualized-view';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
@@ -75,103 +63,102 @@ const InvoiceManagement = props => {
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       {loading && <CustomLoading />}
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <CustomSearchAppBar
-          iconLeft={icons.ic_back}
-          label={'Quản lý hóa đơn'}
-          iconRight={icons.ic_bell}
-          iconSecondRight={icons.ic_moreOption}
-          pressIconLeft={() => navigation.goBack()}
-          keyboard={keyboard}
-          textSearch={textSearch}
-          value={textSearch}
-          onChangeText={text => setTextSearch(text)}
-          placeholder={'Tìm kiếm...'}
-        />
-        <View style={{flex: 1, paddingHorizontal: 10}}>
-          <View style={styles.viewButtonTop}>
-            <ScrollView horizontal>
-              <CustomButton
-                styleButton={[
-                  {
-                    backgroundColor:
-                      isActive == 1 ? colors.backgroundOrange : 'white',
-                  },
-                  styles.viewButton,
-                ]}
-                label={'Chưa chốt'}
-                styleLabel={{color: isActive == 1 ? 'white' : '#7F8A93'}}
-                onPress={() => setIsActive(1)}
-              />
-              <CustomButton
-                styleButton={[
-                  {
-                    backgroundColor:
-                      isActive == 2 ? colors.backgroundOrange : 'white',
-                  },
-                  styles.viewButton,
-                ]}
-                label={'Chưa thanh toán'}
-                styleLabel={{color: isActive == 2 ? 'white' : '#7F8A93'}}
-                onPress={() => setIsActive(2)}
-              />
-              <CustomButton
-                styleButton={[
-                  {
-                    backgroundColor:
-                      isActive == 3 ? colors.backgroundOrange : 'white',
-                  },
-                  styles.viewButton,
-                ]}
-                label={'Đã thanh toán'}
-                styleLabel={{color: isActive == 3 ? 'white' : '#7F8A93'}}
-                onPress={() => setIsActive(3)}
-              />
-            </ScrollView>
-          </View>
-          <CustomButtonCarendar
-            value={valueDate}
-            label={'Chọn ngày'}
-            icon={icons.ic_calendar}
-            onPress={() => {}}
-          />
+      <CustomSearchAppBar
+        iconLeft={icons.ic_back}
+        label={'Quản lý hóa đơn'}
+        iconRight={icons.ic_bell}
+        iconSecondRight={icons.ic_moreOption}
+        pressIconLeft={() => navigation.goBack()}
+        keyboard={keyboard}
+        textSearch={textSearch}
+        value={textSearch}
+        onChangeText={text => setTextSearch(text)}
+        placeholder={'Tìm kiếm...'}
+      />
+      <View style={{flex: 1, paddingHorizontal: 10}}>
+        <View style={styles.viewButtonTop}>
+          <ScrollView horizontal>
+            <CustomButton
+              styleButton={[
+                {
+                  backgroundColor:
+                    isActive == 1 ? colors.backgroundOrange : 'white',
+                },
+                styles.viewButton,
+              ]}
+              label={'Chưa chốt'}
+              styleLabel={{color: isActive == 1 ? 'white' : '#7F8A93'}}
+              onPress={() => setIsActive(1)}
+            />
+            <CustomButton
+              styleButton={[
+                {
+                  backgroundColor:
+                    isActive == 2 ? colors.backgroundOrange : 'white',
+                },
+                styles.viewButton,
+              ]}
+              label={'Chưa thanh toán'}
+              styleLabel={{color: isActive == 2 ? 'white' : '#7F8A93'}}
+              onPress={() => setIsActive(2)}
+            />
+            <CustomButton
+              styleButton={[
+                {
+                  backgroundColor:
+                    isActive == 3 ? colors.backgroundOrange : 'white',
+                },
+                styles.viewButton,
+              ]}
+              label={'Đã thanh toán'}
+              styleLabel={{color: isActive == 3 ? 'white' : '#7F8A93'}}
+              onPress={() => setIsActive(3)}
+            />
+          </ScrollView>
+        </View>
 
-          {isActive == 1 ? (
-            <InvoiceUnconfimred
-              data={listInvoiceUnconfimred}
-              onPress={id => {
-                dispatch(updateStatus(true));
-                navigation.navigate('InvoiceDetail', id);
-              }}
-            />
-          ) : isActive == 2 ? (
-            <InvoiceUnpaid
-              data={listInvoiceUnpaid}
-              onPress={id => {
-                dispatch(updateStatus(true));
-                navigation.navigate('InvoiceUnpaidDetail', id);
-              }}
-            />
-          ) : isActive == 3 ? (
-            <InvoicePaid
-              data={listInvoicePaid}
-              onPress={id => {
-                navigation.navigate('InvoicePaidDetail', id);
-              }}
-            />
-          ) : // : isActive == 4 ? (
-          //   <InvoiceOutOfDate />
-          // )
-          null}
-          <CustomButtonBottom
-            label={'Thêm hóa đơn'}
-            onPress={() => {
+        <CustomButtonCarendar
+          value={valueDate}
+          label={'Chọn ngày'}
+          icon={icons.ic_calendar}
+          onPress={() => {}}
+        />
+
+        {isActive == 1 ? (
+          <InvoiceUnconfimred
+            data={listInvoiceUnconfimred}
+            onPress={id => {
               dispatch(updateStatus(true));
-              navigation.navigate('CreateInvoice');
+              navigation.navigate('InvoiceDetail', id);
             }}
           />
-        </View>
-      </KeyboardAvoidingView>
+        ) : isActive == 2 ? (
+          <InvoiceUnpaid
+            data={listInvoiceUnpaid}
+            onPress={id => {
+              dispatch(updateStatus(true));
+              navigation.navigate('InvoiceUnpaidDetail', id);
+            }}
+          />
+        ) : isActive == 3 ? (
+          <InvoicePaid
+            data={listInvoicePaid}
+            onPress={id => {
+              navigation.navigate('InvoicePaidDetail', id);
+            }}
+          />
+        ) : // : isActive == 4 ? (
+        //   <InvoiceOutOfDate />
+        // )
+        null}
+      </View>
+      <CustomButtonBottom
+        label={'Thêm hóa đơn'}
+        onPress={() => {
+          dispatch(updateStatus(true));
+          navigation.navigate('CreateInvoice');
+        }}
+      />
     </View>
   );
 };

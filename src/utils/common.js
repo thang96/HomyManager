@@ -1,11 +1,11 @@
 export const formatNumber = value => {
-  let removeChar = value.replace(/[^0-9\.]/g, '');
-  let removerDot = removeChar.replace(/\./g, '');
-  let formatNumber = removerDot.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  let removeChar = value?.replace(/[^0-9\.]/g, '');
+  let removerDot = removeChar?.replace(/\./g, '');
+  let formatNumber = removerDot?.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   return formatNumber;
 };
 export const validateNumber = value => {
-  let removeChar = value.replace(/[^0-9\.]/g, '');
+  let removeChar = value?.replace(/[^0-9\.]/g, '');
   return removeChar;
 };
 export const convertDate = value => {

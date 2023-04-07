@@ -87,76 +87,74 @@ const AddBuildingsStep2 = props => {
         />
       )}
 
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <CustomStepAppBar
-          iconLeft={icons.ic_back}
-          label={'Thiết lập tiền nhà'}
-          iconRight={icons.ic_bell}
-          pressIconRight={() => navigation.navigate('NotificationScreen')}
-          iconSecondRight={icons.ic_moreOption}
-          pressIconLeft={() => navigation.goBack()}
-          step={2}
+      <CustomStepAppBar
+        iconLeft={icons.ic_back}
+        label={'Thiết lập tiền nhà'}
+        iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        iconSecondRight={icons.ic_moreOption}
+        pressIconLeft={() => navigation.goBack()}
+        step={2}
+      />
+      <ScrollView
+        nestedScrollEnabled={true}
+        keyboardDismissMode="none"
+        style={[styles.eachContainer]}>
+        <CustomSuggest
+          label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
         />
-        <ScrollView
-          nestedScrollEnabled={true}
-          keyboardDismissMode="none"
-          style={[styles.eachContainer]}>
-          <CustomSuggest
-            label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
-          />
 
-          <CustomTextTitle label={'Thiết lập tiền nhà'} />
+        <CustomTextTitle label={'Thiết lập tiền nhà'} />
 
-          <ComponentButton
-            type={'buttonValue'}
-            important={true}
-            icon={icons.ic_down}
-            title={'Ngày chốt tiền'}
-            placeholder={'Chọn ngày'}
-            value={billingDate?.key}
-            onPress={() => setModalbillingDate(true)}
-          />
-
-          <CustomTimeButtons
-            styleContainer={{marginTop: 20}}
-            title={'Thời gian nộp tiền phòng'}
-            leftLabel={'Từ ngày'}
-            rightLabel={'Đến ngày'}
-            iconLeft={icons.ic_down}
-            iconRight={icons.ic_down}
-            styleButtonLeft={{marginRight: 5}}
-            styleButtonRight={{marginLeft: 5}}
-            valueLeft={paymentDateFrom?.value}
-            valueRight={paymentDateTo?.value}
-            onPressLeft={() => setModalpaymentDateFrom(true)}
-            onPressRightt={() => setModalpaymentDateTo(true)}
-          />
-
-          <CustomTextTitle
-            label={'Thông tin thanh toán'}
-            labelButton={'Thêm'}
-            icon={icons.ic_plus}
-            onPress={() => {
-              dispatch(updateStatus(true));
-              navigation.navigate('ListPaymentSelect');
-            }}
-          />
-          {bank && (
-            <CustomBankAccountInfor
-              viewCustom={{marginBottom: 10}}
-              imageUrl={bank?.bank?.logo}
-              userName={bank?.name}
-              accountNo={bank?.accountNo}
-            />
-          )}
-        </ScrollView>
-        <CustomTwoButtonBottom
-          leftLabel={'Trở lại'}
-          rightLabel={'Tiếp tục'}
-          onPressLeft={() => navigation.goBack()}
-          onPressRight={() => goToStepThree()}
+        <ComponentButton
+          type={'buttonValue'}
+          important={true}
+          icon={icons.ic_down}
+          title={'Ngày chốt tiền'}
+          placeholder={'Chọn ngày'}
+          value={billingDate?.key}
+          onPress={() => setModalbillingDate(true)}
         />
-      </KeyboardAvoidingView>
+
+        <CustomTimeButtons
+          styleContainer={{marginTop: 20}}
+          title={'Thời gian nộp tiền phòng'}
+          leftLabel={'Từ ngày'}
+          rightLabel={'Đến ngày'}
+          iconLeft={icons.ic_down}
+          iconRight={icons.ic_down}
+          styleButtonLeft={{marginRight: 5}}
+          styleButtonRight={{marginLeft: 5}}
+          valueLeft={paymentDateFrom?.value}
+          valueRight={paymentDateTo?.value}
+          onPressLeft={() => setModalpaymentDateFrom(true)}
+          onPressRightt={() => setModalpaymentDateTo(true)}
+        />
+
+        <CustomTextTitle
+          label={'Thông tin thanh toán'}
+          labelButton={'Thêm'}
+          icon={icons.ic_plus}
+          onPress={() => {
+            dispatch(updateStatus(true));
+            navigation.navigate('ListPaymentSelect');
+          }}
+        />
+        {bank && (
+          <CustomBankAccountInfor
+            viewCustom={{marginBottom: 10}}
+            imageUrl={bank?.bank?.logo}
+            userName={bank?.name}
+            accountNo={bank?.accountNo}
+          />
+        )}
+      </ScrollView>
+      <CustomTwoButtonBottom
+        leftLabel={'Trở lại'}
+        rightLabel={'Tiếp tục'}
+        onPressLeft={() => navigation.goBack()}
+        onPressRight={() => goToStepThree()}
+      />
     </View>
   );
 };

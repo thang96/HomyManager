@@ -2,18 +2,17 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  Image,
   Text,
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
 import {icons} from '../../Constants';
 import CustomButton from '../CommonComponent/CustomButton';
+import {formatNumber} from '../../utils/common';
 
 const RenderService = props => {
   const {
     viewStyle,
-    icon,
     calculateUnit,
     name,
     fee,
@@ -28,7 +27,6 @@ const RenderService = props => {
       disabled={disabled}
       onPress={onPress}
       style={[styles.viewContainer, viewStyle, {width: widthWindow}]}>
-      {/* {icon && <Image source={icon} style={styles.icon} />} */}
       <View style={{flex: 1}}>
         {name && (
           <Text
@@ -43,7 +41,7 @@ const RenderService = props => {
             style={{
               fontSize: 13,
               color: '#0191FF',
-            }}>{`${fee}/${calculateUnit}`}</Text>
+            }}>{`${formatNumber(`${fee}`)}/${calculateUnit}`}</Text>
         )}
       </View>
       {isDelete && (

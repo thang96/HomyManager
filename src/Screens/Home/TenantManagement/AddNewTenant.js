@@ -1,14 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Image, Alert} from 'react-native';
+import {StyleSheet, View, Image, Alert, ScrollView} from 'react-native';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
-import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import {FlatList, TextInput} from 'react-native-gesture-handler';
-import {uuid} from '../../../utils/uuid';
-import CustomInput from '../../../Components/CommonComponent/CustomInput';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -17,6 +12,8 @@ import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
+import ComponentButton from '../../../Components/CommonComponent/ComponentButton';
 import {dateToDMY, dateToYMD} from '../../../utils/common';
 import {CreateNewTenantApi} from '../../../Api/Home/TenantApis/TenantApis';
 import {useDispatch, useSelector} from 'react-redux';
@@ -26,6 +23,8 @@ import {
   PostImageIdentityApi,
   PostImageUserApi,
 } from '../../../Api/Home/FileDataApis/FileDataApis';
+import ComponentRenderImage from '../../../Components/CommonComponent/ComponentRenderImage';
+import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 
 const AddNewTenant = () => {
   const navigation = useNavigation();
@@ -123,30 +122,6 @@ const AddNewTenant = () => {
       });
   };
 
-  const renderImage = (item, index) => {
-    return (
-      <View>
-        <View style={styles.viewRender}>
-          <CustomButton
-            onPress={() => {
-              let result = [...albumImage];
-              let newResult = result.filter(itemResult => itemResult !== item);
-              setAlbumImage(newResult);
-            }}
-            styleButton={styles.customButtonIcon}
-            styleIcon={styles.imageStyle}
-            icon={icons.ic_cancel}
-          />
-          <Image
-            source={{uri: item?.uri}}
-            style={{width: 180, height: 180, marginHorizontal: 5}}
-            resizeMode={'contain'}
-          />
-        </View>
-      </View>
-    );
-  };
-
   const createNewTenant = async () => {
     setModalAddTenant(false);
     setLoadingAddTenant(true);
@@ -166,32 +141,36 @@ const AddNewTenant = () => {
       .then(async res => {
         if (res?.status == 200) {
           const tenantId = res?.data?.id;
-          await PostImageUserApi(tokenStore, tenantId, albumImageUser)
-            .then(async res => {
-              if (res?.status == 200) {
-                await PostImageIdentityApi(tokenStore, tenantId, albumImage)
-                  .then(res => {
-                    if (res?.status == 200) {
-                      dispatch(updateStatus(false));
-                      setLoadingAddTenant(false);
-                      navigation.goBack();
-                    }
-                  })
-                  .catch(error => {
-                    Alert.alert('Cảnh báo', 'Không thể gửi ảnh CMND/CCCD');
-                  });
-              }
-            })
-            .catch(error => {
-              Alert.alert('Cảnh báo', 'Không thể gửi ảnh người dùng.');
-            });
+          if (albumImageUser?.length > 0) {
+            await PostImageUserApi(tokenStore, tenantId, albumImageUser)
+              .then(async res => {
+                if (res?.status == 200) {
+                }
+              })
+              .catch(error => {
+                Alert.alert('Cảnh báo', 'Không thể gửi ảnh người dùng.');
+              });
+          }
+          if (albumImage?.length > 0) {
+            await PostImageIdentityApi(tokenStore, tenantId, albumImage)
+              .then(res => {
+                if (res?.status == 200) {
+                  dispatch(updateStatus('updateNewTenant'));
+                  setLoadingAddTenant(false);
+                  navigation.goBack();
+                }
+              })
+              .catch(error => {
+                Alert.alert('Cảnh báo', 'Không thể gửi ảnh CMND/CCCD');
+              });
+          }
         }
       })
       .catch(error => console.log(error));
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+    <View style={styles.container}>
       {loadingAddTenant && <CustomLoading />}
       {modalAddTenant && (
         <CustomModalNotify
@@ -258,160 +237,132 @@ const AddNewTenant = () => {
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
+      <ScrollView
+        nestedScrollEnabled={true}
+        keyboardDismissMode="none"
+        style={{paddingHorizontal: 10, paddingTop: 10}}>
         <CustomSuggest
           label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
         />
         <CustomTextTitle label={'Thông tin người thuê'} />
 
-        <CustomInput
+        <ComponentInput
+          important={true}
+          keyboardType={'number-pad'}
           type={'input'}
           title={'Số điện thoại'}
           placeholder={'Nhập số điện thoại'}
-          keyboardType={'numeric'}
-          important={true}
-          defaultValue={phoneNumber}
-          onEndEditing={evt => setPhoneNumber(evt.nativeEvent.text)}
+          value={phoneNumber}
+          onChangeText={text => setPhoneNumber(text)}
         />
-
-        <CustomInput
+        <ComponentInput
+          viewComponent={{marginTop: 10}}
           type={'input'}
-          styleViewInput={{marginTop: 20}}
           title={'Họ và tên'}
-          placeholder="Nhập họ và tên"
-          defaultValue={fullName}
-          onEndEditing={evt => setFullName(evt.nativeEvent.text)}
+          placeholder={'Nhập họ và tên'}
+          value={fullName}
+          onChangeText={text => setFullName(text)}
         />
-
-        <CustomInput
+        <ComponentInput
+          viewComponent={{marginTop: 10}}
           type={'input'}
-          styleViewInput={{marginTop: 20}}
           title={'Email'}
-          placeholder="Nhập email"
-          defaultValue={email}
-          onEndEditing={evt => setEmail(evt.nativeEvent.text)}
+          placeholder={'Nhập email'}
+          value={email}
+          onChangeText={text => setEmail(text)}
         />
-
-        <CustomInput
-          type={'button'}
-          styleViewInput={{marginTop: 20}}
+        <ComponentButton
+          viewComponent={{marginTop: 10}}
+          type={'buttonSelect'}
           title={'Ngày sinh'}
           placeholder={'Chọn ngày sinh'}
           value={birthDayValue}
           onPress={() => setModalBirthDay(true)}
         />
-
-        <CustomInput
+        <ComponentInput
+          viewComponent={{marginTop: 10}}
           type={'input'}
-          styleViewInput={{marginTop: 20}}
+          keyboardType={'number-pad'}
           title={'Số CMND/ CCCD'}
           placeholder={'Nhập số CMND/ CCCD'}
-          keyboardType={'numeric'}
-          defaultValue={identityNumber}
-          onEndEditing={evt => setIdentityNumber(evt.nativeEvent.text)}
+          value={identityNumber}
+          onChangeText={text => setIdentityNumber(text)}
         />
-
-        <CustomInput
-          type={'button'}
-          styleViewInput={{marginTop: 20}}
+        <ComponentButton
+          viewComponent={{marginTop: 10}}
+          type={'buttonSelect'}
           title={'Ngày cấp'}
           placeholder={'Chọn ngày cấp'}
           value={identityIssueDateValue}
           onPress={() => setModalIdentityIssueDate(true)}
         />
-
-        <CustomInput
+        <ComponentInput
+          viewComponent={{marginTop: 10}}
           type={'input'}
-          styleViewInput={{marginTop: 20}}
           title={'Nơi cấp'}
           placeholder={'Nhập nơi cấp'}
-          defaultValue={identityIssuePlace}
-          onEndEditing={evt => setIdentityIssuePlace(evt.nativeEvent.text)}
+          value={identityIssuePlace}
+          onChangeText={text => setIdentityIssuePlace(text)}
         />
-
-        <CustomInput
+        <ComponentInput
+          viewComponent={{marginTop: 10}}
           type={'input'}
-          styleViewInput={{marginTop: 20}}
           title={'Địa chỉ'}
           placeholder={'Nhập địa chỉ'}
-          defaultValue={address}
-          onEndEditing={evt => setAddress(evt.nativeEvent.text)}
+          value={address}
+          onChangeText={text => setAddress(text)}
         />
-        <View style={styles.line} />
+
+        {StraightLine()}
         <CustomTextTitle label={'Tạo tài khoản cho người thuê'} />
-        <CustomInput
+
+        <ComponentInput
+          important={true}
+          viewComponent={{marginTop: 10}}
           type={'input'}
           title={'Tài khoản'}
           placeholder={'Nhập tài khoản'}
-          important={true}
-          defaultValue={userName}
-          onEndEditing={evt => setUserName(evt.nativeEvent.text)}
+          value={userName}
+          onChangeText={text => setUserName(text)}
         />
-        <CustomInput
+        <ComponentInput
+          important={true}
+          viewComponent={{marginTop: 10}}
           type={'input'}
           title={'Mật khẩu'}
           placeholder={'Nhập mật khẩu'}
-          important={true}
-          defaultValue={password}
-          onEndEditing={evt => setPassword(evt.nativeEvent.text)}
+          value={password}
+          onChangeText={text => setPassword(text)}
         />
-        <View style={styles.line} />
-        <CustomTextTitle label={'Thêm ảnh người dùng'} />
 
-        <View style={styles.viewShowImage}>
-          {albumImageUser.length > 0 ? (
-            <FlatList
-              horizontal
-              data={albumImageUser}
-              keyExtractor={uuid}
-              renderItem={({item}) => renderImage(item)}
-            />
-          ) : (
-            <CustomButton
-              styleButton={{flex: 1}}
-              label={'Tải lên ảnh người dùng'}
-              styleLabel={[{marginTop: 5, textAlign: 'center'}]}
-              disabled={true}
-              icon={icons.ic_upload}
-              styleIcon={{with: 100, height: 100, alignSelf: 'center'}}
-            />
-          )}
-        </View>
-
-        <CustomButton
-          styleButton={[styles.buttonUploadIM]}
-          label={'Thêm ảnh người dùng'}
-          styleLabel={styles.labelUploadIM}
-          onPress={() => setModalCameraUser(true)}
+        {StraightLine()}
+        <ComponentRenderImage
+          title={'Thêm ảnh người dùng'}
+          label={'Tải lên ảnh người dùng'}
+          labelUpload={'Thêm ảnh người dùng'}
+          data={albumImageUser}
+          deleteButton={true}
+          openModal={() => setModalCameraUser(true)}
+          deleteItem={item => {
+            let result = [...albumImageUser];
+            let newResult = result.filter(itemResult => itemResult !== item);
+            setAlbumImageUser(newResult);
+          }}
         />
-        <View style={styles.line} />
 
-        <CustomTextTitle label={'Thêm ảnh CMND/ CCCD'} />
-
-        <View style={styles.viewShowImage}>
-          {albumImage.length > 0 ? (
-            <FlatList
-              horizontal
-              data={albumImage}
-              keyExtractor={uuid}
-              renderItem={({item}) => renderImage(item)}
-            />
-          ) : (
-            <CustomButton
-              styleButton={{flex: 1}}
-              label={'Tải lên ảnh mặt trước và mặt sau của CMND/ CCCD'}
-              styleLabel={[{marginTop: 5, textAlign: 'center'}]}
-              disabled={true}
-              icon={icons.ic_upload}
-              styleIcon={{with: 100, height: 100, alignSelf: 'center'}}
-            />
-          )}
-        </View>
-        <CustomButton
-          styleButton={[styles.buttonUploadIM]}
-          label={'Thêm ảnh CMND/ CCCD'}
-          styleLabel={styles.labelUploadIM}
-          onPress={() => setModalCamera(true)}
+        {StraightLine()}
+        <ComponentRenderImage
+          title={'Thêm ảnh CMND/ CCCD'}
+          label={'Tải lên ảnh mặt trước và mặt sau của CMND/ CCCD'}
+          labelUpload={'Thêm ảnh CMND/ CCCD'}
+          data={albumImage}
+          deleteButton={true}
+          openModal={() => setModalCamera(true)}
+          deleteItem={item => {
+            let result = [...albumImage];
+            let newResult = result.filter(itemResult => itemResult !== item);
+            setAlbumImage(newResult);
+          }}
         />
 
         <View style={{height: 56}} />
@@ -426,45 +377,6 @@ const AddNewTenant = () => {
   );
 };
 const styles = StyleSheet.create({
-  textTitle: {color: '#173b5f', fontSize: 16, fontWeight: 'bold'},
-  label: {fontSize: 15, color: 'black', fontWeight: '500'},
-  viewtextInput: {
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: 'grey',
-    paddingHorizontal: 10,
-    backgroundColor: '#f8f9f9',
-  },
-  line: {
-    height: 1,
-    width: '100%',
-    alignSelf: 'center',
-    backgroundColor: 'black',
-    marginVertical: 20,
-  },
-  buttonUploadIM: {
-    height: 50,
-    backgroundColor: colors.mainColor,
-    borderRadius: 10,
-  },
-  labelUploadIM: {color: 'white', fontWeight: '500', fontSize: 15},
-  customButtonIcon: {position: 'absolute', right: 3, top: 3, zIndex: 1},
-  imageStyle: {width: 20, height: 20},
-  viewRender: {
-    height: 210,
-    width: 210,
-    borderWidth: 0.5,
-    borderColor: colors.mainColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginRight: 10,
-  },
-  viewShowImage: {
-    height: 220,
-    marginVertical: 5,
-    borderRadius: 10,
-    backgroundColor: 'white',
-  },
+  container: {flex: 1, backgroundColor: colors.backgroundGrey},
 });
 export default AddNewTenant;

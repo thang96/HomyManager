@@ -1,26 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Keyboard,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  SectionList,
-  Alert,
-} from 'react-native';
+import {StyleSheet, View, Text, Image, ScrollView, Alert} from 'react-native';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
-import CustomButton from '../../../Components/CommonComponent/CustomButton';
-import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
-import CustomInputValue from '../../../Components/CommonComponent/CustomInputValue';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import {uuid} from '../../../utils/uuid';
-import CustomInput from '../../../Components/CommonComponent/CustomInput';
 import CustomTimeButtons from '../../../Components/CommonComponent/CustomTimeButton';
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
@@ -36,11 +20,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetListHausesApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import {GetListUnitsApi} from '../../../Api/Home/UnitApis/UnitApis';
-import {dateToDMY, dateToYMD} from '../../../utils/common';
+import {dateToDMY, dateToYMD, formatNumber} from '../../../utils/common';
 import {PAYMENTDURATION} from '../../../Resource/DataPicker';
-import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
-import {GetListServicesApi} from '../../../Api/Home/ServiceApis/ServiceApis';
-import {GetListTenantsApi} from '../../../Api/Home/TenantApis/TenantApis';
 import {
   amenityState,
   serviceState,
@@ -54,7 +35,11 @@ import {CreateNewContractApi} from '../../../Api/Home/ContractApis/ContractApis'
 import {updateStatus} from '../../../Store/slices/statusSlice';
 import CustomNote from '../../../Components/CommonComponent/CustomNote';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
+import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
+import ComponentButton from '../../../Components/CommonComponent/ComponentButton';
 import {PostImageContractApi} from '../../../Api/Home/FileDataApis/FileDataApis';
+import ComponentRenderImage from '../../../Components/CommonComponent/ComponentRenderImage';
+import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 
 const CreateContract = () => {
   const navigation = useNavigation();
@@ -211,29 +196,6 @@ const CreateContract = () => {
       });
   };
 
-  const renderImage = (item, index) => {
-    return (
-      <View>
-        <View style={styles.viewRender}>
-          <CustomButton
-            onPress={() => {
-              let result = [...contractImages];
-              let newResult = result.filter(itemResult => itemResult !== item);
-              setContractImages(newResult);
-            }}
-            styleButton={styles.customButtonIcon}
-            styleIcon={styles.imageStyle}
-            icon={icons.ic_cancel}
-          />
-          <Image
-            source={{uri: item?.uri}}
-            style={{width: 180, height: 180, marginHorizontal: 5}}
-            resizeMode={'contain'}
-          />
-        </View>
-      </View>
-    );
-  };
   const getListUnit = async item => {
     setHause(item);
     setModalHause(false);
@@ -293,7 +255,7 @@ const CreateContract = () => {
           await PostImageContractApi(tokenStore, contractId, contractImages)
             .then(res => {
               if (res?.status == 200) {
-                dispatch(updateStatus(true));
+                dispatch(updateStatus('updateContract'));
                 setLoadingAddContract(false);
                 navigation.goBack();
               }
@@ -314,8 +276,8 @@ const CreateContract = () => {
       {loadingAddContract && <CustomLoading />}
       {modalCreateContract && (
         <CustomModalNotify
-          title={'Tạo mới dịch vụ'}
-          label={'Bạn có muốn thêm mới dịch vụ này ?'}
+          title={'Tạo mới hợp đồng'}
+          label={'Bạn có muốn thêm mới hợp đồng này ?'}
           modalVisible={modalCreateContract}
           onRequestClose={() => setModalCreateContract(false)}
           pressConfirm={() => {
@@ -380,6 +342,7 @@ const CreateContract = () => {
           mode={'date'}
           openPicker={modalStartChargeDate}
           onDateChange={value => {
+            setTimeChargeDate(value);
             setStartChargeDate(dateToYMD(value));
             setStartChargeDateValue(dateToDMY(value));
           }}
@@ -414,24 +377,28 @@ const CreateContract = () => {
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
+      <ScrollView
+        nestedScrollEnabled={true}
+        keyboardDismissMode="none"
+        style={{paddingHorizontal: 10, paddingTop: 10}}>
         <CustomSuggest
           label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
         />
         <CustomTextTitle label={'Thông tin hợp đồng'} />
-        <CustomInput
+
+        <ComponentButton
+          type={'buttonSelect'}
           important={true}
-          type={'button'}
-          styleViewInput={{marginTop: 10}}
+          viewComponent={{marginTop: 10}}
           title={'Tòa nhà'}
           placeholder={'Chọn tòa nhà'}
           value={hause?.name}
           onPress={() => setModalHause(true)}
         />
-        <CustomInput
+        <ComponentButton
+          type={'buttonSelect'}
           important={true}
-          type={'button'}
-          styleViewInput={{marginTop: 20}}
+          viewComponent={{marginTop: 10}}
           title={'Phòng'}
           placeholder={'Chọn phòng'}
           value={unitId?.name}
@@ -458,11 +425,10 @@ const CreateContract = () => {
             setModalEndDate(true);
           }}
         />
-
-        <CustomInput
+        <ComponentButton
+          type={'buttonSelect'}
           important={true}
-          type={'button'}
-          styleViewInput={{marginTop: 20}}
+          viewComponent={{marginTop: 10}}
           title={'Ngày bắt đầu tính tiền'}
           placeholder={'Chọn ngày'}
           value={startChargeDateValue}
@@ -472,11 +438,10 @@ const CreateContract = () => {
             setModalStartChargeDate(true);
           }}
         />
-
-        <CustomInput
+        <ComponentButton
+          type={'buttonSelect'}
           important={true}
-          type={'button'}
-          styleViewInput={{marginTop: 20}}
+          viewComponent={{marginTop: 10}}
           title={'Kỳ thanh toán tiền phòng'}
           placeholder={`Chọn kỳ thanh toán`}
           value={paymentDuration?.key}
@@ -484,38 +449,38 @@ const CreateContract = () => {
         />
 
         <CustomTextTitle label={'Tiền phòng'} />
-        <CustomInputValue
-          type={'input'}
-          label={'Tiền thuê phòng'}
+
+        <ComponentInput
           important={true}
-          unit={'VNĐ'}
+          type={'inputUnit'}
+          title={'Tiền thuê phòng'}
           placeholder={'Nhập tiền thuê phòng'}
-          keyboardType={'numeric'}
-          defaultValue={
-            leasingFee ? `${parseInt(leasingFee)?.toLocaleString()}` : ''
-          }
-          onEndEditing={event => setLeasingFee(event.nativeEvent.text)}
-        />
-        <CustomInputValue
-          viewContainer={{marginTop: 20}}
-          type={'input'}
-          label={'Tiền cọc'}
-          important={true}
+          keyboardType={'number-pad'}
           unit={'VNĐ'}
-          placeholder={'Nhập tiền cọc'}
-          keyboardType={'numeric'}
-          defaultValue={
-            depositMoney ? `${parseInt(depositMoney)?.toLocaleString()}` : ''
-          }
-          onEndEditing={event => setDepositMoney(event.nativeEvent.text)}
+          value={`${formatNumber(`${leasingFee}`)}`}
+          onChangeText={text => setLeasingFee(text)}
         />
-        <View style={styles.line} />
-        <CustomNote
+        <ComponentInput
           important={true}
+          viewComponent={{marginTop: 10}}
+          type={'inputUnit'}
+          title={'Tiền cọc'}
+          placeholder={'Nhập tiền cọc'}
+          keyboardType={'number-pad'}
+          unit={'VNĐ'}
+          value={`${formatNumber(`${depositMoney}`)}`}
+          onChangeText={text => setDepositMoney(text)}
+        />
+
+        {StraightLine()}
+        <ComponentInput
+          important={true}
+          viewComponent={{marginTop: 10}}
+          type={'inputNote'}
           title={'Điều khoản hợp đồng'}
           placeholder={'Nhập điều khoản hợp đồng'}
-          defaultValue={termAndCondition}
-          onEndEditing={evt => setTermAndCondition(evt.nativeEvent.text)}
+          value={termAndCondition}
+          onChangeText={text => setTermAndCondition(text)}
         />
 
         <CustomNote
@@ -525,7 +490,7 @@ const CreateContract = () => {
           defaultValue={description}
           onEndEditing={evt => setDescription(evt.nativeEvent.text)}
         />
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle
           label={'Dịch vụ có phí'}
@@ -537,24 +502,28 @@ const CreateContract = () => {
         <CustomSuggest
           label={'Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ'}
         />
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {listService.length > 0 ? (
+              <FlatList
+                listKey="listService"
+                horizontal={false}
+                scrollEnabled={false}
+                numColumns={2}
+                keyExtractor={key => key.id}
+                data={listService}
+                renderItem={({item, index}) => renderSelectSevice(item, index)}
+              />
+            ) : null}
+          </ScrollView>
+        </View>
 
-        {listService.length > 0 ? (
-          <FlatList
-            listKey="listService"
-            horizontal={false}
-            scrollEnabled={false}
-            numColumns={2}
-            keyExtractor={key => key.id}
-            data={listService}
-            renderItem={({item, index}) => renderSelectSevice(item, index)}
-          />
-        ) : null}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
           <Text style={styles.pickerTotal}>{`${listService.length}`}</Text>
         </View>
 
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle
           label={'Tiện ích miễn phí'}
@@ -566,23 +535,28 @@ const CreateContract = () => {
         <CustomSuggest
           label={'Chọn tiện ích miễn phí đã có hoặc thêm mới tiện ích'}
         />
-        {listAmenity.length > 0 ? (
-          <FlatList
-            listKey="listAmenity"
-            horizontal={false}
-            scrollEnabled={false}
-            numColumns={3}
-            keyExtractor={key => key.id}
-            data={listAmenity}
-            renderItem={({item, index}) => renderSelectAmenity(item, index)}
-          />
-        ) : null}
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {listAmenity.length > 0 ? (
+              <FlatList
+                listKey="listAmenity"
+                horizontal={false}
+                scrollEnabled={false}
+                numColumns={2}
+                keyExtractor={key => key.id}
+                data={listAmenity}
+                renderItem={({item, index}) => renderSelectAmenity(item, index)}
+              />
+            ) : null}
+          </ScrollView>
+        </View>
+
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
           <Text style={styles.pickerTotal}>{`${listAmenity.length}`}</Text>
         </View>
 
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle
           label={'Danh sách người thuê'}
@@ -590,46 +564,35 @@ const CreateContract = () => {
           icon={icons.ic_plus}
           onPress={() => navigation.navigate('TenantList')}
         />
-        {listTenant.length > 0 ? (
-          <FlatList
-            listKey="listTenant"
-            horizontal={false}
-            scrollEnabled={false}
-            numColumns={1}
-            keyExtractor={key => key.id}
-            data={listTenant}
-            renderItem={({item, index}) => renderSelectTenant(item, index)}
-          />
-        ) : null}
-
-        <View style={styles.line} />
-
-        <CustomTextTitle label={'Thêm ảnh hợp đồng'} />
-        <View style={styles.viewShowImage}>
-          {contractImages.length > 0 ? (
-            <FlatList
-              horizontal
-              data={contractImages}
-              keyExtractor={uuid}
-              renderItem={({item}) => renderImage(item)}
-            />
-          ) : (
-            <CustomButton
-              styleButton={{flex: 1}}
-              label={'Tải lên ảnh hợp đồng ( tối đa 10 ảnh )'}
-              styleLabel={[styles.title, {marginTop: 5}]}
-              disabled={true}
-              icon={icons.ic_upload}
-              styleIcon={{with: 100, height: 100, alignSelf: 'center'}}
-            />
-          )}
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {listTenant.length > 0 ? (
+              <FlatList
+                listKey="listTenant"
+                horizontal={false}
+                scrollEnabled={false}
+                numColumns={1}
+                keyExtractor={key => key.id}
+                data={listTenant}
+                renderItem={({item, index}) => renderSelectTenant(item, index)}
+              />
+            ) : null}
+          </ScrollView>
         </View>
 
-        <CustomButton
-          styleButton={[styles.buttonUploadIM]}
-          label={'Tải lên ảnh hợp đồng'}
-          styleLabel={styles.labelUploadIM}
-          onPress={() => setModalCamera(true)}
+        {StraightLine()}
+        <ComponentRenderImage
+          title={'Thêm ảnh hợp đồng'}
+          label={'Tải lên ảnh hợp đồng ( tối đa 10 ảnh )'}
+          labelUpload={'Tải lên ảnh hợp đồng'}
+          data={contractImages}
+          deleteButton={true}
+          openModal={() => setModalCamera(true)}
+          deleteItem={item => {
+            let result = [...contractImages];
+            let newResult = result.filter(itemResult => itemResult !== item);
+            setContractImages(newResult);
+          }}
         />
 
         <View style={{height: 56}} />
@@ -639,50 +602,17 @@ const CreateContract = () => {
           onPressLeft={() => navigation.goBack()}
           onPressRight={() => setModalCreateContract(true)}
         />
-
-        <View style={{height: 56}} />
       </ScrollView>
     </View>
   );
 };
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: colors.backgroundGrey},
-  line: {
-    height: 1,
-    width: '100%',
-    alignSelf: 'center',
-    backgroundColor: 'black',
-    marginVertical: 20,
-  },
   textPicker: {fontSize: 11, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
   pickerTotal: {
     fontSize: 15,
     color: 'rgba(254, 122, 55, 1)',
     fontWeight: '600',
-  },
-  buttonUploadIM: {
-    height: 50,
-    backgroundColor: colors.mainColor,
-    borderRadius: 10,
-  },
-  labelUploadIM: {color: 'white', fontWeight: '500', fontSize: 15},
-  customButtonIcon: {position: 'absolute', right: 3, top: 3, zIndex: 1},
-  imageStyle: {width: 20, height: 20},
-  viewRender: {
-    height: 210,
-    width: 210,
-    borderWidth: 0.5,
-    borderColor: colors.mainColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginRight: 10,
-  },
-  viewShowImage: {
-    height: 220,
-    marginVertical: 5,
-    borderRadius: 10,
-    backgroundColor: 'white',
   },
 });
 export default CreateContract;

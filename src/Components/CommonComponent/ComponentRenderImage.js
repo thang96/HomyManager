@@ -41,7 +41,7 @@ const ComponentRenderImage = props => {
           <CustomButton
             styleButton={{flex: 1}}
             label={label}
-            styleLabel={[styles.title, {marginTop: 5}]}
+            styleLabel={[{marginTop: 5, textAlign: 'center'}]}
             disabled={true}
             icon={icons.ic_upload}
             styleIcon={{with: 100, height: 100, alignSelf: 'center'}}

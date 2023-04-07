@@ -6,14 +6,13 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  ActivityIndicator,
+  ScrollView,
 } from 'react-native';
-import {ScrollView} from 'react-native-virtualized-view';
 import {colors, icons, images} from '../../../Constants';
 import BoxShowInfor from '../../../Components/CommonComponent/BoxShowInfor';
 import {FlatList} from 'react-native-gesture-handler';
+import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 import CustomAppBarBuildingInfor from '../../../Components/CommonComponent/CustomAppBarBuildingInfor';
-import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
@@ -84,11 +83,14 @@ const BuildingInformation = () => {
       )}
       <CustomAppBarBuildingInfor
         pressIconRight={() => navigation.navigate('NotificationScreen')}
-        nameBuilding={`${hauseInfor?.name}`}
-        addressBuilding={`${hauseInfor?.fullAddress}`}
+        nameBuilding={`${hauseInfor?.name ?? ''}`}
+        addressBuilding={`${hauseInfor?.fullAddress ?? ''}`}
         onPressLeft={() => navigation.goBack()}
       />
-      <ScrollView style={{paddingHorizontal: 10, paddingTop: 20}}>
+      <ScrollView
+        nestedScrollEnabled={true}
+        keyboardDismissMode="none"
+        style={{paddingHorizontal: 10, paddingTop: 20}}>
         <View style={styles.viewUtils}>
           <CustomOptionBT
             title={'Phòng'}
@@ -123,8 +125,7 @@ const BuildingInformation = () => {
             styleBGIcon={{backgroundColor: '#fefdd9'}}
           />
         </View>
-
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle
           label={'Thông tin tòa nhà'}
@@ -150,29 +151,7 @@ const BuildingInformation = () => {
           unit={'VNĐ'}
         />
 
-        {/* <View style={styles.line} /> */}
-        {/* <CustomTextTitle label={'Danh sách người thuê'} />
-        {hauseInfor?.houseUsers?.length > 0 ? (
-          <FlatList
-            listKey="houseUsers"
-            horizontal={false}
-            scrollEnabled={false}
-            numColumns={3}
-            keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
-            data={hauseInfor?.houseUsers}
-            renderItem={({item, index}) => {
-              return (
-                <CustomPersonInfor
-                  styleView={{marginTop: 10}}
-                  avatar={item?.avatar}
-                  userName={item?.fullName}
-                  phoneNumber={item?.phoneNumber}
-                />
-              );
-            }}
-          />
-        ) : null} */}
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Thông tin thanh toán'} />
 
@@ -185,20 +164,25 @@ const BuildingInformation = () => {
             navigation.navigate('PaymentDetail', hauseInfor?.bankAccount?.id)
           }
         />
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Dịch vụ có phí'} />
-        {hauseInfor?.chargeServices?.length > 0 ? (
-          <FlatList
-            listKey="chargeServices"
-            horizontal={false}
-            scrollEnabled={false}
-            numColumns={2}
-            keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
-            data={hauseInfor?.chargeServices}
-            renderItem={({item, index}) => renderSevices(item, index)}
-          />
-        ) : null}
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {hauseInfor?.chargeServices?.length > 0 ? (
+              <FlatList
+                listKey="chargeServices"
+                horizontal={false}
+                scrollEnabled={false}
+                numColumns={2}
+                keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
+                data={hauseInfor?.chargeServices}
+                renderItem={({item, index}) => renderSevices(item, index)}
+              />
+            ) : null}
+          </ScrollView>
+        </View>
+
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
           <Text
@@ -207,20 +191,25 @@ const BuildingInformation = () => {
             }>{`${hauseInfor?.chargeServices?.length}`}</Text>
         </View>
 
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Tiện ích miễn phí'} />
-        {hauseInfor?.amenities.length > 0 ? (
-          <FlatList
-            listKey="amenities"
-            horizontal={false}
-            scrollEnabled={false}
-            numColumns={3}
-            keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
-            data={hauseInfor?.amenities}
-            renderItem={({item, index}) => renderAmenitys(item, index)}
-          />
-        ) : null}
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {hauseInfor?.amenities.length > 0 ? (
+              <FlatList
+                listKey="amenities"
+                horizontal={false}
+                scrollEnabled={false}
+                numColumns={3}
+                keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
+                data={hauseInfor?.amenities}
+                renderItem={({item, index}) => renderAmenitys(item, index)}
+              />
+            ) : null}
+          </ScrollView>
+        </View>
+
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.textPicker}>Đã chọn </Text>
           <Text
@@ -229,7 +218,7 @@ const BuildingInformation = () => {
             }>{`${hauseInfor?.amenities.length}`}</Text>
         </View>
 
-        <View style={styles.line} />
+        {StraightLine()}
 
         <CustomTextTitle label={'Hình ảnh tòa nhà'} />
         {hauseInfor?.images?.length > 0 && (
@@ -241,7 +230,7 @@ const BuildingInformation = () => {
             renderItem={({item, index}) => renderImageHauses(item, index)}
           />
         )}
-        <View style={styles.line} />
+        {StraightLine()}
         <CustomTextTitle label={'Lưu ý cho người thuê'} />
         <CustomSuggest label={`${hauseInfor?.notice}`} />
         <CustomTextTitle label={'Lưu ý cho hóa đơn'} />
@@ -254,14 +243,6 @@ const BuildingInformation = () => {
 
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: colors.backgroundGrey},
-  line: {
-    height: 0.5,
-    width: '100%',
-    alignSelf: 'center',
-    backgroundColor: '#97A1A7',
-    marginTop: 20,
-    marginBottom: 10,
-  },
   viewRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -285,13 +266,12 @@ const styles = StyleSheet.create({
     margin: 1,
     elevation: 3,
   },
-  textPicker: {fontSize: 11, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
+  textPicker: {fontSize: 11, fontWeight: '400', color: 'orange'},
   pickerTotal: {
     fontSize: 15,
-    color: 'rgba(254, 122, 55, 1)',
+    color: 'orange',
     fontWeight: '600',
   },
-  pickerTotal: {fontSize: 15, color: 'orange', fontWeight: 'bold'},
 });
 
 const CustomOptionBT = props => {

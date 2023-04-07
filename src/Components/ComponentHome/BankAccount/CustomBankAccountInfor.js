@@ -1,6 +1,13 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {icons} from '../../../Constants';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {colors, icons} from '../../../Constants';
 import CustomButton from '../../CommonComponent/CustomButton';
 const CustomBankAccountInfor = props => {
   const {
@@ -58,6 +65,7 @@ const CustomBankAccountInfor = props => {
     </View>
   );
 };
+const widthView = Dimensions.get('window').width - 22;
 const styles = StyleSheet.create({
   container: {
     height: 64,
@@ -66,6 +74,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
+    width: widthView,
   },
   image: {
     height: 32,
@@ -86,7 +95,7 @@ const styles = StyleSheet.create({
   },
   userName: {color: '#374047', fontWeight: '600', fontSize: 15},
   accountNo: {color: '#5F6E78', fontSize: 13},
-  styleIcon: {width: 20, height: 20, tintColor: '#797979'},
+  styleIcon: {width: 20, height: 20, tintColor: colors.mainColor},
   viewRow: {flexDirection: 'row', alignItems: 'center'},
 });
 export default CustomBankAccountInfor;

@@ -14,7 +14,13 @@ import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
-import {amenityState, serviceState} from '../../../Store/slices/commonSlice';
+import {
+  amenityState,
+  serviceState,
+  updateAmenity,
+  updateServices,
+  updateTenants,
+} from '../../../Store/slices/commonSlice';
 import {CreateNewUnitApi} from '../../../Api/Home/UnitApis/UnitApis';
 import {updateStatus} from '../../../Store/slices/statusSlice';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
@@ -56,6 +62,9 @@ const AddRoom = () => {
 
   useEffect(() => {
     LogBox.ignoreAllLogs();
+    dispatch(updateAmenity([]));
+    dispatch(updateServices([]));
+    dispatch(updateTenants([]));
   }, []);
 
   useMemo(() => {
@@ -140,13 +149,12 @@ const AddRoom = () => {
       .then(async res => {
         if (res?.status == 200) {
           let unitId = res?.data?.id;
-          console.log(unitId);
           if (unitImages?.length > 0) {
             await PostImageUnitApi(tokenStore, unitId, unitImages)
               .then(res => {
                 if (res?.status == 200) {
                   dispatch(updateStatus('updateRoom'));
-                  navigation.navigate('FloorInformation', unitId);
+                  navigation.navigate('FloorInformation', hauseId);
                   setLoadingRoom(false);
                 }
               })
@@ -160,7 +168,7 @@ const AddRoom = () => {
               });
           } else {
             dispatch(updateStatus('updateRoom'));
-            navigation.navigate('FloorInformation', unitId);
+            navigation.navigate('FloorInformation', hauseId);
             setLoadingRoom(false);
           }
         }
