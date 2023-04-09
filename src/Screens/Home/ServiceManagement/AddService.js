@@ -14,6 +14,7 @@ import {updateStatus} from '../../../Store/slices/statusSlice';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
 import {formatNumber, validateNumber} from '../../../utils/common';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
 
 const AddService = props => {
   const navigation = useNavigation();
@@ -27,6 +28,7 @@ const AddService = props => {
   const [calculateUnit, setCalculateUnit] = useState('');
   const [fee, setFee] = useState(0);
   const [description, setDescription] = useState('');
+  const [isCheck, setIsCheck] = useState(false);
 
   const createNewService = async () => {
     setModalService(false);
@@ -98,13 +100,21 @@ const AddService = props => {
         <ComponentInput
           important={true}
           viewComponent={{marginTop: 10}}
-          type={'inputUnit'}
-          unit={'VNĐ'}
+          type={'input'}
           keyboardType={'number-pad'}
-          title={'Phí dịch vụ'}
+          title={'Phí dịch vụ/đơn vị tính'}
           placeholder={'Nhập phí dịch vụ'}
           value={`${formatNumber(`${fee}`)}`}
           onChangeText={text => setFee(text)}
+        />
+        <CustomProgressive
+          onPress={() => setIsCheck(prev => (prev == false ? true : false))}
+          isCheck={isCheck}
+        />
+        <CustomSuggest
+          label={
+            'Dịch phụ thu phí theo lũy tiến sẽ bắt buộc chốt chỉ số từng tháng'
+          }
         />
         <ComponentInput
           important={true}
@@ -128,6 +138,27 @@ const AddService = props => {
     </View>
   );
 };
+const CustomProgressive = props => {
+  const {isCheck, onPress} = props;
+  return (
+    <View style={styles.viewComponent}>
+      {isCheck ? (
+        <CustomButton
+          onPress={onPress}
+          icon={icons.ic_check}
+          styleIcon={styles.styleIconCheck}
+        />
+      ) : (
+        <CustomButton
+          onPress={onPress}
+          icon={icons.ic_unCheck}
+          styleIcon={styles.styleIconCheck}
+        />
+      )}
+      <Text style={styles.textProgressive}>Thu phí theo lũy tiến</Text>
+    </View>
+  );
+};
 const styles = StyleSheet.create({
   eachContainer: {
     flex: 1,
@@ -135,5 +166,13 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: colors.backgroundGrey,
   },
+  viewComponent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 15,
+    marginBottom: 5,
+  },
+  styleIconCheck: {width: 25, height: 25, tintColor: colors.mainColor},
+  textProgressive: {marginLeft: 10, fontSize: 15, color: '#374047'},
 });
 export default AddService;

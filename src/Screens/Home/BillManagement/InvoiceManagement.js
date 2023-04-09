@@ -152,13 +152,13 @@ const InvoiceManagement = props => {
         // )
         null}
       </View>
-      <CustomButtonBottom
+      {/* <CustomButtonBottom
         label={'Thêm hóa đơn'}
         onPress={() => {
           dispatch(updateStatus(true));
           navigation.navigate('CreateInvoice');
         }}
-      />
+      /> */}
     </View>
   );
 };

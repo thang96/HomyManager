@@ -58,4 +58,5 @@ export default {
   ic_exclamationMark: require('../Assets/Icons/ic_exclamationMark.png'),
   ic_cancel: require('../Assets/Icons/ic_cancel.png'),
   ic_cashPayment: require('../Assets/Icons/ic_cashPayment.png'),
+  ic_businessOutline: require('../Assets/Icons/ic_businessOutline.png'),
 };

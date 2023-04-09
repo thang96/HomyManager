@@ -40,6 +40,7 @@ import ComponentButton from '../../../Components/CommonComponent/ComponentButton
 import {PostImageContractApi} from '../../../Api/Home/FileDataApis/FileDataApis';
 import ComponentRenderImage from '../../../Components/CommonComponent/ComponentRenderImage';
 import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
+import RenderServiceInput from '../../../Components/ComponentHome/Contract/RenderServiceInput';
 
 const CreateContract = () => {
   const navigation = useNavigation();
@@ -106,7 +107,7 @@ const CreateContract = () => {
         })
         .catch(error => console.log(error));
       dispatch(updateAmenity([]));
-      dispatch(updateServices([]));
+      // dispatch(updateServices([]));
       dispatch(updateTenants([]));
     };
     getListData();
@@ -116,9 +117,8 @@ const CreateContract = () => {
     let eachService = [];
     if (serviceSelect.length > 0) {
       serviceSelect.map((item, index) => {
-        if (item?.isCheck == true) {
-          eachService.push(item);
-        }
+        let newItem = {...item, usageAmount: ''};
+        eachService.push(newItem);
       });
     }
     setListService(eachService);
@@ -150,10 +150,18 @@ const CreateContract = () => {
 
   const renderSelectSevice = (item, index) => {
     return (
-      <RenderService
+      <RenderServiceInput
+        viewComponent={{marginBottom: 10}}
+        placeholder={'Nhập chỉ số ban đầu'}
         name={item?.name}
         fee={item?.fee}
         calculateUnit={item?.calculateUnit}
+        value={`${formatNumber(`${item?.usageAmount}`)}`}
+        onChangeText={text => {
+          let eachList = [...listService];
+          eachList[index] = {...item, usageAmount: text};
+          setListService(eachList);
+        }}
       />
     );
   };
@@ -499,9 +507,6 @@ const CreateContract = () => {
           onPress={() => navigation.navigate('Service')}
         />
 
-        <CustomSuggest
-          label={'Chọn dịch vụ tính phí đã có hoặc thêm mới dịch vụ'}
-        />
         <View>
           <ScrollView horizontal={true} style={{width: '100%'}}>
             {listService.length > 0 ? (
@@ -509,7 +514,7 @@ const CreateContract = () => {
                 listKey="listService"
                 horizontal={false}
                 scrollEnabled={false}
-                numColumns={2}
+                numColumns={1}
                 keyExtractor={key => key.id}
                 data={listService}
                 renderItem={({item, index}) => renderSelectSevice(item, index)}
@@ -532,9 +537,6 @@ const CreateContract = () => {
           onPress={() => navigation.navigate('Utilities')}
         />
 
-        <CustomSuggest
-          label={'Chọn tiện ích miễn phí đã có hoặc thêm mới tiện ích'}
-        />
         <View>
           <ScrollView horizontal={true} style={{width: '100%'}}>
             {listAmenity.length > 0 ? (
@@ -607,7 +609,7 @@ const CreateContract = () => {
   );
 };
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: colors.backgroundGrey},
+  container: {flex: 1, backgroundColor: 'white'},
   textPicker: {fontSize: 11, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
   pickerTotal: {
     fontSize: 15,

@@ -1,20 +1,11 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useMemo, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  FlatList,
-  Alert,
-  TextInput,
-  ScrollView,
-} from 'react-native';
-import CustomButton from '../../../Components/CommonComponent/CustomButton';
+import {StyleSheet, View, Alert, ScrollView} from 'react-native';
 import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import {icons, colors} from '../../../Constants';
 import ImagePicker from 'react-native-image-crop-picker';
 import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
-import {uuid} from '../../../utils/uuid';
 import CustomTimeButtons from '../../../Components/CommonComponent/CustomTimeButton';
 import CustomStepAppBar from '../../../Components/CommonComponent/CustomStepAppBar';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
@@ -30,7 +21,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {updateCommon, updateManagers} from '../../../Store/slices/commonSlice';
 import {GetListManagersApi} from '../../../Api/Home/ManagerApis/ManagerApis';
-import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import {formatNumber, validateNumber} from '../../../utils/common';
 import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 import ComponentInput from '../../../Components/CommonComponent/ComponentInput';

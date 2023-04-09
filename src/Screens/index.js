@@ -32,10 +32,6 @@ import UtilitiesManager from './Home/UtilitiesManagement/UtilitiesManager';
 import Utilities from './Home/UtilitiesManagement/Utilities';
 import AmenityDetail from './Home/UtilitiesManagement/AmenityDetail';
 import AddUtilities from './Home/UtilitiesManagement/AddUtilities';
-//----------- WaterAndElectricityManagement
-import WaterAndElectricityManagement from './Home/WaterAndElectricityManagement/WaterAndElectricityManager';
-import WaterAndElectricityInfor from './Home/WaterAndElectricityManagement/WaterAndElectricityInfor';
-import RequestResend from './Home/WaterAndElectricityManagement/RequestResend';
 //----------- ContractManagement
 import ContractManagement from './Home/ContractManagement/ContractManagement';
 import CreateContract from './Home/ContractManagement/CreateContract';
@@ -61,6 +57,9 @@ import TenantManager from './Home/TenantManagement/TenantManager';
 import TenantDetail from './Home/TenantManagement/TenantDetail';
 import TenantList from './Home/TenantManagement/TenantList';
 import AddNewTenant from './Home/TenantManagement/AddNewTenant';
+//----------- WaterAndElectricityManager
+import WaterAndElectricityManager from './Home/WaterAndElectricityManagement/WaterAndElectricityManager';
+import ConfirmWaterAndElectricity from './Home/WaterAndElectricityManagement/ConfirmWaterAndElectricity';
 // WorkScreen -----------------------------------------------------------------
 import WorkScreen from './Work/WorkScreen';
 import IssueInformation from './Work/IssueInformation';
@@ -127,10 +126,6 @@ export {
   Utilities,
   AmenityDetail,
   AddUtilities,
-  //-- WaterAndElectricityManagement
-  WaterAndElectricityManagement,
-  WaterAndElectricityInfor,
-  RequestResend,
   //-- UserManager
   UserManager,
   ManagerList,
@@ -146,6 +141,9 @@ export {
   IssueInformation,
   MarkTheIssue,
   AddExtraFee,
+  // WaterAndElectricityManager ------------------------------------------
+  WaterAndElectricityManager,
+  ConfirmWaterAndElectricity,
   // StatisticScreen ------------------------------------------
   StatisticScreen,
   // MessageScreen ------------------------------------------

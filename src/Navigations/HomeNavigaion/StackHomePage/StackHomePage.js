@@ -22,9 +22,6 @@ import {
   ContractManagement,
   InvoiceManagement,
   TenantManager,
-  WaterAndElectricityManagement,
-  WaterAndElectricityInfor,
-  RequestResend,
   ServiceDetail,
   UserManager,
   ManagerList,
@@ -44,6 +41,8 @@ import {
   QuickAddRoom,
   EditRoomInformation,
   EditHouseInformation,
+  WaterAndElectricityManager,
+  ConfirmWaterAndElectricity,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -211,27 +210,6 @@ const StackHomepage = () => {
         }}
       />
       <Stack.Screen
-        component={WaterAndElectricityManagement}
-        name={'WaterAndElectricityManagement'}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        component={WaterAndElectricityInfor}
-        name={'WaterAndElectricityInfor'}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        component={RequestResend}
-        name={'RequestResend'}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
         component={BuildingInformation}
         name={'BuildingInformation'}
         options={{
@@ -346,6 +324,20 @@ const StackHomepage = () => {
       <Stack.Screen
         component={TenantDetail}
         name={'TenantDetail'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={WaterAndElectricityManager}
+        name={'WaterAndElectricityManager'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={ConfirmWaterAndElectricity}
+        name={'ConfirmWaterAndElectricity'}
         options={{
           headerShown: false,
         }}
