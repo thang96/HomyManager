@@ -169,12 +169,12 @@ const HomeScreen = () => {
               styleBGIcon={{backgroundColor: '#edfcfb'}}
               onPress={() => navigation.navigate('PaymentManagement')}
             />
-            {/* <CustomOptionBT
+            <CustomOptionBT
               title={'Điện-nước'}
               svgIcon={svgs.Water}
               styleBGIcon={{backgroundColor: '#edfcfb'}}
-              onPress={() => {}}
-            /> */}
+              onPress={() => navigation.navigate('WaterAndElectricityManager')}
+            />
           </View>
           <View style={[styles.viewRow, {marginTop: 15}]}>
             {/* <CustomOptionBT

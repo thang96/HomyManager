@@ -5,9 +5,9 @@ import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomButtonValue from '../../../Components/CommonComponent/CustomButtonValue';
-import ComponentUnfinished from './ComponentUnfinished';
+import ComponentUnfinished from '../../../Components/ComponentHome/WaterAndElectricity/ComponentUnfinished';
 
-const WaterAndElectricityManagement = () => {
+const WaterAndElectricityManager = props => {
   const navigation = useNavigation();
   const [isActive, setIsActive] = useState(1);
   return (
@@ -21,7 +21,7 @@ const WaterAndElectricityManagement = () => {
         <CustomButtonValue
           styleView={{marginVertical: 10}}
           type={'button'}
-          icon={icons.ic_businessBuilding}
+          icon={icons.ic_businessOutline}
           placeholder={'Chọn tòa nhà'}
           value={'Tòa nhà D2'}
         />
@@ -53,7 +53,10 @@ const WaterAndElectricityManagement = () => {
         </View>
       </View>
       {isActive == 1 ? (
-        <ComponentUnfinished />
+        <ComponentUnfinished
+          data={FACE_DATA}
+          onPress={item => navigation.navigate('ConfirmWaterAndElectricity')}
+        />
       ) : isActive == 2 ? null : isActive == 3 ? null : null}
     </View>
   );
@@ -86,4 +89,34 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-export default WaterAndElectricityManagement;
+export default WaterAndElectricityManager;
+const FACE_DATA = [
+  {
+    floor: 1,
+    room: [
+      {
+        room: 'P101',
+        status: false,
+        value: 'Điện: 12KWH | Nước: 13 Khối',
+        name: 'Đức Thắng',
+      },
+      {
+        room: 'P103',
+        status: false,
+        value: 'Điện: 12KWH | Nước: 13 Khối',
+        name: 'Đức Thắng',
+      },
+    ],
+  },
+  {
+    floor: 2,
+    room: [
+      {
+        room: 'P201',
+        status: false,
+        value: 'Điện: 12KWH  Nước: 13 Khối',
+        name: 'Đức Thắng',
+      },
+    ],
+  },
+];

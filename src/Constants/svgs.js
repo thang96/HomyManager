@@ -11,7 +11,7 @@ import LogoApp from '../Assets/Svgs/LogoApp.svg';
 import Money from '../Assets/Svgs/Money.svg';
 import Utilities from '../Assets/Svgs/Utilities.svg';
 import Wallet from '../Assets/Svgs/Wallet.svg';
-import Water from '../Assets/Svgs/Wallet.svg';
+import Water from '../Assets/Svgs/Water.svg';
 
 export default {
   Bed,
