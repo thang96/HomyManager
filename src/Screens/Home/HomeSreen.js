@@ -25,6 +25,7 @@ import useKeyboard from '../../Hook/useKeyboard';
 const HomeScreen = () => {
   const navigation = useNavigation();
   const statusLoadingHome = useSelector(statusState);
+  const userStore = useSelector(userInfor);
   const [loading, setLoading] = useState(true);
   const [modalNotify, setModalNotify] = useState(false);
   const [textSearch, setTextSearch] = useState('');
@@ -77,7 +78,11 @@ const HomeScreen = () => {
         iconRight={icons.ic_bell}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconRightTextInput={icons.ic_option}
-        iconSecondRight={null}
+        iconSecondRight={
+          userStore?.avatarImage?.fileUrl
+            ? userStore?.avatarImage?.fileUrl
+            : icons.ic_user
+        }
         pressSeccodIconRight={() => navigation.navigate('StackAccountPage')}
         keyboard={keyboard}
         textSearch={textSearch}

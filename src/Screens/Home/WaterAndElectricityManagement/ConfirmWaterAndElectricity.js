@@ -85,7 +85,7 @@ const ConfirmWaterAndElectricity = props => {
       });
   };
   return (
-    <View style={styles.stretcher}>
+    <View style={styles.container}>
       {showImageElectric && (
         <ModalshowImage
           modalVisible={showImageElectric}
@@ -174,7 +174,7 @@ const ConfirmWaterAndElectricity = props => {
               onPress={() => setShowImageElectric(true)}
               style={styles.buttonImage}>
               <Image
-                resizeMode="stretch"
+                resizeMode="contain"
                 style={{width: '100%', height: '100%'}}
                 source={images.im_frame1}
               />
@@ -193,7 +193,7 @@ const ConfirmWaterAndElectricity = props => {
                 onPress={() => setModalShowElectricImage(true)}
                 style={styles.buttonImage}>
                 <Image
-                  resizeMode="stretch"
+                  resizeMode="contain"
                   style={{width: '100%', height: '100%'}}
                   source={{uri: electricityIndexImage?.uri}}
                 />
@@ -230,7 +230,7 @@ const ConfirmWaterAndElectricity = props => {
               onPress={() => setShowImageWater(true)}
               style={styles.buttonImage}>
               <Image
-                resizeMode="stretch"
+                resizeMode="contain"
                 style={{width: '100%', height: '100%'}}
                 source={images.im_frame2}
               />
@@ -249,7 +249,7 @@ const ConfirmWaterAndElectricity = props => {
                 onPress={() => setModalShowWaterImage(true)}
                 style={styles.buttonImage}>
                 <Image
-                  resizeMode="stretch"
+                  resizeMode="contain"
                   style={{width: '100%', height: '100%'}}
                   source={{uri: waterIndexImage?.uri}}
                 />
@@ -289,6 +289,7 @@ const ConfirmWaterAndElectricity = props => {
             value={`${formatNumber(`${90}`)}`}
           />
         </View>
+        <View style={{height: 56}} />
       </ScrollView>
       <CustomTwoButtonBottom
         leftLabel={'Lưu lại'}
@@ -301,7 +302,7 @@ const ConfirmWaterAndElectricity = props => {
 };
 
 const styles = StyleSheet.create({
-  stretcher: {flex: 1, backgroundColor: colors.backgroundGrey},
+  container: {flex: 1, backgroundColor: colors.backgroundGrey},
   scrollView: {paddingHorizontal: 10, marginTop: 10},
   viewBetween: {
     flexDirection: 'row',
@@ -382,7 +383,7 @@ const ModalshowImage = props => {
                 : null
             }
             style={{width: '100%', height: '90%'}}
-            resizeMode={'stretch'}
+            resizeMode={'contain'}
           />
           <CustomButton
             onPress={pressClose}

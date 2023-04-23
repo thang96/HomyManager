@@ -142,16 +142,6 @@ const AddPayment = props => {
         <ComponentInput
           important={true}
           viewComponent={{marginTop: 10}}
-          keyboardType={'number-pad'}
-          type={'input'}
-          title={'Số tài khoản'}
-          placeholder={'Nhập số tài khoản'}
-          value={accountNo}
-          onChangeText={text => setAccountNo(text)}
-        />
-        <ComponentInput
-          important={true}
-          viewComponent={{marginTop: 10}}
           type={'input'}
           title={'Tên chủ tài khoản'}
           placeholder={'Nhập tên chủ tài khoản'}
