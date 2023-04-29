@@ -19,6 +19,7 @@ const CustomAppBarRoomInfor = props => {
     rentMonthlyFee,
     pressQuickAddRoom,
     pressEdit,
+    pressDelete,
   } = props;
   return (
     <ImageBackground source={images.im_appBar} style={{paddingHorizontal: 10}}>
@@ -34,7 +35,11 @@ const CustomAppBarRoomInfor = props => {
           icon={icons.ic_bell}
           onPress={pressIconRight}
         />
-        <CustomButton styleIcon={styles.iconTop} icon={icons.ic_moreOption} />
+        <CustomButton
+          styleIcon={styles.iconTop}
+          icon={icons.ic_trash}
+          onPress={pressDelete}
+        />
       </View>
       <View style={styles.line} />
       <View style={{height: 130}}>

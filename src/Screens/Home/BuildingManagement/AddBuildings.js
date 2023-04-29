@@ -161,7 +161,7 @@ const AddBuildings = props => {
         setModalCamera(false);
       });
   };
-  console.log(`${validateNumber(`${numberOfFloor}`)}`);
+
   const goToStepTwo = () => {
     let data = {
       name: name,

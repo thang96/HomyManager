@@ -16,6 +16,7 @@ import {convertDate, formatNumber} from '../../../utils/common';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import RenderContract from '../../../Components/ComponentHome/RenderContract';
+import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 
 const RoomInformation = props => {
@@ -25,6 +26,7 @@ const RoomInformation = props => {
   const navigation = useNavigation();
   const [unit, setUnit] = useState();
   const [loading, setLoading] = useState(true);
+  const [modalDeleteRoom, setModalDeleteRoom] = useState(false);
 
   useEffect(() => {
     const getListData = async () => {
@@ -39,15 +41,25 @@ const RoomInformation = props => {
     };
     getListData();
   }, []);
-
+  console.log(unit);
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       {loading && <CustomLoading />}
+      {modalDeleteRoom && (
+        <CustomModalNotify
+          modalVisible={modalDeleteRoom}
+          title={'Xóa phòng'}
+          label={'Bạn có muốn xóa phòng này ?'}
+          onRequestClose={() => setModalDeleteRoom(false)}
+          pressConfir={() => {}}
+        />
+      )}
       <CustomAppBarRoomInfor
         rentMonthlyFee={`${formatNumber(`${unit?.rentMonthlyFee}`) ?? 0}`}
         nameRoom={`${unit?.name ?? ''}`}
         onPressLeft={() => navigation.goBack()}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
+        pressDelete={() => setModalDeleteRoom(true)}
         pressQuickAddRoom={() =>
           navigation.navigate('QuickAddRoom', route.params)
         }
@@ -99,7 +111,10 @@ const RoomInformation = props => {
 
         {StraightLine()}
 
-        <CustomTextTitle label={'Hợp đồng cho thuê'} />
+        <CustomTextTitle
+          label={'Hợp đồng cho thuê'}
+          labelButton={unit?.activeContract ? '' : 'Thêm hợp đồng'}
+        />
         {unit?.activeContract && (
           <RenderContract
             description={unit?.activeContract?.description}

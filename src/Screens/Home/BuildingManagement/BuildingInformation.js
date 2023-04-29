@@ -153,6 +153,11 @@ const BuildingInformation = () => {
 
         {StraightLine()}
 
+        <CustomTextTitle
+          label={'Quản lý tòa nhà'}
+          labelButton={'Thêm'}
+          icon={icons.ic_plus}
+        />
         <CustomTextTitle label={'Thông tin thanh toán'} />
 
         <CustomBankAccountInfor

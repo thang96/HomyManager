@@ -20,7 +20,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetListHausesApi} from '../../../Api/Home/BuildingApis/BuildingApis';
 import {GetListUnitsApi} from '../../../Api/Home/UnitApis/UnitApis';
-import {dateToDMY, dateToYMD, formatNumber} from '../../../utils/common';
+import {
+  dateToDMY,
+  dateToYMD,
+  formatNumber,
+  validateNumber,
+} from '../../../utils/common';
 import {PAYMENTDURATION} from '../../../Resource/DataPicker';
 import {
   amenityState,
@@ -41,6 +46,7 @@ import {PostImageContractApi} from '../../../Api/Home/FileDataApis/FileDataApis'
 import ComponentRenderImage from '../../../Components/CommonComponent/ComponentRenderImage';
 import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 import RenderServiceInput from '../../../Components/ComponentHome/Contract/RenderServiceInput';
+import CustomButton from '../../../Components/CommonComponent/CustomButton';
 
 const CreateContract = () => {
   const navigation = useNavigation();
@@ -84,17 +90,9 @@ const CreateContract = () => {
   const [listTenant, setListTenant] = useState([]);
   const [modalHause, setModalHause] = useState(false);
   const [modalUnit, setModalUnit] = useState(false);
-
+  // console.log(listUnits);
   const valueIsReady = () =>
-    termAndCondition != '' &&
-    startDate != null &&
-    endDate != null &&
-    startChargeDate != null &&
-    paymentDuration != null &&
-    leasingFee != null &&
-    termAndCondition != null &&
-    contractImages.length > 0 &&
-    unitId != null;
+    paymentDuration != null && leasingFee != null && unitId != null;
 
   useEffect(() => {
     const getListData = async () => {
@@ -107,7 +105,7 @@ const CreateContract = () => {
         })
         .catch(error => console.log(error));
       dispatch(updateAmenity([]));
-      // dispatch(updateServices([]));
+      dispatch(updateServices([]));
       dispatch(updateTenants([]));
     };
     getListData();
@@ -150,18 +148,10 @@ const CreateContract = () => {
 
   const renderSelectSevice = (item, index) => {
     return (
-      <RenderServiceInput
-        viewComponent={{marginBottom: 10}}
-        placeholder={'Nhập chỉ số ban đầu'}
+      <RenderService
         name={item?.name}
         fee={item?.fee}
         calculateUnit={item?.calculateUnit}
-        value={`${formatNumber(`${item?.usageAmount}`)}`}
-        onChangeText={text => {
-          let eachList = [...listService];
-          eachList[index] = {...item, usageAmount: text};
-          setListService(eachList);
-        }}
       />
     );
   };
@@ -247,10 +237,10 @@ const CreateContract = () => {
       endDate: endDate,
       startChargeDate: startChargeDate,
       paymentDuration: parseInt(paymentDuration?.value),
-      leasingFee: parseInt(leasingFee),
-      depositMoney: parseInt(depositMoney),
-      description: description,
-      termAndCondition: termAndCondition,
+      leasingFee: parseInt(validateNumber(`${leasingFee}`)),
+      depositMoney: parseInt(validateNumber(`${depositMoney}`)),
+      description: description ?? '',
+      termAndCondition: termAndCondition ?? '',
       unitId: unitId?.id,
       serviceIds: eachServiceIds,
       amenityIds: eachAmenityIds,
@@ -260,20 +250,19 @@ const CreateContract = () => {
       .then(async res => {
         if (res?.status == 200) {
           contractId = res?.data?.id;
-          await PostImageContractApi(tokenStore, contractId, contractImages)
-            .then(res => {
-              if (res?.status == 200) {
-                dispatch(updateStatus('updateContract'));
-                setLoadingAddContract(false);
-                navigation.goBack();
-              }
-            })
-            .catch(error => {
-              Alert.alert(
-                'Cảnh báo!!!',
-                'Có lỗi sảy ra,vui lòng liên hệ admin...',
-              );
-            });
+          if (contractImages.length > 0) {
+            await PostImageContractApi(tokenStore, contractId, contractImages)
+              .then(res => {
+                if (res?.status == 200) {
+                  dispatch(updateStatus('updateContract'));
+                  setLoadingAddContract(false);
+                  navigation.goBack();
+                }
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          }
         }
       })
       .catch(error => console.log(error));
@@ -481,7 +470,12 @@ const CreateContract = () => {
         />
 
         {StraightLine()}
-        <ComponentInput
+        <CustomTextTitle
+          label={'Điều khoản hợp đồng'}
+          labelButton={'Xem chi tiết'}
+          onPress={() => navigation.navigate('DetailedContractTerms')}
+        />
+        {/* <ComponentInput
           important={true}
           viewComponent={{marginTop: 10}}
           type={'inputNote'}
@@ -489,12 +483,12 @@ const CreateContract = () => {
           placeholder={'Nhập điều khoản hợp đồng'}
           value={termAndCondition}
           onChangeText={text => setTermAndCondition(text)}
-        />
+        /> */}
 
         <CustomNote
           viewCustom={{marginTop: 10}}
-          title={'Mô tả hợp đồng'}
-          placeholder={'Nhập mô tả hợp đồng'}
+          title={'Điều khoản bổ sung'}
+          placeholder={'Nhập điều khoản bổ sung'}
           defaultValue={description}
           onEndEditing={evt => setDescription(evt.nativeEvent.text)}
         />
@@ -514,7 +508,7 @@ const CreateContract = () => {
                 listKey="listService"
                 horizontal={false}
                 scrollEnabled={false}
-                numColumns={1}
+                numColumns={2}
                 keyExtractor={key => key.id}
                 data={listService}
                 renderItem={({item, index}) => renderSelectSevice(item, index)}

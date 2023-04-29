@@ -117,7 +117,6 @@ const AddService = props => {
           }
         />
         <ComponentInput
-          important={true}
           viewComponent={{marginTop: 10}}
           type={'inputNote'}
           title={'Ghi chú'}
@@ -130,8 +129,10 @@ const AddService = props => {
       </ScrollView>
 
       <CustomTwoButtonBottom
-        leftLabel={'Trở lại'}
-        rightLabel={'Hoàn tất'}
+        styleButtonLeft={styles.styleButtonLeft}
+        styleLabelLeft={styles.styleLabelLeft}
+        leftLabel={'Hủy'}
+        rightLabel={'Thêm mới'}
         onPressLeft={() => navigation.goBack()}
         onPressRight={() => setModalService(true)}
       />
@@ -174,5 +175,11 @@ const styles = StyleSheet.create({
   },
   styleIconCheck: {width: 25, height: 25, tintColor: colors.mainColor},
   textProgressive: {marginLeft: 10, fontSize: 15, color: '#374047'},
+  styleButtonLeft: {
+    borderColor: '#FE7A37',
+    backgroundColor: 'white',
+    marginRight: 5,
+  },
+  styleLabelLeft: {color: '#FE7A37', fontSize: 15, fontWeight: '600'},
 });
 export default AddService;

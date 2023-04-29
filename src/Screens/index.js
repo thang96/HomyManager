@@ -36,6 +36,7 @@ import AddUtilities from './Home/UtilitiesManagement/AddUtilities';
 import ContractManagement from './Home/ContractManagement/ContractManagement';
 import CreateContract from './Home/ContractManagement/CreateContract';
 import ContractDetail from './Home/ContractManagement/ContractDetail';
+import DetailedContractTerms from './Home/ContractManagement/DetailedContractTerms';
 //----------- PaymentManagement
 import PaymentManagement from './Home/PaymentManagement/PaymentManagement';
 import AddPayment from './Home/PaymentManagement/AddPayment';
@@ -105,12 +106,13 @@ export {
   ContractManagement,
   CreateContract,
   ContractDetail,
-  InvoicePaidDetail,
+  DetailedContractTerms,
   //-- InvoiceManagement
   InvoiceManagement,
   CreateInvoice,
   InvoiceDetail,
   InvoiceUnpaidDetail,
+  InvoicePaidDetail,
   //-- PaymentManagement
   PaymentManagement,
   AddPayment,

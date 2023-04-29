@@ -39,9 +39,9 @@ const RenderService = props => {
           <Text
             numberOfLines={1}
             style={{
-              fontSize: 13,
+              fontSize: 11,
               color: '#0191FF',
-            }}>{`${formatNumber(`${fee}`)}/${calculateUnit}`}</Text>
+            }}>{`${formatNumber(`${fee}`)} VNĐ/${calculateUnit}`}</Text>
         )}
       </View>
       {isDelete && (

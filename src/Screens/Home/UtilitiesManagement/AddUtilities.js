@@ -92,7 +92,9 @@ const AddUtilities = props => {
       </ScrollView>
 
       <CustomTwoButtonBottom
-        leftLabel={'Trở lại'}
+        styleButtonLeft={styles.styleButtonLeft}
+        styleLabelLeft={styles.styleLabelLeft}
+        leftLabel={'Hủy'}
         rightLabel={'Thêm mới'}
         onPressLeft={() => {
           dispatch(updateStatus(false));
@@ -110,5 +112,11 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: colors.backgroundGrey,
   },
+  styleButtonLeft: {
+    borderColor: '#FE7A37',
+    backgroundColor: 'white',
+    marginRight: 5,
+  },
+  styleLabelLeft: {color: '#FE7A37', fontSize: 15, fontWeight: '600'},
 });
 export default AddUtilities;

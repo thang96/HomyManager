@@ -8,7 +8,7 @@ import {token} from '../../../Store/slices/tokenSlice';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import {ScrollView} from 'react-native-virtualized-view';
-import {dateToDMY} from '../../../utils/common';
+import {dateToDMY, formatNumber} from '../../../utils/common';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
@@ -16,6 +16,7 @@ import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
+import RenderImage from '../../../Components/ComponentHome/RenderImage';
 const ContractDetail = props => {
   const route = useRoute();
   const contractId = route.params;
@@ -57,6 +58,7 @@ const ContractDetail = props => {
   const renderListAcmenity = (item, index) => {
     return <RenderAmenity label={item?.name} />;
   };
+  console.log(contract);
   return (
     <View style={styles.container}>
       <CustomAppBar
@@ -92,12 +94,12 @@ const ContractDetail = props => {
 
         <CustomViewShowBetween
           title={'Tiền phòng'}
-          value={`${contract?.leasingFee?.toLocaleString()}`}
+          value={`${formatNumber(`${contract?.leasingFee}`)}`}
           unit={'VNĐ'}
         />
         <CustomViewShowBetween
           title={'Tiền cọc'}
-          value={`${contract?.depositMoney?.toLocaleString()}`}
+          value={`${formatNumber(`${contract?.depositMoney}`)}`}
           unit={'VNĐ'}
         />
         <CustomViewShowBetween
@@ -149,8 +151,17 @@ const ContractDetail = props => {
             }}
           />
         )}
-        <CustomTextTitle label={'Điều khoản'} />
-        <CustomSuggest label={`${contract?.termAndCondition}`} />
+        <CustomTextTitle label={'Ảnh hợp đồng'} />
+        {contract?.images?.length > 0 && (
+          <FlatList
+            listKey={'images'}
+            data={contract?.images}
+            keyExtractor={key => key?.id}
+            renderItem={({item, index}) => <RenderImage data={item} />}
+          />
+        )}
+        <CustomTextTitle label={'Điều khoản bổ sung'} />
+        <CustomSuggest label={`${contract?.description}`} />
         <View style={{height: 56}} />
       </ScrollView>
       <CustomButtonBottom label={'Thêm hóa đơn'} />

@@ -43,6 +43,7 @@ import {
   EditHouseInformation,
   WaterAndElectricityManager,
   ConfirmWaterAndElectricity,
+  DetailedContractTerms,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -268,6 +269,13 @@ const StackHomepage = () => {
       <Stack.Screen
         component={ContractDetail}
         name={'ContractDetail'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={DetailedContractTerms}
+        name={'DetailedContractTerms'}
         options={{
           headerShown: false,
         }}
