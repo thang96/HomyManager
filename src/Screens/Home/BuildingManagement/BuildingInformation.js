@@ -225,7 +225,7 @@ const BuildingInformation = () => {
 
         {StraightLine()}
 
-        <CustomTextTitle label={'Hình ảnh tòa nhà'} />
+        <CustomTextTitle label={'Ảnh tòa nhà'} />
         {hauseInfor?.images?.length > 0 && (
           <FlatList
             listKey="imagesHause"

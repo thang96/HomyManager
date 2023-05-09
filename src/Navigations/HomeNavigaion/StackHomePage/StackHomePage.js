@@ -44,6 +44,8 @@ import {
   WaterAndElectricityManager,
   ConfirmWaterAndElectricity,
   DetailedContractTerms,
+  CreateContractFromRoom,
+  EditContract,
 } from '../../../Screens';
 const Stack = createStackNavigator();
 const StackHomepage = () => {
@@ -276,6 +278,20 @@ const StackHomepage = () => {
       <Stack.Screen
         component={DetailedContractTerms}
         name={'DetailedContractTerms'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={CreateContractFromRoom}
+        name={'CreateContractFromRoom'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={EditContract}
+        name={'EditContract'}
         options={{
           headerShown: false,
         }}

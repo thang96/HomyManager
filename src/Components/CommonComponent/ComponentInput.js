@@ -15,6 +15,7 @@ const ComponentInput = props => {
     onChangeText,
     styleInput,
     styleButton,
+    editable,
   } = props;
   return (
     <View style={viewComponent}>
@@ -26,6 +27,7 @@ const ComponentInput = props => {
       {type == 'input' && (
         <View style={[styles.viewButton, styleInput]}>
           <TextInput
+            editable={editable}
             style={{flex: 1}}
             placeholder={placeholder}
             placeholderTextColor={'grey'}

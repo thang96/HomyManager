@@ -11,6 +11,7 @@ const RenderServiceInput = props => {
     placeholder,
     value,
     onChangeText,
+    isProgressive,
   } = props;
   return (
     <View style={viewComponent}>
@@ -28,9 +29,11 @@ const RenderServiceInput = props => {
           value={value}
           onChangeText={onChangeText}
         />
-        <View style={styles.viewUnit}>
-          <Text style={styles.textUnit}>{'Lũy tiến'}</Text>
-        </View>
+        {isProgressive && (
+          <View style={styles.viewUnit}>
+            <Text style={styles.textUnit}>{'Lũy tiến'}</Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -56,7 +59,7 @@ const styles = StyleSheet.create({
   viewUnit: {
     height: 32,
     paddingHorizontal: 5,
-    backgroundColor: '#EBEDEE',
+    backgroundColor: '#CFD3D6',
     borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',

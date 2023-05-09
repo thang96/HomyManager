@@ -41,7 +41,7 @@ const RoomInformation = props => {
     };
     getListData();
   }, []);
-  console.log(unit);
+
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
       {loading && <CustomLoading />}
@@ -114,6 +114,7 @@ const RoomInformation = props => {
         <CustomTextTitle
           label={'Hợp đồng cho thuê'}
           labelButton={unit?.activeContract ? '' : 'Thêm hợp đồng'}
+          onPress={() => navigation.navigate('CreateContractFromRoom', unitId)}
         />
         {unit?.activeContract && (
           <RenderContract
@@ -229,7 +230,7 @@ const RoomInformation = props => {
 
         {StraightLine()}
 
-        <CustomTextTitle label={'Hình ảnh của phòng'} />
+        <CustomTextTitle label={'Ảnh phòng'} />
         {unit?.images?.length > 0 && (
           <FlatList
             listKey="imagesUnit"

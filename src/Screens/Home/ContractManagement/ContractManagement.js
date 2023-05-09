@@ -13,6 +13,7 @@ import {token} from '../../../Store/slices/tokenSlice';
 import CustomIsActive from '../../../Components/ComponentHome/Contract/CustomIsActive';
 import CustomLiquidated from '../../../Components/ComponentHome/Contract/CustomLiquidated';
 import CustomOutOfDate from '../../../Components/ComponentHome/Contract/CustomOutOfDate';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 
 const ContractManagement = props => {
   const navigation = useNavigation();
@@ -23,6 +24,7 @@ const ContractManagement = props => {
   const dispatch = useDispatch();
   const statusLoading = useSelector(statusState);
   const [listContract, setListContract] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getListData = async () => {
@@ -30,6 +32,7 @@ const ContractManagement = props => {
         .then(res => {
           if (res?.status == 200) {
             setListContract(res?.data);
+            setLoading(false);
           }
         })
         .catch(error => console.log(error));
@@ -38,6 +41,7 @@ const ContractManagement = props => {
   }, [statusLoading]);
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {loading && <CustomLoading />}
       <CustomSearchAppBar
         iconLeft={icons.ic_back}
         label={'Quản lý hợp đồng'}
@@ -93,6 +97,7 @@ const ContractManagement = props => {
           <CustomIsActive
             data={listContract}
             onPress={item => navigation.navigate('ContractDetail', item?.id)}
+            pressEdit={item => navigation.navigate('EditContract', item?.id)}
           />
         ) : isActive == 2 ? (
           <CustomOutOfDate />

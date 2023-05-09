@@ -24,9 +24,8 @@ const AddService = props => {
   const [modalService, setModalService] = useState('');
 
   const [name, setName] = useState('');
-  const [calculateMethod, setCalculateMethod] = useState(0);
   const [calculateUnit, setCalculateUnit] = useState('');
-  const [fee, setFee] = useState(0);
+  const [fee, setFee] = useState('');
   const [description, setDescription] = useState('');
   const [isCheck, setIsCheck] = useState(false);
 
@@ -34,11 +33,11 @@ const AddService = props => {
     setModalService(false);
     setLoadingService(true);
     let data = {
-      name: name,
-      calculateMethod: calculateMethod,
-      calculateUnit: calculateUnit,
-      fee: validateNumber(fee),
-      description: description,
+      name: name ?? '',
+      calculateUnit: calculateUnit ?? '',
+      fee: validateNumber(fee) ?? 0,
+      description: description ?? '',
+      isProgressive: isCheck ?? false,
     };
     await CreateNewService(tokenStore, data)
       .then(res => {
@@ -112,6 +111,7 @@ const AddService = props => {
           isCheck={isCheck}
         />
         <CustomSuggest
+          labelStyle={{color: '#374047'}}
           label={
             'Dịch phụ thu phí theo lũy tiến sẽ bắt buộc chốt chỉ số từng tháng'
           }

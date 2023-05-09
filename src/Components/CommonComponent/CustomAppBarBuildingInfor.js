@@ -40,7 +40,6 @@ const CustomAppBarBuildingInfor = props => {
         <View
           style={{
             flexDirection: 'row',
-            alignItems: 'center',
             flex: 1,
           }}>
           <View style={{marginTop: 5}}>

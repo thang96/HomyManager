@@ -6,7 +6,7 @@ import RenderContract from '../../../Components/ComponentHome/RenderContract';
 import {convertDate} from '../../../utils/common';
 
 const CustomIsActive = props => {
-  const {data, onPress} = props;
+  const {data, onPress, pressEdit} = props;
 
   const renderContract = (item, index) => {
     return (
@@ -18,6 +18,7 @@ const CustomIsActive = props => {
         unitName={`${item?.unit?.name}`}
         contractOwner={`${item?.contractOwner?.fullName}`}
         onPress={() => onPress(item)}
+        pressEdit={() => pressEdit(item)}
       />
     );
   };

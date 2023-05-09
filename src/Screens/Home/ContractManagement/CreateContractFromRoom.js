@@ -1,64 +1,68 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {StyleSheet, View, Text, Image, ScrollView, Alert} from 'react-native';
-import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
-import {colors, icons, images} from '../../../Constants';
-import {FlatList, TextInput} from 'react-native-gesture-handler';
-import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomTimeButtons from '../../../Components/CommonComponent/CustomTimeButton';
-import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
-import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
-import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
-import ImagePicker from 'react-native-image-crop-picker';
-import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
-import CustomModalPicker from '../../../Components/CommonComponent/CustomModalPicker';
-import CustomPickerDay from '../../../Components/CommonComponent/CustomPickerDay';
-import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
-import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import React, {useEffect, useMemo, useState} from 'react';
+import {
+  Alert,
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {GetUnitDetailAPi} from '../../../Api/Home/UnitApis/UnitApis';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
-import {GetListHausesApi} from '../../../Api/Home/BuildingApis/BuildingApis';
-import {
-  GetListUnitsApi,
-  GetUnitDetailAPi,
-} from '../../../Api/Home/UnitApis/UnitApis';
+import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
+import {colors, icons} from '../../../Constants';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
+import ComponentButton from '../../../Components/CommonComponent/ComponentButton';
+import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
 import {
   dateToDMY,
   dateToYMD,
   formatNumber,
   validateNumber,
 } from '../../../utils/common';
+import CustomModalDateTimePicker from '../../../Components/CommonComponent/CustomModalDateTimePicker';
 import {PAYMENTDURATION} from '../../../Resource/DataPicker';
+import CustomPickerDay from '../../../Components/CommonComponent/CustomPickerDay';
+import CustomTimeButtons from '../../../Components/CommonComponent/CustomTimeButton';
+import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 import {
   amenityState,
   serviceState,
   tenantState,
-  updateAmenity,
-  updateServices,
   updateTenants,
 } from '../../../Store/slices/commonSlice';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
-import {CreateNewContractApi} from '../../../Api/Home/ContractApis/ContractApis';
-import {updateStatus} from '../../../Store/slices/statusSlice';
-import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
-import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
-import ComponentButton from '../../../Components/CommonComponent/ComponentButton';
-import {PostImageContractApi} from '../../../Api/Home/FileDataApis/FileDataApis';
-import ComponentRenderImage from '../../../Components/CommonComponent/ComponentRenderImage';
-import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
+import ImagePicker from 'react-native-image-crop-picker';
+import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 import RenderServiceInput from '../../../Components/ComponentHome/Contract/RenderServiceInput';
-
-const CreateContract = () => {
+import ComponentRenderImage from '../../../Components/CommonComponent/ComponentRenderImage';
+import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
+import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
+import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
+import {CreateNewContractApi} from '../../../Api/Home/ContractApis/ContractApis';
+import {PostImageContractApi} from '../../../Api/Home/FileDataApis/FileDataApis';
+import {updateStatus} from '../../../Store/slices/statusSlice';
+const CreateContractFromRoom = props => {
+  const route = useRoute();
   const navigation = useNavigation();
-  const dispatch = useDispatch();
+  const unitId = route.params;
   const tokenStore = useSelector(token);
-  const serviceSelect = useSelector(serviceState);
-  const amenitySelect = useSelector(amenityState);
-  const tenantSelect = useSelector(tenantState);
+  const dispatch = useDispatch();
+  const [unit, setUnit] = useState();
+  const [loading, setLoading] = useState(true);
   const [timeStart, setTimeStart] = useState(new Date());
   const [timeEnd, setTimeEnd] = useState(new Date());
   const [timeChargeDate, setTimeChargeDate] = useState(new Date());
-  const [loadingAddContract, setLoadingAddContract] = useState(true);
+  const serviceSelect = useSelector(serviceState);
+  const amenitySelect = useSelector(amenityState);
+  const tenantSelect = useSelector(tenantState);
+  const [listService, setListService] = useState([]);
+  const [listAmenity, setListAmenity] = useState([]);
+  const [listTenant, setListTenant] = useState([]);
 
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
@@ -66,9 +70,7 @@ const CreateContract = () => {
   const [paymentDuration, setpaymentDuration] = useState();
   const [leasingFee, setLeasingFee] = useState();
   const [depositMoney, setDepositMoney] = useState();
-  const [termAndCondition, setTermAndCondition] = useState();
   const [description, setDescription] = useState();
-  const [unit, setUnit] = useState();
 
   const [contractImages, setContractImages] = useState([]);
 
@@ -82,28 +84,28 @@ const CreateContract = () => {
   const [modalCamera, setModalCamera] = useState(false);
   const [modalCreateContract, setModalCreateContract] = useState(false);
 
-  const [hause, setHause] = useState(null);
-  const [listHauses, setListHauses] = useState([]);
-  const [listUnits, setListUnits] = useState([]);
-  const [listService, setListService] = useState([]);
-  const [listAmenity, setListAmenity] = useState([]);
-  const [listTenant, setListTenant] = useState([]);
-  const [modalHause, setModalHause] = useState(false);
-  const [modalUnit, setModalUnit] = useState(false);
-
   useEffect(() => {
     const getListData = async () => {
-      await GetListHausesApi(tokenStore)
+      dispatch(updateTenants([]));
+      await GetUnitDetailAPi(tokenStore, unitId)
         .then(res => {
           if (res?.status == 200) {
-            setListHauses(res?.data);
-            setLoadingAddContract(false);
+            setUnit(res?.data);
+            setLeasingFee(res?.data?.rentMonthlyFee);
+            setDepositMoney(res?.data?.depositMoney);
+            setListAmenity(res?.data?.amenities);
+            let services = [];
+            if (res?.data?.chargeServices?.length > 0) {
+              res?.data?.chargeServices?.forEach(element => {
+                let newData = {...element, initUsageAmount: ''};
+                services.push(newData);
+              });
+            }
+            setListService(services);
+            setLoading(false);
           }
         })
-        .catch(error => console.log(error));
-      dispatch(updateAmenity([]));
-      dispatch(updateServices([]));
-      dispatch(updateTenants([]));
+        .catch(error => console.log(error, 'error unit detail'));
     };
     getListData();
   }, []);
@@ -143,29 +145,16 @@ const CreateContract = () => {
     setListTenant(eachTenants);
   }, [tenantSelect]);
 
-  const renderSelectSevice = (item, index) => {
+  const renderSelectTenant = (item, index) => {
     return (
-      <RenderServiceInput
-        viewComponent={{marginBottom: 10}}
-        isProgressive={item?.isProgressive}
-        placeholder={'Nhập chỉ số ban đầu'}
-        name={item?.name}
-        fee={item?.fee}
-        calculateUnit={item?.calculateUnit}
-        value={`${formatNumber(`${item?.initUsageAmount}` ?? '')}`}
-        onChangeText={text => {
-          let eachService = [...listService];
-          eachService[index] = {...item, initUsageAmount: text};
-          setListService(eachService);
-        }}
+      <CustomPersonInfor
+        styleView={{marginBottom: 10}}
+        userName={`${item?.fullName}`}
+        phoneNumber={`${item?.phoneNumber}`}
+        avatar={item?.avatarImage?.fileUrl}
       />
     );
   };
-
-  const renderSelectAmenity = (item, index) => {
-    return <RenderAmenity label={item?.name} />;
-  };
-
   const openCamera = () => {
     setModalCamera(false);
     ImagePicker.openCamera({width: 300, height: 400})
@@ -199,65 +188,35 @@ const CreateContract = () => {
         setModalCamera(false);
       });
   };
-
-  const getListUnit = async item => {
-    setLoadingAddContract(true);
-    setHause(item);
-    setUnit([]);
-    setModalHause(false);
-    let hauseId = item?.id;
-    await GetListUnitsApi(tokenStore, hauseId)
-      .then(res => {
-        if (res?.status == 200) {
-          setListUnits(res?.data);
-          setLoadingAddContract(false);
-        }
-      })
-      .catch(error => console.log(error.response.data));
-  };
-  const getUnitDetailAPi = async item => {
-    setLoadingAddContract(true);
-    dispatch(updateTenants([]));
-    await GetUnitDetailAPi(tokenStore, item?.id)
-      .then(res => {
-        if (res?.status == 200) {
-          setUnit(res?.data);
-          setLoadingAddContract(false);
-        }
-      })
-      .catch(error => console.log(error, 'error unit detail'));
-  };
-  useMemo(() => {
-    setLeasingFee(unit?.rentMonthlyFee);
-    setDepositMoney(unit?.depositMoney);
-    setListAmenity(unit?.amenities);
-    let services = [];
-    if (unit?.chargeServices?.length > 0) {
-      unit?.chargeServices?.forEach(element => {
-        let newData = {...element, initUsageAmount: ''};
-        services.push(newData);
-      });
-    }
-    setListService(services);
-  }, [unit]);
-  const renderSelectTenant = (item, index) => {
+  const renderSelectSevice = (item, index) => {
     return (
-      <CustomPersonInfor
-        styleView={{marginBottom: 10}}
-        userName={`${item?.fullName}`}
-        phoneNumber={`${item?.phoneNumber}`}
-        avatar={item?.avatarImage?.fileUrl}
+      <RenderServiceInput
+        viewComponent={{marginBottom: 10}}
+        isProgressive={item?.isProgressive}
+        placeholder={'Nhập chỉ số ban đầu'}
+        name={item?.name}
+        fee={item?.fee}
+        calculateUnit={item?.calculateUnit}
+        value={`${formatNumber(`${item?.initUsageAmount}` ?? '')}`}
+        onChangeText={text => {
+          let eachService = [...listService];
+          eachService[index] = {...item, initUsageAmount: text};
+          setListService(eachService);
+        }}
       />
     );
+  };
+
+  const renderSelectAmenity = (item, index) => {
+    return <RenderAmenity label={item?.name} />;
   };
 
   const warning = () => {
     setModalCreateContract(false);
     Alert.alert('Cảnh báo !!!', 'Vui lòng điền đủ thông tin cần thiết');
   };
-
   const valueIsReady = () =>
-    unit != null &&
+    unitId != null &&
     startDate != null &&
     endDate != null &&
     startChargeDate != null &&
@@ -267,7 +226,7 @@ const CreateContract = () => {
 
   const createNewContract = async () => {
     setModalCreateContract(false);
-    setLoadingAddContract(true);
+    setLoading(true);
     let eachServiceIds = [];
     let eachAmenityIds = [];
     let eachTenantIds = [];
@@ -295,7 +254,7 @@ const CreateContract = () => {
       depositMoney: parseInt(validateNumber(`${depositMoney}`)),
       description: '',
       termAndCondition: '',
-      unitId: unit?.id,
+      unitId: unitId,
       serviceIds: eachServiceIds,
       amenityIds: eachAmenityIds,
       tenantIds: eachTenantIds,
@@ -310,7 +269,7 @@ const CreateContract = () => {
               .then(res => {
                 if (res?.status == 200) {
                   dispatch(updateStatus('updateContractFromRoom'));
-                  setLoadingAddContract(false);
+                  setLoading(false);
                   navigation.navigate('ContractManagement');
                 }
               })
@@ -319,42 +278,24 @@ const CreateContract = () => {
               });
           } else {
             dispatch(updateStatus('updateContractFromRoom'));
-            setLoadingAddContract(false);
+            setLoading(false);
             navigation.navigate('ContractManagement');
           }
         }
       })
       .catch(error => console.log(error));
   };
-
   return (
     <View style={styles.container}>
-      {loadingAddContract && <CustomLoading />}
+      {loading && <CustomLoading />}
       {modalCreateContract && (
         <CustomModalNotify
           title={'Tạo mới hợp đồng'}
-          label={'Bạn có muốn thêm mới hợp đồng này ?'}
+          label={'Bạn có tạo hợp đồng cho phòng này ?'}
           modalVisible={modalCreateContract}
           onRequestClose={() => setModalCreateContract(false)}
           pressConfirm={() => {
             valueIsReady() == true ? createNewContract() : warning();
-          }}
-        />
-      )}
-      {modalHause && (
-        <CustomModalPicker
-          data={listHauses}
-          pressClose={() => setModalHause(false)}
-          onPressItem={item => getListUnit(item)}
-        />
-      )}
-      {modalUnit && (
-        <CustomModalPicker
-          data={listUnits}
-          pressClose={() => setModalUnit(false)}
-          onPressItem={item => {
-            getUnitDetailAPi(item);
-            setModalUnit(false);
           }}
         />
       )}
@@ -436,29 +377,19 @@ const CreateContract = () => {
           label={'Vui lòng điền đầy đủ thông tin! Mục có dấu * là bắt buộc'}
         />
         <CustomTextTitle label={'Thông tin hợp đồng'} />
-
-        <ComponentButton
-          type={'buttonSelect'}
+        <ComponentInput
           important={true}
           viewComponent={{marginTop: 10}}
-          title={'Tòa nhà'}
-          placeholder={'Chọn tòa nhà'}
-          value={hause?.name}
-          onPress={() => setModalHause(true)}
-        />
-        <ComponentButton
-          type={'buttonSelect'}
-          important={true}
-          viewComponent={{marginTop: 10}}
+          type={'input'}
           title={'Phòng'}
           placeholder={'Chọn phòng'}
           value={unit?.name}
-          onPress={() => setModalUnit(true)}
+          editable={false}
         />
 
         <CustomTimeButtons
-          styleContainer={{marginTop: 20}}
           important={true}
+          styleContainer={{marginTop: 20}}
           title={'Thời hạn'}
           leftLabel={'Từ'}
           rightLabel={'Đến'}
@@ -530,6 +461,29 @@ const CreateContract = () => {
           labelButton={'Xem chi tiết'}
           onPress={() => navigation.navigate('DetailedContractTerms')}
         />
+        {StraightLine()}
+
+        <CustomTextTitle
+          label={'Danh sách người ở'}
+          labelButton={'Thêm'}
+          icon={icons.ic_plus}
+          onPress={() => navigation.navigate('TenantList')}
+        />
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {listTenant.length > 0 ? (
+              <FlatList
+                listKey="listTenant"
+                horizontal={false}
+                scrollEnabled={false}
+                numColumns={1}
+                keyExtractor={key => key.id}
+                data={listTenant}
+                renderItem={({item, index}) => renderSelectTenant(item, index)}
+              />
+            ) : null}
+          </ScrollView>
+        </View>
 
         {StraightLine()}
 
@@ -592,30 +546,6 @@ const CreateContract = () => {
         </View>
 
         {StraightLine()}
-
-        <CustomTextTitle
-          label={'Danh sách người ở'}
-          labelButton={'Thêm'}
-          icon={icons.ic_plus}
-          onPress={() => navigation.navigate('TenantList')}
-        />
-        <View>
-          <ScrollView horizontal={true} style={{width: '100%'}}>
-            {listTenant.length > 0 ? (
-              <FlatList
-                listKey="listTenant"
-                horizontal={false}
-                scrollEnabled={false}
-                numColumns={1}
-                keyExtractor={key => key.id}
-                data={listTenant}
-                renderItem={({item, index}) => renderSelectTenant(item, index)}
-              />
-            ) : null}
-          </ScrollView>
-        </View>
-
-        {StraightLine()}
         <ComponentRenderImage
           title={'Thêm ảnh hợp đồng'}
           label={'Ảnh hợp đồng'}
@@ -629,25 +559,36 @@ const CreateContract = () => {
             setContractImages(newResult);
           }}
         />
-
         <View style={{height: 56}} />
-        <CustomTwoButtonBottom
-          leftLabel={'Trở lại'}
-          rightLabel={'Tiếp tục'}
-          onPressLeft={() => navigation.goBack()}
-          onPressRight={() => setModalCreateContract(true)}
-        />
       </ScrollView>
+      <CustomTwoButtonBottom
+        styleButtonLeft={styles.styleButtonLeft}
+        styleLabelLeft={styles.styleLabelLeft}
+        leftLabel={'Hủy'}
+        rightLabel={'Hoàn tất'}
+        onPressLeft={() => navigation.goBack()}
+        onPressRight={() => setModalCreateContract(true)}
+      />
     </View>
   );
 };
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: 'white'},
+  container: {flex: 1, backgroundColor: colors.backgroundGrey},
   textPicker: {fontSize: 11, fontWeight: '400', color: 'rgba(254, 122, 55, 1)'},
   pickerTotal: {
     fontSize: 15,
     color: 'rgba(254, 122, 55, 1)',
     fontWeight: '600',
   },
+  styleButtonLeft: {
+    borderColor: 'rgba(254, 122, 55, 1)',
+    backgroundColor: 'white',
+    marginLeft: 5,
+  },
+  styleLabelLeft: {
+    color: 'rgba(254, 122, 55, 1)',
+    fontSize: 15,
+    fontWeight: '600',
+  },
 });
-export default CreateContract;
+export default CreateContractFromRoom;

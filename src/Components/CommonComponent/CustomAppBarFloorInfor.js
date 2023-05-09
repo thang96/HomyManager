@@ -34,7 +34,7 @@ const CustomAppBarFloorInfor = props => {
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text
             numberOfLines={1}
-            style={{fontSize: 26, color: 'white', flex: 1}}>
+            style={{fontSize: 20, fontWeight: '600', color: 'white', flex: 1}}>
             {hauseName}
           </Text>
         </View>

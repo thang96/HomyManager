@@ -11,6 +11,7 @@ const RenderContract = props => {
     unitName,
     contractOwner,
     onPress,
+    pressEdit,
   } = props;
   return (
     <View style={styles.viewContract}>
@@ -23,7 +24,7 @@ const RenderContract = props => {
             disabled={true}
             styleButton={styles.buttonActive}
             label={'Hoạt động'}
-            styleLabel={{fontSize: 12, color: 'white'}}
+            styleLabel={{fontSize: 11, color: 'white'}}
           />
         </View>
         <View style={[styles.viewRow]}>
@@ -53,6 +54,7 @@ const RenderContract = props => {
           ]}
           label={'Chỉnh sửa'}
           styleLabel={{fontWeight: '600', color: colors.backgroundOrange}}
+          onPress={pressEdit}
         />
         <CustomButton
           styleButton={[styles.buttonRender, {borderColor: colors.mainColor}]}
@@ -87,7 +89,7 @@ const styles = StyleSheet.create({
   },
   viewRow: {flexDirection: 'row', alignItems: 'center'},
   buttonActive: {
-    backgroundColor: colors.backgroundButton,
+    backgroundColor: '#55CCEF',
     width: 100,
     height: 30,
     borderRadius: 4,

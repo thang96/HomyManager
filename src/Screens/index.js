@@ -37,6 +37,8 @@ import ContractManagement from './Home/ContractManagement/ContractManagement';
 import CreateContract from './Home/ContractManagement/CreateContract';
 import ContractDetail from './Home/ContractManagement/ContractDetail';
 import DetailedContractTerms from './Home/ContractManagement/DetailedContractTerms';
+import CreateContractFromRoom from './Home/ContractManagement/CreateContractFromRoom';
+import EditContract from './Home/ContractManagement/EditContract';
 //----------- PaymentManagement
 import PaymentManagement from './Home/PaymentManagement/PaymentManagement';
 import AddPayment from './Home/PaymentManagement/AddPayment';
@@ -107,6 +109,8 @@ export {
   CreateContract,
   ContractDetail,
   DetailedContractTerms,
+  CreateContractFromRoom,
+  EditContract,
   //-- InvoiceManagement
   InvoiceManagement,
   CreateInvoice,

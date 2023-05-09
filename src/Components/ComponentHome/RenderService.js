@@ -21,7 +21,7 @@ const RenderService = props => {
     deleteService,
     disabled,
   } = props;
-  const widthWindow = Dimensions.get('window').width / 2 - 15;
+  const widthWindow = Dimensions.get('window').width / 2 - 20;
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -65,13 +65,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    margin: 2.5,
     backgroundColor: 'white',
     borderRadius: 4,
     padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    margin: 5,
   },
   iconService: {
     width: 15,

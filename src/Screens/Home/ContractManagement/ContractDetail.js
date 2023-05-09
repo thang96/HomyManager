@@ -48,17 +48,18 @@ const ContractDetail = props => {
   const renderListService = (item, index) => {
     return (
       <RenderService
-        calculateUnit={item?.calculateUnit}
-        name={`${item?.name}`}
-        fee={`${item?.fee?.toLocaleString()}`}
+        calculateUnit={item?.chargeService?.calculateUnit}
+        name={`${item?.chargeService?.name}`}
+        fee={`${item?.chargeService?.fee?.toLocaleString()}`}
         onPress={() => navigation.navigate('ServiceDetail', item?.id)}
       />
     );
   };
+
   const renderListAcmenity = (item, index) => {
     return <RenderAmenity label={item?.name} />;
   };
-  console.log(contract);
+
   return (
     <View style={styles.container}>
       <CustomAppBar
@@ -111,7 +112,7 @@ const ContractDetail = props => {
         {StraightLine()}
 
         <CustomTextTitle label={'Dịch vụ có phí'} />
-        {contract?.chargeServices.length > 0 && (
+        {contract?.chargeServices?.length > 0 && (
           <FlatList
             numColumns={2}
             listKey="chargeServices"
