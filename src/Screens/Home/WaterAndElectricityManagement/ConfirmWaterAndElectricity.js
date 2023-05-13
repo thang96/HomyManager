@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   Dimensions,
+  FlatList,
   Image,
   Modal,
   ScrollView,
@@ -14,128 +16,159 @@ import CustomButtonValue from '../../../Components/CommonComponent/CustomButtonV
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomPersonInfor from '../../../Components/CommonComponent/CustomPersonInfor';
 import CustomIndexInput from '../../../Components/ComponentHome/WaterAndElectricity/CustomIndexInput';
-import {formatNumber} from '../../../utils/common';
+import {formatNumber, validateNumber} from '../../../utils/common';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import ImagePicker from 'react-native-image-crop-picker';
 import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {GetDetailInvoiceUnClosingsApi} from '../../../Api/Home/WaterAndElectricityApis/WaterAndElectricityApis';
+import {useDispatch, useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
+import {updateStatus} from '../../../Store/slices/statusSlice';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import {PutInvoiceUnClosingsApi} from '../../../Api/Home/WaterAndElectricityApis/WaterAndElectricityApis';
 const widthView = Dimensions.get('window').width / 2 - 15;
 
 const ConfirmWaterAndElectricity = props => {
-  const [showImageElectric, setShowImageElectric] = useState(false);
-  const [showImageWater, setShowImageWater] = useState(false);
-  const [electricityIndexImage, setElectricityIndexImage] = useState(null);
-  const [waterIndexImage, setWaterIndexImage] = useState(null);
+  const navigation = useNavigation();
+  const tokenStore = useSelector(token);
+  const dispatch = useDispatch();
+  const route = useRoute();
+  const confirmId = route.params;
+  const [modalShowImage, setModalShowImage] = useState(false);
+  const [modalCamera, setModalCamera] = useState(false);
 
-  const [modalShowElectricImage, setModalShowElectricImage] = useState(false);
-  const [modalElectricCamera, setModalElectricCamera] = useState(false);
-  const [modalShowWaterImage, setModalShowWaterImage] = useState(false);
-  const [modalWarterCamera, setModalWarterCamera] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [progressiveServiceClosings, setProgressiveServiceClosings] =
+    useState();
+  const [indexValue, setIndexValue] = useState();
+  const [selectedPhoto, setSelectedPhoto] = useState();
 
-  let dataImg = images.im_frame1;
-  let dataImgWater = images.im_frame2;
+  useEffect(() => {
+    const getData = async () => {
+      await GetDetailInvoiceUnClosingsApi(tokenStore, confirmId)
+        .then(res => {
+          if (res?.status == 200) {
+            let data = res?.data?.progressiveServiceClosings;
+            let array = [];
+            for (let index = 0; index < data.length; index++) {
+              const element = data[index];
+              let newElement = {
+                ...element,
+                imageUsageNumber: null,
+                // thisStageUsageNumber: '',
+              };
+              array.push(newElement);
+            }
+            setProgressiveServiceClosings(array);
+            setLoading(false);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    };
+    getData();
+  }, []);
+
   const openCamera = () => {
-    setModalElectricCamera(false);
+    setModalCamera(false);
     ImagePicker.openCamera({width: 300, height: 400})
       .then(image => {
         let eachImage = {...image, uri: image?.path};
-        setElectricityIndexImage(eachImage);
+        let eachValue = [...progressiveServiceClosings];
+        eachValue[indexValue] = {
+          ...eachValue[indexValue],
+          imageUsageNumber: eachImage,
+        };
+        setProgressiveServiceClosings(eachValue);
       })
       .catch(e => {
         ImagePicker.clean();
-        setModalElectricCamera(false);
+        setModalCamera(false);
       });
   };
 
   const openGallery = () => {
-    setModalElectricCamera(false);
+    setModalCamera(false);
     ImagePicker.openPicker({multiple: false})
       .then(image => {
         let eachImage = {...image, uri: image?.path};
-        setElectricityIndexImage(eachImage);
+        let eachValue = [...progressiveServiceClosings];
+        eachValue[indexValue] = {
+          ...eachValue[indexValue],
+          imageUsageNumber: eachImage,
+        };
+        setProgressiveServiceClosings(eachValue);
       })
       .catch(e => {
         ImagePicker.clean();
-        setModalElectricCamera(false);
-      });
-  };
-  const openCameraWater = () => {
-    setModalWarterCamera(false);
-    ImagePicker.openCamera({width: 300, height: 400})
-      .then(image => {
-        let eachImage = {...image, uri: image?.path};
-        setWaterIndexImage(eachImage);
-      })
-      .catch(e => {
-        ImagePicker.clean();
-        setModalWarterCamera(false);
+        setModalCamera(false);
       });
   };
 
-  const openGalleryWater = () => {
-    setModalWarterCamera(false);
-    ImagePicker.openPicker({multiple: false})
-      .then(image => {
-        let eachImage = {...image, uri: image?.path};
-        setWaterIndexImage(eachImage);
-      })
-      .catch(e => {
-        ImagePicker.clean();
-        setModalWarterCamera(false);
-      });
+  const saveInvoiceClosings = async () => {
+    setLoading(true);
+    let array = [];
+    for (let index = 0; index < progressiveServiceClosings.length; index++) {
+      const element = progressiveServiceClosings[index];
+      let thisStageUsageNumber = parseInt(
+        `${validateNumber(`${element?.thisStageUsageNumber}`)}`,
+      );
+      let previousStageUsageNumber = parseInt(
+        `${validateNumber(`${element?.previousStageUsageNumber}`)}`,
+      );
+      let subtract = thisStageUsageNumber - previousStageUsageNumber;
+      if (subtract < 0) {
+        Alert.alert('Có lỗi sảy ra', 'Vui lòng kiểm tra lại thông tin đã nhập');
+        break;
+      }
+      let object = {
+        id: element?.id,
+        thisStageUsageAmount: subtract,
+        thisStageUsageNumber: parseInt(`${element?.thisStageUsageNumber}`),
+      };
+      array.push(object);
+    }
+    const data = {progressiveServiceClosings: array};
+    if (array?.length == progressiveServiceClosings?.length) {
+      await PutInvoiceUnClosingsApi(tokenStore, data, confirmId)
+        .then(res => {
+          if (res?.status == 200) {
+            dispatch(updateStatus('updateInvoiceClosings'));
+            navigation.navigate('WaterAndElectricityManager');
+            setLoading(false);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   };
+  const goToConfirmInvoiceClosings = async () => {};
+
   return (
     <View style={styles.container}>
-      {showImageElectric && (
+      {loading && <CustomLoading />}
+      {modalShowImage && (
         <ModalshowImage
-          modalVisible={showImageElectric}
-          onRequestClose={() => setShowImageElectric(false)}
-          pressClose={() => setShowImageElectric(false)}
-          data={dataImg}
+          modalVisible={modalShowImage}
+          onRequestClose={() => setModalShowImage(false)}
+          pressClose={() => setModalShowImage(false)}
+          data={selectedPhoto}
         />
       )}
-      {showImageWater && (
-        <ModalshowImage
-          modalVisible={showImageWater}
-          onRequestClose={() => setShowImageWater(false)}
-          pressClose={() => setShowImageWater(false)}
-          data={dataImgWater}
-        />
-      )}
-      {modalShowElectricImage && (
-        <ModalshowImage
-          modalVisible={modalShowElectricImage}
-          onRequestClose={() => setModalShowElectricImage(false)}
-          pressClose={() => setModalShowElectricImage(false)}
-          data={electricityIndexImage}
-        />
-      )}
-      {modalShowWaterImage && (
-        <ModalshowImage
-          modalVisible={modalShowWaterImage}
-          onRequestClose={() => setModalShowWaterImage(false)}
-          pressClose={() => setModalShowWaterImage(false)}
-          data={waterIndexImage}
-        />
-      )}
-      {modalElectricCamera && (
+      {modalCamera && (
         <CustomModalCamera
           openCamera={() => openCamera()}
           openGallery={() => openGallery()}
-          modalVisible={modalElectricCamera}
-          onRequestClose={() => setModalElectricCamera(false)}
-          cancel={() => setModalElectricCamera(false)}
+          modalVisible={modalCamera}
+          onRequestClose={() => setModalCamera(false)}
+          cancel={() => setModalCamera(false)}
         />
       )}
-      {modalWarterCamera && (
-        <CustomModalCamera
-          openCamera={() => openCameraWater()}
-          openGallery={() => openGalleryWater()}
-          modalVisible={modalWarterCamera}
-          onRequestClose={() => setModalWarterCamera(false)}
-          cancel={() => setModalWarterCamera(false)}
-        />
-      )}
+
       <CustomAppBar
         iconLeft={icons.ic_back}
         pressIconLeft={() => navigation.goBack()}
@@ -160,135 +193,176 @@ const ConfirmWaterAndElectricity = props => {
           userName={'Nguyen Van A'}
           phoneNumber={'123456789'}
         />
-        <CustomTextTitle label={'Chỉ số điện'} />
-        <View style={styles.viewBetween}>
-          <View>
-            <CustomIndexInput
-              title={'Số cũ'}
-              styleInput={{color: '#FE7A37'}}
-              editable={false}
-              unit={'kwh'}
-              value={`${formatNumber(`${30}`)}`}
-            />
-            <TouchableOpacity
-              onPress={() => setShowImageElectric(true)}
-              style={styles.buttonImage}>
-              <Image
-                resizeMode="contain"
-                style={{width: '100%', height: '100%'}}
-                source={images.im_frame1}
-              />
-            </TouchableOpacity>
-          </View>
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {progressiveServiceClosings?.length > 0 && (
+              <FlatList
+                data={progressiveServiceClosings}
+                keyExtractor={key => key?.id}
+                renderItem={({item, index}) => {
+                  return (
+                    <View>
+                      <CustomTextTitle label={`Chỉ số ${item?.serviceName}`} />
+                      <View style={styles.viewBetween}>
+                        <View>
+                          <CustomIndexInput
+                            title={'Số cũ'}
+                            styleInput={{color: '#FE7A37'}}
+                            editable={false}
+                            unit={`${item?.calculateUnit}`}
+                            value={`${formatNumber(
+                              `${item?.previousStageUsageNumber}`,
+                            )}`}
+                          />
+                          <TouchableOpacity
+                            onPress={() => {
+                              setSelectedPhoto(images?.im_frame1);
+                              setModalShowImage(true);
+                            }}
+                            style={styles.buttonImage}>
+                            <Image
+                              resizeMode="contain"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                              }}
+                              source={
+                                item?.image?.fileUrl
+                                  ? {uri: item?.image?.fileUrl}
+                                  : images.im_frame1
+                              }
+                            />
+                          </TouchableOpacity>
+                        </View>
 
-          <View>
-            <CustomIndexInput
-              title={'Số mới'}
-              unit={'kwh'}
-              placeholder={'Nhập số'}
-              styleInput={{color: colors.mainColor, borderBottomWidth: 1}}
-            />
-            {electricityIndexImage ? (
-              <TouchableOpacity
-                onPress={() => setModalShowElectricImage(true)}
-                style={styles.buttonImage}>
-                <Image
-                  resizeMode="contain"
-                  style={{width: '100%', height: '100%'}}
-                  source={{uri: electricityIndexImage?.uri}}
-                />
-                <CustomButton
-                  styleButton={styles.buttonDeleteImage}
-                  icon={icons.ic_close}
-                  styleIcon={{width: 20, height: 20, tintColor: 'white'}}
-                  onPress={() => setElectricityIndexImage(null)}
-                />
-              </TouchableOpacity>
-            ) : (
-              <CustomButton
-                styleButton={[styles.buttonImage, styles.buttonPicture]}
-                label={'Thêm ảnh'}
-                styleLabel={{color: colors.mainColor}}
-                icon={icons.ic_plus}
-                styleIcon={styles.addImageIcon}
-                onPress={() => setModalElectricCamera(true)}
+                        <View>
+                          <CustomIndexInput
+                            title={'Số mới'}
+                            unit={`${item?.calculateUnit}`}
+                            placeholder={'Nhập số'}
+                            styleInput={{
+                              color: colors.mainColor,
+                              borderBottomWidth: 1,
+                            }}
+                            value={
+                              item?.thisStageUsageNumber == 0
+                                ? ''
+                                : `${formatNumber(
+                                    `${item?.thisStageUsageNumber}`,
+                                  )}`
+                            }
+                            onChangeText={text => {
+                              let newValue = {
+                                ...item,
+                                thisStageUsageNumber: text,
+                              };
+                              let newData = [...progressiveServiceClosings];
+                              newData[index] = newValue;
+                              setProgressiveServiceClosings(newData);
+                            }}
+                          />
+                          {item?.imageUsageNumber ? (
+                            <TouchableOpacity
+                              onPress={() => {
+                                setSelectedPhoto(item?.imageUsageNumber);
+                                setModalShowImage(true);
+                              }}
+                              style={styles.buttonImage}>
+                              <Image
+                                resizeMode="contain"
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                }}
+                                source={{uri: item?.imageUsageNumber?.uri}}
+                              />
+                              <CustomButton
+                                styleButton={styles.buttonDeleteImage}
+                                icon={icons.ic_close}
+                                styleIcon={{
+                                  width: 20,
+                                  height: 20,
+                                  tintColor: 'red',
+                                }}
+                                onPress={() => {
+                                  let eachValue = [
+                                    ...progressiveServiceClosings,
+                                  ];
+                                  eachValue[index] = {
+                                    ...eachValue[index],
+                                    imageUsageNumber: null,
+                                  };
+                                  setProgressiveServiceClosings(eachValue);
+                                }}
+                              />
+                            </TouchableOpacity>
+                          ) : (
+                            <CustomButton
+                              styleButton={[
+                                styles.buttonImage,
+                                styles.buttonPicture,
+                              ]}
+                              label={'Thêm ảnh'}
+                              styleLabel={{color: colors.mainColor}}
+                              icon={icons.ic_plus}
+                              styleIcon={styles.addImageIcon}
+                              onPress={() => {
+                                setIndexValue(index);
+                                setModalCamera(true);
+                              }}
+                            />
+                          )}
+                        </View>
+                      </View>
+                    </View>
+                  );
+                }}
               />
             )}
-          </View>
+          </ScrollView>
         </View>
-        <CustomTextTitle label={'Chỉ số nước'} />
-        <View style={styles.viewBetween}>
-          <View>
-            <CustomIndexInput
-              title={'Số cũ'}
-              styleInput={{color: '#FE7A37'}}
-              editable={false}
-              unit={'Khối'}
-              value={`${formatNumber(`${30}`)}`}
-            />
-            <TouchableOpacity
-              onPress={() => setShowImageWater(true)}
-              style={styles.buttonImage}>
-              <Image
-                resizeMode="contain"
-                style={{width: '100%', height: '100%'}}
-                source={images.im_frame2}
-              />
-            </TouchableOpacity>
-          </View>
 
-          <View>
-            <CustomIndexInput
-              title={'Số mới'}
-              unit={'Khối'}
-              styleInput={{color: colors.mainColor, borderBottomWidth: 1}}
-              placeholder={'Nhập số'}
-            />
-            {waterIndexImage ? (
-              <TouchableOpacity
-                onPress={() => setModalShowWaterImage(true)}
-                style={styles.buttonImage}>
-                <Image
-                  resizeMode="contain"
-                  style={{width: '100%', height: '100%'}}
-                  source={{uri: waterIndexImage?.uri}}
-                />
-                <CustomButton
-                  styleButton={styles.buttonDeleteImage}
-                  icon={icons.ic_close}
-                  styleIcon={{width: 20, height: 20, tintColor: 'white'}}
-                  onPress={() => setWaterIndexImage(null)}
-                />
-              </TouchableOpacity>
-            ) : (
-              <CustomButton
-                styleButton={[styles.buttonImage, styles.buttonPicture]}
-                label={'Thêm ảnh'}
-                styleLabel={{color: colors.mainColor}}
-                icon={icons.ic_plus}
-                styleIcon={styles.addImageIcon}
-                onPress={() => setModalWarterCamera(true)}
-              />
-            )}
-          </View>
-        </View>
         <CustomTextTitle label={'Mức tiêu thụ tháng này'} />
-        <View style={styles.viewBetween}>
-          <CustomIndexInput
-            title={'Chỉ số điện'}
-            styleInput={{color: '#FE7A37'}}
-            editable={false}
-            unit={'kwh'}
-            value={`${formatNumber(`${30}`)}`}
-          />
-          <CustomIndexInput
-            title={'Chỉ số nước'}
-            styleInput={{color: '#FE7A37'}}
-            editable={false}
-            unit={'Khối'}
-            value={`${formatNumber(`${90}`)}`}
-          />
+        <View>
+          <ScrollView horizontal={true} style={{width: '100%'}}>
+            {progressiveServiceClosings?.length > 0 && (
+              <FlatList
+                data={progressiveServiceClosings}
+                keyExtractor={key => key?.id}
+                numColumns={2}
+                renderItem={({item, index}) => {
+                  return (
+                    <View>
+                      <CustomIndexInput
+                        title={`Chỉ số ${item?.serviceName}`}
+                        styleInput={{color: '#FE7A37'}}
+                        editable={false}
+                        unit={'kwh'}
+                        value={
+                          `${parseInt(`${item?.thisStageUsageNumber}`)}` -
+                            `${parseInt(`${item?.previousStageUsageNumber}`)}` >
+                          0
+                            ? formatNumber(
+                                `${
+                                  `${parseInt(
+                                    `${item?.thisStageUsageNumber}`,
+                                  )}` -
+                                  `${parseInt(
+                                    `${item?.previousStageUsageNumber}`,
+                                  )}`
+                                }`,
+                              )
+                            : `${formatNumber(`${0}`)}`
+                        }
+                      />
+                    </View>
+                  );
+                }}
+              />
+            )}
+          </ScrollView>
         </View>
+
         <View style={{height: 56}} />
       </ScrollView>
       <CustomTwoButtonBottom
@@ -296,6 +370,8 @@ const ConfirmWaterAndElectricity = props => {
         rightLabel={'Chốt dịch vụ'}
         styleLabelLeft={styles.styleLabelLeft}
         styleButtonLeft={styles.styleButtonLeft}
+        onPressLeft={() => saveInvoiceClosings()}
+        onPressRight={() => goToConfirmInvoiceClosings()}
       />
     </View>
   );

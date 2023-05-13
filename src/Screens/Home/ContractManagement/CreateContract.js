@@ -66,8 +66,6 @@ const CreateContract = () => {
   const [paymentDuration, setpaymentDuration] = useState();
   const [leasingFee, setLeasingFee] = useState();
   const [depositMoney, setDepositMoney] = useState();
-  const [termAndCondition, setTermAndCondition] = useState();
-  const [description, setDescription] = useState();
   const [unit, setUnit] = useState();
 
   const [contractImages, setContractImages] = useState([]);
@@ -632,6 +630,8 @@ const CreateContract = () => {
 
         <View style={{height: 56}} />
         <CustomTwoButtonBottom
+          styleButtonLeft={styles.styleButtonLeft}
+          styleLabelLeft={styles.styleLabelLeft}
           leftLabel={'Trở lại'}
           rightLabel={'Tiếp tục'}
           onPressLeft={() => navigation.goBack()}
@@ -647,6 +647,16 @@ const styles = StyleSheet.create({
   pickerTotal: {
     fontSize: 15,
     color: 'rgba(254, 122, 55, 1)',
+    fontWeight: '600',
+  },
+  styleButtonLeft: {
+    borderColor: 'rgba(254, 122, 55, 1)',
+    backgroundColor: 'white',
+    marginLeft: 5,
+  },
+  styleLabelLeft: {
+    color: 'rgba(254, 122, 55, 1)',
+    fontSize: 15,
     fontWeight: '600',
   },
 });

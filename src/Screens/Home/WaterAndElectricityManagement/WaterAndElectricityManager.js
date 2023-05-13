@@ -1,17 +1,56 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, View, Text, FlatList} from 'react-native';
 import {colors, icons, images, svgs} from '../../../Constants';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomButtonValue from '../../../Components/CommonComponent/CustomButtonValue';
-import ComponentUnfinished from '../../../Components/ComponentHome/WaterAndElectricity/ComponentUnfinished';
+import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import {useDispatch, useSelector} from 'react-redux';
+import {token} from '../../../Store/slices/tokenSlice';
+import {GetAllInvoiceUnClosingsApi} from '../../../Api/Home/WaterAndElectricityApis/WaterAndElectricityApis';
+import RenderWaterElectricity from '../../../Components/ComponentHome/WaterAndElectricity/RenderWaterElectricity';
 
 const WaterAndElectricityManager = props => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const tokenStore = useSelector(token);
   const [isActive, setIsActive] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [listInvoiceClosing, setListInvoiceClosing] = useState([]);
+  const [listInvoiceUnClosing, setListInvoiceUnClosing] = useState([]);
+  // console.log(listInvoiceUnClosing[0]?.contract?.unit);
+  useEffect(() => {
+    const getData = async () => {
+      await GetAllInvoiceUnClosingsApi(tokenStore)
+        .then(res => {
+          if (res?.status == 200) {
+            let listData = res?.data;
+            let closing = [];
+            let unClosing = [];
+            for (let index = 0; index < listData?.length; index++) {
+              const element = listData[index];
+              if (element?.statusName == 'Đã chốt') {
+                closing.push(element);
+              } else if (element?.statusName == 'Chưa chốt') {
+                unClosing.push(element);
+              }
+            }
+            setListInvoiceClosing(closing);
+            setListInvoiceUnClosing(unClosing);
+            setLoading(false);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    };
+    getData();
+  }, []);
+
   return (
     <View style={styles.container}>
+      {loading && <CustomLoading />}
       <CustomAppBar
         iconLeft={icons.ic_back}
         pressIconLeft={() => navigation.goBack()}
@@ -53,11 +92,40 @@ const WaterAndElectricityManager = props => {
         </View>
       </View>
       {isActive == 1 ? (
-        <ComponentUnfinished
-          data={FACE_DATA}
-          onPress={item => navigation.navigate('ConfirmWaterAndElectricity')}
-        />
-      ) : isActive == 2 ? null : isActive == 3 ? null : null}
+        <View style={{flex: 1, paddingHorizontal: 10}}>
+          <FlatList
+            data={listInvoiceUnClosing}
+            keyExtractor={key => `${key?.id}`}
+            renderItem={({item, index}) => {
+              return (
+                <RenderWaterElectricity
+                  data={item}
+                  onPress={() =>
+                    navigation.navigate('ConfirmWaterAndElectricity', item?.id)
+                  }
+                />
+              );
+            }}
+          />
+        </View>
+      ) : isActive == 2 ? (
+        <View style={{flex: 1, paddingHorizontal: 10}}>
+          <FlatList
+            data={listInvoiceClosing}
+            keyExtractor={key => `${key?.id}`}
+            renderItem={({item, index}) => {
+              return (
+                <RenderWaterElectricity
+                  data={item}
+                  onPress={() =>
+                    navigation.navigate('ConfirmWaterAndElectricity', item?.id)
+                  }
+                />
+              );
+            }}
+          />
+        </View>
+      ) : isActive == 3 ? null : null}
     </View>
   );
 };

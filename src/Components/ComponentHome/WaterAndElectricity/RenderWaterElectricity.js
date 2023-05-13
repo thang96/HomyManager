@@ -4,52 +4,47 @@ import CustomButton from '../../CommonComponent/CustomButton';
 import {colors, icons} from '../../../Constants';
 
 const RenderWaterElectricity = props => {
-  const {value, room, name, onPress, floor} = props;
+  const {data, onPress} = props;
   return (
     <View style={{marginBottom: 15}}>
-      <Text style={styles.title}>{`Tầng: ${floor}`}</Text>
-      {room.map((item, index) => {
-        return (
-          <View key={`${item?.room}`} style={styles.viewRender}>
-            <View style={styles.viewBetween}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
-                  source={icons.ic_home}
-                  style={{width: 20, height: 20, tintColor: colors.mainColor}}
-                />
-                <Text style={styles.labelRoom}>{`${item?.room}`}</Text>
-              </View>
-              <CustomButton
-                disabled={true}
-                styleButton={styles.statusView}
-                label={item?.status ? 'Đã chốt' : 'Chưa chốt'}
-                styleLabel={{fontSize: 12, color: 'white'}}
-              />
-            </View>
+      {/* <Text style={styles.title}>{`Tầng: ${floor}`}</Text> */}
+      <View key={`${data?.room}`} style={styles.viewRender}>
+        <View style={styles.viewBetween}>
+          <View style={{flexDirection: 'row', aligndatas: 'center'}}>
+            <Image
+              source={icons.ic_home}
+              style={{width: 20, height: 20, tintColor: colors.mainColor}}
+            />
+            <Text
+              style={styles.labelRoom}>{`${data?.contract?.unit?.name}`}</Text>
+          </View>
+          <CustomButton
+            disabled={true}
+            styleButton={styles.statusView}
+            label={data?.statusName}
+            styleLabel={{fontSize: 12, color: 'white'}}
+          />
+        </View>
 
+        <Text numberOfLines={1} style={styles.content}>{`${data?.value}`}</Text>
+        <View style={styles.viewBetween}>
+          <View style={{flexDirection: 'row', aligndatas: 'center'}}>
+            <Text style={[styles.label]}>{`Người gửi: `}</Text>
             <Text
               numberOfLines={1}
-              style={styles.content}>{`${item?.value}`}</Text>
-            <View style={styles.viewBetween}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={[styles.label]}>{`Người gửi: `}</Text>
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    {fontWeight: '600'},
-                    styles.label,
-                  ]}>{`${item?.name}`}</Text>
-              </View>
-              <CustomButton
-                styleButton={styles.buttonConfirm}
-                label={'Xác nhận'}
-                styleLabel={{fontSize: 13, color: 'white'}}
-                onPress={() => onPress(item)}
-              />
-            </View>
+              style={[
+                {fontWeight: '600'},
+                styles.label,
+              ]}>{`${data?.contract?.contractOwner?.fullName}`}</Text>
           </View>
-        );
-      })}
+          <CustomButton
+            styleButton={styles.buttonConfirm}
+            label={'Xác nhận'}
+            styleLabel={{fontSize: 13, color: 'white'}}
+            onPress={onPress}
+          />
+        </View>
+      </View>
     </View>
   );
 };
@@ -80,7 +75,7 @@ const styles = StyleSheet.create({
   },
   viewBetween: {
     flexDirection: 'row',
-    alignItems: 'center',
+    aligndatas: 'center',
     justifyContent: 'space-between',
   },
   labelRoom: {

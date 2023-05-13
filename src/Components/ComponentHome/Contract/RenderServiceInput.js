@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     borderColor: '#ACB4B9',
     paddingHorizontal: 10,
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   viewUnit: {
     height: 32,

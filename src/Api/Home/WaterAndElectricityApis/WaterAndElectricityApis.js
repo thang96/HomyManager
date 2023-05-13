@@ -1,10 +1,10 @@
 import axios from 'axios';
 import {BASEURL} from '../../BASEURL';
 
-export const GetListContractsApi = token => {
+export const GetAllInvoiceUnClosingsApi = token => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/contracts`, {
+      .get(`${BASEURL}/invoice-closings`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -20,10 +20,10 @@ export const GetListContractsApi = token => {
   });
 };
 
-export const GetContractDetailAPi = (token, contractId) => {
+export const GetListInvoiceUnClosingsApi = token => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/contracts/${contractId}`, {
+      .get(`${BASEURL}/invoice-closings/un-closings`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -39,10 +39,10 @@ export const GetContractDetailAPi = (token, contractId) => {
   });
 };
 
-export const CreateNewContractApi = (token, data) => {
+export const GetDetailInvoiceUnClosingsApi = (token, id) => {
   return new Promise((resolve, reject) => {
     axios
-      .post(`${BASEURL}/contracts`, data, {
+      .get(`${BASEURL}/invoice-closings/${id}`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -58,10 +58,10 @@ export const CreateNewContractApi = (token, data) => {
   });
 };
 
-export const GetActiveContractApi = (token, unitId) => {
+export const PutInvoiceUnClosingsApi = (token, data, id) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${BASEURL}/units/${unitId}/contracts/getActiveContract`, {
+      .put(`${BASEURL}/invoice-closings/${id}`, data, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -77,29 +77,10 @@ export const GetActiveContractApi = (token, unitId) => {
   });
 };
 
-export const PutContractAPi = (token, data, contractId) => {
+export const GetInvoiceRequestClosingsApi = (token, id) => {
   return new Promise((resolve, reject) => {
     axios
-      .put(`${BASEURL}/contracts/${contractId}`, data, {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(res => {
-        resolve(res);
-      })
-      .catch(errors => {
-        reject(errors);
-      });
-  });
-};
-
-export const DeleteContractAPi = (token, serviceId) => {
-  return new Promise((resolve, reject) => {
-    axios
-      .delete(`${BASEURL}/contracts/${serviceId}`, {
+      .get(`${BASEURL}/invoice-closings/${id}/request-closing`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
