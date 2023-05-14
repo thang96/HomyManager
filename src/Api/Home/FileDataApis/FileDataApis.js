@@ -173,6 +173,42 @@ export const PostImageInvoiceApi = (token, invoiceId, invoiceImages) => {
   });
 };
 
+export const PostImageInvoiceUploadPaymentApi = (
+  token,
+  invoiceId,
+  invoiceImages,
+) => {
+  let formInvoice = new FormData();
+  for (let i = 0; i < invoiceImages.length; i++) {
+    let image = invoiceImages[i];
+    formInvoice.append('files', {
+      uri: image?.uri,
+      name: getFileName(image),
+      type: 'image/jpeg',
+    });
+  }
+  return new Promise((resolve, reject) => {
+    axios
+      .post(
+        `${BASEURL}/invoices/${invoiceId}/files/upload-payment`,
+        formInvoice,
+        {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
 export const DeleteImageApi = (token, imageId) => {
   return new Promise((resolve, reject) => {
     axios

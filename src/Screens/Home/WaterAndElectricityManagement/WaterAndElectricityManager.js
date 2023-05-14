@@ -10,6 +10,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import {GetAllInvoiceUnClosingsApi} from '../../../Api/Home/WaterAndElectricityApis/WaterAndElectricityApis';
 import RenderWaterElectricity from '../../../Components/ComponentHome/WaterAndElectricity/RenderWaterElectricity';
+import {updateStatus} from '../../../Store/slices/statusSlice';
 
 const WaterAndElectricityManager = props => {
   const navigation = useNavigation();
@@ -100,9 +101,10 @@ const WaterAndElectricityManager = props => {
               return (
                 <RenderWaterElectricity
                   data={item}
-                  onPress={() =>
-                    navigation.navigate('ConfirmWaterAndElectricity', item?.id)
-                  }
+                  onPress={() => {
+                    dispatch(updateStatus('toDoUpdate'));
+                    navigation.navigate('ConfirmWaterAndElectricity', item?.id);
+                  }}
                 />
               );
             }}

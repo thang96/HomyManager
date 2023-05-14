@@ -19,11 +19,13 @@ const ComponentInput = props => {
   } = props;
   return (
     <View style={viewComponent}>
-      <View
-        style={{flexDirection: 'row', marginBottom: 3, alignItems: 'center'}}>
-        <Text style={styles.label}>{title}</Text>
-        {important && <Text style={{color: 'red'}}> *</Text>}
-      </View>
+      {title && (
+        <View
+          style={{flexDirection: 'row', marginBottom: 3, alignItems: 'center'}}>
+          <Text style={styles.label}>{title}</Text>
+          {important && <Text style={{color: 'red'}}> *</Text>}
+        </View>
+      )}
       {type == 'input' && (
         <View style={[styles.viewButton, styleInput]}>
           <TextInput

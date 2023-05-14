@@ -20,25 +20,6 @@ export const GetListInvoicesApi = token => {
   });
 };
 
-export const CreateInvoicesApi = (token, data) => {
-  return new Promise((resolve, reject) => {
-    axios
-      .post(`${BASEURL}/invoices`, data, {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(res => {
-        resolve(res);
-      })
-      .catch(errors => {
-        reject(errors);
-      });
-  });
-};
-
 export const GetInvoiceDetailApi = (token, invoiceId) => {
   return new Promise((resolve, reject) => {
     axios
@@ -57,11 +38,10 @@ export const GetInvoiceDetailApi = (token, invoiceId) => {
       });
   });
 };
-
-export const PutInvoiceIssueApi = (token, invoiceId) => {
+export const DeleteInvoiceApi = (token, invoiceId) => {
   return new Promise((resolve, reject) => {
     axios
-      .put(`${BASEURL}/invoices/${invoiceId}/issued`, null, {
+      .delete(`${BASEURL}/invoices/${invoiceId}`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -81,6 +61,25 @@ export const PutInvoiceConfirmPaymentApi = (token, invoiceId) => {
   return new Promise((resolve, reject) => {
     axios
       .put(`${BASEURL}/invoices/${invoiceId}/payment-confirm`, null, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
+export const PutInvoiceRejectApi = (token, invoiceId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(`${BASEURL}/invoices/${invoiceId}/reject`, null, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

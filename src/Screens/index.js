@@ -46,7 +46,6 @@ import PaymentDetail from './Home/PaymentManagement/PaymentDetail';
 import ListPaymentSelect from './Home/PaymentManagement/ListPaymentSelect';
 //----------- InvoiceManagement
 import InvoiceManagement from './Home/BillManagement/InvoiceManagement';
-import CreateInvoice from './Home/BillManagement/CreateInvoice';
 import InvoiceDetail from './Home/BillManagement/InvoiceDetail';
 import InvoiceUnpaidDetail from './Home/BillManagement/InvoiceUnpaidDetail';
 import InvoicePaidDetail from './Home/BillManagement/InvoicePaidDetail';
@@ -113,7 +112,6 @@ export {
   EditContract,
   //-- InvoiceManagement
   InvoiceManagement,
-  CreateInvoice,
   InvoiceDetail,
   InvoiceUnpaidDetail,
   InvoicePaidDetail,

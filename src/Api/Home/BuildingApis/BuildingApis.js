@@ -137,7 +137,7 @@ export const PutBuildingApi = (token, houseId, data) => {
 export const DeleteBuildingApi = (token, houseId) => {
   return new Promise((resolve, reject) => {
     axios
-      .delete(`${BASEURL}/houses${houseId}`, data, {
+      .delete(`${BASEURL}/houses/${houseId}`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

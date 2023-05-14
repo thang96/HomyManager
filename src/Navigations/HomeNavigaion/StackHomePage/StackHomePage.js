@@ -29,7 +29,6 @@ import {
   TenantDetail,
   ManagerDetail,
   ContractDetail,
-  CreateInvoice,
   PaymentManagement,
   AddPayment,
   ListPaymentSelect,
@@ -79,13 +78,7 @@ const StackHomepage = () => {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        component={CreateInvoice}
-        name={'CreateInvoice'}
-        options={{
-          headerShown: false,
-        }}
-      />
+
       <Stack.Screen
         component={InvoiceDetail}
         name={'InvoiceDetail'}

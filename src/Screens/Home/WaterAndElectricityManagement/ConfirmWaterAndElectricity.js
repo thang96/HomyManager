@@ -57,7 +57,6 @@ const ConfirmWaterAndElectricity = props => {
               let newElement = {
                 ...element,
                 imageUsageNumber: null,
-                // thisStageUsageNumber: '',
               };
               array.push(newElement);
             }
@@ -108,8 +107,7 @@ const ConfirmWaterAndElectricity = props => {
       });
   };
 
-  const saveInvoiceClosings = async () => {
-    setLoading(true);
+  const checkData = () => {
     let array = [];
     for (let index = 0; index < progressiveServiceClosings.length; index++) {
       const element = progressiveServiceClosings[index];
@@ -131,8 +129,17 @@ const ConfirmWaterAndElectricity = props => {
       };
       array.push(object);
     }
-    const data = {progressiveServiceClosings: array};
-    if (array?.length == progressiveServiceClosings?.length) {
+    return array;
+  };
+
+  const saveInvoiceClosings = async () => {
+    checkData();
+    const data = {progressiveServiceClosings: checkData()};
+    if (
+      data?.progressiveServiceClosings?.length ==
+      progressiveServiceClosings?.length
+    ) {
+      setLoading(true);
       await PutInvoiceUnClosingsApi(tokenStore, data, confirmId)
         .then(res => {
           if (res?.status == 200) {
@@ -146,7 +153,27 @@ const ConfirmWaterAndElectricity = props => {
         });
     }
   };
-  const goToConfirmInvoiceClosings = async () => {};
+  const goToConfirmInvoiceClosings = async () => {
+    checkData();
+    const data = {progressiveServiceClosings: checkData()};
+    if (
+      data?.progressiveServiceClosings?.length ==
+      progressiveServiceClosings?.length
+    ) {
+      setLoading(true);
+      await PutInvoiceUnClosingsApi(tokenStore, data, confirmId)
+        .then(res => {
+          if (res?.status == 200) {
+            dispatch(updateStatus('updateInvoiceClosings'));
+            navigation.navigate('InvoiceDetail', confirmId);
+            setLoading(false);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  };
 
   return (
     <View style={styles.container}>

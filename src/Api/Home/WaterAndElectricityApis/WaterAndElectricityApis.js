@@ -95,3 +95,22 @@ export const GetInvoiceRequestClosingsApi = (token, id) => {
       });
   });
 };
+
+export const PostInvoiceRequestClosingsApi = (token, data, id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${BASEURL}/invoice-closings/${id}/confirm-closing`, data, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};

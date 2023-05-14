@@ -13,19 +13,25 @@ import BoxShowInfor from '../../../Components/CommonComponent/BoxShowInfor';
 import {FlatList} from 'react-native-gesture-handler';
 import {StraightLine} from '../../../Components/CommonComponent/LineComponent';
 import CustomAppBarBuildingInfor from '../../../Components/CommonComponent/CustomAppBarBuildingInfor';
+import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
-import {HauseDetailApi} from '../../../Api/Home/BuildingApis/BuildingApis';
+import {
+  DeleteBuildingApi,
+  HauseDetailApi,
+} from '../../../Api/Home/BuildingApis/BuildingApis';
 import RenderService from '../../../Components/ComponentHome/RenderService';
 import RenderAmenity from '../../../Components/ComponentHome/RenderAmenity';
 import RenderImage from '../../../Components/ComponentHome/RenderImage';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../Store/slices/tokenSlice';
 import CustomBankAccountInfor from '../../../Components/ComponentHome/BankAccount/CustomBankAccountInfor';
+import {updateStatus} from '../../../Store/slices/statusSlice';
 
 const BuildingInformation = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const route = useRoute();
   const isFocused = useIsFocused();
   const tokenStore = useSelector(token);
@@ -33,6 +39,7 @@ const BuildingInformation = () => {
   const [hauseInfor, setHauseInfor] = useState();
   const [openTimeValue, setOpenTimeValue] = useState('');
   const [closeTimeValue, setCloseTimeValue] = useState('');
+  const [modalDeleteHouse, setModalDeleteHouse] = useState(false);
   const hauseId = route.params;
 
   useEffect(() => {
@@ -72,7 +79,21 @@ const BuildingInformation = () => {
   const renderImageHauses = (item, index) => {
     return <RenderImage data={item} />;
   };
-
+  const deleteHouse = async () => {
+    setModalDeleteHouse(false);
+    setLoading(true);
+    await DeleteBuildingApi(tokenStore, hauseId)
+      .then(res => {
+        if (res?.status == 200) {
+          dispatch(updateStatus('deleteHouse'));
+          navigation.navigate('BuildingManager');
+          setLoading(false);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
   return (
     <View style={styles.container}>
       {loading && (
@@ -81,11 +102,21 @@ const BuildingInformation = () => {
           pressBack={() => navigation.goBack()}
         />
       )}
+      {modalDeleteHouse && (
+        <CustomModalNotify
+          modalVisible={modalDeleteHouse}
+          title={'Xóa nhà'}
+          label={'Bạn có muốn xóa căn nhà này'}
+          onRequestClose={() => setModalDeleteHouse(false)}
+          pressConfirm={() => deleteHouse()}
+        />
+      )}
       <CustomAppBarBuildingInfor
         pressIconRight={() => navigation.navigate('NotificationScreen')}
         nameBuilding={`${hauseInfor?.name ?? ''}`}
         addressBuilding={`${hauseInfor?.fullAddress ?? ''}`}
         onPressLeft={() => navigation.goBack()}
+        pressDelete={() => setModalDeleteHouse(true)}
       />
       <ScrollView
         nestedScrollEnabled={true}

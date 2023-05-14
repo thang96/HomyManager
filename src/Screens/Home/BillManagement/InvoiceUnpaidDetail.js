@@ -4,8 +4,10 @@ import {Alert, FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  DeleteInvoiceApi,
   GetInvoiceDetailApi,
   PutInvoiceConfirmPaymentApi,
+  PutInvoiceRejectApi,
 } from '../../../Api/Home/InvoiceApis/InvoiceApis';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
@@ -13,7 +15,6 @@ import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
 import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
-import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import {colors, icons} from '../../../Constants';
 import {token} from '../../../Store/slices/tokenSlice';
 import {updateStatus} from '../../../Store/slices/statusSlice';
@@ -23,6 +24,10 @@ import {
   StraightLine,
 } from '../../../Components/CommonComponent/LineComponent';
 import CustomViewServiceFee from '../../../Components/ComponentHome/Invoice/CustomViewServiceFee';
+import ComponentRenderImage from '../../../Components/CommonComponent/ComponentRenderImage';
+import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
+import ImagePicker from 'react-native-image-crop-picker';
+import {PostImageInvoiceUploadPaymentApi} from '../../../Api/Home/FileDataApis/FileDataApis';
 
 const InvoiceUnpaidDetail = props => {
   const route = useRoute();
@@ -31,12 +36,16 @@ const InvoiceUnpaidDetail = props => {
   const tokenStore = useSelector(token);
   const invoiceId = route.params;
   const [loading, setLoading] = useState(true);
-  const [modalConfrimTheBill, setModalConfrimTheBill] = useState(false);
   const [invoice, setInvoice] = useState(null);
   const [invoiceServices, setInvoiceServices] = useState([]);
-  const [serviceImages, setServiceImages] = useState([]);
-  const [paymentmages, setPaymentImages] = useState([]);
   const timeNow = new Date();
+
+  const [modalRejectTheBill, setModalRejectTheBill] = useState(false);
+  const [modalConfrimTheBill, setModalConfrimTheBill] = useState(false);
+  const [modalDeleteInvoice, setModalDeleteInvoice] = useState(false);
+
+  const [modalCamera, setModalCamera] = useState(false);
+  const [paymentImages, setPaymentImages] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -44,7 +53,6 @@ const InvoiceUnpaidDetail = props => {
         .then(res => {
           if (res?.status == 200) {
             setInvoiceServices(res?.data?.invoiceServices);
-            setServiceImages(res?.data?.serviceImages);
             setPaymentImages(res?.data?.paymentImages);
             setInvoice(res?.data);
             setLoading(false);
@@ -55,26 +63,31 @@ const InvoiceUnpaidDetail = props => {
     getData();
   }, []);
 
-  const renderImage = (item, index) => {
-    return <RenderImage data={item} />;
-  };
-  const renderImagePayment = (item, index) => {
-    return <RenderImage data={item} />;
+  const openCamera = () => {
+    setModalCamera(false);
+    ImagePicker.openCamera({width: 300, height: 400})
+      .then(image => {
+        let eachImg = {...image, uri: image?.path};
+        const eachResult = [...paymentImages, eachImg];
+        setPaymentImages(eachResult);
+      })
+      .catch(e => {
+        ImagePicker.clean();
+        setModalCamera(false);
+      });
   };
 
-  const confirmTheBill = async () => {
-    setModalConfrimTheBill(false);
-    setLoading(true);
-    await PutInvoiceConfirmPaymentApi(tokenStore, invoiceId)
-      .then(res => {
-        if (res?.status == 200) {
-          dispatch(updateStatus(false));
-          setLoading(false);
-          navigation.navigate('InvoiceManagement');
-        }
+  const openGallery = () => {
+    setModalCamera(false);
+    ImagePicker.openPicker({multiple: false})
+      .then(async image => {
+        let eachImg = {...image, uri: image?.path};
+        const eachResult = [...paymentImages, eachImg];
+        setPaymentImages(eachResult);
       })
-      .catch(error => {
-        console.log(error);
+      .catch(e => {
+        ImagePicker.clean();
+        setModalCamera(false);
       });
   };
   const renderItem = (item, index) => {
@@ -89,7 +102,72 @@ const InvoiceUnpaidDetail = props => {
       />
     );
   };
-  console.log(invoice);
+  const deleteTheBill = async () => {
+    setModalDeleteInvoice(false);
+    setLoading(true);
+    await DeleteInvoiceApi(tokenStore, invoiceId)
+      .then(res => {
+        if (res?.status == 200) {
+          dispatch(updateStatus('deleteInvoiceSuccess'));
+          navigation.navigate('InvoiceManagement');
+          setLoading(false);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const rejectTheBill = async () => {
+    setModalRejectTheBill(false);
+    setLoading(true);
+    await PutInvoiceRejectApi(tokenStore, invoiceId)
+      .then(res => {
+        if (res?.status == 200) {
+          dispatch(updateStatus('rejectInvoiceSuccess'));
+          navigation.navigate('InvoiceManagement');
+          setLoading(false);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const confirmTheBill = async () => {
+    setModalConfrimTheBill(false);
+    if (paymentImages.length <= 0) {
+      Alert.alert(
+        'Thiếu thông tin',
+        'Vùi lòng thêm ảnh xác nhận hóa đơn đã thanh toán',
+      );
+    }
+    setLoading(true);
+    await PutInvoiceConfirmPaymentApi(tokenStore, invoiceId)
+      .then(async res => {
+        if (res?.status == 200) {
+          await PostImageInvoiceUploadPaymentApi(
+            tokenStore,
+            invoiceId,
+            paymentImages,
+          )
+            .then(res => {
+              if (res?.status == 200) {
+                dispatch(updateStatus('confirmInvoiceSuccess'));
+                navigation.navigate('InvoiceManagement');
+                setLoading(false);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   return (
     <View style={styles.container}>
       {loading && <CustomLoading />}
@@ -101,12 +179,38 @@ const InvoiceUnpaidDetail = props => {
           pressConfirm={() => confirmTheBill()}
         />
       )}
+      {modalRejectTheBill && (
+        <CustomModalNotify
+          title={'Từ chối thanh toán'}
+          label={'Bạn có muốn từ chối phiếu thanh toán này ?'}
+          onRequestClose={() => setModalRejectTheBill(false)}
+          pressConfirm={() => rejectTheBill()}
+        />
+      )}
+      {modalCamera && (
+        <CustomModalCamera
+          openCamera={() => openCamera()}
+          openGallery={() => openGallery()}
+          modalVisible={modalCamera}
+          onRequestClose={() => setModalCamera(false)}
+          cancel={() => setModalCamera(false)}
+        />
+      )}
+      {modalDeleteInvoice && (
+        <CustomModalNotify
+          title={'Xóa hóa đơn'}
+          label={'Bạn có muốn xóa hóa đơn này ?'}
+          onRequestClose={() => setModalDeleteInvoice(false)}
+          pressConfirm={() => deleteTheBill()}
+        />
+      )}
       <CustomAppBar
         iconLeft={icons.ic_back}
         label={'Hóa đơn chưa thanh toán'}
         iconRight={icons.ic_bell}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
-        iconSecondRight={icons.ic_moreOption}
+        iconSecondRight={icons.ic_trash}
+        pressSeccodIconRight={() => setModalDeleteInvoice(true)}
         pressIconLeft={() => navigation.goBack()}
       />
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
@@ -114,9 +218,7 @@ const InvoiceUnpaidDetail = props => {
           <View style={styles.viewBetween}>
             <Text style={styles.title}>{`${invoice?.name ?? ''}`}</Text>
             <Text style={{color: 'red', fontSize: 13}}>
-              {invoice?.status == 0
-                ? 'Chưa chốt'
-                : invoice?.status == 1
+              {invoice?.status == 1
                 ? 'Chưa thanh toán'
                 : invoice?.status == 1
                 ? 'Đã thanh toán'
@@ -125,7 +227,11 @@ const InvoiceUnpaidDetail = props => {
           </View>
 
           <View style={styles.viewBetween}>
-            <Text style={styles.title}>{``}</Text>
+            <Text
+              style={{
+                color: '#000000',
+                fontSize: 13,
+              }}>{`${invoice?.code}`}</Text>
             <Text style={{color: '#000000', fontSize: 13}}>
               {`${convertDate(invoice?.createTime ?? timeNow)}`}
             </Text>
@@ -189,40 +295,38 @@ const InvoiceUnpaidDetail = props => {
           {BreakLine()}
 
           <CustomTextTitle label={'Ghi chú'} />
-          <CustomSuggest label={`${invoice?.notice ?? ''}`} />
+          <CustomSuggest
+            label={`Hạn thanh toán hóa đơn là 3 ngày kể từ ngày xuất hóa đơn, vui lòng thanh toán hoặc xin gia hạn trong thời gian này.`}
+          />
         </View>
 
         {StraightLine()}
 
-        <CustomTextTitle label={'Ảnh dịch vụ'} />
-        {serviceImages.length > 0 && (
-          <FlatList
-            horizontal
-            data={serviceImages}
-            keyExtractor={key => key?.id}
-            renderItem={({item}) => renderImage(item)}
-          />
-        )}
-        <CustomTextTitle label={'Ảnh thanh toán'} />
-        {paymentmages.length > 0 && (
-          <FlatList
-            horizontal
-            data={paymentmages}
-            keyExtractor={key => key?.id}
-            renderItem={({item}) => renderImagePayment(item)}
-          />
-        )}
+        <ComponentRenderImage
+          title={'Ảnh thanh toán'}
+          label={'Tải lên ảnh thanh toán'}
+          labelUpload={'Thêm ảnh'}
+          data={paymentImages}
+          deleteButton={true}
+          openModal={() => setModalCamera(true)}
+          deleteItem={item => {
+            let result = [...paymentImages];
+            let newResult = result.filter(itemResult => itemResult !== item);
+            setPaymentImages(newResult);
+          }}
+        />
 
         <View style={{height: 56}} />
-        <CustomTwoButtonBottom
-          leftLabel={'Chỉnh sửa'}
-          rightLabel={'Xác nhận'}
-          styleLabelLeft={styles.styleLabelLeft}
-          styleButtonLeft={styles.styleButtonLeft}
-          onPressLeft={() => {}}
-          onPressRight={() => setModalConfrimTheBill(true)}
-        />
       </ScrollView>
+
+      <CustomTwoButtonBottom
+        leftLabel={'Từ chối'}
+        rightLabel={'Xác nhận'}
+        styleLabelLeft={styles.styleLabelLeft}
+        styleButtonLeft={styles.styleButtonLeft}
+        onPressLeft={() => setModalRejectTheBill(true)}
+        onPressRight={() => setModalConfrimTheBill(true)}
+      />
     </View>
   );
 };

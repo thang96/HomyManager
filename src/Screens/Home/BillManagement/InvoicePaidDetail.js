@@ -3,10 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {Alert, FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  GetInvoiceDetailApi,
-  PutInvoiceConfirmPaymentApi,
-} from '../../../Api/Home/InvoiceApis/InvoiceApis';
+import {GetInvoiceDetailApi} from '../../../Api/Home/InvoiceApis/InvoiceApis';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
@@ -20,8 +17,6 @@ import {
   StraightLine,
 } from '../../../Components/CommonComponent/LineComponent';
 import CustomViewServiceFee from '../../../Components/ComponentHome/Invoice/CustomViewServiceFee';
-
-const breakLine = Array(19).fill('');
 
 const InvoicePaidDetail = props => {
   const route = useRoute();

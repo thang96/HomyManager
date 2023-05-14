@@ -1,36 +1,32 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   Alert,
-  Dimensions,
   FlatList,
   Image,
   StyleSheet,
   Text,
+  TextInput,
   View,
+  ScrollView,
 } from 'react-native';
-import {ScrollView} from 'react-native-virtualized-view';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  GetInvoiceDetailApi,
-  PutInvoiceIssueApi,
-} from '../../../Api/Home/InvoiceApis/InvoiceApis';
 import CustomAppBar from '../../../Components/CommonComponent/CustomAppBar';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
-import CustomSuggest from '../../../Components/CommonComponent/CustomSuggest';
+import ComponentInput from '../../../Components/CommonComponent/ComponentInput';
 import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
-import CustomTwoButtonBottom from '../../../Components/CommonComponent/CustomTwoButtonBottom';
+import CustomButtonBottom from '../../../Components/CommonComponent/CustomButtonBottom';
 import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
-import RenderImage from '../../../Components/ComponentHome/RenderImage';
 import {colors, icons} from '../../../Constants';
 import {token} from '../../../Store/slices/tokenSlice';
-import {
-  BreakLine,
-  StraightLine,
-} from '../../../Components/CommonComponent/LineComponent';
+import {BreakLine} from '../../../Components/CommonComponent/LineComponent';
 import {updateStatus} from '../../../Store/slices/statusSlice';
-import {convertDate, formatNumber} from '../../../utils/common';
+import {convertDate, formatNumber, validateNumber} from '../../../utils/common';
 import CustomViewServiceFee from '../../../Components/ComponentHome/Invoice/CustomViewServiceFee';
+import {
+  GetInvoiceRequestClosingsApi,
+  PostInvoiceRequestClosingsApi,
+} from '../../../Api/Home/WaterAndElectricityApis/WaterAndElectricityApis';
 
 const InvoiceDetail = props => {
   const route = useRoute();
@@ -39,20 +35,33 @@ const InvoiceDetail = props => {
   const tokenStore = useSelector(token);
   const invoiceId = route.params;
   const [loading, setLoading] = useState(true);
-  const [modalCloseTheBill, setModalCloseTheBill] = useState(false);
+  const [modalConfirm, setModalConfirm] = useState(false);
   const [invoice, setInvoice] = useState(null);
   const [invoiceServices, setInvoiceServices] = useState([]);
-  const [serviceImages, setServiceImages] = useState([]);
   const timeNow = new Date();
+  const [totalFee, setTotalFee] = useState();
+  const [totalFee1, setTotalFee1] = useState();
+
+  const [otherFee, setOtherFee] = useState();
+  const [discountFee, setDiscountFee] = useState();
+  const [notice, setNotice] = useState('');
+
+  useMemo(() => {
+    let total =
+      parseInt(`${validateNumber(`${invoice?.totalFee ?? '0'}`)}`) +
+      parseInt(`${validateNumber(`${otherFee ?? '0'}`)}`) -
+      parseInt(`${validateNumber(`${discountFee ?? '0'}`)}`);
+    setTotalFee(total);
+  }, [otherFee, discountFee]);
 
   useEffect(() => {
     const getData = async () => {
-      await GetInvoiceDetailApi(tokenStore, invoiceId)
+      await GetInvoiceRequestClosingsApi(tokenStore, invoiceId)
         .then(res => {
           if (res?.status == 200) {
             setInvoiceServices(res?.data?.invoiceServices);
-            setServiceImages(res?.data?.serviceImages);
             setInvoice(res?.data);
+            setTotalFee(res?.data?.totalFee);
             setLoading(false);
           }
         })
@@ -60,25 +69,24 @@ const InvoiceDetail = props => {
     };
     getData();
   }, []);
-
-  const renderImage = (item, index) => {
-    return <RenderImage data={item} />;
-  };
-
-  const closeTheBill = async () => {
-    setModalCloseTheBill(false);
+  const confirmTheInvoice = async () => {
+    setModalConfirm(false);
     setLoading(true);
-    await PutInvoiceIssueApi(tokenStore, invoiceId)
+    let data = {
+      otherFee: parseInt(`${validateNumber(`${otherFee ?? '0'}`)}`),
+      discountFee: parseInt(`${validateNumber(`${discountFee ?? '0'}`)}`),
+      notice: notice,
+    };
+    await PostInvoiceRequestClosingsApi(tokenStore, data, invoiceId)
       .then(res => {
         if (res?.status == 200) {
-          dispatch(updateStatus('updateInvoice'));
-          setLoading(false);
+          dispatch(updateStatus('confirmInvoiceSuccess'));
           navigation.navigate('InvoiceManagement');
+          setLoading(false);
         }
       })
       .catch(error => {
         console.log(error);
-        Alert.alert('Cảnh báo', 'Có lỗi sảy ra, vui lòng liên hệ admin...');
       });
   };
   const renderItem = (item, index) => {
@@ -93,15 +101,16 @@ const InvoiceDetail = props => {
       />
     );
   };
+
   return (
     <View style={styles.container}>
       {loading && <CustomLoading />}
-      {modalCloseTheBill && (
+      {modalConfirm && (
         <CustomModalNotify
           title={'Chốt hóa đơn'}
           label={'Bạn có muốn chốt hóa đơn này ?'}
-          onRequestClose={() => setModalCloseTheBill(false)}
-          pressConfirm={() => closeTheBill()}
+          onRequestClose={() => setModalConfirm(false)}
+          pressConfirm={() => confirmTheInvoice()}
         />
       )}
       <CustomAppBar
@@ -112,23 +121,26 @@ const InvoiceDetail = props => {
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
-      <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
+      <ScrollView
+        nestedScrollEnabled={true}
+        keyboardDismissMode="none"
+        style={{paddingHorizontal: 10, paddingTop: 10}}>
         <View style={[styles.shadowView, styles.viewInvoice]}>
           <View style={styles.viewBetween}>
-            <Text style={styles.title}>{`${invoice?.name ?? ''}`}</Text>
-            <Text style={{color: 'red', fontSize: 13}}>
-              {invoice?.status == 0
-                ? 'Chưa chốt'
-                : invoice?.status == 1
-                ? 'Chưa thanh toán'
-                : invoice?.status == 1
-                ? 'Đã thanh toán'
-                : ''}
-            </Text>
+            <View>
+              <Text style={styles.title}>{`${invoice?.name ?? ''}`}</Text>
+            </View>
+            <View>
+              <Text style={{color: 'red', fontSize: 13}}>
+                {invoice?.statusName}
+              </Text>
+            </View>
           </View>
 
           <View style={styles.viewBetween}>
-            <Text style={styles.title}>{``}</Text>
+            <Text style={{color: '#000000', fontSize: 13}}>
+              {invoice?.code}
+            </Text>
             <Text style={{color: '#000000', fontSize: 13}}>
               {`${convertDate(invoice?.createTime ?? timeNow)}`}
             </Text>
@@ -170,51 +182,88 @@ const InvoiceDetail = props => {
           </View>
 
           {BreakLine()}
-
-          {invoiceServices.length > 0 && (
-            <FlatList
-              data={invoiceServices}
-              keyExtractor={key => key?.id}
-              renderItem={({item, index}) => renderItem(item, index)}
-            />
-          )}
+          <View>
+            <ScrollView horizontal={true} style={{width: '100%'}}>
+              {invoiceServices?.length > 0 && (
+                <FlatList
+                  data={invoiceServices}
+                  keyExtractor={key => key?.id}
+                  renderItem={({item, index}) => renderItem(item, index)}
+                />
+              )}
+            </ScrollView>
+          </View>
 
           {BreakLine()}
 
           <View style={styles.viewBetween}>
+            <View>
+              <Text style={styles.label}>Phát sinh</Text>
+            </View>
+            <View style={styles.viewOtherFee}>
+              <TextInput
+                style={{flex: 1}}
+                keyboardType="number-pad"
+                placeholder="0"
+                value={`${formatNumber(`${otherFee}`)}`}
+                onChangeText={text => {
+                  setOtherFee(text);
+                }}
+              />
+              <View style={{backgroundColor: '#F8F9F9', borderRadius: 4}}>
+                <Text style={{fontSize: 13, color: '#5F6E78', margin: 5}}>
+                  VNĐ
+                </Text>
+              </View>
+            </View>
+          </View>
+          {BreakLine()}
+          <View style={styles.viewBetween}>
+            <View>
+              <Text style={styles.label}>Giảm giá</Text>
+            </View>
+            <View style={styles.viewOtherFee}>
+              <TextInput
+                style={{flex: 1}}
+                keyboardType="number-pad"
+                placeholder="0"
+                value={`${formatNumber(`${discountFee}`)}`}
+                onChangeText={text => {
+                  setDiscountFee(text);
+                }}
+              />
+              <View style={{backgroundColor: '#F8F9F9', borderRadius: 4}}>
+                <Text style={{fontSize: 13, color: '#5F6E78', margin: 5}}>
+                  VNĐ
+                </Text>
+              </View>
+            </View>
+          </View>
+          {BreakLine()}
+          <View style={styles.viewBetween}>
             <Text style={styles.label}>Tổng</Text>
             <Text style={{color: 'red', fontSize: 15, fontWeight: '600'}}>
-              {`${formatNumber(`${invoice?.totalFee ?? 0}`)}`}
+              {`${formatNumber(`${totalFee ?? 0}`)}`}
             </Text>
           </View>
 
           {BreakLine()}
 
           <CustomTextTitle label={'Ghi chú'} />
-          <CustomSuggest label={`${invoice?.notice ?? ''}`} />
+          <ComponentInput
+            type={'inputNote'}
+            placeholder={'Nhập ghi chú hóa đơn'}
+            value={notice}
+            onChangeText={text => setNotice(text)}
+          />
         </View>
 
-        {StraightLine()}
-
-        <CustomTextTitle label={'Ảnh dịch vụ'} />
-        {serviceImages.length > 0 && (
-          <FlatList
-            horizontal
-            data={serviceImages}
-            keyExtractor={key => key?.id}
-            renderItem={({item}) => renderImage(item)}
-          />
-        )}
         <View style={{height: 56}} />
-        <CustomTwoButtonBottom
-          leftLabel={'Chỉnh sửa'}
-          rightLabel={'Chốt hóa đơn'}
-          styleLabelLeft={styles.styleLabelLeft}
-          styleButtonLeft={styles.styleButtonLeft}
-          onPressLeft={() => {}}
-          onPressRight={() => setModalCloseTheBill(true)}
-        />
       </ScrollView>
+      <CustomButtonBottom
+        label={'Xác nhận'}
+        onPress={() => setModalConfirm(true)}
+      />
     </View>
   );
 };
@@ -262,6 +311,14 @@ const styles = StyleSheet.create({
     borderColor: 'orange',
     backgroundColor: 'white',
     marginRight: 5,
+  },
+  viewOtherFee: {
+    padding: 10,
+    width: '70%',
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#5F6E78',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 export default InvoiceDetail;

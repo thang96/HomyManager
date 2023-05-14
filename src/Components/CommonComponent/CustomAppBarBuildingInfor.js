@@ -12,7 +12,13 @@ import Location from '../../Assets/Svgs/Location.svg';
 const widthLine = Dimensions.get('window').width - 20;
 
 const CustomAppBarBuildingInfor = props => {
-  const {onPressLeft, nameBuilding, addressBuilding, pressIconRight} = props;
+  const {
+    onPressLeft,
+    nameBuilding,
+    addressBuilding,
+    pressIconRight,
+    pressDelete,
+  } = props;
   return (
     <ImageBackground source={images.im_appBar} style={{paddingHorizontal: 10}}>
       <View style={styles.viewTabBarTop}>
@@ -27,7 +33,11 @@ const CustomAppBarBuildingInfor = props => {
           icon={icons.ic_bell}
           onPress={pressIconRight}
         />
-        <CustomButton styleIcon={styles.iconTop} icon={icons.ic_moreOption} />
+        <CustomButton
+          styleIcon={styles.iconTop}
+          icon={icons.ic_trash}
+          onPress={pressDelete}
+        />
       </View>
       <View style={styles.whiteLine} />
       <View style={{height: 130, paddingVertical: 5}}>
