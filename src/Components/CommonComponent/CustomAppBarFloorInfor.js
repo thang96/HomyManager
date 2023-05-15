@@ -27,7 +27,7 @@ const CustomAppBarFloorInfor = props => {
           icon={icons.ic_bell}
           onPress={pressIconRight}
         />
-        <CustomButton styleIcon={styles.iconTop} icon={icons.ic_moreOption} />
+        {/* <CustomButton styleIcon={styles.iconTop} icon={icons.ic_moreOption} /> */}
       </View>
       <View style={styles.line} />
       <View style={{height: 130}}>

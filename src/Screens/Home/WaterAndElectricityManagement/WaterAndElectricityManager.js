@@ -31,9 +31,9 @@ const WaterAndElectricityManager = props => {
             let unClosing = [];
             for (let index = 0; index < listData?.length; index++) {
               const element = listData[index];
-              if (element?.statusName == 'Đã chốt') {
+              if (element?.status == 2) {
                 closing.push(element);
-              } else if (element?.statusName == 'Chưa chốt') {
+              } else if (element?.status == 0 || element?.status == 1) {
                 unClosing.push(element);
               }
             }
@@ -55,9 +55,9 @@ const WaterAndElectricityManager = props => {
       <CustomAppBar
         iconLeft={icons.ic_back}
         pressIconLeft={() => navigation.goBack()}
-        label={'Chốt điện nước'}
+        label={'Chốt dịch vụ'}
       />
-      <View style={{paddingHorizontal: 10}}>
+      {/* <View style={{paddingHorizontal: 10}}>
         <CustomButtonValue
           styleView={{marginVertical: 10}}
           type={'button'}
@@ -65,32 +65,32 @@ const WaterAndElectricityManager = props => {
           placeholder={'Chọn tòa nhà'}
           value={'Tòa nhà D2'}
         />
-        <View style={styles.viewButtonTop}>
-          <CustomButton
-            styleButton={[
-              {
-                backgroundColor:
-                  isActive == 1 ? colors.backgroundOrange : 'white',
-              },
-              styles.viewButton,
-            ]}
-            label={'Chưa chốt'}
-            styleLabel={{color: isActive == 1 ? 'white' : '#7F8A93'}}
-            onPress={() => setIsActive(1)}
-          />
-          <CustomButton
-            styleButton={[
-              {
-                backgroundColor:
-                  isActive == 2 ? colors.backgroundOrange : 'white',
-              },
-              styles.viewButton,
-            ]}
-            label={'Đã chốt'}
-            styleLabel={{color: isActive == 2 ? 'white' : '#7F8A93'}}
-            onPress={() => setIsActive(2)}
-          />
-        </View>
+      </View> */}
+      <View style={styles.viewButtonTop}>
+        <CustomButton
+          styleButton={[
+            {
+              backgroundColor:
+                isActive == 1 ? colors.backgroundOrange : 'white',
+            },
+            styles.viewButton,
+          ]}
+          label={'Chưa chốt'}
+          styleLabel={{color: isActive == 1 ? 'white' : '#7F8A93'}}
+          onPress={() => setIsActive(1)}
+        />
+        <CustomButton
+          styleButton={[
+            {
+              backgroundColor:
+                isActive == 2 ? colors.backgroundOrange : 'white',
+            },
+            styles.viewButton,
+          ]}
+          label={'Đã chốt'}
+          styleLabel={{color: isActive == 2 ? 'white' : '#7F8A93'}}
+          onPress={() => setIsActive(2)}
+        />
       </View>
       {isActive == 1 ? (
         <View style={{flex: 1, paddingHorizontal: 10}}>
@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginHorizontal: 10,
   },
   viewButton: {
     height: 42,

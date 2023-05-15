@@ -91,8 +91,8 @@ const AddService = props => {
           important={true}
           viewComponent={{marginTop: 10}}
           type={'input'}
-          title={'Đơn vị đo'}
-          placeholder={'Đơn vị đo'}
+          title={'Đơn vị tính'}
+          placeholder={'Đơn vị tính'}
           value={calculateUnit}
           onChangeText={text => setCalculateUnit(text)}
         />

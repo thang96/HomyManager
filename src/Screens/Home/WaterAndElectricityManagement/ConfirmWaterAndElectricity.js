@@ -28,6 +28,10 @@ import {token} from '../../../Store/slices/tokenSlice';
 import {updateStatus} from '../../../Store/slices/statusSlice';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
 import {PutInvoiceUnClosingsApi} from '../../../Api/Home/WaterAndElectricityApis/WaterAndElectricityApis';
+import {
+  DeleteImageApi,
+  PostInvoiceServiceFilesUploadApi,
+} from '../../../Api/Home/FileDataApis/FileDataApis';
 const widthView = Dimensions.get('window').width / 2 - 15;
 
 const ConfirmWaterAndElectricity = props => {
@@ -38,6 +42,7 @@ const ConfirmWaterAndElectricity = props => {
   const confirmId = route.params;
   const [modalShowImage, setModalShowImage] = useState(false);
   const [modalCamera, setModalCamera] = useState(false);
+  const [confirmInvoice, setConfirmInvoice] = useState();
 
   const [loading, setLoading] = useState(true);
   const [progressiveServiceClosings, setProgressiveServiceClosings] =
@@ -50,6 +55,7 @@ const ConfirmWaterAndElectricity = props => {
       await GetDetailInvoiceUnClosingsApi(tokenStore, confirmId)
         .then(res => {
           if (res?.status == 200) {
+            setConfirmInvoice(res?.data);
             let data = res?.data?.progressiveServiceClosings;
             let array = [];
             for (let index = 0; index < data.length; index++) {
@@ -79,6 +85,7 @@ const ConfirmWaterAndElectricity = props => {
         let eachValue = [...progressiveServiceClosings];
         eachValue[indexValue] = {
           ...eachValue[indexValue],
+          image: eachImage,
           imageUsageNumber: eachImage,
         };
         setProgressiveServiceClosings(eachValue);
@@ -97,6 +104,7 @@ const ConfirmWaterAndElectricity = props => {
         let eachValue = [...progressiveServiceClosings];
         eachValue[indexValue] = {
           ...eachValue[indexValue],
+          image: eachImage,
           imageUsageNumber: eachImage,
         };
         setProgressiveServiceClosings(eachValue);
@@ -141,8 +149,35 @@ const ConfirmWaterAndElectricity = props => {
     ) {
       setLoading(true);
       await PutInvoiceUnClosingsApi(tokenStore, data, confirmId)
-        .then(res => {
+        .then(async res => {
           if (res?.status == 200) {
+            for (
+              let index = 0;
+              index < progressiveServiceClosings.length;
+              index++
+            ) {
+              const element = progressiveServiceClosings[index];
+              let image = [];
+              if (
+                element?.image != null &&
+                typeof element?.image?.uri == 'string'
+              ) {
+                image.push(element?.image);
+                await PostInvoiceServiceFilesUploadApi(
+                  tokenStore,
+                  element?.id,
+                  image,
+                )
+                  .then(res => {
+                    if (res?.status == 200) {
+                      console.log(res?.status);
+                    }
+                  })
+                  .catch(error => {
+                    console.log(error, 'upload image error');
+                  });
+              }
+            }
             dispatch(updateStatus('updateInvoiceClosings'));
             navigation.navigate('WaterAndElectricityManager');
             setLoading(false);
@@ -153,6 +188,7 @@ const ConfirmWaterAndElectricity = props => {
         });
     }
   };
+
   const goToConfirmInvoiceClosings = async () => {
     checkData();
     const data = {progressiveServiceClosings: checkData()};
@@ -162,8 +198,36 @@ const ConfirmWaterAndElectricity = props => {
     ) {
       setLoading(true);
       await PutInvoiceUnClosingsApi(tokenStore, data, confirmId)
-        .then(res => {
+        .then(async res => {
           if (res?.status == 200) {
+            for (
+              let index = 0;
+              index < progressiveServiceClosings.length;
+              index++
+            ) {
+              const element = progressiveServiceClosings[index];
+              let image = [];
+              if (
+                element?.image != null &&
+                typeof element?.image?.uri == 'string'
+              ) {
+                image.push(element?.image);
+                await PostInvoiceServiceFilesUploadApi(
+                  tokenStore,
+                  element?.id,
+                  image,
+                )
+                  .then(res => {
+                    if (res?.status == 200) {
+                      console.log(res?.status);
+                    }
+                  })
+                  .catch(error => {
+                    console.log(error, 'upload image error');
+                  });
+              }
+            }
+
             dispatch(updateStatus('updateInvoiceClosings'));
             navigation.navigate('InvoiceDetail', confirmId);
             setLoading(false);
@@ -199,9 +263,9 @@ const ConfirmWaterAndElectricity = props => {
       <CustomAppBar
         iconLeft={icons.ic_back}
         pressIconLeft={() => navigation.goBack()}
-        label={'Chốt điện nước'}
+        label={'Chốt dịch vụ'}
       />
-      <View style={{paddingHorizontal: 10}}>
+      {/* <View style={{paddingHorizontal: 10}}>
         <CustomButtonValue
           styleView={{marginVertical: 10}}
           type={'button'}
@@ -209,16 +273,16 @@ const ConfirmWaterAndElectricity = props => {
           placeholder={'Chọn tòa nhà'}
           value={'Tòa nhà D2'}
         />
-      </View>
+      </View> */}
       <ScrollView
         nestedScrollEnabled={true}
         keyboardDismissMode="none"
         style={styles.scrollView}>
-        <CustomTextTitle label={'Người đại diện'} />
+        <CustomTextTitle label={'Chủ hợp đồng'} />
         <CustomPersonInfor
-          avatar={icons.ic_user}
-          userName={'Nguyen Van A'}
-          phoneNumber={'123456789'}
+          avatar={confirmInvoice?.contract?.contractOwner?.avatarImage?.fileUrl}
+          userName={`${confirmInvoice?.contract?.contractOwner?.fullName}`}
+          phoneNumber={`${confirmInvoice?.contract?.contractOwner?.phoneNumber}`}
         />
         <View>
           <ScrollView horizontal={true} style={{width: '100%'}}>
@@ -243,7 +307,11 @@ const ConfirmWaterAndElectricity = props => {
                           />
                           <TouchableOpacity
                             onPress={() => {
-                              setSelectedPhoto(images?.im_frame1);
+                              setSelectedPhoto(
+                                item?.previousStageImage
+                                  ? item?.previousStageImage
+                                  : null,
+                              );
                               setModalShowImage(true);
                             }}
                             style={styles.buttonImage}>
@@ -254,8 +322,10 @@ const ConfirmWaterAndElectricity = props => {
                                 height: '100%',
                               }}
                               source={
-                                item?.image?.fileUrl
-                                  ? {uri: item?.image?.fileUrl}
+                                item?.previousStageImage
+                                  ? {
+                                      uri: item?.previousStageImage?.fileUrl,
+                                    }
                                   : images.im_frame1
                               }
                             />
@@ -288,10 +358,12 @@ const ConfirmWaterAndElectricity = props => {
                               setProgressiveServiceClosings(newData);
                             }}
                           />
-                          {item?.imageUsageNumber ? (
+                          {item?.image ? (
                             <TouchableOpacity
                               onPress={() => {
-                                setSelectedPhoto(item?.imageUsageNumber);
+                                setSelectedPhoto(
+                                  item?.image ? item?.image : null,
+                                );
                                 setModalShowImage(true);
                               }}
                               style={styles.buttonImage}>
@@ -301,7 +373,11 @@ const ConfirmWaterAndElectricity = props => {
                                   width: '100%',
                                   height: '100%',
                                 }}
-                                source={{uri: item?.imageUsageNumber?.uri}}
+                                source={{
+                                  uri: item?.image?.fileUrl
+                                    ? item?.image?.fileUrl
+                                    : item?.image?.uri,
+                                }}
                               />
                               <CustomButton
                                 styleButton={styles.buttonDeleteImage}
@@ -311,14 +387,30 @@ const ConfirmWaterAndElectricity = props => {
                                   height: 20,
                                   tintColor: 'red',
                                 }}
-                                onPress={() => {
+                                onPress={async () => {
                                   let eachValue = [
                                     ...progressiveServiceClosings,
                                   ];
                                   eachValue[index] = {
                                     ...eachValue[index],
+                                    image: null,
                                     imageUsageNumber: null,
                                   };
+                                  if (item?.image?.fileUrl) {
+                                    setLoading(true);
+                                    await DeleteImageApi(
+                                      tokenStore,
+                                      item?.image?.id,
+                                    )
+                                      .then(res => {
+                                        if (res?.status == 200) {
+                                          setLoading(false);
+                                        }
+                                      })
+                                      .catch(error => {
+                                        console.log(error);
+                                      });
+                                  }
                                   setProgressiveServiceClosings(eachValue);
                                 }}
                               />

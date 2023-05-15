@@ -41,7 +41,7 @@ const BuildingInformation = () => {
   const [closeTimeValue, setCloseTimeValue] = useState('');
   const [modalDeleteHouse, setModalDeleteHouse] = useState(false);
   const hauseId = route.params;
-
+  console.log(hauseInfor);
   useEffect(() => {
     const getDataHause = async () => {
       await HauseDetailApi(tokenStore, hauseId)

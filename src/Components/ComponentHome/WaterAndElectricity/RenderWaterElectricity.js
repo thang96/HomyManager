@@ -1,10 +1,26 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import CustomButton from '../../CommonComponent/CustomButton';
 import {colors, icons} from '../../../Constants';
 
 const RenderWaterElectricity = props => {
   const {data, onPress} = props;
+
+  const renderName = () => {
+    return (
+      <View style={{flexDirection: 'row'}}>
+        {data?.progressiveServiceClosings?.map((item, index) => {
+          return (
+            <Text
+              key={item?.id}
+              numberOfLines={1}
+              style={styles.content}>{`${item?.serviceName} `}</Text>
+          );
+        })}
+      </View>
+    );
+  };
+
   return (
     <View style={{marginBottom: 15}}>
       {/* <Text style={styles.title}>{`Tầng: ${floor}`}</Text> */}
@@ -26,7 +42,12 @@ const RenderWaterElectricity = props => {
           />
         </View>
 
-        <Text numberOfLines={1} style={styles.content}>{`${data?.value}`}</Text>
+        {data?.progressiveServiceClosings?.length > 0 ? (
+          renderName()
+        ) : (
+          <Text numberOfLines={1} style={styles.content}>{``}</Text>
+        )}
+
         <View style={styles.viewBetween}>
           <View style={{flexDirection: 'row', aligndatas: 'center'}}>
             <Text style={[styles.label]}>{`Người gửi: `}</Text>
@@ -39,7 +60,7 @@ const RenderWaterElectricity = props => {
           </View>
           <CustomButton
             styleButton={styles.buttonConfirm}
-            label={'Xác nhận'}
+            label={data?.status != 2 ? 'Xác nhận' : 'Xem'}
             styleLabel={{fontSize: 13, color: 'white'}}
             onPress={onPress}
           />

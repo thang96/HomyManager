@@ -190,6 +190,7 @@ const styles = StyleSheet.create({
   },
   iconAddFloor: {width: 20, height: 20, tintColor: 'white', marginRight: 5},
   labelAddFloor: {fontSize: 16, fontWeight: '500', color: 'white'},
+  textPrice: {color: colors.primary, fontSize: 13},
 });
 
 const CustomFloorInfor = props => {
@@ -223,11 +224,13 @@ const CustomFloorInfor = props => {
       <Text style={{color: '#5F6E78', fontWeight: '400', fontSize: 13}}>
         {username}
       </Text>
-      <Text
-        style={{
-          color: colors.primary,
-          fontSize: 13,
-        }}>{`Giá: ${price} VNĐ`}</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Text style={styles.textPrice}>Giá:</Text>
+        <View style={{flex: 1}}>
+          <Text numberOfLines={1} style={styles.textPrice}>{` ${price} `}</Text>
+        </View>
+        <Text style={styles.textPrice}>VNĐ</Text>
+      </View>
     </TouchableOpacity>
   );
 };

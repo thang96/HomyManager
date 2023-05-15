@@ -9,7 +9,6 @@ import {GetListInvoicesApi} from '../../../Api/Home/InvoiceApis/InvoiceApis';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 import {token} from '../../../Store/slices/tokenSlice';
 import {useDispatch, useSelector} from 'react-redux';
-import CustomButtonCarendar from '../../../Components/ComponentHome/CustomButtonCarendar';
 import InvoiceUnpaid from '../../../Components/ComponentHome/Invoice/InvoiceUnpaid';
 import InvoicePaid from '../../../Components/ComponentHome/Invoice/InvoicePaid';
 import useKeyboard from '../../../Hook/useKeyboard';
@@ -25,7 +24,6 @@ const InvoiceManagement = props => {
   const [isActive, setIsActive] = useState(1);
   const [listInvoiceUnpaid, setListInvoiceUnpaid] = useState([]);
   const [listInvoicePaid, setListInvoicePaid] = useState(1);
-  const [valueDate, setValueDate] = useState('03-03-2023');
 
   useEffect(() => {
     const getListData = async () => {
@@ -95,13 +93,6 @@ const InvoiceManagement = props => {
             onPress={() => setIsActive(2)}
           />
         </View>
-
-        <CustomButtonCarendar
-          value={valueDate}
-          label={'Chọn ngày'}
-          icon={icons.ic_calendar}
-          onPress={() => {}}
-        />
 
         {isActive == 1 ? (
           <InvoiceUnpaid

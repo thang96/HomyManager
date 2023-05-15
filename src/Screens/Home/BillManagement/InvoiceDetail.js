@@ -40,7 +40,6 @@ const InvoiceDetail = props => {
   const [invoiceServices, setInvoiceServices] = useState([]);
   const timeNow = new Date();
   const [totalFee, setTotalFee] = useState();
-  const [totalFee1, setTotalFee1] = useState();
 
   const [otherFee, setOtherFee] = useState();
   const [discountFee, setDiscountFee] = useState();
@@ -126,15 +125,13 @@ const InvoiceDetail = props => {
         keyboardDismissMode="none"
         style={{paddingHorizontal: 10, paddingTop: 10}}>
         <View style={[styles.shadowView, styles.viewInvoice]}>
-          <View style={styles.viewBetween}>
-            <View>
-              <Text style={styles.title}>{`${invoice?.name ?? ''}`}</Text>
-            </View>
-            <View>
-              <Text style={{color: 'red', fontSize: 13}}>
-                {invoice?.statusName}
-              </Text>
-            </View>
+          <View>
+            <Text style={styles.title}>{`${invoice?.name ?? ''}`}</Text>
+          </View>
+          <View>
+            <Text style={{color: 'red', fontSize: 13, alignSelf: 'center'}}>
+              {invoice?.statusName}
+            </Text>
           </View>
 
           <View style={styles.viewBetween}>

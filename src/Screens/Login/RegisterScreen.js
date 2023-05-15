@@ -51,7 +51,13 @@ const RegisterScreen = () => {
       .then(res => {
         if (res?.status == 200) {
           Alert.alert('Chúc mừng', 'Bạn đã đăng ký thành công', [
-            {text: 'OK', onPress: () => navigation.navigate('LoginScreen')},
+            {
+              text: 'OK',
+              onPress: () => {
+                navigation.navigate('LoginScreen');
+                setLoading(false);
+              },
+            },
           ]);
         }
       })

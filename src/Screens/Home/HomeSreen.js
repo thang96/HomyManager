@@ -34,7 +34,7 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
   const keyboard = useKeyboard();
-
+  // console.log(tokenStore);
   useEffect(() => {
     const getData = async () => {
       if (tokenStore != null && tokenStore != undefined && tokenStore != '') {

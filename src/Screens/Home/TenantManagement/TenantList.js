@@ -126,7 +126,7 @@ const TenantList = () => {
         rightLabel={'Thêm mới'}
         onPressLeft={() => updateTenantList()}
         onPressRight={() => {
-          dispatch(updateStatus(true));
+          dispatch(updateStatus('addTenantSuccess'));
           navigation.navigate('AddNewTenant');
         }}
       />

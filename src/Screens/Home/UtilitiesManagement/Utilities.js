@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {amenityState, updateAmenity} from '../../../Store/slices/commonSlice';
 import {GetListAmenitysApi} from '../../../Api/Home/AmenityApis/AmenityApis';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
-import {statusState} from '../../../Store/slices/statusSlice';
+import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 import {token} from '../../../Store/slices/tokenSlice';
 
 const Utilities = props => {
@@ -105,7 +105,7 @@ const Utilities = props => {
         rightLabel={'Thêm mới'}
         onPressLeft={() => updateAmenitys()}
         onPressRight={() => {
-          dispatch(updateStatus(true));
+          dispatch(updateStatus('goToUpdateUtilities'));
           navigation.navigate('AddUtilities');
         }}
       />

@@ -70,7 +70,6 @@ const CreateContractFromRoom = props => {
   const [paymentDuration, setpaymentDuration] = useState();
   const [leasingFee, setLeasingFee] = useState();
   const [depositMoney, setDepositMoney] = useState();
-  const [description, setDescription] = useState();
 
   const [contractImages, setContractImages] = useState([]);
 

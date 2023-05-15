@@ -106,6 +106,7 @@ const AccountScreen = () => {
           label={'Đăng xuất'}
           onPress={async () => {
             let user = {username: '', password: ''};
+            dispatch(updateStatus('logout'));
             await AsyncStorage.removeItem('token');
             await AsyncStorage.removeItem('user');
             navigation.navigate('LoginNavigation');

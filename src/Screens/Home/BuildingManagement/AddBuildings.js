@@ -168,7 +168,7 @@ const AddBuildings = props => {
       numberOfFloor: parseInt(`${validateNumber(`${numberOfFloor}`)}`),
       openTime: `${openTime}`,
       closeTime: `${closeTime}`,
-      leasingFee: parseInt(`${validateNumber(`${leasingFee}`)}`),
+      leasingFee: parseInt(`${validateNumber(`${leasingFee ?? '0'}`)}`),
       description: description,
       cityId: cityId,
       districtId: districtId,
@@ -312,7 +312,6 @@ const AddBuildings = props => {
           onPressRightt={() => setModalcloseTime(true)}
         />
         <ComponentInput
-          important={true}
           type={'inputUnit'}
           title={'Chi phí thuê nhà'}
           unit={'VNĐ'}

@@ -16,6 +16,7 @@ import {useDispatch} from 'react-redux';
 import {updateToken} from '../../Store/slices/tokenSlice';
 import {AuthenticationAPi} from '../../Api/Login/LoginApis';
 import CustomLoading from '../../Components/CommonComponent/CustomLoading';
+import {updateStatus} from '../../Store/slices/statusSlice';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
@@ -30,11 +31,12 @@ const LoginScreen = () => {
     setLoading(true);
     await AuthenticationAPi(password, username)
       .then(async res => {
-        if (200 >= res?.status <= 204) {
+        if (res?.status == 200) {
           let token = res?.data?.token;
           await AsyncStorage.setItem('token', token);
           await AsyncStorage.setItem('user', JSON.stringify(user));
           dispatch(updateToken(token));
+          dispatch(updateStatus('login'));
           setLoading(false);
           navigation.navigate('HomeNavigation');
         }

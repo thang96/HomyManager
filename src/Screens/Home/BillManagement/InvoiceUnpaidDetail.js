@@ -27,7 +27,10 @@ import CustomViewServiceFee from '../../../Components/ComponentHome/Invoice/Cust
 import ComponentRenderImage from '../../../Components/CommonComponent/ComponentRenderImage';
 import CustomModalCamera from '../../../Components/CommonComponent/CustomModalCamera';
 import ImagePicker from 'react-native-image-crop-picker';
-import {PostImageInvoiceUploadPaymentApi} from '../../../Api/Home/FileDataApis/FileDataApis';
+import {
+  DeleteImageApi,
+  PostImageInvoiceUploadPaymentApi,
+} from '../../../Api/Home/FileDataApis/FileDataApis';
 
 const InvoiceUnpaidDetail = props => {
   const route = useRoute();
@@ -146,21 +149,29 @@ const InvoiceUnpaidDetail = props => {
     await PutInvoiceConfirmPaymentApi(tokenStore, invoiceId)
       .then(async res => {
         if (res?.status == 200) {
-          await PostImageInvoiceUploadPaymentApi(
-            tokenStore,
-            invoiceId,
-            paymentImages,
-          )
-            .then(res => {
-              if (res?.status == 200) {
-                dispatch(updateStatus('confirmInvoiceSuccess'));
-                navigation.navigate('InvoiceManagement');
-                setLoading(false);
-              }
-            })
-            .catch(error => {
-              console.log(error);
-            });
+          for (let index = 0; index < paymentImages.length; index++) {
+            let image = [];
+            const element = paymentImages[index];
+            if (element?.uri) {
+              image.push(element);
+              await PostImageInvoiceUploadPaymentApi(
+                tokenStore,
+                invoiceId,
+                paymentImages,
+              )
+                .then(res => {
+                  if (res?.status == 200) {
+                    console.log(res?.status);
+                  }
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+            }
+          }
+          dispatch(updateStatus('confirmInvoiceSuccess'));
+          navigation.navigate('InvoiceManagement');
+          setLoading(false);
         }
       })
       .catch(error => {
@@ -215,16 +226,10 @@ const InvoiceUnpaidDetail = props => {
       />
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
         <View style={[styles.shadowView, styles.viewInvoice]}>
-          <View style={styles.viewBetween}>
-            <Text style={styles.title}>{`${invoice?.name ?? ''}`}</Text>
-            <Text style={{color: 'red', fontSize: 13}}>
-              {invoice?.status == 1
-                ? 'Chưa thanh toán'
-                : invoice?.status == 1
-                ? 'Đã thanh toán'
-                : ''}
-            </Text>
-          </View>
+          <Text style={styles.title}>{`${invoice?.name ?? ''}`}</Text>
+          <Text style={{color: 'red', fontSize: 13, alignSelf: 'center'}}>
+            {'Chưa thanh toán'}
+          </Text>
 
           <View style={styles.viewBetween}>
             <Text
@@ -282,7 +287,20 @@ const InvoiceUnpaidDetail = props => {
               renderItem={({item, index}) => renderItem(item, index)}
             />
           )}
-
+          {BreakLine()}
+          <View style={styles.viewBetween}>
+            <Text style={styles.label}>Phát sinh</Text>
+            <Text style={styles.label}>
+              {`${formatNumber(`${invoice?.otherFee ?? 0}`)}`}
+            </Text>
+          </View>
+          {BreakLine()}
+          <View style={styles.viewBetween}>
+            <Text style={styles.label}>Giảm giá</Text>
+            <Text style={styles.label}>
+              {`${formatNumber(`${invoice?.discountFee ?? 0}`)}`}
+            </Text>
+          </View>
           {BreakLine()}
 
           <View style={styles.viewBetween}>
@@ -309,9 +327,21 @@ const InvoiceUnpaidDetail = props => {
           data={paymentImages}
           deleteButton={true}
           openModal={() => setModalCamera(true)}
-          deleteItem={item => {
+          deleteItem={async item => {
             let result = [...paymentImages];
             let newResult = result.filter(itemResult => itemResult !== item);
+            if (item?.fileUrl) {
+              setLoading(true);
+              await DeleteImageApi(tokenStore, item?.id)
+                .then(res => {
+                  if (res?.status == 200) {
+                    setLoading(false);
+                  }
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+            }
             setPaymentImages(newResult);
           }}
         />

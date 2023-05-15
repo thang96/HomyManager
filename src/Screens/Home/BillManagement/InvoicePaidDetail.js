@@ -26,17 +26,15 @@ const InvoicePaidDetail = props => {
   const [loading, setLoading] = useState(true);
   const [invoice, setInvoice] = useState(null);
   const [invoiceServices, setInvoiceServices] = useState([]);
-  const [serviceImages, setServiceImages] = useState([]);
   const [paymentmages, setPaymentImages] = useState([]);
   const timeNow = new Date();
-
+  console.log(invoice);
   useEffect(() => {
     const getData = async () => {
       await GetInvoiceDetailApi(tokenStore, invoiceId)
         .then(res => {
           if (res?.status == 200) {
             setInvoiceServices(res?.data?.invoiceServices);
-            setServiceImages(res?.data?.serviceImages);
             setPaymentImages(res?.data?.paymentImages);
             setInvoice(res?.data);
             setLoading(false);
@@ -47,9 +45,6 @@ const InvoicePaidDetail = props => {
     getData();
   }, []);
 
-  const renderImage = (item, index) => {
-    return <RenderImage data={item} />;
-  };
   const renderImagePayment = (item, index) => {
     return <RenderImage data={item} />;
   };
@@ -74,18 +69,17 @@ const InvoicePaidDetail = props => {
         label={'Hóa đơn đã thanh toán'}
         iconRight={icons.ic_bell}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
-        iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
         <View style={[styles.shadowView, styles.viewInvoice]}>
-          <View style={styles.viewBetween}>
-            <Text style={styles.title}>{`${invoice?.name ?? ''}`}</Text>
-            <Text style={{color: 'red', fontSize: 13}}>{'Đã thanh toán'}</Text>
-          </View>
+          <Text style={styles.title}>{`${invoice?.name ?? ''}`}</Text>
+          <Text style={{color: 'red', fontSize: 13, alignSelf: 'center'}}>
+            {'Đã thanh toán'}
+          </Text>
 
           <View style={styles.viewBetween}>
-            <Text style={styles.title}>{``}</Text>
+            <Text style={styles.title}>{`${invoice?.code}`}</Text>
             <Text style={{color: '#000000', fontSize: 13}}>
               {`${convertDate(invoice?.createTime ?? timeNow)}`}
             </Text>
@@ -139,6 +133,20 @@ const InvoicePaidDetail = props => {
           )}
 
           {BreakLine()}
+          <View style={styles.viewBetween}>
+            <Text style={styles.label}>Phát sinh</Text>
+            <Text style={styles.label}>
+              {`${formatNumber(`${invoice?.otherFee ?? 0}`)}`}
+            </Text>
+          </View>
+          {BreakLine()}
+          <View style={styles.viewBetween}>
+            <Text style={styles.label}>Giảm giá</Text>
+            <Text style={styles.label}>
+              {`${formatNumber(`${invoice?.discountFee ?? 0}`)}`}
+            </Text>
+          </View>
+          {BreakLine()}
 
           <View style={styles.viewBetween}>
             <Text style={styles.label}>Tổng</Text>
@@ -155,16 +163,6 @@ const InvoicePaidDetail = props => {
 
         {StraightLine()}
 
-        <CustomTextTitle label={'Ảnh dịch vụ'} />
-        {serviceImages.length > 0 && (
-          <FlatList
-            listKey={'serviceImages'}
-            horizontal
-            data={serviceImages}
-            keyExtractor={key => key?.id}
-            renderItem={({item}) => renderImage(item)}
-          />
-        )}
         <CustomTextTitle label={'Ảnh thanh toán'} />
         {paymentmages.length > 0 && (
           <FlatList
