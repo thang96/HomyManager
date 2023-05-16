@@ -65,9 +65,9 @@ const TenantManager = () => {
       <CustomSearchAppBar
         iconLeft={icons.ic_back}
         label={'Quản lý người thuê'}
-        iconRight={icons.ic_bell}
-        pressIconRight={() => navigation.navigate('NotificationScreen')}
-        iconSecondRight={icons.ic_moreOption}
+        // iconRight={icons.ic_bell}
+        // pressIconRight={() => navigation.navigate('NotificationScreen')}
+        // iconSecondRight={icons.ic_moreOption}
         keyboard={keyboard}
         textSearch={textSearch}
         value={textSearch}

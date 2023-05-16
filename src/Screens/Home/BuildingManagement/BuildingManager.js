@@ -70,8 +70,8 @@ const BuildingManager = () => {
       <CustomSearchAppBar
         iconLeft={icons.ic_back}
         label={'Quản lý tòa nhà'}
-        iconRight={icons.ic_bell}
-        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        // iconRight={icons.ic_bell}
+        // pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconSecondRight={icons.ic_circle}
         keyboard={keyboard}
         textSearch={textSearch}

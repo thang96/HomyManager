@@ -67,8 +67,8 @@ const InvoicePaidDetail = props => {
       <CustomAppBar
         iconLeft={icons.ic_back}
         label={'Hóa đơn đã thanh toán'}
-        iconRight={icons.ic_bell}
-        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        // iconRight={icons.ic_bell}
+        // pressIconRight={() => navigation.navigate('NotificationScreen')}
         pressIconLeft={() => navigation.goBack()}
       />
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>

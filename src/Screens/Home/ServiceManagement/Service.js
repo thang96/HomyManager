@@ -82,9 +82,9 @@ const Service = props => {
       <CustomAppBar
         iconLeft={icons.ic_back}
         label={'Dịch vụ'}
-        iconRight={icons.ic_bell}
-        pressIconRight={() => navigation.navigate('NotificationScreen')}
-        iconSecondRight={icons.ic_moreOption}
+        // iconRight={icons.ic_bell}
+        // pressIconRight={() => navigation.navigate('NotificationScreen')}
+        // iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
       <View style={[styles.eachContainer]}>

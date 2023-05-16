@@ -14,6 +14,7 @@ import {GetUserAPi} from '../../Api/User/UserApis';
 import CustomButton from '../../Components/CommonComponent/CustomButton';
 import CustomLoading from '../../Components/CommonComponent/CustomLoading';
 import CustomSearchAppBar from '../../Components/CommonComponent/CustomSearchAppBar';
+import CustomAppBar from '../../Components/CommonComponent/CustomAppBar';
 import {colors, icons, images, svgs} from '../../Constants';
 import {token} from '../../Store/slices/tokenSlice';
 import {updateUserInfor, userInfor} from '../../Store/slices/userInfoSlice';
@@ -75,7 +76,7 @@ const HomeScreen = () => {
       <CustomSearchAppBar
         svgLeft={svgs.LogoApp}
         label={'Trang chủ'}
-        iconRight={icons.ic_bell}
+        // iconRight={icons.ic_bell}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconRightTextInput={icons.ic_option}
         iconSecondRight={
@@ -90,6 +91,7 @@ const HomeScreen = () => {
         onChangeText={text => setTextSearch(text)}
         placeholder={'Tìm kiếm...'}
       />
+
       <ScrollView style={styles.eachContainer}>
         <View style={styles.viewRow}>
           <CustomViewButton
@@ -102,7 +104,7 @@ const HomeScreen = () => {
             onPress={() => navigation.navigate('BuildingManager')}
           />
 
-          <CustomViewButton
+          {/* <CustomViewButton
             styleButton={{width: widthImage}}
             styleImageBG={{width: widthImage}}
             imageBG={images.im_frame2}
@@ -110,9 +112,7 @@ const HomeScreen = () => {
             label={'Tổng số phòng'}
             labelNumber={`${homeInfor?.unitTotal}`}
             onPress={async () => {}}
-          />
-        </View>
-        <View style={[styles.viewRow, {marginTop: 20}]}>
+          /> */}
           <CustomViewButton
             styleButton={{width: widthImage}}
             styleImageBG={{width: widthImage}}
@@ -122,14 +122,16 @@ const HomeScreen = () => {
             labelNumber={`${homeInfor?.tenantTotal}`}
             onPress={() => navigation.navigate('TenantManager')}
           />
-          <CustomViewButton
+        </View>
+        <View style={[styles.viewRow, {marginTop: 20}]}>
+          {/* <CustomViewButton
             styleButton={{width: widthImage}}
             styleImageBG={{width: widthImage}}
             imageBG={images.im_frame4}
             icon={icons.ic_hause}
             label={'Phòng trống'}
             labelNumber={`${homeInfor?.emptyUnitTotal}`}
-          />
+          /> */}
         </View>
         <View style={styles.viewOption}>
           <Text style={styles.title}>Quản lý cho thuê</Text>
@@ -148,12 +150,12 @@ const HomeScreen = () => {
               styleBGIcon={{backgroundColor: '#e6f6e2'}}
               onPress={() => navigation.navigate('InvoiceManagement')}
             />
-            <CustomOptionBT
+            {/* <CustomOptionBT
               title={'Công việc'}
               content={`${homeInfor?.taskTotal}`}
               svgIcon={svgs.Gear}
               styleBGIcon={{backgroundColor: '#fff3e9'}}
-            />
+            /> */}
           </View>
           <View style={[styles.viewRow, {marginTop: 15}]}>
             <CustomOptionBT
@@ -190,7 +192,7 @@ const HomeScreen = () => {
             /> */}
           </View>
         </View>
-        <View style={[styles.viewRow, {marginTop: 15, marginBottom: 10}]}>
+        {/* <View style={[styles.viewRow, {marginTop: 15, marginBottom: 10}]}>
           <Text style={styles.textTitle}>Công việc</Text>
           <CustomButton
             styleButton={{flexDirection: 'row', alignItems: 'center'}}
@@ -340,7 +342,7 @@ const HomeScreen = () => {
               <Text style={{fontSize: 10}}>Số HĐ : #123465</Text>
             </View>
           </View>
-        </View>
+        </View> */}
       </ScrollView>
     </View>
   );

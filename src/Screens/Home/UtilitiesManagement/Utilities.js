@@ -80,8 +80,8 @@ const Utilities = props => {
       <CustomAppBar
         iconLeft={icons.ic_back}
         label={'Tiện ích'}
-        iconRight={icons.ic_bell}
-        iconSecondRight={icons.ic_moreOption}
+        // iconRight={icons.ic_bell}
+        // iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
       <View style={[styles.eachContainer]}>

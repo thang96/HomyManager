@@ -30,11 +30,11 @@ const CustomAppBarRoomInfor = props => {
           onPress={onPressLeft}
         />
         <Text style={styles.titleScreen}>Thông tin phòng</Text>
-        <CustomButton
+        {/* <CustomButton
           styleIcon={styles.iconTop}
           icon={icons.ic_bell}
           onPress={pressIconRight}
-        />
+        /> */}
         <CustomButton
           styleIcon={styles.iconTop}
           icon={icons.ic_trash}

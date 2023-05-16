@@ -57,7 +57,7 @@ const InvoiceManagement = props => {
       <CustomSearchAppBar
         iconLeft={icons.ic_back}
         label={'Quản lý hóa đơn'}
-        iconRight={icons.ic_bell}
+        // iconRight={icons.ic_bell}
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
         keyboard={keyboard}

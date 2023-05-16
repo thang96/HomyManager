@@ -1,6 +1,12 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, KeyboardAvoidingView, Keyboard} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  Keyboard,
+  FlatList,
+} from 'react-native';
 import {icons, colors} from '../../../Constants';
 import CustomButton from '../../../Components/CommonComponent/CustomButton';
 import CustomSearchAppBar from '../../../Components/CommonComponent/CustomSearchAppBar';
@@ -8,12 +14,17 @@ import CustomButtonBottom from '../../../Components/CommonComponent/CustomButton
 import {useDispatch, useSelector} from 'react-redux';
 import {statusState, updateStatus} from '../../../Store/slices/statusSlice';
 import useKeyboard from '../../../Hook/useKeyboard';
-import {GetListContractsApi} from '../../../Api/Home/ContractApis/ContractApis';
+import {
+  DeleteContractAPi,
+  GetListContractsApi,
+  LiquidationContractApi,
+} from '../../../Api/Home/ContractApis/ContractApis';
 import {token} from '../../../Store/slices/tokenSlice';
-import CustomIsActive from '../../../Components/ComponentHome/Contract/CustomIsActive';
-import CustomLiquidated from '../../../Components/ComponentHome/Contract/CustomLiquidated';
-import CustomOutOfDate from '../../../Components/ComponentHome/Contract/CustomOutOfDate';
 import CustomLoading from '../../../Components/CommonComponent/CustomLoading';
+import CustomModalNotify from '../../../Components/CommonComponent/CustomModalNotify';
+import RenderContract from '../../../Components/ComponentHome/RenderContract';
+import CustomTextTitle from '../../../Components/CommonComponent/CustomTextTitle';
+import {convertDate} from '../../../utils/common';
 
 const ContractManagement = props => {
   const navigation = useNavigation();
@@ -23,15 +34,37 @@ const ContractManagement = props => {
   const [isActive, setIsActive] = useState(1);
   const dispatch = useDispatch();
   const statusLoading = useSelector(statusState);
-  const [listContract, setListContract] = useState([]);
+  const [listContractActive, setListContractActive] = useState([]);
+  const [listContractOutOfDate, setListContractOutOfDate] = useState([]);
+  const [listContractLiquidation, setListContractLiquidation] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modalDeleteContract, setModalDeleteContract] = useState(false);
+  const [modalLiquidationContract, setModalLiquidationContract] =
+    useState(false);
+  const [selectContract, setSelectContract] = useState();
 
   useEffect(() => {
     const getListData = async () => {
       await GetListContractsApi(tokenStore)
         .then(res => {
           if (res?.status == 200) {
-            setListContract(res?.data);
+            let response = res?.data;
+            let active = [];
+            let outOfDate = [];
+            let liquidation = [];
+            for (let index = 0; index < response.length; index++) {
+              const element = response[index];
+              if (element?.status == 0) {
+                active.push(element);
+              } else if (element?.status == 2) {
+                outOfDate.push(element);
+              } else if (element?.status == 3) {
+                liquidation.push(element);
+              }
+            }
+            setListContractActive(active);
+            setListContractOutOfDate(outOfDate);
+            setListContractLiquidation(liquidation);
             setLoading(false);
           }
         })
@@ -39,13 +72,61 @@ const ContractManagement = props => {
     };
     getListData();
   }, [statusLoading]);
+
+  const liquidationContract = async () => {
+    setModalLiquidationContract(false);
+    setLoading(true);
+    await LiquidationContractApi(tokenStore, selectContract?.id)
+      .then(res => {
+        if (res?.status == 200) {
+          dispatch(updateStatus(`liquidation${selectContract?.id}`));
+          setLoading(false);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const deleteContract = async () => {
+    setModalDeleteContract(false);
+    setLoading(true);
+    await DeleteContractAPi(tokenStore, selectContract?.id)
+      .then(res => {
+        if (res?.status == 200) {
+          dispatch(updateStatus(`deleteContract${selectContract?.id}`));
+          setLoading(false);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundGrey}}>
+      {modalLiquidationContract && (
+        <CustomModalNotify
+          modalVisible={modalLiquidationContract}
+          title={'Thanh lý hợp đồng'}
+          label={'Bạn có muốn thanh lý hợp đồng này ?'}
+          onRequestClose={() => setModalLiquidationContract(false)}
+          pressConfirm={() => liquidationContract()}
+        />
+      )}
+      {modalDeleteContract && (
+        <CustomModalNotify
+          modalVisible={modalDeleteContract}
+          title={'Xóa hợp đồng'}
+          label={'Bạn có muốn xóa hợp đồng này ?'}
+          onRequestClose={() => setModalDeleteContract(false)}
+          pressConfirm={() => deleteContract()}
+        />
+      )}
       {loading && <CustomLoading />}
       <CustomSearchAppBar
         iconLeft={icons.ic_back}
         label={'Quản lý hợp đồng'}
-        iconRight={icons.ic_bell}
+        // iconRight={icons.ic_bell}
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
         keyboard={keyboard}
@@ -94,15 +175,110 @@ const ContractManagement = props => {
           />
         </View>
         {isActive == 1 ? (
-          <CustomIsActive
-            data={listContract}
-            onPress={item => navigation.navigate('ContractDetail', item?.id)}
-            pressEdit={item => navigation.navigate('EditContract', item?.id)}
-          />
+          <View style={styles.container}>
+            <CustomTextTitle label={'Hợp đồng đang hoạt động'} />
+            <FlatList
+              data={listContractActive}
+              keyExtractor={key => key.id}
+              renderItem={({item, index}) => {
+                return (
+                  <RenderContract
+                    status={item?.status}
+                    description={item?.description}
+                    startDate={`${convertDate(item?.startDate)}`}
+                    endDate={`${convertDate(item?.endDate)}`}
+                    houseName={`${item?.unit?.house?.name}`}
+                    unitName={`${item?.unit?.name}`}
+                    contractOwner={`${item?.contractOwner?.fullName}`}
+                    onPress={() =>
+                      navigation.navigate('ContractDetail', item?.id)
+                    }
+                    pressEdit={() =>
+                      navigation.navigate('EditContract', item?.id)
+                    }
+                    pressLiquidation={() => {
+                      setSelectContract(item);
+                      setModalLiquidationContract(true);
+                    }}
+                    pressDelete={() => {
+                      setSelectContract(item);
+                      setModalDeleteContract(true);
+                    }}
+                  />
+                );
+              }}
+            />
+          </View>
         ) : isActive == 2 ? (
-          <CustomOutOfDate />
+          <View style={styles.container}>
+            <CustomTextTitle label={'Hợp đồng quá hạn'} />
+            <FlatList
+              data={listContractOutOfDate}
+              keyExtractor={key => key.id}
+              renderItem={({item, index}) => {
+                return (
+                  <RenderContract
+                    status={item?.status}
+                    description={item?.description}
+                    startDate={`${convertDate(item?.startDate)}`}
+                    endDate={`${convertDate(item?.endDate)}`}
+                    houseName={`${item?.unit?.house?.name}`}
+                    unitName={`${item?.unit?.name}`}
+                    contractOwner={`${item?.contractOwner?.fullName}`}
+                    onPress={() =>
+                      navigation.navigate('ContractDetail', item?.id)
+                    }
+                    pressEdit={() =>
+                      navigation.navigate('EditContract', item?.id)
+                    }
+                    pressLiquidation={() => {
+                      setSelectContract(item);
+                      setModalLiquidationContract(true);
+                    }}
+                    pressDelete={() => {
+                      setSelectContract(item);
+                      setModalDeleteContract(true);
+                    }}
+                  />
+                );
+              }}
+            />
+          </View>
         ) : isActive == 3 ? (
-          <CustomLiquidated />
+          <View style={styles.container}>
+            <CustomTextTitle label={'Hợp đồng đã thanh lý'} />
+            <FlatList
+              data={listContractLiquidation}
+              keyExtractor={key => key.id}
+              renderItem={({item, index}) => {
+                return (
+                  <RenderContract
+                    status={item?.status}
+                    description={item?.description}
+                    startDate={`${convertDate(item?.startDate)}`}
+                    endDate={`${convertDate(item?.endDate)}`}
+                    houseName={`${item?.unit?.house?.name}`}
+                    unitName={`${item?.unit?.name}`}
+                    contractOwner={`${item?.contractOwner?.fullName}`}
+                    onPress={() =>
+                      navigation.navigate('ContractDetail', item?.id)
+                    }
+                    pressEdit={() =>
+                      navigation.navigate('EditContract', item?.id)
+                    }
+                    pressLiquidation={() => {
+                      setSelectContract(item);
+                      setModalLiquidationContract(true);
+                    }}
+                    pressDelete={() => {
+                      setSelectContract(item);
+                      setModalDeleteContract(true);
+                    }}
+                  />
+                );
+              }}
+            />
+          </View>
         ) : null}
         <CustomButtonBottom
           label={'Thêm hợp đồng'}
@@ -116,6 +292,7 @@ const ContractManagement = props => {
   );
 };
 const styles = StyleSheet.create({
+  container: {flex: 1, backgroundColor: colors.backgroundGrey},
   eachContainer: {
     flex: 1,
     backgroundColor: colors.backgroundGrey,

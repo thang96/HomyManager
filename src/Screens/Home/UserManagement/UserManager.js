@@ -52,9 +52,9 @@ const UserManager = () => {
       <CustomSearchAppBar
         iconLeft={icons.ic_back}
         label={'Người quản lý tòa nhà'}
-        iconRight={icons.ic_bell}
-        pressIconRight={() => navigation.navigate('NotificationScreen')}
-        iconSecondRight={icons.ic_moreOption}
+        // iconRight={icons.ic_bell}
+        // pressIconRight={() => navigation.navigate('NotificationScreen')}
+        // iconSecondRight={icons.ic_moreOption}
         keyboard={keyboard}
         textSearch={textSearch}
         value={textSearch}

@@ -218,8 +218,8 @@ const InvoiceUnpaidDetail = props => {
       <CustomAppBar
         iconLeft={icons.ic_back}
         label={'Hóa đơn chưa thanh toán'}
-        iconRight={icons.ic_bell}
-        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        // iconRight={icons.ic_bell}
+        // pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconSecondRight={icons.ic_trash}
         pressSeccodIconRight={() => setModalDeleteInvoice(true)}
         pressIconLeft={() => navigation.goBack()}

@@ -99,8 +99,8 @@ const TenantList = () => {
       <CustomSearchAppBar
         iconLeft={icons.ic_back}
         label={'Danh sách người thuê'}
-        iconRight={icons.ic_bell}
-        iconSecondRight={icons.ic_moreOption}
+        // iconRight={icons.ic_bell}
+        // iconSecondRight={icons.ic_moreOption}
         keyboard={keyboard}
         textSearch={textSearch}
         value={textSearch}

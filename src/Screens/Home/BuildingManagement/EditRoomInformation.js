@@ -258,9 +258,9 @@ const EditRoomInformation = () => {
       <CustomAppBar
         iconLeft={icons.ic_back}
         label={'Sửa thông tin phòng'}
-        iconRight={icons.ic_bell}
-        pressIconRight={() => navigation.navigate('NotificationScreen')}
-        iconSecondRight={icons.ic_moreOption}
+        // iconRight={icons.ic_bell}
+        // pressIconRight={() => navigation.navigate('NotificationScreen')}
+        // iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
       {unit && (

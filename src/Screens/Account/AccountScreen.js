@@ -74,19 +74,19 @@ const AccountScreen = () => {
             }}
           />
         </View>
-        <CustomComponentButton
+        {/* <CustomComponentButton
           styleButton={[styles.viewShadow, {marginTop: 20}]}
           icon={icons.ic_plusUser}
           label={'Nhân sự'}
-        />
-        <CustomComponentButton
+        /> */}
+        {/* <CustomComponentButton
           styleButton={[styles.viewShadow, {marginTop: 20}]}
           icon={icons.ic_lock}
           label={'Đổi mật khẩu'}
           onPress={() => navigation.navigate('ChangePassword')}
-        />
+        /> */}
 
-        <View style={[styles.viewMidle, styles.viewShadow, {marginTop: 20}]}>
+        {/* <View style={[styles.viewMidle, styles.viewShadow, {marginTop: 20}]}>
           <CustomComponentButton icon={icons.ic_book} label={'Chính sách'} />
           <View style={styles.viewLine} />
           <CustomComponentButton
@@ -98,7 +98,7 @@ const AccountScreen = () => {
             icon={icons.ic_exclamationMark}
             label={'Phiên bản'}
           />
-        </View>
+        </View> */}
 
         <CustomComponentButton
           styleButton={[styles.viewShadow, {marginTop: 20}]}

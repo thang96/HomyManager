@@ -39,7 +39,7 @@ const ManagerDetail = props => {
       <CustomAppBar
         label={'Thông tin người quản lý'}
         iconLeft={icons.ic_back}
-        iconRight={icons.ic_moreOption}
+        // iconRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
       <ScrollView>

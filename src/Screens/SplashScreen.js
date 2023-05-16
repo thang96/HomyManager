@@ -14,9 +14,10 @@ const SplashScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setTimeout(() => {
-      loginTokenApi();
-    }, 300);
+    // setTimeout(() => {
+    //   loginTokenApi();
+    // }, 300);
+    loginTokenApi();
   }, []);
 
   const loginTokenApi = async () => {

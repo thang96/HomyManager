@@ -79,9 +79,9 @@ const ServiceManager = props => {
       <CustomSearchAppBar
         iconLeft={icons.ic_back}
         label={'Quản lý dịch vụ'}
-        iconRight={icons.ic_bell}
-        pressIconRight={() => navigation.navigate('NotificationScreen')}
-        iconSecondRight={icons.ic_moreOption}
+        // iconRight={icons.ic_bell}
+        // pressIconRight={() => navigation.navigate('NotificationScreen')}
+        // iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
         keyboard={keyboard}
         textSearch={textSearch}

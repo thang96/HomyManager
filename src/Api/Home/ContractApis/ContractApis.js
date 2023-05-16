@@ -57,6 +57,24 @@ export const CreateNewContractApi = (token, data) => {
       });
   });
 };
+export const LiquidationContractApi = (token, contractId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${BASEURL}/contracts/${contractId}/close`, null, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
 
 export const GetActiveContractApi = (token, unitId) => {
   return new Promise((resolve, reject) => {

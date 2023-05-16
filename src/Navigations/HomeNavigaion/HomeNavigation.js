@@ -52,7 +52,7 @@ const HomeNavigation = props => {
             renderTabBar(focused, icons.ic_homeTabBar, 'Trang chủ'),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         component={StackWorkpage}
         name={'StackWorkpage'}
         options={{
@@ -62,8 +62,8 @@ const HomeNavigation = props => {
           tabBarIcon: ({color, focused, size}) =>
             renderTabBar(focused, icons.ic_gearAppBar, 'Công việc'),
         }}
-      />
-      <Tab.Screen
+      /> */}
+      {/* <Tab.Screen
         component={StackStatisticPage}
         name={'StackStatisticPage'}
         options={{
@@ -73,8 +73,8 @@ const HomeNavigation = props => {
           tabBarIcon: ({color, focused, size}) =>
             renderTabBar(focused, icons.ic_chartAppBar, 'Thống kê'),
         }}
-      />
-      <Tab.Screen
+      /> */}
+      {/* <Tab.Screen
         component={StackMessagePage}
         name={'StackMessagePage'}
         options={{
@@ -84,7 +84,7 @@ const HomeNavigation = props => {
           tabBarIcon: ({color, focused, size}) =>
             renderTabBar(focused, icons.ic_chatAppBar, 'Tin nhắn'),
         }}
-      />
+      /> */}
       <Tab.Screen
         component={StackAccountPage}
         name={'StackAccountPage'}

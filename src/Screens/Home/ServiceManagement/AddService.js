@@ -66,8 +66,8 @@ const AddService = props => {
         iconLeft={icons.ic_back}
         pressIconRight={() => navigation.navigate('NotificationScreen')}
         label={'Thêm dịch vụ'}
-        iconRight={icons.ic_bell}
-        iconSecondRight={icons.ic_moreOption}
+        // iconRight={icons.ic_bell}
+        // iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
       <ScrollView

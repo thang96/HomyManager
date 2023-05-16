@@ -22,11 +22,11 @@ const CustomAppBarFloorInfor = props => {
           onPress={onPressLeft}
         />
         <Text style={styles.titleScreen}>Thông tin tầng</Text>
-        <CustomButton
+        {/* <CustomButton
           styleIcon={styles.iconTop}
           icon={icons.ic_bell}
           onPress={pressIconRight}
-        />
+        /> */}
         {/* <CustomButton styleIcon={styles.iconTop} icon={icons.ic_moreOption} /> */}
       </View>
       <View style={styles.line} />

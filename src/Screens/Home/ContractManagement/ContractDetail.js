@@ -24,7 +24,7 @@ const ContractDetail = props => {
   const tokenStore = useSelector(token);
   const [contract, setContract] = useState();
   const [loadingContract, setLoadingContract] = useState(true);
-  console.log(contractId);
+
   useEffect(() => {
     const getData = async () => {
       await GetContractDetailAPi(tokenStore, contractId)
@@ -164,7 +164,6 @@ const ContractDetail = props => {
 
         <View style={{height: 56}} />
       </ScrollView>
-      <CustomButtonBottom label={'Thêm hóa đơn'} />
     </View>
   );
 };

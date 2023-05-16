@@ -28,11 +28,11 @@ const CustomAppBarBuildingInfor = props => {
           onPress={onPressLeft}
         />
         <Text style={{color: 'white', flex: 1}}>Thông tin tòa nhà</Text>
-        <CustomButton
+        {/* <CustomButton
           styleIcon={styles.iconTop}
           icon={icons.ic_bell}
           onPress={pressIconRight}
-        />
+        /> */}
         <CustomButton
           styleIcon={styles.iconTop}
           icon={icons.ic_trash}

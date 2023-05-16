@@ -58,7 +58,7 @@ const RoomInformation = props => {
         rentMonthlyFee={`${formatNumber(`${unit?.rentMonthlyFee}`) ?? 0}`}
         nameRoom={`${unit?.name ?? ''}`}
         onPressLeft={() => navigation.goBack()}
-        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        // pressIconRight={() => navigation.navigate('NotificationScreen')}
         pressDelete={() => setModalDeleteRoom(true)}
         pressQuickAddRoom={() =>
           navigation.navigate('QuickAddRoom', route.params)

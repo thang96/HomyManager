@@ -115,8 +115,8 @@ const InvoiceDetail = props => {
       <CustomAppBar
         iconLeft={icons.ic_back}
         label={'Chi tiết hóa đơn'}
-        iconRight={icons.ic_bell}
-        pressIconRight={() => navigation.navigate('NotificationScreen')}
+        // iconRight={icons.ic_bell}
+        // pressIconRight={() => navigation.navigate('NotificationScreen')}
         iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />

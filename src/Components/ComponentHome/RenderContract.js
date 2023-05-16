@@ -4,6 +4,7 @@ import {icons, colors} from '../../Constants';
 import CustomButton from '../CommonComponent/CustomButton';
 const RenderContract = props => {
   const {
+    status,
     description,
     startDate,
     endDate,
@@ -12,6 +13,8 @@ const RenderContract = props => {
     contractOwner,
     onPress,
     pressEdit,
+    pressLiquidation,
+    pressDelete,
   } = props;
   return (
     <View style={styles.viewContract}>
@@ -60,11 +63,13 @@ const RenderContract = props => {
           styleButton={[styles.buttonRender, {borderColor: colors.mainColor}]}
           label={'Thanh lý'}
           styleLabel={{fontWeight: '600', color: colors.mainColor}}
+          onPress={pressLiquidation}
         />
         <CustomButton
           styleButton={[styles.buttonRender, {borderColor: 'red'}]}
           label={'Xóa'}
           styleLabel={{fontWeight: '600', color: 'red'}}
+          onPress={pressDelete}
         />
       </View>
     </View>

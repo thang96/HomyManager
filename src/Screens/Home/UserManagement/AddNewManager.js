@@ -182,9 +182,9 @@ const AddNewManager = () => {
       <CustomAppBar
         iconLeft={icons.ic_back}
         label={'Thêm người quản lý'}
-        iconRight={icons.ic_bell}
-        pressIconRight={() => navigation.navigate('NotificationScreen')}
-        iconSecondRight={icons.ic_moreOption}
+        // iconRight={icons.ic_bell}
+        // pressIconRight={() => navigation.navigate('NotificationScreen')}
+        // iconSecondRight={icons.ic_moreOption}
         pressIconLeft={() => navigation.goBack()}
       />
       <ScrollView
