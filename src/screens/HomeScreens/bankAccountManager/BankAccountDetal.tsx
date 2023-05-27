@@ -6,12 +6,12 @@ import {GetBankAccountDetailApi} from '../../../apis/homeApi/bankAccountApi';
 import AppBarComponent from '../../../components/appBarComponent/AppBarComponent';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
-import {colors, icons} from '../../../constants';
+import {colors, icons, images} from '../../../constants';
 import {token} from '../../../store/slices/tokenSlice';
 
 const BankAccountDetal = () => {
   const [loading, setLoading] = useState(true);
-  const [bankAccount, setBankAccount] = useState<any>(true);
+  const [bankAccount, setBankAccount] = useState<any>(null);
   const tokenStore = useSelector(token);
   const navigation = useNavigation();
   const route: any = useRoute();
@@ -40,7 +40,9 @@ const BankAccountDetal = () => {
       <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
         <View style={[styles.shadowView, styles.viewDetail]}>
           <Image
-            source={{uri: bankAccount?.bank?.logo}}
+            source={
+              bankAccount ? {uri: bankAccount?.bank?.logo} : images.im_frame1
+            }
             style={{width: 250, height: 150, alignSelf: 'center'}}
             resizeMode="contain"
           />

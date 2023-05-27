@@ -153,26 +153,22 @@ const CreateContractFromUnit = () => {
   };
   const openCamera = () => {
     setModalCamera(false);
-    setLoading(true);
     setTimeout(() => {
       ImagePicker.openCamera({width: 300, height: 400})
         .then(image => {
           let eachImg = {...image, uri: image?.path};
           const eachResult = [...contractImages, eachImg];
           setContractImages(eachResult);
-          setLoading(false);
         })
         .catch(e => {
           ImagePicker.clean();
           setModalCamera(false);
-          setLoading(false);
         });
     }, 1000);
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    setLoading(true);
     setTimeout(() => {
       ImagePicker.openPicker({multiple: true})
         .then(async image => {
@@ -185,12 +181,10 @@ const CreateContractFromUnit = () => {
           const eachResult = [...contractImages];
           const newResult = eachResult.concat(albumImg);
           setContractImages(newResult);
-          setLoading(false);
         })
         .catch(e => {
           ImagePicker.clean();
           setModalCamera(false);
-          setLoading(false);
         });
     }, 1000);
   };

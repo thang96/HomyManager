@@ -125,7 +125,6 @@ const EditUnitInfor = () => {
   };
 
   const openCamera = () => {
-    setLoadingRoom(true);
     setTimeout(() => {
       setModalCamera(false);
       ImagePicker.openCamera({width: 300, height: 400})
@@ -136,18 +135,15 @@ const EditUnitInfor = () => {
           let eachImages = [...unit?.images, eachImg];
           const eachResult = {...unit, images: eachImages};
           setUnit(eachResult);
-          setLoadingRoom(false);
         })
         .catch(e => {
           ImagePicker.clean();
           setModalCamera(false);
-          setLoadingRoom(false);
         });
     }, 1000);
   };
 
   const openGallery = () => {
-    setLoadingRoom(true);
     setModalCamera(false);
     setTimeout(() => {
       ImagePicker.openPicker({multiple: true})
@@ -164,12 +160,10 @@ const EditUnitInfor = () => {
           let eachUnitImages = [...unitImages];
           const newResultImages = eachUnitImages.concat(albumImg);
           setUnitImages(newResultImages);
-          setLoadingRoom(false);
         })
         .catch(e => {
           ImagePicker.clean();
           setModalCamera(false);
-          setLoadingRoom(false);
         });
     }, 1000);
   };

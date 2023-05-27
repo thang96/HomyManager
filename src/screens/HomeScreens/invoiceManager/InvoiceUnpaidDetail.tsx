@@ -75,30 +75,34 @@ const InvoiceUnpaidDetail = () => {
 
   const openCamera = () => {
     setModalCamera(false);
-    ImagePicker.openCamera({width: 300, height: 400})
-      .then(image => {
-        let eachImg = {...image, uri: image?.path};
-        const eachResult = [...paymentImages, eachImg];
-        setPaymentImages(eachResult);
-      })
-      .catch(e => {
-        ImagePicker.clean();
-        setModalCamera(false);
-      });
+    setTimeout(() => {
+      ImagePicker.openCamera({width: 300, height: 400})
+        .then(image => {
+          let eachImg = {...image, uri: image?.path};
+          const eachResult = [...paymentImages, eachImg];
+          setPaymentImages(eachResult);
+        })
+        .catch(e => {
+          ImagePicker.clean();
+          setModalCamera(false);
+        });
+    }, 1000);
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    ImagePicker.openPicker({multiple: false})
-      .then(async image => {
-        let eachImg = {...image, uri: image?.path};
-        const eachResult = [...paymentImages, eachImg];
-        setPaymentImages(eachResult);
-      })
-      .catch(e => {
-        ImagePicker.clean();
-        setModalCamera(false);
-      });
+    setTimeout(() => {
+      ImagePicker.openPicker({multiple: false})
+        .then(async image => {
+          let eachImg = {...image, uri: image?.path};
+          const eachResult = [...paymentImages, eachImg];
+          setPaymentImages(eachResult);
+        })
+        .catch(e => {
+          ImagePicker.clean();
+          setModalCamera(false);
+        });
+    }, 1000);
   };
   const renderItem = (item: any, index: number) => {
     let totalPrice =

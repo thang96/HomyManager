@@ -60,7 +60,7 @@ const BankAccountManager = () => {
                   userName={item?.accountName}
                   accountNo={item?.accountNo}
                   pressDetail={() =>
-                    navigation.navigate('PaymentDetail', item?.id)
+                    navigation.navigate('BankAccountDetal', item?.id)
                   }
                 />
               );

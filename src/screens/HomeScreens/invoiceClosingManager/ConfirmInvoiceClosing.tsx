@@ -44,7 +44,7 @@ const ConfirmInvoiceClosing = () => {
   const [modalShowImage, setModalShowImage] = useState(false);
   const [modalCamera, setModalCamera] = useState(false);
   const [confirmInvoice, setConfirmInvoice] = useState<any>();
-  console.log(confirmInvoice);
+  // console.log(confirmInvoice);
 
   const [loading, setLoading] = useState(true);
   const [progressiveServiceClosings, setProgressiveServiceClosings] =
@@ -81,40 +81,44 @@ const ConfirmInvoiceClosing = () => {
 
   const openCamera = () => {
     setModalCamera(false);
-    ImagePicker.openCamera({width: 300, height: 400})
-      .then(image => {
-        let eachImage = {...image, uri: image?.path};
-        let eachValue = [...progressiveServiceClosings];
-        eachValue[indexValue] = {
-          ...eachValue[indexValue],
-          image: eachImage,
-          imageUsageNumber: eachImage,
-        };
-        setProgressiveServiceClosings(eachValue);
-      })
-      .catch(e => {
-        ImagePicker.clean();
-        setModalCamera(false);
-      });
+    setTimeout(() => {
+      ImagePicker.openCamera({width: 300, height: 400})
+        .then(image => {
+          let eachImage = {...image, uri: image?.path};
+          let eachValue = [...progressiveServiceClosings];
+          eachValue[indexValue] = {
+            ...eachValue[indexValue],
+            image: eachImage,
+            imageUsageNumber: eachImage,
+          };
+          setProgressiveServiceClosings(eachValue);
+        })
+        .catch(e => {
+          ImagePicker.clean();
+          setModalCamera(false);
+        });
+    }, 1000);
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    ImagePicker.openPicker({multiple: false})
-      .then(image => {
-        let eachImage = {...image, uri: image?.path};
-        let eachValue = [...progressiveServiceClosings];
-        eachValue[indexValue] = {
-          ...eachValue[indexValue],
-          image: eachImage,
-          imageUsageNumber: eachImage,
-        };
-        setProgressiveServiceClosings(eachValue);
-      })
-      .catch(e => {
-        ImagePicker.clean();
-        setModalCamera(false);
-      });
+    setTimeout(() => {
+      ImagePicker.openPicker({multiple: false})
+        .then(image => {
+          let eachImage = {...image, uri: image?.path};
+          let eachValue = [...progressiveServiceClosings];
+          eachValue[indexValue] = {
+            ...eachValue[indexValue],
+            image: eachImage,
+            imageUsageNumber: eachImage,
+          };
+          setProgressiveServiceClosings(eachValue);
+        })
+        .catch(e => {
+          ImagePicker.clean();
+          setModalCamera(false);
+        });
+    }, 1000);
   };
 
   const checkData = () => {

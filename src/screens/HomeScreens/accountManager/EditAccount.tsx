@@ -27,10 +27,7 @@ import {
   PostImageUserApi,
   PostImageIdentityApi,
 } from '../../../apis/homeApi/fileDataApi';
-import {
-  reloadState,
-  updateReloadStatus,
-} from '../../../store/slices/reloadSlice';
+import {updateReloadStatus} from '../../../store/slices/reloadSlice';
 import ComponentInput from '../../../components/commonComponent/ComponentInput';
 import ComponentButton from '../../../components/commonComponent/ComponentButton';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';

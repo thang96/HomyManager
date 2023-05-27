@@ -57,68 +57,76 @@ const AddNewTenant = () => {
 
   const openCamera = () => {
     setModalCamera(false);
-    ImagePicker.openCamera({width: 300, height: 400})
-      .then(image => {
-        let eachImg = {...image, uri: image?.path};
-        const eachResult = [...albumImage, eachImg];
-        setAlbumImage(eachResult);
-      })
-      .catch(e => {
-        ImagePicker.clean();
-        setModalCamera(false);
-      });
+    setTimeout(() => {
+      ImagePicker.openCamera({width: 300, height: 400})
+        .then(image => {
+          let eachImg = {...image, uri: image?.path};
+          const eachResult = [...albumImage, eachImg];
+          setAlbumImage(eachResult);
+        })
+        .catch(e => {
+          ImagePicker.clean();
+          setModalCamera(false);
+        });
+    }, 1000);
   };
   const openGallery = () => {
     setModalCamera(false);
-    ImagePicker.openPicker({multiple: true})
-      .then(async image => {
-        let albumImg = [];
-        for (let index = 0; index < image.length; index++) {
-          let element = image[index];
-          let eachElement = {...element, uri: element?.path};
-          albumImg.push(eachElement);
-        }
-        const eachResult = [...albumImage];
-        const newResult = eachResult.concat(albumImg);
-        setAlbumImage(newResult);
-      })
-      .catch(e => {
-        ImagePicker.clean();
-        setModalCamera(false);
-      });
+    setTimeout(() => {
+      ImagePicker.openPicker({multiple: true})
+        .then(async image => {
+          let albumImg = [];
+          for (let index = 0; index < image.length; index++) {
+            let element = image[index];
+            let eachElement = {...element, uri: element?.path};
+            albumImg.push(eachElement);
+          }
+          const eachResult = [...albumImage];
+          const newResult = eachResult.concat(albumImg);
+          setAlbumImage(newResult);
+        })
+        .catch(e => {
+          ImagePicker.clean();
+          setModalCamera(false);
+        });
+    }, 1000);
   };
   const openCameraUser = () => {
     setModalCameraUser(false);
-    ImagePicker.openCamera({width: 300, height: 400})
-      .then(image => {
-        let eachImg = {...image, uri: image?.path};
-        let eachResult = [...albumImageUser, eachImg];
-        setAlbumImageUser(eachResult);
-      })
-      .catch(e => {
-        ImagePicker.clean();
-        setModalCameraUser(false);
-      });
+    setTimeout(() => {
+      ImagePicker.openCamera({width: 300, height: 400})
+        .then(image => {
+          let eachImg = {...image, uri: image?.path};
+          let eachResult = [...albumImageUser, eachImg];
+          setAlbumImageUser(eachResult);
+        })
+        .catch(e => {
+          ImagePicker.clean();
+          setModalCameraUser(false);
+        });
+    }, 1000);
   };
 
   const openGalleryUser = () => {
     setModalCameraUser(false);
-    ImagePicker.openPicker({multiple: true})
-      .then(async image => {
-        let albumImg = [];
-        for (let index = 0; index < image.length; index++) {
-          let element = image[index];
-          let eachElement = {...element, uri: element?.path};
-          albumImg.push(eachElement);
-        }
-        let eachResult = [...albumImageUser];
-        let newResult = eachResult.concat(albumImg);
-        setAlbumImageUser(newResult);
-      })
-      .catch(e => {
-        ImagePicker.clean();
-        setModalCamera(false);
-      });
+    setTimeout(() => {
+      ImagePicker.openPicker({multiple: true})
+        .then(async image => {
+          let albumImg = [];
+          for (let index = 0; index < image.length; index++) {
+            let element = image[index];
+            let eachElement = {...element, uri: element?.path};
+            albumImg.push(eachElement);
+          }
+          let eachResult = [...albumImageUser];
+          let newResult = eachResult.concat(albumImg);
+          setAlbumImageUser(newResult);
+        })
+        .catch(e => {
+          ImagePicker.clean();
+          setModalCamera(false);
+        });
+    }, 1000);
   };
 
   const createNewTenant = async () => {

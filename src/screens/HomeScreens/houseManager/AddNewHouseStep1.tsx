@@ -117,26 +117,22 @@ const AddNewHouseStep1 = (props: any) => {
 
   const openCamera = () => {
     setModalCamera(false);
-    setLoading(true)
     setTimeout(() => {
       ImagePicker.openCamera({width: 300, height: 400})
         .then(image => {
           let eachImg = {...image, uri: image?.path};
           const eachResult = [...hauseImages, eachImg];
           setHauseImages(eachResult);
-          setLoading(false)
         })
         .catch(e => {
           ImagePicker.clean();
           setModalCamera(false);
-          setLoading(false)
         });
     }, 1000);
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    setLoading(true)
     setTimeout(() => {
       ImagePicker.openPicker({multiple: true, width: 300, height: 400})
         .then(async image => {
@@ -149,12 +145,10 @@ const AddNewHouseStep1 = (props: any) => {
           const eachResult = [...hauseImages];
           const newResult = eachResult.concat(albumImg);
           setHauseImages(newResult);
-          setLoading(false)
         })
         .catch(e => {
           ImagePicker.clean();
           setModalCamera(false);
-          setLoading(false)
         });
     }, 1000);
   };

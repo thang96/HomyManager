@@ -187,36 +187,40 @@ const EditContractInfor = () => {
 
   const openCamera = () => {
     setModalCamera(false);
-    ImagePicker.openCamera({width: 300, height: 400})
-      .then(image => {
-        let eachImg = {...image, uri: image?.path};
-        const eachResult: any = [...contractImages, eachImg];
-        setContractImages(eachResult);
-      })
-      .catch(e => {
-        ImagePicker.clean();
-        setModalCamera(false);
-      });
+    setTimeout(() => {
+      ImagePicker.openCamera({width: 300, height: 400})
+        .then(image => {
+          let eachImg = {...image, uri: image?.path};
+          const eachResult: any = [...contractImages, eachImg];
+          setContractImages(eachResult);
+        })
+        .catch(e => {
+          ImagePicker.clean();
+          setModalCamera(false);
+        });
+    }, 1000);
   };
 
   const openGallery = () => {
     setModalCamera(false);
-    ImagePicker.openPicker({multiple: true})
-      .then(async image => {
-        let albumImg: any = [];
-        for (let index = 0; index < image.length; index++) {
-          let element = image[index];
-          let eachElement = {...element, uri: element?.path};
-          albumImg.push(eachElement);
-        }
-        const eachResult = [...contractImages];
-        const newResult = eachResult.concat(albumImg);
-        setContractImages(newResult);
-      })
-      .catch(e => {
-        ImagePicker.clean();
-        setModalCamera(false);
-      });
+    setTimeout(() => {
+      ImagePicker.openPicker({multiple: true})
+        .then(async image => {
+          let albumImg: any = [];
+          for (let index = 0; index < image.length; index++) {
+            let element = image[index];
+            let eachElement = {...element, uri: element?.path};
+            albumImg.push(eachElement);
+          }
+          const eachResult = [...contractImages];
+          const newResult = eachResult.concat(albumImg);
+          setContractImages(newResult);
+        })
+        .catch(e => {
+          ImagePicker.clean();
+          setModalCamera(false);
+        });
+    }, 1000);
   };
 
   const deleteImage = async (item: any) => {
