@@ -11,6 +11,7 @@ import HouseDetail from './HomeScreens/houseManager/HouseDetail';
 import AddNewHouseStep1 from './HomeScreens/houseManager/AddNewHouseStep1';
 import AddNewHouseStep2 from './HomeScreens/houseManager/AddNewHouseStep2';
 import AddNewHouseStep3 from './HomeScreens/houseManager/AddNewHouseStep3';
+import EditHouseInformation from './HomeScreens/houseManager/EditHouseInformation';
 // TenantManager -------------------------------
 import TenantManager from './HomeScreens/tenantManager/TenantManager';
 import TenantDetail from './HomeScreens/tenantManager/TenantDetail';
@@ -19,7 +20,7 @@ import AddNewTenant from './HomeScreens/tenantManager/AddNewTenant';
 // ContractManager -------------------------------
 import ContractDetail from './HomeScreens/contractManager/ContractDetail';
 import ContractManager from './HomeScreens/contractManager/ContractManager';
-import ContractTermsDetal from './HomeScreens/contractManager/ContractTermsDetal';
+import ContractTermsDetail from './HomeScreens/contractManager/ContractTermsDetail';
 import CreateContract from './HomeScreens/contractManager/CreateContract';
 import CreateContractFromUnit from './HomeScreens/contractManager/CreateContractFromUnit';
 import EditContractInfor from './HomeScreens/contractManager/EditContractInfor';
@@ -33,6 +34,7 @@ import UnitManager from './HomeScreens/unitManager/UnitManager';
 import UnitDetail from './HomeScreens/unitManager/UnitDetail';
 import EditUnitInfor from './HomeScreens/unitManager/EditUnitInfor';
 import AddNewUnit from './HomeScreens/unitManager/AddNewUnit';
+import QuickAddUnit from './HomeScreens/unitManager/QuickAddUnit';
 // BankAccountManager -------------------------------
 import BankAccountManager from './HomeScreens/bankAccountManager/BankAccountManager';
 import BankAccountDetal from './HomeScreens/bankAccountManager/BankAccountDetal';
@@ -69,6 +71,7 @@ export {
   AddNewHouseStep1,
   AddNewHouseStep2,
   AddNewHouseStep3,
+  EditHouseInformation,
   // TenantManager -------------------------------
   TenantManager,
   TenantDetail,
@@ -77,7 +80,7 @@ export {
   // AccountScreen -------------------------------
   ContractDetail,
   ContractManager,
-  ContractTermsDetal,
+  ContractTermsDetail,
   CreateContract,
   CreateContractFromUnit,
   EditContractInfor,
@@ -91,6 +94,7 @@ export {
   UnitDetail,
   EditUnitInfor,
   AddNewUnit,
+  QuickAddUnit,
   // AccountScreen -------------------------------
   BankAccountManager,
   BankAccountDetal,

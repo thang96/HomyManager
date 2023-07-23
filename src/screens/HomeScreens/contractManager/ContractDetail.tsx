@@ -29,8 +29,9 @@ const ContractDetail = () => {
   const tokenStore = useSelector(token);
   const [contract, setContract] = useState<any>();
   const [loadingContract, setLoadingContract] = useState(true);
-  console.log(contract?.id);
-  console.log(tokenStore);
+  // console.log(contract?.id);
+  // console.log(tokenStore);
+  
   useEffect(() => {
     const getData = async () => {
       await GetContractDetailAPi(tokenStore, contractId)

@@ -27,13 +27,13 @@ import RenderImage from '../../../components/renderComponent/RenderImage';
 import {useDispatch, useSelector} from 'react-redux';
 import {token} from '../../../store/slices/tokenSlice';
 import CustomBankAccountInfor from '../../../components/commonComponent/CustomBankAccountInfor';
-import {updateReloadStatus} from '../../../store/slices/reloadSlice';
+import {reloadState, updateReloadStatus} from '../../../store/slices/reloadSlice';
 
 const HouseDetail = () => {
   const navigation: any = useNavigation();
+  const reload = useSelector(reloadState)
   const dispatch = useDispatch();
   const route = useRoute();
-  const isFocused = useIsFocused();
   const tokenStore = useSelector(token);
   const [loading, setLoading] = useState(true);
   const [hauseInfor, setHauseInfor] = useState<any>();
@@ -58,7 +58,7 @@ const HouseDetail = () => {
         .catch(error => console.error(error));
     };
     getDataHause();
-  }, [isFocused]);
+  }, [reload]);
 
   const renderSevices = (item: any, index: number) => {
     return (
@@ -129,9 +129,7 @@ const HouseDetail = () => {
             icon={icons.ic_bed}
             styleImageBG={{tintColor: '#1297c0'}}
             styleBGIcon={{backgroundColor: '#ebf9fd'}}
-            onPress={() =>
-              navigation.navigate('UnitManager', hauseInfor?.id)
-            }
+            onPress={() => navigation.navigate('UnitManager', hauseInfor?.id)}
           />
           <CustomOptionBT
             title={'Trống'}
@@ -161,7 +159,10 @@ const HouseDetail = () => {
         <TextTitleComponent
           label={'Thông tin tòa nhà'}
           labelButton={'Chỉnh sửa'}
-          onPress={() => navigation.navigate('EditHouseInformation', hauseId)}
+          onPress={() => {
+            dispatch(updateReloadStatus('updateHouseInfor'))
+            navigation.navigate('EditHouseInformation', hauseId)
+          }}
         />
         <View style={[styles.viewRow, {marginBottom: 10}]}>
           <BoxShowInfor
@@ -184,11 +185,11 @@ const HouseDetail = () => {
 
         {StraightLine()}
 
-        <TextTitleComponent
+        {/* <TextTitleComponent
           label={'Quản lý tòa nhà'}
           labelButton={'Thêm'}
           icon={icons.ic_plus}
-        />
+        /> */}
         <TextTitleComponent label={'Thông tin thanh toán'} />
 
         <CustomBankAccountInfor
@@ -235,7 +236,7 @@ const HouseDetail = () => {
               <FlatList
                 horizontal={false}
                 scrollEnabled={false}
-                numColumns={3}
+                numColumns={2}
                 keyExtractor={(key, index) => `${key?.name}${index.toString()}`}
                 data={hauseInfor?.amenities}
                 renderItem={({item, index}) => renderAmenitys(item, index)}

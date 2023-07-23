@@ -459,7 +459,7 @@ const CreateContractFromUnit = () => {
         <TextTitleComponent
           label={'Điều khoản hợp đồng'}
           labelButton={'Xem chi tiết'}
-          onPress={() => navigation.navigate('DetailedContractTerms')}
+          onPress={() => navigation.navigate('ContractTermsDetail')}
         />
         {StraightLine()}
 
@@ -467,7 +467,7 @@ const CreateContractFromUnit = () => {
           label={'Danh sách người ở'}
           labelButton={'Thêm'}
           icon={icons.ic_plus}
-          onPress={() => navigation.navigate('TenantList')}
+          onPress={() => navigation.navigate('ChooseTenant')}
         />
         <View>
           <ScrollView horizontal={true} style={{width: '100%'}}>

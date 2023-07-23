@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {colors, icons} from '../../constants';
+import {colors, icons, images} from '../../constants';
 import ButtonComponent from '../commonComponent/ButtonComponent';
 const CustomBankAccountInfor = (props:any) => {
   const {
@@ -28,7 +28,7 @@ const CustomBankAccountInfor = (props:any) => {
         onPress={pressDetail}
         style={[styles.viewRow, {flex: 1}]}>
         <Image
-          source={typeof imageUrl == 'string' ? {uri: imageUrl} : null}
+          source={typeof imageUrl == 'string' ? {uri: imageUrl} : images.im_frame1}
           style={styles.image}
           resizeMode={'contain'}
         />

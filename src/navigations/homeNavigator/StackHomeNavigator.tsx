@@ -17,15 +17,17 @@ import {
   ChooseService,
   DetailNotification,
   EditUnitInfor,
+  QuickAddUnit,
+  UnitDetail,
+  UnitManager,
   HomeScreen,
   HouseDetail,
   HouseManager,
+  EditHouseInformation,
   NotificationScreen,
-  UnitDetail,
-  UnitManager,
   ContractDetail,
   ContractManager,
-  ContractTermsDetal,
+  ContractTermsDetail,
   CreateContract,
   CreateContractFromUnit,
   EditContractInfor,
@@ -42,7 +44,6 @@ import {
   BankAccountManager,
   BankAccountDetal,
 } from '../../screens';
-import AuthNavigator from '../AuthNavigator';
 const Stack = createStackNavigator();
 
 const StackHomeNavigator = () => {
@@ -55,13 +56,6 @@ const StackHomeNavigator = () => {
           headerShown: false,
         }}
       />
-      {/* <Stack.Screen
-        component={AuthNavigator}
-        name={'AuthNavigator'}
-        options={{
-          headerShown: false,
-        }}
-      /> */}
       <Stack.Screen
         component={NotificationScreen}
         name={'NotificationScreen'}
@@ -112,6 +106,13 @@ const StackHomeNavigator = () => {
         }}
       />
       <Stack.Screen
+        component={EditHouseInformation}
+        name={'EditHouseInformation'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         component={TenantManager}
         name={'TenantManager'}
         options={{
@@ -154,8 +155,8 @@ const StackHomeNavigator = () => {
         }}
       />
       <Stack.Screen
-        component={ContractTermsDetal}
-        name={'ContractTermsDetal'}
+        component={ContractTermsDetail}
+        name={'ContractTermsDetail'}
         options={{
           headerShown: false,
         }}
@@ -205,6 +206,13 @@ const StackHomeNavigator = () => {
       <Stack.Screen
         component={AddNewUnit}
         name={'AddNewUnit'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={QuickAddUnit}
+        name={'QuickAddUnit'}
         options={{
           headerShown: false,
         }}

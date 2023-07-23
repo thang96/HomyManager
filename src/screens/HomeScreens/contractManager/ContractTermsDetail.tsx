@@ -3,7 +3,7 @@ import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import AppBarComponent from '../../../components/appBarComponent/AppBarComponent';
 import {icons} from '../../../constants';
 import {useNavigation} from '@react-navigation/native';
-const ContractTermsDetal = () => {
+const ContractTermsDetail = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -19,4 +19,4 @@ const ContractTermsDetal = () => {
   );
 };
 const styles = StyleSheet.create({container: {flex: 1}});
-export default ContractTermsDetal;
+export default ContractTermsDetail;

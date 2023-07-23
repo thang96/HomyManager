@@ -61,10 +61,10 @@ const UnitDetail = () => {
         // pressIconRight={() => navigation.navigate('NotificationScreen')}
         pressDelete={() => setModalDeleteRoom(true)}
         pressQuickAddRoom={() =>
-          navigation.navigate('QuickAddRoom', route.params)
+          navigation.navigate('QuickAddUnit', route.params)
         }
         pressEdit={() =>
-          navigation.navigate('EditRoomInformation', route.params)
+          navigation.navigate('EditUnitInfor', route.params)
         }
       />
       <ScrollView
@@ -113,8 +113,8 @@ const UnitDetail = () => {
 
         <TextTitleComponent
           label={'Hợp đồng cho thuê'}
-          labelButton={unit?.activeContract ? '' : 'Thêm hợp đồng'}
-          onPress={() => navigation.navigate('CreateContractFromRoom', unitId)}
+          labelButton={unit?.activeContract ? '' : 'Thêm hợp đồng +'}
+          onPress={() => navigation.navigate('CreateContractFromUnit', unitId)}
         />
         {unit?.activeContract && (
           <RenderContract
