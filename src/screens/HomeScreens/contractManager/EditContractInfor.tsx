@@ -60,7 +60,9 @@ const EditContractInfor = () => {
   const serviceSelect = useSelector(serviceState);
   const amenitySelect = useSelector(amenityState);
   const tenantSelect = useSelector(tenantState);
-
+  console.log(tokenStore);
+  console.log(contractId);
+  
   const [modalStartDate, setModalStartDate] = useState(false);
   const [modalEndDate, setModalEndDate] = useState(false);
   const [modalStartChargeDate, setModalStartChargeDate] = useState(false);
@@ -69,7 +71,8 @@ const EditContractInfor = () => {
   const [modalEditContract, setModalEditContract] = useState(false);
 
   const [contractImages, setContractImages] = useState([]);
-
+  // console.log(contract);
+  
   useEffect(() => {
     const getData = async () => {
       await GetContractDetailAPi(tokenStore, contractId)
@@ -311,7 +314,7 @@ const EditContractInfor = () => {
       amenityIds: eachAmenityIds,
       tenantIds: eachTenantIds,
     };
-    console.log(data);
+    // console.log(data,'dataaaa');
     
     await PutContractAPi(tokenStore, data, contractId)
       .then(async (res: any) => {

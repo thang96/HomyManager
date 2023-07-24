@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  Platform,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetUserAPi} from '../../apis/homeApi/userApi';
@@ -20,8 +21,12 @@ import CustomModalNotify from '../../components/commonComponent/CustomModalNotif
 import {GetHomeScreenInforApi} from '../../apis/homeApi/homeInforApi';
 import {reloadState} from '../../store/slices/reloadSlice';
 import useKeyboard from '../../hooks/useKeyboard';
-import { NotificationServices, requestUserPermission } from '../../utils/PushNotification';
+import {
+  NotificationServices,
+  requestUserPermission,
+} from '../../utils/PushNotification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {PostNotificationDeviceApi} from '../../apis/homeApi/notificationDeviceApi';
 
 const HomeScreen = () => {
   const navigation: any = useNavigation();
@@ -35,36 +40,62 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
   const keyboard = useKeyboard();
-  
-  //   console.log(userStore?.avatarImage?.fileUrl);
+  const device = Platform.OS === 'android' ? 'android' : 'ios';
+
   useEffect(() => {
-    const getData = async () => {
-      // let fcmToken= await AsyncStorage.getItem('fcmToken')
-      // console.log(fcmToken);
-      
-      if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
-        await GetHomeScreenInforApi(tokenStore)
-          .then((res: any) => {
-            if (res?.status == 200) {
-              setHomeInfor(res?.data);
-            }
-          })
-          .catch(error => console.log(error));
-        await GetUserAPi(tokenStore)
-          .then((res: any) => {
-            if (res?.status == 200) {
-              setLoading(false);
-              dispatch(updateUser(res?.data));
-            }
-          })
-          .catch(error => console.log(error));
-      }
-    };
     getData();
     requestUserPermission();
     NotificationServices();
+    registerNotification();
   }, [reload]);
-  
+
+  const getData = async () => {
+    // let fcmToken= await AsyncStorage.getItem('fcmToken')
+    // console.log(fcmToken);
+
+    if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
+      await GetHomeScreenInforApi(tokenStore)
+        .then((res: any) => {
+          if (res?.status == 200) {
+            setHomeInfor(res?.data);
+          }
+        })
+        .catch(error => console.log(error));
+      await GetUserAPi(tokenStore)
+        .then((res: any) => {
+          if (res?.status == 200) {
+            setLoading(false);
+            dispatch(updateUser(res?.data));
+          }
+        })
+        .catch(error => console.log(error));
+    }
+  };
+
+  const registerNotification = async () => {
+    await AsyncStorage.getItem('fcmToken')
+      .then(async fcmToken => {
+        // console.log(fcmToken);
+        let data = {
+          token: fcmToken,
+          deviceInfo: device,
+          deviceName: device,
+        };
+        await PostNotificationDeviceApi(tokenStore, data)
+          .then(res => {
+            if (res?.status === 200) {
+              // console.log('ok');
+            }
+          })
+          .catch(function (error) {
+            // console.log(error);
+          });
+      })
+      .catch(function (error) {
+        // console.log(error);
+      });
+  };
+
   return (
     <View style={styles.container}>
       {loading && <LoadingComponent modalVisible={loading} />}
