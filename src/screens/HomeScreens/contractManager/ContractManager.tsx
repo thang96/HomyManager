@@ -227,7 +227,7 @@ const ContractManager = () => {
                       navigation.navigate('ContractDetail', item?.id)
                     }
                     pressEdit={() =>
-                      navigation.navigate('EditContract', item?.id)
+                      navigation.navigate('EditContractInfor', item?.id)
                     }
                     pressLiquidation={() => {
                       setSelectContract(item);

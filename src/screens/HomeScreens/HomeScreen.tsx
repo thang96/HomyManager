@@ -20,6 +20,8 @@ import CustomModalNotify from '../../components/commonComponent/CustomModalNotif
 import {GetHomeScreenInforApi} from '../../apis/homeApi/homeInforApi';
 import {reloadState} from '../../store/slices/reloadSlice';
 import useKeyboard from '../../hooks/useKeyboard';
+import { NotificationServices, requestUserPermission } from '../../utils/PushNotification';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
   const navigation: any = useNavigation();
@@ -33,9 +35,13 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
   const keyboard = useKeyboard();
+  
   //   console.log(userStore?.avatarImage?.fileUrl);
   useEffect(() => {
     const getData = async () => {
+      // let fcmToken= await AsyncStorage.getItem('fcmToken')
+      // console.log(fcmToken);
+      
       if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
         await GetHomeScreenInforApi(tokenStore)
           .then((res: any) => {
@@ -55,8 +61,10 @@ const HomeScreen = () => {
       }
     };
     getData();
+    requestUserPermission();
+    NotificationServices();
   }, [reload]);
-
+  
   return (
     <View style={styles.container}>
       {loading && <LoadingComponent modalVisible={loading} />}

@@ -300,9 +300,9 @@ const EditContractInfor = () => {
       startDate: contract?.startDate,
       endDate: contract?.endDate,
       startChargeDate: contract?.startChargeDate,
-      paymentDuration: parseInt(`${contract?.paymentDuration}`),
-      leasingFee: parseInt(`${validateNumber(`${contract?.leasingFee}`)}`),
-      depositMoney: parseInt(`${validateNumber(`${contract?.depositMoney}`)}`),
+      paymentDuration: parseInt(`${contract?.paymentDuration ??0}`),
+      leasingFee: parseInt(`${validateNumber(`${contract?.leasingFee ?? 0}`)}`),
+      depositMoney: parseInt(`${validateNumber(`${contract?.depositMoney ??0}`)}`),
       description: contract?.description ?? '',
       termAndCondition: contract?.termAndCondition ?? '',
       status: contract?.status,
@@ -311,7 +311,8 @@ const EditContractInfor = () => {
       amenityIds: eachAmenityIds,
       tenantIds: eachTenantIds,
     };
-
+    console.log(data);
+    
     await PutContractAPi(tokenStore, data, contractId)
       .then(async (res: any) => {
         if (res?.status == 200) {
@@ -522,7 +523,7 @@ const EditContractInfor = () => {
         <TextTitleComponent
           label={'Điều khoản hợp đồng'}
           labelButton={'Xem chi tiết'}
-          onPress={() => navigation.navigate('DetailedContractTerms')}
+          onPress={() => navigation.navigate('ContractTermsDetail')}
         />
         {StraightLine()}
 
@@ -530,7 +531,7 @@ const EditContractInfor = () => {
           label={'Danh sách người ở'}
           labelButton={'Thêm'}
           icon={icons.ic_plus}
-          onPress={() => navigation.navigate('TenantList')}
+          onPress={() => navigation.navigate('ChooseTenant')}
         />
         <View>
           <ScrollView horizontal={true} style={{width: '100%'}}>
