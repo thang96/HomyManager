@@ -32,7 +32,7 @@ export const NotificationServices = () => {
     );
   });
   //App on foreground state
-  messaging().onMessage(async (remoteMessage: { notification: { title: any; body: any; }; }) => {
+  messaging().onMessage(async (remoteMessage: any) => {
     Alert.alert(
       JSON.stringify(remoteMessage?.notification?.title),
       JSON.stringify(remoteMessage?.notification?.body),
@@ -41,7 +41,7 @@ export const NotificationServices = () => {
   //Check whether an initial notification is available
   messaging()
     .getInitialNotification()
-    .then((remoteMessage: { notification: { body: any; }; }) => {
+    .then((remoteMessage: any) => {
       if (remoteMessage) {
         console.log(
           'Notification caused app to open from quit state:',

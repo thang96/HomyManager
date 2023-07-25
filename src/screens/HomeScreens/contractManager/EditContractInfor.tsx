@@ -60,9 +60,9 @@ const EditContractInfor = () => {
   const serviceSelect = useSelector(serviceState);
   const amenitySelect = useSelector(amenityState);
   const tenantSelect = useSelector(tenantState);
-  console.log(tokenStore);
-  console.log(contractId);
-  
+  // console.log(tokenStore);
+  // console.log(contractId);
+
   const [modalStartDate, setModalStartDate] = useState(false);
   const [modalEndDate, setModalEndDate] = useState(false);
   const [modalStartChargeDate, setModalStartChargeDate] = useState(false);
@@ -71,8 +71,8 @@ const EditContractInfor = () => {
   const [modalEditContract, setModalEditContract] = useState(false);
 
   const [contractImages, setContractImages] = useState([]);
-  // console.log(contract);
-  
+  // console.log(contract?.chargeServices);
+
   useEffect(() => {
     const getData = async () => {
       await GetContractDetailAPi(tokenStore, contractId)
@@ -109,6 +109,7 @@ const EditContractInfor = () => {
         let eachItem = {...item};
         let newItem = {
           chargeService: {
+            id: eachItem?.id,
             calculateUnit: eachItem?.calculateUnit,
             description: eachItem?.description,
             fee: eachItem?.fee,
@@ -286,7 +287,7 @@ const EditContractInfor = () => {
     let eachTenantIds: any = [];
     contract?.chargeServices?.map((item: any, index: number) => {
       let serviceId = {
-        id: item?.id,
+        id: item?.chargeService?.id,
         initUsageAmount: parseInt(
           `${validateNumber(`${item?.initUsageAmount ?? '0'}`)}`,
         ),
@@ -303,9 +304,11 @@ const EditContractInfor = () => {
       startDate: contract?.startDate,
       endDate: contract?.endDate,
       startChargeDate: contract?.startChargeDate,
-      paymentDuration: parseInt(`${contract?.paymentDuration ??0}`),
+      paymentDuration: parseInt(`${contract?.paymentDuration ?? 0}`),
       leasingFee: parseInt(`${validateNumber(`${contract?.leasingFee ?? 0}`)}`),
-      depositMoney: parseInt(`${validateNumber(`${contract?.depositMoney ??0}`)}`),
+      depositMoney: parseInt(
+        `${validateNumber(`${contract?.depositMoney ?? 0}`)}`,
+      ),
       description: contract?.description ?? '',
       termAndCondition: contract?.termAndCondition ?? '',
       status: contract?.status,
@@ -315,12 +318,18 @@ const EditContractInfor = () => {
       tenantIds: eachTenantIds,
     };
     // console.log(data,'dataaaa');
-    
+
     await PutContractAPi(tokenStore, data, contractId)
       .then(async (res: any) => {
         if (res?.status == 200) {
           if (contractImages.length > 0) {
-            await PostImageContractApi(tokenStore, contractId, contractImages)
+            let photo: any = [];
+            contractImages.map((image, index) => {
+              if (typeof image !== 'string') {
+                photo.push(image);
+              }
+            });
+            await PostImageContractApi(tokenStore, contractId, photo)
               .then((res: any) => {
                 if (res?.status == 200) {
                   dispatch(updateReloadStatus('EditContractSuccess'));
@@ -329,9 +338,12 @@ const EditContractInfor = () => {
                 }
               })
               .catch(error => {
-                console.log(error);
+                console.log(error, 'sendImageError');
               });
           }
+          dispatch(updateReloadStatus('EditContractSuccess'));
+          navigation.goBack();
+          setLoading(false);
         } else {
           Alert.alert('Lỗi', 'Có lỗi sảy ra,vui lòng thử lại !');
           setLoading(false);
@@ -557,7 +569,7 @@ const EditContractInfor = () => {
           label={'Dịch vụ có phí'}
           labelButton={'Thêm'}
           icon={icons.ic_plus}
-          onPress={() => navigation.navigate('Service')}
+          onPress={() => navigation.navigate('ChooseService')}
         />
 
         <View>

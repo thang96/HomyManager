@@ -41,7 +41,7 @@ const HomeScreen = () => {
   const tokenStore = useSelector(token);
   const keyboard = useKeyboard();
   const device = Platform.OS === 'android' ? 'android' : 'ios';
-
+  
   useEffect(() => {
     getData();
     requestUserPermission();
@@ -50,8 +50,8 @@ const HomeScreen = () => {
   }, [reload]);
 
   const getData = async () => {
-    let fcmToken= await AsyncStorage.getItem('fcmToken')
-    console.log(fcmToken,'fcmToken');
+    // let fcmToken= await AsyncStorage.getItem('fcmToken')
+    // console.log(fcmToken,'fcmToken');
 
     if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
       await GetHomeScreenInforApi(tokenStore)
