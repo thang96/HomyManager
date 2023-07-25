@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert} from 'react-native';
 
 export const requestUserPermission = async () => {
+  await messaging().registerDeviceForRemoteMessages();
   await messaging().getAPNSToken();
   const authStatus = await messaging().requestPermission();
   const enabled =

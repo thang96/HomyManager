@@ -50,8 +50,8 @@ const HomeScreen = () => {
   }, [reload]);
 
   const getData = async () => {
-    // let fcmToken= await AsyncStorage.getItem('fcmToken')
-    // console.log(fcmToken);
+    let fcmToken= await AsyncStorage.getItem('fcmToken')
+    console.log(fcmToken,'fcmToken');
 
     if (tokenStore != null && tokenStore != undefined && tokenStore != '') {
       await GetHomeScreenInforApi(tokenStore)
