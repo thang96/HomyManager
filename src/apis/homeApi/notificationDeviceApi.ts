@@ -39,6 +39,28 @@ export const PostNotificationDeviceApi = (token: string,data:any) => {
   });
 };
 
+export const DeleteNotificationFromDeviceApi = (token: string,deviceInfo:string) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`${BASEURL}/notification-devices`, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          device: deviceInfo,
+        },
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(errors => {
+        reject(errors);
+      });
+  });
+};
+
 export const DeleteNotificationDeviceApi = (token: string,id:string) => {
   return new Promise((resolve, reject) => {
     axios

@@ -27,6 +27,7 @@ import {
 } from '../../utils/PushNotification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PostNotificationDeviceApi} from '../../apis/homeApi/notificationDeviceApi';
+import DeviceInfo from 'react-native-device-info';
 
 const HomeScreen = () => {
   const navigation: any = useNavigation();
@@ -41,7 +42,8 @@ const HomeScreen = () => {
   const tokenStore = useSelector(token);
   const keyboard = useKeyboard();
   const device = Platform.OS === 'android' ? 'android' : 'ios';
-  
+  const deviceId = DeviceInfo.getDeviceId();
+
   useEffect(() => {
     getData();
     requestUserPermission();
@@ -78,13 +80,13 @@ const HomeScreen = () => {
         // console.log(fcmToken);
         let data = {
           token: fcmToken,
-          deviceInfo: device,
+          deviceInfo: deviceId,
           deviceName: device,
         };
         await PostNotificationDeviceApi(tokenStore, data)
-          .then(res => {
+          .then((res: any) => {
             if (res?.status === 200) {
-              // console.log('ok');
+              console.log('ok');
             }
           })
           .catch(function (error) {

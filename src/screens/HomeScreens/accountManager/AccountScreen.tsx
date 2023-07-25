@@ -16,6 +16,8 @@ import {token} from '../../../store/slices/tokenSlice';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {updateAppStatus} from '../../../store/slices/appStatusSlice';
+import DeviceInfo from 'react-native-device-info';
+import {DeleteNotificationFromDeviceApi} from '../../../apis/homeApi/notificationDeviceApi';
 
 const AccountScreen = () => {
   const navigation: any = useNavigation();
@@ -24,6 +26,7 @@ const AccountScreen = () => {
   const stateLoading = useSelector(reloadState);
   const tokenStore = useSelector(token);
   const [loading, setLoading] = useState(true);
+  const deviceId = DeviceInfo.getDeviceId();
   // console.log(userStore);
   useEffect(() => {
     const getData = async () => {
@@ -40,6 +43,25 @@ const AccountScreen = () => {
     };
     getData();
   }, [stateLoading, userStore]);
+
+  const handleLogout = async () => {
+    setLoading(true);
+    await DeleteNotificationFromDeviceApi(tokenStore, deviceId)
+      .then(async (res: any) => {
+        if (res?.status === 200) {
+          await AsyncStorage.removeItem('token').then(async () => {
+            await AsyncStorage.removeItem('user').then(() => {
+              dispatch(updateReloadStatus('logOut'));
+              dispatch(updateAppStatus('rejects'));
+              setLoading(false);
+            });
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -108,14 +130,7 @@ const AccountScreen = () => {
           styleButton={[styles.viewShadow, {marginTop: 20}]}
           icon={icons.ic_logOut}
           label={'Đăng xuất'}
-          onPress={async () => {
-            await AsyncStorage.removeItem('token').then(async () => {
-              await AsyncStorage.removeItem('user').then(() => {
-                dispatch(updateReloadStatus('logOut'));
-                dispatch(updateAppStatus('rejects'));
-              });
-            });
-          }}
+          onPress={() => handleLogout()}
         />
       </ScrollView>
     </View>
