@@ -601,7 +601,7 @@ const EditContractInfor = () => {
           label={'Tiện ích miễn phí'}
           labelButton={'Thêm'}
           icon={icons.ic_plus}
-          onPress={() => navigation.navigate('Utilities')}
+          onPress={() => navigation.navigate('ChooseAmenity')}
         />
 
         <View>
