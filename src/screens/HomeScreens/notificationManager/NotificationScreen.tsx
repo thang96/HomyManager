@@ -11,60 +11,75 @@ import {
 import AppBarComponent from '../../../components/appBarComponent/AppBarComponent';
 import ButtonComponent from '../../../components/commonComponent/ButtonComponent';
 import {colors, icons, images} from '../../../constants';
+import {useSelector} from 'react-redux';
+import {reloadState} from '../../../store/slices/reloadSlice';
+import {token} from '../../../store/slices/tokenSlice';
+import {GetListNotificationApi} from '../../../apis/homeApi/notificationApis';
+import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
 
 const NotificationScreen = (props: any) => {
   const navigation: any = useNavigation();
-  const [data, setData] = useState(FAKE_DATA);
+  const reload = useSelector(reloadState);
+  const tokenStorage = useSelector(token);
+  const [listNotifi, setListNotifi] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getData();
+  }, [reload]);
+  // console.log(listNotifi);
+
+  const getData = async () => {
+    await GetListNotificationApi(tokenStorage)
+      .then((res: any) => {
+        if (res?.status == 200) {
+          setListNotifi(res?.data);
+          setLoading(false);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   const renderItem = (item: any, index: number) => {
     return (
-      <View style={{marginBottom: 10}}>
-        <Text style={styles.time}>{item?.time}</Text>
-        {item?.event.map((item: any, index: number) => {
-          return (
-            <TouchableOpacity
-              onPress={() => navigation.navigate('DetailNotification', item)}
-              key={`${index.toString()}`}
-              style={[styles.buttonRender, styles.shadowView]}>
-              <ButtonComponent
-                disabled={true}
-                icon={icons.ic_bell}
-                styleIcon={{tintColor: colors.mainColor, width: 22, height: 22}}
-                styleButton={styles.viewBell}
-              />
-              <View>
-                <Text style={styles.title}>{item?.title}</Text>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={styles.duration}>{`${item?.time}  `}</Text>
-                  <Text style={styles.duration}>{item?.day}</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+      <View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('DetailNotification', item)}
+          style={[styles.buttonRender, styles.shadowView]}>
+          <ButtonComponent
+            disabled={true}
+            icon={icons.ic_bell}
+            styleIcon={{tintColor: colors.mainColor, width: 22, height: 22}}
+            styleButton={styles.viewBell}
+          />
+          <View>
+            <Text style={styles.title}>{item?.title}</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text numberOfLines={1} style={styles.duration}>{`${item?.description}  `}</Text>
+              {/* <Text style={styles.duration}>{item?.day}</Text> */}
+            </View>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   };
   return (
     <View style={styles.container}>
+      {loading && <LoadingComponent modalVisible={loading} />}
       <AppBarComponent
         iconLeft={icons.ic_back}
         pressIconLeft={() => navigation.goBack()}
         label={'Thông báo'}
       />
-      <ScrollView style={{paddingHorizontal: 10, paddingTop: 10}}>
-        <View>
-          <ScrollView horizontal={true} style={{width: '100%'}}>
-            {data && (
-              <FlatList
-                data={data}
-                keyExtractor={key => key?.time}
-                renderItem={({item, index}) => renderItem(item, index)}
-              />
-            )}
-          </ScrollView>
-        </View>
-      </ScrollView>
+      <View style={{paddingHorizontal: 10, flex: 1, paddingTop: 10}}>
+        <FlatList
+          data={listNotifi}
+          keyExtractor={(key: any) => key?.id}
+          renderItem={({item, index}) => renderItem(item, index)}
+        />
+      </View>
     </View>
   );
 };
@@ -103,46 +118,3 @@ const styles = StyleSheet.create({
   duration: {fontSize: 13, fontWeight: '400', color: '#374047'},
 });
 export default NotificationScreen;
-
-const FAKE_DATA = [
-  {
-    time: '03-10-2023',
-    event: [
-      {
-        title: 'Tiêu đề thông báo',
-        time: '16h30',
-        day: '03-10-2023',
-        content: 'Test render nội dung thông báo',
-      },
-      {
-        title: 'Tiêu đề thông báo',
-        time: '20h30',
-        day: '03-10-2023',
-        content: 'Test render nội dung thông báo',
-      },
-    ],
-  },
-  {
-    time: '02-10-2023',
-    event: [
-      {
-        title: 'Tiêu đề thông báo',
-        time: '9h30',
-        day: '02-10-2023',
-        content: 'Test render nội dung thông báo',
-      },
-      {
-        title: 'Tiêu đề thông báo',
-        time: '10h30',
-        day: '02-10-2023',
-        content: 'Test render nội dung thông báo',
-      },
-      {
-        title: 'Tiêu đề thông báo',
-        time: '12h30',
-        day: '02-10-2023',
-        content: 'Test render nội dung thông báo',
-      },
-    ],
-  },
-];

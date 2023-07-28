@@ -16,12 +16,12 @@ import ComponentInput from '../../components/commonComponent/ComponentInput';
 import CustomModalNotify from '../../components/commonComponent/CustomModalNotify';
 import {AuthenticationRegisterAPi} from '../../apis/loginApi/loginApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch } from 'react-redux';
-import { updateReloadStatus } from '../../store/slices/reloadSlice';
+import {useDispatch} from 'react-redux';
+import {updateReloadStatus} from '../../store/slices/reloadSlice';
 
 const RegisterScreen = () => {
   const navigation: any = useNavigation();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [modalRegister, setModalRegister] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -58,7 +58,7 @@ const RegisterScreen = () => {
             {
               text: 'OK',
               onPress: async () => {
-                setLoading(true)
+                setLoading(true);
                 try {
                   let data: any = {
                     username: userName,
@@ -67,7 +67,7 @@ const RegisterScreen = () => {
                   const jsonValue = JSON.stringify(data);
                   await AsyncStorage.setItem('user', jsonValue);
                   navigation.navigate('LoginScreen');
-                  dispatch(updateReloadStatus('registerSuccess'))
+                  dispatch(updateReloadStatus('registerSuccess'));
                   setLoading(false);
                 } catch (error) {
                   console.log(error);
@@ -78,7 +78,10 @@ const RegisterScreen = () => {
         }
       })
       .catch(error => {
-        console.log(error);
+        Alert.alert(
+          'Đăng ký thất bại',
+          'Đã có lỗi sảy ra,vui lòng liên hệ admin để được hỗ trợ',
+        );
       });
   };
 

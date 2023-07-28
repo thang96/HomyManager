@@ -19,7 +19,7 @@ const InvoiceClosingManager = () => {
   const [loading, setLoading] = useState(true);
   const [listInvoiceClosing, setListInvoiceClosing] = useState<any>([]);
   const [listInvoiceUnClosing, setListInvoiceUnClosing] = useState<any>([]);
-  // console.log(listInvoiceUnClosing[0]?.contract?.unit);
+  // console.log(tokenStore);
   useEffect(() => {
     const getData = async () => {
       await GetAllInvoiceUnClosingsApi(tokenStore)
@@ -42,7 +42,7 @@ const InvoiceClosingManager = () => {
           }
         })
         .catch(error => {
-          console.log(error);
+          console.log(error,'get list InvoiceUnClosings error');
         });
     };
     getData();

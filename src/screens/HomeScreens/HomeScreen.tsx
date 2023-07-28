@@ -43,7 +43,7 @@ const HomeScreen = () => {
   const keyboard = useKeyboard();
   const device = Platform.OS === 'android' ? 'android' : 'ios';
   const deviceId = DeviceInfo.getDeviceId();
-
+  // console.log(tokenStore);
   useEffect(() => {
     getData();
     requestUserPermission();
@@ -86,7 +86,7 @@ const HomeScreen = () => {
         await PostNotificationDeviceApi(tokenStore, data)
           .then((res: any) => {
             if (res?.status === 200) {
-              console.log('ok');
+              // console.log('ok');
             }
           })
           .catch(function (error) {
