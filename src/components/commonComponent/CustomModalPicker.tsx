@@ -8,28 +8,28 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Dimensions,
 } from 'react-native';
 import {colors, icons} from '../../constants';
 import ButtonComponent from './ButtonComponent';
 import useKeyboard from '../../hooks/useKeyboard';
+import {removeAccents} from '../../utils/common';
 
-const CustomModalPicker = (props:any) => {
+const CustomModalPicker = (props: any) => {
   const {modalVisible, onRequestClose, onPressItem, data, pressClose} = props;
   const [search, setSearch] = useState('');
-  const keyboard=useKeyboard()
-
- 
+  const keyboard = useKeyboard();
 
   const filteredItem = () =>
-    data.filter((eachVoucher:any) =>
+    data.filter((eachVoucher: any) =>
       eachVoucher?.name
-        ? eachVoucher?.name
+        ? removeAccents(`${eachVoucher?.name}`)
             .toLocaleLowerCase()
-            .includes(search.toLocaleLowerCase())
+            .includes(removeAccents(`${search}`).toLocaleLowerCase())
         : null,
     );
 
-  const renderItem = (item:any, index:number) => {
+  const renderItem = (item: any, index: number) => {
     return (
       <TouchableOpacity onPress={() => onPressItem(item)} style={styles.button}>
         <Text style={styles.text}>{item?.name}</Text>
@@ -50,6 +50,13 @@ const CustomModalPicker = (props:any) => {
             styleIcon={styles.iconClose}
             onPress={pressClose}
           />
+
+          <FlatList
+            style={{marginTop: 20}}
+            data={filteredItem()}
+            keyExtractor={(item, index) => `${index.toString()}`}
+            renderItem={({item, index}) => renderItem(item, index)}
+          />
           <View style={styles.input}>
             {!keyboard && search == '' && (
               <Image source={icons.ic_search} style={styles.iconSearch} />
@@ -62,17 +69,12 @@ const CustomModalPicker = (props:any) => {
               onChangeText={text => setSearch(text)}
             />
           </View>
-          <FlatList
-            style={{marginTop: 20}}
-            data={filteredItem()}
-            keyExtractor={(item, index) => `${index.toString()}`}
-            renderItem={({item, index}) => renderItem(item, index)}
-          />
         </View>
       </Modal>
     </View>
   );
 };
+const heightView = Dimensions.get('screen').height / 2;
 const styles = StyleSheet.create({
   container: {
     height: '100%',
@@ -83,7 +85,7 @@ const styles = StyleSheet.create({
   },
   eachContainer: {
     backgroundColor: 'white',
-    height: 350,
+    height: heightView,
     position: 'absolute',
     bottom: 0,
     width: '100%',

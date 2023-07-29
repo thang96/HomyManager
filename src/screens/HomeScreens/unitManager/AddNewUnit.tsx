@@ -28,6 +28,7 @@ import ComponentInput from '../../../components/commonComponent/ComponentInput';
 import ComponentButton from '../../../components/commonComponent/ComponentButton';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
+import { GetListHausesApi, HauseDetailApi } from '../../../apis/homeApi/houseApi';
 
 const AddNewUnit = () => {
   const navigation: any = useNavigation();
@@ -51,17 +52,33 @@ const AddNewUnit = () => {
   const [listService, setListService] = useState<any>([]);
   const [listAmenity, setListAmenity] = useState<any>([]);
 
-  const [loadingRoom, setLoadingRoom] = useState(false);
+  const [loadingRoom, setLoadingRoom] = useState(true);
   const [modalAddRoom, setModalAddRoom] = useState(false);
   const [modalCamera, setModalCamera] = useState(false);
   const [modalUnitType, setModalUnitType] = useState(false);
+
+
 
   useEffect(() => {
     LogBox.ignoreAllLogs();
     dispatch(updateAmenity([]));
     dispatch(updateService([]));
     dispatch(updateTenant([]));
+    getDataHause()
   }, []);
+
+  const getDataHause = async () => {
+    await HauseDetailApi(tokenStore, hauseId)
+      .then((res: any) => {
+        if (res?.status === 200) {
+          // console.log(res?.data);
+          setListService(res?.data?.chargeServices)
+          setListAmenity(res?.data?.amenities)
+          setLoadingRoom(false);
+        }
+      })
+      .catch(error => console.error(error));
+  };
 
   useMemo(() => {
     setListService(serviceSelect);

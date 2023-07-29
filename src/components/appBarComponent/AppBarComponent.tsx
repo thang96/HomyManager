@@ -1,10 +1,11 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {colors} from '../../constants';
 import ButtonComponent from '../commonComponent/ButtonComponent';
 
-const AppBarComponent = (props:any) => {
+const AppBarComponent = (props: any) => {
   const {
+    iconHome,
     iconLeft,
     label,
     iconRight,
@@ -15,15 +16,26 @@ const AppBarComponent = (props:any) => {
   } = props;
   return (
     <View style={styles.styleAppBar}>
-      {iconLeft && (
-        <ButtonComponent
-          styleButton={styles.styleButton}
-          icon={iconLeft}
-          styleIcon={styles.icon}
-          onPress={pressIconLeft}
-        />
-      )}
-      {label && <Text style={styles.label}>{label}</Text>}
+      <TouchableOpacity
+        style={{flexDirection: 'row', alignItems: 'center', flex: 1}}
+        onPress={pressIconLeft}>
+        {iconLeft && (
+          <ButtonComponent
+            disabled={true}
+            styleButton={styles.styleButton}
+            icon={iconLeft}
+            styleIcon={styles.icon}
+          />
+        )}
+        {iconHome && (
+          <ButtonComponent
+            icon={iconHome}
+            styleIcon={styles.iconHome}
+            disabled={true}
+          />
+        )}
+        {label && <Text style={styles.label}>{label}</Text>}
+      </TouchableOpacity>
       {iconRight && (
         <ButtonComponent
           styleButton={styles.styleButton}
@@ -56,11 +68,11 @@ const styles = StyleSheet.create({
   label: {
     color: 'white',
     marginLeft: 10,
-    flex: 1,
     fontSize: 16,
     fontWeight: '600',
     letterSpacing: -0.5,
   },
   styleButton: {width: 25, height: 56},
+  iconHome: {width: 24, height: 24},
 });
 export default AppBarComponent;

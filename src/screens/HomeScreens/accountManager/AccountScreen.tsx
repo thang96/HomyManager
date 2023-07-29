@@ -67,7 +67,7 @@ const AccountScreen = () => {
     <View style={styles.container}>
       {loading && <LoadingComponent />}
       <AppBarComponent
-        iconLeft={icons.ic_logoApp}
+        iconHome={icons.ic_logoApp}
         label={'Tài khoản'}
         iconRight={icons.ic_bell}
         pressIconRight={() => navigation.navigate('NotificationScreen')}

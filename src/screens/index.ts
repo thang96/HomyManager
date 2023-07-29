@@ -35,6 +35,7 @@ import UnitDetail from './HomeScreens/unitManager/UnitDetail';
 import EditUnitInfor from './HomeScreens/unitManager/EditUnitInfor';
 import AddNewUnit from './HomeScreens/unitManager/AddNewUnit';
 import QuickAddUnit from './HomeScreens/unitManager/QuickAddUnit';
+import EmptyUnitManager from './HomeScreens/unitManager/EmptyUnitManager';
 // BankAccountManager -------------------------------
 import BankAccountManager from './HomeScreens/bankAccountManager/BankAccountManager';
 import BankAccountDetal from './HomeScreens/bankAccountManager/BankAccountDetal';
@@ -95,6 +96,7 @@ export {
   EditUnitInfor,
   AddNewUnit,
   QuickAddUnit,
+  EmptyUnitManager,
   // AccountScreen -------------------------------
   BankAccountManager,
   BankAccountDetal,

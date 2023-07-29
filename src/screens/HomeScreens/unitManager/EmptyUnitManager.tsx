@@ -26,7 +26,7 @@ import {
   updateReloadStatus,
 } from '../../../store/slices/reloadSlice';
 
-const UnitManager = () => {
+const EmptyUnitManager = () => {
   const navigation: any = useNavigation();
   const route = useRoute();
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ const UnitManager = () => {
   const hauseId: any = route.params;
   const statusLoading = useSelector(reloadState);
   // console.log(listRoomOfFloor);
-  
+
   useEffect(() => {
     setLoading(true);
     const getListUnit = async () => {
@@ -48,8 +48,8 @@ const UnitManager = () => {
             // console.log(res?.data?.numberOfFloor);
             setHauseInfor(res?.data);
             let listFloor = [];
-            for (let index = 0; index < res?.data?.numberOfFloor+1; index++) {
-              let obj = {floorNumber: index , floorInfor: []};
+            for (let index = 0; index < res?.data?.numberOfFloor + 1; index++) {
+              let obj = {floorNumber: index, floorInfor: []};
               listFloor.push(obj);
             }
             setListRoomOfFloor(listFloor);
@@ -68,12 +68,17 @@ const UnitManager = () => {
         .then((res: any) => {
           if (res?.status == 200) {
             let response = res?.data;
-            
+            let listEmptyRoom: any[] = [];
+            response.forEach((element: any) => {
+              if (element?.status === 'Trống') {
+                listEmptyRoom.push(element);
+              }
+            });
             let eachListFloors = [...listRoomOfFloor];
-            for (let index = 0; index < response.length; index++) {
-              const element = response[index];
+            for (let index = 0; index < listEmptyRoom.length; index++) {
+              const element = listEmptyRoom[index];
               const floorNumber = element?.floorNumber;
-              eachListFloors[floorNumber ]?.floorInfor?.push(element);
+              eachListFloors[floorNumber]?.floorInfor?.push(element);
             }
             setListFloors(eachListFloors);
             setLoading(false);
@@ -153,7 +158,7 @@ const UnitManager = () => {
             label={'Thêm phòng'}
             onPress={() => {
               dispatch(updateReloadStatus(false));
-              navigation.navigate('AddNewUnit', hauseId);
+              navigation.navigate('AddNewUnit', route.params);
             }}
           />
         </>
@@ -246,4 +251,4 @@ const CustomFloorInfor = (props: any) => {
   );
 };
 
-export default UnitManager;
+export default EmptyUnitManager;

@@ -54,6 +54,8 @@ const InvoiceClosingManager = () => {
       <AppBarComponent
         iconLeft={icons.ic_back}
         pressIconLeft={() => navigation.goBack()}
+        iconRight={icons.ic_bell}
+        pressIconRight={() => navigation.navigate('NotificationScreen')}
         label={'Chốt dịch vụ'}
       />
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text, TextInput} from 'react-native';
 
-const ComponentInput = (props:any) => {
+const ComponentInput = (props: any) => {
   const {
     type,
     title,
@@ -54,7 +54,8 @@ const ComponentInput = (props:any) => {
       {type == 'inputNote' && (
         <View style={styles.viewInput}>
           <TextInput
-            multiline
+            style={{flex:1, textAlignVertical: 'top'}}
+            multiline={true}
             placeholder={placeholder}
             keyboardType={keyboardType}
             placeholderTextColor={'grey'}

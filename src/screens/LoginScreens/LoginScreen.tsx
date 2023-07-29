@@ -72,7 +72,7 @@ const LoginScreen = () => {
         source={images.im_backgroundLogin}
         style={styles.container}>
         {loading && <LoadingComponent modalVisible={loading} />}
-        <ScrollView style={{paddingTop: 220}}>
+        <View style={styles.viewCenter}>
           <Text style={styles.title}>Đăng nhập/ Đăng ký</Text>
           <View style={{marginTop: 30}}>
             <Text style={styles.content}>Tài khoản</Text>
@@ -107,15 +107,9 @@ const LoginScreen = () => {
             label={'Quên mật khẩu'}
           />
 
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              marginTop: 10,
-            }}>
+          <View style={styles.viewRegister}>
             <Text style={{fontSize: 13, color: '#7F8A93'}}>
-              Không có tài khoản?
+              {'Không có tài khoản?  '}
             </Text>
             <ButtonComponent
               styleLabel={{color: colors.mainColor, fontWeight: '600'}}
@@ -129,8 +123,7 @@ const LoginScreen = () => {
             styleLabel={styles.styleLabel}
             onPress={() => loginFuntion()}
           />
-          <View style={{height: 500}} />
-        </ScrollView>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -140,7 +133,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 10,
-    paddingTop: 50,
+    alignItems: 'center',
+    zIndex:1
+  },
+  viewCenter: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 30,
+    zIndex:2
   },
   title: {
     color: colors.mainColor,
@@ -149,6 +149,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   content: {fontSize: 15, color: '#374047'},
+  viewRegister: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginTop: 10,
+  },
   styleViewTextInput: {
     height: 48,
     width: '100%',

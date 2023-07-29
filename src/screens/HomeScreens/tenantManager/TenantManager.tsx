@@ -14,6 +14,7 @@ import {
   updateReloadStatus,
 } from '../../../store/slices/reloadSlice';
 import useKeyboard from '../../../hooks/useKeyboard';
+import { userInfor } from '../../../store/slices/userInforSlice';
 
 const TenantManager = () => {
   const navigation: any = useNavigation();
@@ -24,6 +25,7 @@ const TenantManager = () => {
   const [listTenants, setListTenants] = useState([]);
   const tokenStore = useSelector(token);
   const statusLoading = useSelector(reloadState);
+  const userStore = useSelector(userInfor);
 
   useEffect(() => {
     const getListTenants = async () => {
@@ -56,9 +58,14 @@ const TenantManager = () => {
       <AppBarSearchComponent
         iconLeft={icons.ic_back}
         label={'Quản lý người thuê'}
-        // iconRight={icons.ic_bell}
-        // pressIconRight={() => navigation.navigate('NotificationScreen')}
-        // iconSecondRight={icons.ic_moreOption}
+        iconSecondRight={
+          userStore?.avatarImage?.fileUrl
+            ? userStore?.avatarImage?.fileUrl
+            : icons.ic_user
+        }
+        pressSeccodIconRight={() =>
+          navigation.navigate('StackAccountNavigatior')
+        }
         keyboard={keyboard}
         textSearch={textSearch}
         value={textSearch}

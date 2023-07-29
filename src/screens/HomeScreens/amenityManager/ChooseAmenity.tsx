@@ -8,14 +8,17 @@ import SuggestComponent from '../../../components/commonComponent/SuggestCompone
 import CustomChecker from '../../../components/commonComponent/CustomChecker';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
 import {useDispatch, useSelector} from 'react-redux';
-import { updateAmenity} from '../../../store/slices/amenitySlice';
+import {updateAmenity} from '../../../store/slices/amenitySlice';
 import {GetListAmenitysApi} from '../../../apis/homeApi/amenityApi';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
-import {reloadState, updateReloadStatus} from '../../../store/slices/reloadSlice';
+import {
+  reloadState,
+  updateReloadStatus,
+} from '../../../store/slices/reloadSlice';
 import {token} from '../../../store/slices/tokenSlice';
 
 const ChooseAmenity = () => {
-  const navigation:any = useNavigation();
+  const navigation: any = useNavigation();
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
   const loadingState = useSelector(reloadState);
@@ -25,11 +28,11 @@ const ChooseAmenity = () => {
   useEffect(() => {
     const getListAmenity = async () => {
       await GetListAmenitysApi(tokenStore)
-        .then((res:any) => {
+        .then((res: any) => {
           if (res?.status == 200) {
             let eachData = res?.data;
-            let eachArray:any = [];
-            eachData.map((data:any, index:number) => {
+            let eachArray: any = [];
+            eachData.map((data: any, index: number) => {
               let newData = {...data, isCheck: false};
               eachArray.push(newData);
             });
@@ -42,10 +45,10 @@ const ChooseAmenity = () => {
     getListAmenity();
   }, [loadingState]);
 
-  const renderListService = (item:any, index:number) => {
+  const renderListService = (item: any, index: number) => {
     const updateItem = () => {
-      let newList:any = [...listAmenitys];
-      let itemCheck:any = newList[index];
+      let newList: any = [...listAmenitys];
+      let itemCheck: any = newList[index];
       let newItem = {
         ...itemCheck,
         isCheck: itemCheck?.isCheck == false ? true : false,
@@ -63,9 +66,9 @@ const ChooseAmenity = () => {
   };
 
   const updateAmenitys = () => {
-    let amenitys:any = [];
+    let amenitys: any = [];
     for (let index = 0; index < listAmenitys.length; index++) {
-      const element:any = listAmenitys[index];
+      const element: any = listAmenitys[index];
       if (element?.isCheck == true) {
         amenitys.push(element);
       }
@@ -94,16 +97,16 @@ const ChooseAmenity = () => {
           <FlatList
             numColumns={2}
             data={listAmenitys}
-            keyExtractor={(key:any) => `${key.id}`}
+            keyExtractor={(key: any) => `${key.id}`}
             renderItem={({item, index}) => renderListService(item, index)}
           />
         ) : null}
       </View>
       <CustomTwoButtonBottom
-        leftLabel={'Lưu'}
-        rightLabel={'Thêm mới'}
-        onPressLeft={() => updateAmenitys()}
-        onPressRight={() => {
+        leftLabel={'Thêm mới'}
+        rightLabel={'Lưu'}
+        onPressRight={() => updateAmenitys()}
+        onPressLeft={() => {
           dispatch(updateReloadStatus('goToUpdateUtilities'));
           navigation.navigate('AddNewAmenity');
         }}

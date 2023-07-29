@@ -113,7 +113,7 @@ const HomeScreen = () => {
         />
       )}
       <AppBarSearchComponent
-        iconLeft={icons.ic_logoApp}
+        iconHome={icons.ic_logoApp}
         label={'Trang chủ'}
         iconRight={icons.ic_bell}
         pressIconRight={() => navigation.navigate('NotificationScreen')}

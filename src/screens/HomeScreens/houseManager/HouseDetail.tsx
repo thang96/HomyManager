@@ -41,24 +41,26 @@ const HouseDetail = () => {
   const [closeTimeValue, setCloseTimeValue] = useState('');
   const [modalDeleteHouse, setModalDeleteHouse] = useState(false);
   const hauseId: any = route.params;
-
+  // console.log(hauseInfor);
+  
   useEffect(() => {
-    const getDataHause = async () => {
-      await HauseDetailApi(tokenStore, hauseId)
-        .then((res: any) => {
-          if (res?.status == 200) {
-            let eachOpenTime = new Date(`${res?.data?.openTime}`);
-            let eachCloseTime = new Date(`${res?.data?.closeTime}`);
-            setOpenTimeValue(eachOpenTime.toLocaleTimeString('en-VN'));
-            setCloseTimeValue(eachCloseTime.toLocaleTimeString('en-VN'));
-            setHauseInfor(res?.data);
-            setLoading(false);
-          }
-        })
-        .catch(error => console.error(error));
-    };
     getDataHause();
   }, [reload]);
+
+  const getDataHause = async () => {
+    await HauseDetailApi(tokenStore, hauseId)
+      .then((res: any) => {
+        if (res?.status == 200) {
+          let eachOpenTime = new Date(`${res?.data?.openTime}`);
+          let eachCloseTime = new Date(`${res?.data?.closeTime}`);
+          setOpenTimeValue(eachOpenTime.toLocaleTimeString('en-VN'));
+          setCloseTimeValue(eachCloseTime.toLocaleTimeString('en-VN'));
+          setHauseInfor(res?.data);
+          setLoading(false);
+        }
+      })
+      .catch(error => console.error(error));
+  };
 
   const renderSevices = (item: any, index: number) => {
     return (
@@ -137,6 +139,7 @@ const HouseDetail = () => {
             icon={icons.ic_key}
             styleImageBG={{tintColor: '#ff8d37'}}
             styleBGIcon={{backgroundColor: '#fff3e9'}}
+            onPress={() => navigation.navigate('EmptyUnitManager', hauseInfor?.id)}
           />
           <CustomOptionBT
             title={'Người'}

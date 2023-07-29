@@ -32,18 +32,19 @@ const HouseManager = () => {
   const tokenStore = useSelector(token);
 
   useEffect(() => {
-    const getData = async () => {
-      await GetListHausesApi(tokenStore)
-        .then((res:any) => {
-          if (res?.status == 200) {
-            setListHauses(res?.data);
-            setLoading(false);
-          }
-        })
-        .catch(error => console.log(error));
-    };
     getData();
   }, [reload]);
+  
+  const getData = async () => {
+    await GetListHausesApi(tokenStore)
+      .then((res:any) => {
+        if (res?.status == 200) {
+          setListHauses(res?.data);
+          setLoading(false);
+        }
+      })
+      .catch(error => console.log(error));
+  };
 
   const renderlistHauses = (item:any, index:number) => {
     return (

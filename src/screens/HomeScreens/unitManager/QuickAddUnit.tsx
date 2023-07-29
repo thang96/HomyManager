@@ -365,7 +365,7 @@ const QuickAddUnit = () => {
             label={'Dịch vụ có phí'}
             labelButton={'Thêm'}
             icon={icons.ic_plus}
-            onPress={() => navigation.navigate('Service')}
+            onPress={() => navigation.navigate('ChooseService')}
           />
           <SuggestComponent
             label={
@@ -397,7 +397,7 @@ const QuickAddUnit = () => {
             label={'Tiện ích miễn phí'}
             labelButton={'Thêm'}
             icon={icons.ic_plus}
-            onPress={() => navigation.navigate('Utilities')}
+            onPress={() => navigation.navigate('ChooseAmenity')}
           />
           <SuggestComponent
             label={

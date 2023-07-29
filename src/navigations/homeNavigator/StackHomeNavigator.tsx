@@ -20,6 +20,7 @@ import {
   QuickAddUnit,
   UnitDetail,
   UnitManager,
+  EmptyUnitManager,
   HomeScreen,
   HouseDetail,
   HouseManager,
@@ -185,6 +186,13 @@ const StackHomeNavigator = () => {
       <Stack.Screen
         component={UnitManager}
         name={'UnitManager'}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={EmptyUnitManager}
+        name={'EmptyUnitManager'}
         options={{
           headerShown: false,
         }}

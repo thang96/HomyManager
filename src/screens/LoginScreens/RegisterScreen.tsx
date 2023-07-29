@@ -18,6 +18,8 @@ import {AuthenticationRegisterAPi} from '../../apis/loginApi/loginApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {updateReloadStatus} from '../../store/slices/reloadSlice';
+import AppBarComponent from '../../components/appBarComponent/AppBarComponent';
+import TextInputComponent from '../../components/commonComponent/TextInputComponent';
 
 const RegisterScreen = () => {
   const navigation: any = useNavigation();
@@ -31,6 +33,9 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
   const [email, setEmail] = useState('');
+
+  const [isShowPass, setIsShowPass] = useState(false);
+  const [isShowRePass, setIsShowRePass] = useState(false);
 
   const isReadyData = () =>
     userName != '' &&
@@ -105,22 +110,17 @@ const RegisterScreen = () => {
           }}
         />
       )}
-      <ImageBackground
-        style={styles.container}
-        source={images.im_backgroundLogin}>
-        <ButtonComponent
-          icon={icons.ic_back}
-          styleIcon={styles.iconBack}
-          styleButton={styles.buttonBack}
-          onPress={() => navigation.goBack()}
-        />
-        <View style={{height: 260}} />
+      <AppBarComponent
+        iconLeft={icons.ic_back}
+        label={'Đăng ký tài khoản'}
+        pressIconLeft={() => navigation.goBack()}
+      />
+      <View style={styles.container}>
         <ScrollView nestedScrollEnabled={true} keyboardDismissMode="none">
-          <Text style={styles.title}>Đăng ký tài khoản</Text>
           <SuggestComponent
-            labelStyle={{textAlign: 'center'}}
+            labelStyle={{textAlign: 'center', marginTop: 10}}
             label={
-              'Vui lòng cung cấp thông tin dưới đây để đăng ký tài khoản cho số điện thoại '
+              'Vui lòng cung cấp thông tin dưới đây để đăng ký tài khoản cho số điện thoại'
             }
           />
           <ComponentInput
@@ -160,24 +160,40 @@ const RegisterScreen = () => {
             value={userName}
             onChangeText={(text: any) => setUserName(text)}
           />
-          <ComponentInput
-            viewComponent={{marginTop: 15}}
-            important={true}
-            type={'input'}
-            title={'Mật khẩu'}
-            placeholder={'Nhập mật khẩu'}
-            value={password}
-            onChangeText={(text: any) => setPassword(text)}
-          />
-          <ComponentInput
-            viewComponent={{marginTop: 15}}
-            important={true}
-            type={'input'}
-            title={'Nhập lại mật khẩu'}
-            placeholder={'Nhập lại mật khẩu'}
-            value={rePassword}
-            onChangeText={(text: any) => setRePassword(text)}
-          />
+          <View style={{marginTop: 15}}>
+            <View
+              style={styles.viewRowCenter}>
+              <Text style={{fontSize: 15, color: '#374047'}}>{'Mật khẩu'}</Text>
+              <Text style={{color: 'red'}}> *</Text>
+            </View>
+            <TextInputComponent
+              secureTextEntry={isShowPass ? false : true}
+              styleViewTextInput={styles.styleViewTextInput}
+              placeholder={'Nhập mật khẩu'}
+              value={password}
+              onChangeText={(text: any) => setPassword(text)}
+              iconRight={isShowPass ? icons.ic_show : icons.ic_hide}
+              styleIconRight={styles.iconShow}
+              onPressIconRight={() => setIsShowPass(!isShowPass)}
+            />
+          </View>
+          <View style={{marginTop: 15}}>
+            <View
+              style={styles.viewRowCenter}>
+              <Text style={{fontSize: 15, color: '#374047'}}>{'Mật khẩu'}</Text>
+              <Text style={{color: 'red'}}> *</Text>
+            </View>
+            <TextInputComponent
+              secureTextEntry={isShowRePass ? false : true}
+              styleViewTextInput={styles.styleViewTextInput}
+              placeholder={'Nhập lại mật khẩu'}
+              value={rePassword}
+              onChangeText={(text: any) => setRePassword(text)}
+              iconRight={isShowRePass ? icons.ic_show : icons.ic_hide}
+              styleIconRight={styles.iconShow}
+              onPressIconRight={() => setIsShowRePass(!isShowRePass)}
+            />
+          </View>
 
           <ButtonComponent
             label={'Tiếp tục'}
@@ -185,10 +201,10 @@ const RegisterScreen = () => {
             styleLabel={styles.styleLabel}
             onPress={() => setModalRegister(true)}
           />
-
-          <View style={{height: 300}} />
+          
+          <View style={{height: 56}} />
         </ScrollView>
-      </ImageBackground>
+      </View>
     </View>
   );
 };
@@ -197,20 +213,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 15,
+    backgroundColor: 'white',
   },
-  title: {
-    color: colors.mainColor,
-    fontWeight: 'bold',
-    fontSize: 18,
-    alignSelf: 'center',
-    lineHeight: 18,
-  },
+
   content: {fontSize: 15, color: '#374047'},
   styleViewTextInput: {
     height: 48,
-    width: '150%',
     borderWidth: 1,
-    borderRadius: 15,
+    borderRadius: 4,
     borderColor: '#ACB4B9',
     paddingHorizontal: 15,
     backgroundColor: 'white',
@@ -224,7 +234,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   styleLabel: {color: 'white', fontSize: 15},
-  buttonBack: {position: 'absolute', top: 15, left: 15, zIndex: 1},
-  iconBack: {width: 24, height: 24, tintColor: 'white'},
+  viewRowCenter:{
+    flexDirection: 'row',
+    marginBottom: 3,
+    alignItems: 'center',
+  },
+  iconShow:{
+    width: 30,
+    height: 30,
+    tintColor: '#374047',
+  }
 });
 export default RegisterScreen;

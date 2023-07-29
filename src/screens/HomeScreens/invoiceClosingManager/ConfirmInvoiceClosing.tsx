@@ -7,13 +7,13 @@ import {
   Modal,
   ScrollView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import AppBarComponent from '../../../components/appBarComponent/AppBarComponent';
 import {colors, icons, images} from '../../../constants';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
-import CustomPersonInfor from '../../../components/homeComponent/CustomPersonInfor';
 import IndexInputComponent from '../../../components/commonComponent/IndexInputComponent';
 import {formatNumber, validateNumber} from '../../../utils/common';
 import ButtonComponent from '../../../components/commonComponent/ButtonComponent';
@@ -33,6 +33,10 @@ import {
   DeleteImageApi,
   PostInvoiceServiceFilesUploadApi,
 } from '../../../apis/homeApi/fileDataApi';
+import {
+  BreakLine,
+  StraightLine,
+} from '../../../components/commonComponent/LineConponent';
 const widthView = Dimensions.get('window').width / 2 - 15;
 
 const ConfirmInvoiceClosing = () => {
@@ -44,7 +48,7 @@ const ConfirmInvoiceClosing = () => {
   const [modalShowImage, setModalShowImage] = useState(false);
   const [modalCamera, setModalCamera] = useState(false);
   const [confirmInvoice, setConfirmInvoice] = useState<any>();
-  // console.log(confirmInvoice);
+  // console.log(confirmInvoice.contract);
 
   const [loading, setLoading] = useState(true);
   const [progressiveServiceClosings, setProgressiveServiceClosings] =
@@ -276,12 +280,62 @@ const ConfirmInvoiceClosing = () => {
         nestedScrollEnabled={true}
         keyboardDismissMode="none"
         style={styles.scrollView}>
-        <TextTitleComponent label={'Chủ hợp đồng'} />
-        <CustomPersonInfor
-          avatar={confirmInvoice?.contract?.contractOwner?.avatarImage?.fileUrl}
-          userName={`${confirmInvoice?.contract?.contractOwner?.fullName}`}
-          phoneNumber={`${confirmInvoice?.contract?.contractOwner?.phoneNumber}`}
-        />
+        <View style={[styles.viewInfor, styles.shadow]}>
+          <Text style={styles.textTitle}>{'Chủ hợp đồng'}</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.labelBold}>{'Họ tên : '}</Text>
+            <Text style={styles.labelNomal}>
+              {confirmInvoice?.closingOwner?.fullName}
+            </Text>
+          </View>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.labelBold}>{'SĐT : '}</Text>
+            <Text style={styles.labelNomal}>
+              {confirmInvoice?.closingOwner?.phoneNumber}
+            </Text>
+          </View>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.labelBold}>{'Email : '}</Text>
+            <Text style={styles.labelNomal}>
+              {confirmInvoice?.closingOwner?.email}
+            </Text>
+          </View>
+          {BreakLine()}
+          <Text style={styles.textTitle}>{'Người thuê'}</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.labelBold}>{'Họ tên : '}</Text>
+            <Text style={styles.labelNomal}>
+              {confirmInvoice?.closingTenant?.fullName}
+            </Text>
+          </View>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.labelBold}>{'SĐT : '}</Text>
+            <Text style={styles.labelNomal}>
+              {confirmInvoice?.closingTenant?.phoneNumber}
+            </Text>
+          </View>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.labelBold}>{'Email : '}</Text>
+            <Text style={styles.labelNomal}>
+              {confirmInvoice?.closingTenant?.email}
+            </Text>
+          </View>
+          {StraightLine()}
+          <Text style={styles.textTitle}>{'Thông tin phòng'}</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.labelBold}>{'Địa chỉ\ntòa nhà : '}</Text>
+            <Text style={styles.labelNomal}>
+              {confirmInvoice?.contract?.unit?.house?.fullAddress}
+            </Text>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.labelBold}>{'Tên phòng : '}</Text>
+            <Text style={styles.labelNomal}>
+              {confirmInvoice?.contract?.unit?.name}
+            </Text>
+          </View>
+        </View>
+
         <View>
           <ScrollView horizontal={true} style={{width: '100%'}}>
             {progressiveServiceClosings?.length > 0 && (
@@ -556,6 +610,31 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     marginRight: 5,
   },
+  shadow: {
+    margin: 1,
+    paddingHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+  },
+  textTitle: {
+    fontSize: 17,
+    color: colors.textTitle,
+    fontWeight: '600',
+  },
+  viewInfor: {
+    width: '100%',
+    backgroundColor: 'white',
+    paddingVertical: 5,
+    borderRadius: 4,
+  },
+  labelBold: {color: 'black', fontWeight: '600', fontSize: 11},
+  labelNomal: {color: 'black', fontWeight: '300', fontSize: 11},
 });
 export default ConfirmInvoiceClosing;
 

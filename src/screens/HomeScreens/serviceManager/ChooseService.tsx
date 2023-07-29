@@ -108,10 +108,10 @@ const ChooseService = () => {
         ) : null}
       </View>
       <CustomTwoButtonBottom
-        leftLabel={'Lưu'}
-        rightLabel={'Thêm mới'}
-        onPressLeft={() => updateNewService()}
-        onPressRight={() => {
+        leftLabel={'Thêm mới'}
+        rightLabel={'Lưu'}
+        onPressRight={() => updateNewService()}
+        onPressLeft={() => {
           dispatch(updateReloadStatus('addNewService'));
           navigation.navigate('AddNewService');
         }}

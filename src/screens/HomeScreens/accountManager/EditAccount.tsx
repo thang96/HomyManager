@@ -114,6 +114,7 @@ const EditAccount = () => {
     await PostImageUserApi(tokenStore, user?.id, avatarImage)
       .then((res: any) => {
         if (res?.status == 200) {
+          dispatch(updateReloadStatus('updateAvatarSuccess'));
           loadingData();
         }
       })

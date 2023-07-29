@@ -207,7 +207,7 @@ const EditUnitInfor = () => {
                 if (res?.status == 200) {
                   dispatch(updateReloadStatus('updateUnitInforSuccess'));
                   setLoadingRoom(false);
-                  navigation.navigate('FloorInformation', houseId);
+                  navigation.navigate('UnitManager', houseId);
                 }
               })
               .catch(error => {
@@ -392,7 +392,7 @@ const EditUnitInfor = () => {
             label={'Dịch vụ có phí'}
             labelButton={'Thêm'}
             icon={icons.ic_plus}
-            onPress={() => navigation.navigate('Service')}
+            onPress={() => navigation.navigate('ChooseService')}
           />
           <SuggestComponent
             label={
@@ -424,7 +424,7 @@ const EditUnitInfor = () => {
             label={'Tiện ích miễn phí'}
             labelButton={'Thêm'}
             icon={icons.ic_plus}
-            onPress={() => navigation.navigate('Utilities')}
+            onPress={() => navigation.navigate('ChooseAmenity')}
           />
           <SuggestComponent
             label={
