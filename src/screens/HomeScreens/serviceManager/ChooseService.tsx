@@ -1,5 +1,5 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View, Text, FlatList} from 'react-native';
 import AppBarComponent from '../../../components/appBarComponent/AppBarComponent';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
@@ -7,7 +7,7 @@ import {icons, colors} from '../../../constants';
 import CustomChecker from '../../../components/commonComponent/CustomChecker';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
 import {useDispatch, useSelector} from 'react-redux';
-import {updateService} from '../../../store/slices/serviceSlice';
+import {serviceState, updateService} from '../../../store/slices/serviceSlice';
 import {token} from '../../../store/slices/tokenSlice';
 import {GetListServicesApi} from '../../../apis/homeApi/serviceApi';
 import {
@@ -15,7 +15,7 @@ import {
   updateReloadStatus,
 } from '../../../store/slices/reloadSlice';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
-import {uuid} from '../../../utils/common';
+import {removeDuplicateElements, uuid} from '../../../utils/common';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
 import {formatNumber} from '../../../utils/common';
 
@@ -24,8 +24,11 @@ const ChooseService = () => {
   const tokenStore = useSelector(token);
   const navigation: any = useNavigation();
   const dispatch = useDispatch();
-  const [listSevice, setListSevice] = useState([]);
+  const [listSevice, setListSevice] = useState<any>([]);
+  const [eachService, setEachService] = useState([]);
   const [loading, setLoading] = useState(true);
+  const serviceSelect = useSelector(serviceState);
+  // console.log(listSevice,'serviceSelect');
 
   useEffect(() => {
     const getListService = async () => {
@@ -38,7 +41,7 @@ const ChooseService = () => {
               let newData = {...data, isCheck: false};
               eachService.push(newData);
             });
-            setListSevice(eachService);
+            setEachService(eachService);
             setLoading(false);
           }
         })
@@ -46,6 +49,12 @@ const ChooseService = () => {
     };
     getListService();
   }, [loadingState]);
+
+  useMemo(() => {
+    let newArray = eachService.concat(serviceSelect);
+    let resultCheckElement = removeDuplicateElements(newArray);
+    setListSevice(resultCheckElement);
+  }, [eachService, serviceSelect]);
 
   const renderListService = (item: any, index: number) => {
     const updateItem = () => {
@@ -98,7 +107,7 @@ const ChooseService = () => {
 
         <TextTitleComponent label={'Dịch vụ đã thêm'} />
 
-        {listSevice.length > 0 ? (
+        {listSevice?.length > 0 ? (
           <FlatList
             numColumns={2}
             data={listSevice}

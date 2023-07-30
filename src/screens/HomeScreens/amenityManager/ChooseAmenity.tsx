@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View, FlatList, ScrollView} from 'react-native';
 import AppBarComponent from '../../../components/appBarComponent/AppBarComponent';
 import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwoButtonBottom';
@@ -8,7 +8,7 @@ import SuggestComponent from '../../../components/commonComponent/SuggestCompone
 import CustomChecker from '../../../components/commonComponent/CustomChecker';
 import TextTitleComponent from '../../../components/commonComponent/TextTitleComponent';
 import {useDispatch, useSelector} from 'react-redux';
-import {updateAmenity} from '../../../store/slices/amenitySlice';
+import {amenityState, updateAmenity} from '../../../store/slices/amenitySlice';
 import {GetListAmenitysApi} from '../../../apis/homeApi/amenityApi';
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
 import {
@@ -16,14 +16,17 @@ import {
   updateReloadStatus,
 } from '../../../store/slices/reloadSlice';
 import {token} from '../../../store/slices/tokenSlice';
+import {removeDuplicateElements} from '../../../utils/common';
 
 const ChooseAmenity = () => {
   const navigation: any = useNavigation();
   const dispatch = useDispatch();
   const tokenStore = useSelector(token);
   const loadingState = useSelector(reloadState);
-  const [listAmenitys, setListAmenitys] = useState([]);
+  const [listAmenitys, setListAmenitys] = useState<any>([]);
+  const [eachAmenity, setEachAmenity] = useState([]);
   const [loading, setLoading] = useState(true);
+  const amenitySelect = useSelector(amenityState);
 
   useEffect(() => {
     const getListAmenity = async () => {
@@ -36,7 +39,7 @@ const ChooseAmenity = () => {
               let newData = {...data, isCheck: false};
               eachArray.push(newData);
             });
-            setListAmenitys(eachArray);
+            setEachAmenity(eachArray);
             setLoading(false);
           }
         })
@@ -44,6 +47,12 @@ const ChooseAmenity = () => {
     };
     getListAmenity();
   }, [loadingState]);
+
+  useMemo(() => {
+    let newArray = eachAmenity.concat(amenitySelect);
+    let resultCheckElement = removeDuplicateElements(newArray);
+    setListAmenitys(resultCheckElement);
+  }, [eachAmenity, amenitySelect]);
 
   const renderListService = (item: any, index: number) => {
     const updateItem = () => {

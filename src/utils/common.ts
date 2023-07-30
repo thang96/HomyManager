@@ -76,3 +76,23 @@ export const removeAccents = (str: string) => {
     .replace(/đ/g, 'd')
     .replace(/Đ/g, 'D');
 };
+
+export const removeDuplicateElements = (arrayService: any) => {
+  const idMap: any = {};
+  const uniqueElements: any[] = [];
+
+  arrayService.forEach((element: any) => {
+    const {id, isCheck} = element;
+    if (!idMap[id]) {
+      idMap[id] = element;
+    } else if (isCheck) {
+      idMap[id] = element;
+    }
+  });
+
+  Object.values(idMap).forEach(element => {
+    uniqueElements.push(element);
+  });
+
+  return uniqueElements;
+};
