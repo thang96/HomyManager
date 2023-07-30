@@ -208,9 +208,9 @@ const EditHouseInformation = () => {
       serviceIds: eachServiceIds,
       amenityIds: eachAmenityIds,
     };
-   
+
     await PutBuildingApi(tokenStore, hauseId, data)
-      .then((res:any) => {
+      .then((res: any) => {
         if (res?.status === 200) {
           dispatch(updateReloadStatus('updateHouseSuccess'));
           navigation.goBack();
@@ -470,8 +470,8 @@ const EditHouseInformation = () => {
         />
         <TextTitleComponent
           label={'Thông tin thanh toán'}
-          labelButton={'Thêm'}
-          icon={icons.ic_plus}
+          labelButton={'Chỉnh sửa'}
+          // icon={icons.ic_plus}
           onPress={() => {
             dispatch(updateReloadStatus('chooseABank'));
             navigation.navigate('ChooseABank');
@@ -489,8 +489,8 @@ const EditHouseInformation = () => {
 
         <TextTitleComponent
           label={'Dịch vụ có phí'}
-          labelButton={'Thêm'}
-          icon={icons.ic_plus}
+          labelButton={'Chỉnh sửa'}
+          // icon={icons.ic_plus}
           onPress={() => navigation.navigate('ChooseService')}
         />
         <View>
@@ -512,8 +512,8 @@ const EditHouseInformation = () => {
 
         <TextTitleComponent
           label={'Tiện ích miễn phí'}
-          labelButton={'Thêm'}
-          icon={icons.ic_plus}
+          labelButton={'Chỉnh sửa'}
+          // icon={icons.ic_plus}
           onPress={() => navigation.navigate('ChooseAmenity')}
         />
         <View>

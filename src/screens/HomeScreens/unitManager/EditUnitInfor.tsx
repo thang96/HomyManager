@@ -390,8 +390,8 @@ const EditUnitInfor = () => {
           {StraightLine()}
           <TextTitleComponent
             label={'Dịch vụ có phí'}
-            labelButton={'Thêm'}
-            icon={icons.ic_plus}
+            labelButton={'Chỉnh sửa'}
+            // icon={icons.ic_plus}
             onPress={() => navigation.navigate('ChooseService')}
           />
           <SuggestComponent
@@ -422,8 +422,8 @@ const EditUnitInfor = () => {
 
           <TextTitleComponent
             label={'Tiện ích miễn phí'}
-            labelButton={'Thêm'}
-            icon={icons.ic_plus}
+            labelButton={'Chỉnh sửa'}
+            // icon={icons.ic_plus}
             onPress={() => navigation.navigate('ChooseAmenity')}
           />
           <SuggestComponent

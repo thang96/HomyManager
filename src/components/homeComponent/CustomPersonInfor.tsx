@@ -31,25 +31,27 @@ const CustomPersonInfor = (props: any) => {
             onPress={onPressCheck}
           />
         )}
-        <TouchableOpacity onPress={pressAvatar}>
+        <TouchableOpacity
+          style={{flexDirection: 'row', alignItems: 'center'}}
+          onPress={pressAvatar}>
           <Image
             resizeMode="contain"
             style={styles.avatar}
             source={typeof avatar == 'string' ? {uri: avatar} : icons.ic_user}
           />
+          <View
+            style={{
+              marginLeft: 10,
+              justifyContent: 'center',
+            }}>
+            <Text numberOfLines={1} style={styles.userName}>
+              {userName}
+            </Text>
+            <Text style={styles.phoneNumber}>{phoneNumber}</Text>
+          </View>
         </TouchableOpacity>
       </View>
-      <View
-        style={{
-          marginLeft: 10,
-          justifyContent: 'center',
-          flex: 1,
-        }}>
-        <Text numberOfLines={1} style={styles.userName}>
-          {userName}
-        </Text>
-        <Text style={styles.phoneNumber}>{phoneNumber}</Text>
-      </View>
+
       <View
         style={{
           flexDirection: 'row',
