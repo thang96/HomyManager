@@ -46,21 +46,28 @@ const AccountScreen = () => {
 
   const handleLogout = async () => {
     setLoading(true);
-    await DeleteNotificationFromDeviceApi(tokenStore, deviceId)
-      .then(async (res: any) => {
-        if (res?.status === 200) {
-          await AsyncStorage.removeItem('token').then(async () => {
-            await AsyncStorage.removeItem('user').then(() => {
-              dispatch(updateReloadStatus('logOut'));
-              dispatch(updateAppStatus('rejects'));
-              setLoading(false);
-            });
-          });
-        }
-      })
-      .catch(error => {
-        console.log(error);
+    await AsyncStorage.removeItem('token').then(async () => {
+      await AsyncStorage.removeItem('user').then(() => {
+        dispatch(updateReloadStatus('logOut'));
+        dispatch(updateAppStatus('rejects'));
+        setLoading(false);
       });
+    });
+    // await DeleteNotificationFromDeviceApi(tokenStore, deviceId)
+    //   .then(async (res: any) => {
+    //     if (res?.status === 200) {
+    //       await AsyncStorage.removeItem('token').then(async () => {
+    //         await AsyncStorage.removeItem('user').then(() => {
+    //           dispatch(updateReloadStatus('logOut'));
+    //           dispatch(updateAppStatus('rejects'));
+    //           setLoading(false);
+    //         });
+    //       });
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   };
 
   return (
