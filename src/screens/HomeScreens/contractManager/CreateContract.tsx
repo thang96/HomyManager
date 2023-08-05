@@ -11,7 +11,6 @@ import CustomTwoButtonBottom from '../../../components/commonComponent/CustomTwo
 import LoadingComponent from '../../../components/commonComponent/LoadingComponent';
 import ImagePicker from 'react-native-image-crop-picker';
 import CustomModalCamera from '../../../components/commonComponent/CustomModalCamera';
-import CustomModalPicker from '../../../components/commonComponent/CustomModalPicker';
 import CustomPickerDay from '../../../components/commonComponent/CustomPickerDay';
 import SuggestComponent from '../../../components/commonComponent/SuggestComponent';
 import RenderAmenity from '../../../components/renderComponent/RenderAmenity';
@@ -39,6 +38,7 @@ import {PostImageContractApi} from '../../../apis/homeApi/fileDataApi';
 import ComponentRenderImage from '../../../components/renderComponent/ComponentRenderImage';
 import {StraightLine} from '../../../components/commonComponent/LineConponent';
 import RenderServiceInput from '../../../components/renderComponent/RenderServiceInput';
+import BottomSheetPicker from '../../../components/commonComponent/BottomSheetPicker';
 
 const CreateContract = () => {
   const navigation: any = useNavigation();
@@ -340,21 +340,35 @@ const CreateContract = () => {
         />
       )}
       {modalHause && (
-        <CustomModalPicker
-          data={listHauses}
-          pressClose={() => setModalHause(false)}
-          onPressItem={(item: any) => getListUnit(item)}
-        />
+         <BottomSheetPicker
+         data={listHauses}
+         handlerShow={(index: number) => {
+           if (index === 0) {
+            setModalHause(false);
+           }
+         }}
+         onPressItem={(item: any) => {
+           getListUnit(item);
+         }}
+         handlerCancel={() => setModalHause(false)}
+       />
+     
       )}
       {modalUnit && (
-        <CustomModalPicker
-          data={listUnits}
-          pressClose={() => setModalUnit(false)}
-          onPressItem={(item: any) => {
+           <BottomSheetPicker
+           data={listUnits}
+           handlerShow={(index: number) => {
+             if (index === 0) {
+              setModalUnit(false);
+             }
+           }}
+           onPressItem={(item: any) => {
             getUnitDetailAPi(item);
             setModalUnit(false);
-          }}
-        />
+           }}
+           handlerCancel={() => setModalUnit(false)}
+         />
+   
       )}
       {modalStartDate && (
         <CustomModalDateTimePicker
